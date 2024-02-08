@@ -1,1 +1,141 @@
-<p>codificacion works!</p>
+  <!-- que estilo puedo colocar para hacerlo responsive -->
+  <!-- <div class="codificacion">
+    <h1>Codificación</h1>
+    <p>En esta sección se muestran las variables de inicio del juego.</p>
+    <br>
+    <div class="codificacion__container">
+      <mat-form-field appearance="outline" class="codificacion__input">
+        <mat-label>Nombre del juego</mat-label>
+        <input matInput placeholder="Nombre del juego" [(ngModel)]="nombreJuego">
+        <mat-hint>Escriba el nombre del juego</mat-hint>
+        <mat-error *ngIf="nombreJuego.length == 0">El nombre del juego es obligatorio.</mat-error
+           -->
+
+<h1>Codificación</h1>
+<div class="codificacion__container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Variables de inicio</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="selectionForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill">
+          <mat-label>Seleccione el proyecto curricular</mat-label>
+          <mat-select formControlName="proyectoCurricular">
+            <mat-option *ngFor="let proyecto of proyectosCurriculares" [value]="proyecto">
+              {{ proyecto }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="selectionForm.get('proyectoCurricular')?.hasError('required') && selectionForm.touched">Seleccione un proyecto curricular</mat-error>
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+          <mat-label>Seleccione el año de inicio</mat-label>
+          <mat-select formControlName="anoInicio">
+            <mat-option *ngFor="let ano of anosInicio" [value]="ano">
+              {{ ano }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+          <mat-label>Seleccione el listado de admitidos</mat-label>
+          <mat-select formControlName="listaAdmitidos">
+            <mat-option *ngFor="let lista of listasAdmitidos" [value]="lista">
+              {{ lista }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+          <input matInput placeholder="Código proyecto curricular" formControlName="codigoProyectoCurricular">
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+          <mat-label>Seleccione el período académico</mat-label>
+          <mat-select formControlName="periodoAcademico">
+            <mat-option *ngFor="let periodo of periodosAcademicos" [value]="periodo">
+              {{ periodo }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+          <input matInput placeholder="Plan de estudios" formControlName="planEstudios">
+        </mat-form-field>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" type="submit">Aceptar</button>
+        </mat-card-actions>
+      </form>
+      </mat-card-content>
+      
+  </mat-card>
+
+  <div *ngIf="dataSource">
+    <mat-card>
+      <mat-card-content>
+        <mat-card-header>
+          <mat-card-title>Listado de interes</mat-card-title>
+        </mat-card-header>
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let element">{{element.id}}</td>
+        </ng-container>
+    
+        <!-- Apellido Column -->
+        <ng-container matColumnDef="apellido">
+          <th mat-header-cell *matHeaderCellDef>Apellidos</th>
+          <td mat-cell *matCellDef="let element">{{element.apellido}}</td>
+        </ng-container>
+    
+        <!-- Nombre Column -->
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef>Nombres</th>
+          <td mat-cell *matCellDef="let element">{{element.nombre}}</td>
+        </ng-container>
+    
+        <!-- Estado Admisión Column -->
+        <ng-container matColumnDef="estadoAdmision">
+          <th mat-header-cell *matHeaderCellDef>Estado admisión</th>
+          <td mat-cell *matCellDef="let element">{{element.estadoAdmision}}</td>
+        </ng-container>
+    
+        <!-- Enfasis Column -->
+        <ng-container matColumnDef="enfasis">
+          <th mat-header-cell *matHeaderCellDef>Énfasis</th>
+          <td mat-cell *matCellDef="let element">{{element.enfasis}}</td>
+        </ng-container>
+    
+        <!-- Numero Documento Column -->
+        <ng-container matColumnDef="numeroDocumento">
+          <th mat-header-cell *matHeaderCellDef>Número documento</th>
+          <td mat-cell *matCellDef="let element">{{element.numeroDocumento}}</td>
+        </ng-container>
+    
+        <!-- Código Column -->
+        <ng-container matColumnDef="codigo">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let element">{{element.codigo}}</td>
+        </ng-container>
+    
+  
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+    <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="descargarListado()">Descargar listado</button>
+        <button mat-button color="primary" (click)="generarCodigos()">Generar códigos al listado</button>
+        <button mat-button color="primary" (click)="asignarCodificacion()">Asignar codificación</button>  
+    </mat-card-actions>
+    
+  </mat-card-content>
+</mat-card>
+  </div>
+  
+</div>
