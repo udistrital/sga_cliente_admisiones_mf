@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
-import { CodificacionComponent } from './components/codificacion/codificacion.component';
+
 
 const routes: Routes = [
-  {path: '', component: CodificacionComponent}
+  {
+    path: "", // cambiar la ruta del modulo
+    loadChildren: () => import ('./modules/codificacion/codificacion.module').then(m => m.CodificacionModule),
+  }
 ];
 
 @NgModule({
