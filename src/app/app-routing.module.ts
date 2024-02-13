@@ -6,7 +6,7 @@ import { APP_BASE_HREF } from '@angular/common';
 const routes: Routes = [
   {
     path: "", // cambiar la ruta del modulo
-    loadChildren: () => import ('./modules/codificacion/codificacion.module').then(m => m.CodificacionModule),
+    loadChildren: () => import ('./codificacion-module/codificacion.module').then(m => m.CodificacionModule),
   }
 ];
 

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CodificacionComponent } from 'src/app/modules/codificacion/codificacion/codificacion.component';
+import { CodificacionComponent } from './components/codificacion/codificacion.component';
 
 const routes: Routes = [
   {
