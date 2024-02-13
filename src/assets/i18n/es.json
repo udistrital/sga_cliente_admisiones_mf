@@ -1,5 +1,35 @@
 {
-    "CODIFICACION":{
-        "TITLE": "Codificación"
+    "CODIFICACION": {
+      "TITLE": "Codificación",
+      "VARIABLES_START": "Variables de Inicio",
+      "SELECT_LEVEL": "Seleccione el Nivel",
+      "ERRORS": {
+        "SELECT_LEVEL": "Seleccione un nivel",
+        "SELECT_SUBLEVEL": "Seleccione un subnivel",
+        "SELECT_PROYECTO_CURRICULAR": "Seleccione un proyecto curricular",
+        "SELECT_ANO_INICIO": "Seleccione un año de inicio",
+        "SELECT_LISTADO_ADMITIDOS": "Seleccione un listado de admitidos",
+        "INPUT_PROYECTO_CURRICULAR": "Ingrese un código de proyecto curricular",
+        "SELECT_PERIODO_ACADEMICO": "Seleccione un período académico",
+        "INPUT_PLAN_ESTUDIOS": "Ingrese un plan de estudios"
+      },
+      "SELECT_SUBLEVEL": "Seleccione el Subnivel",
+      "SELECT_PROYECTO_CURRICULAR": "Seleccione el Proyecto Curricular",
+      "SELECT_ANO_INICIO": "Seleccione el Año de Inicio",
+      "SELECT_LISTADO_ADMITIDOS": "Seleccione el Listado de Admitidos",
+      "INPUT_PROYECTO_CURRICULAR": "Código del Proyecto Curricular",
+      "SELECT_PERIODO_ACADEMICO": "Seleccione el Período Académico",
+      "INPUT_PLAN_ESTUDIOS": "Plan de Estudios",
+      "BUTTON_ACEPTAR": "Aceptar",
+      "TABLE_COLUMNA_APELLIDOS": "Apellidos",
+      "TABLE_COLUMNA_NOMBRES": "Nombres",
+      "TABLE_COLUMNA_ESTADO_ADMISION": "Estado de Admisión",
+      "TABLE_COLUMNA_ENFASIS": "Énfasis",
+      "TABLE_COLUMNA_NUMERO_DOCUMENTO": "Número de Documento",
+      "TABLE_CODIGO": "Código",
+      "BUTTON_DESCARGAR_LISTADO": "Descargar Listado",
+      "BUTTON_GENERAR_CODIGOS": "Generar Códigos",
+      "BUTTON_GENERAR_CODIFICACION": "Asignar Codificación"
     }
-}
+  }
+  

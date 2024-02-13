@@ -4,14 +4,14 @@
       <h1>{{ "CODIFICACION.TITLE" | translate }}</h1>
     </legend>
     <mat-card-header>
-      <mat-card-title>Variables de inicio</mat-card-title>
+      <mat-card-title>{{ "CODIFICACION.VARIABLES_START" | translate }}</mat-card-title>
     </mat-card-header>
     <br />
     <mat-card-content>
       <form [formGroup]="selectionForm" (ngSubmit)="onSubmit()">
         <div class="grid">
           <mat-form-field appearance="fill" class="grid-2">
-            <mat-label>Seleccione el nivel</mat-label>
+            <mat-label>{{ "CODIFICACION.SELECT_LEVEL" | translate }}</mat-label>
             <mat-select formControlName="nivel" (selectionChange)="onNivelChange($event)">
               <mat-option
                 *ngFor="let nivel of niveles"
@@ -25,12 +25,12 @@
                 selectionForm.get('nivel')?.hasError('required') &&
                 selectionForm.touched
               "
-              >Seleccione un nivel</mat-error
+              >{{ "CODIFICACION.ERRORS.SELECT_LEVEL" | translate }}</mat-error
             >
           </mat-form-field>
 
           <mat-form-field appearance="fill" class="grid-2">
-            <mat-label>Seleccione el subnivel</mat-label>
+            <mat-label>{{ "CODIFICACION.SELECT_SUBLEVEL" | translate }}</mat-label>
             <mat-select formControlName="subNivel" (selectionChange)="onSubNivelChange($event)">
               <mat-option *ngFor="let subNivel of subNiveles" [value]="subNivel.value">
                 {{ subNivel.viewValue }}
@@ -41,14 +41,14 @@
                 selectionForm.get('subNivel')?.hasError('required') &&
                 selectionForm.touched
               "
-              >Seleccione un subnivel</mat-error
+              >{{ "CODIFICACION.ERRORS.SELECT_SUBLEVEL" | translate }}</mat-error
             >
           </mat-form-field>
         </div>
 
         <div class="grid">
           <mat-form-field appearance="fill" class="grid-3">
-            <mat-label>Seleccione el proyecto curricular</mat-label>
+            <mat-label>{{ "CODIFICACION.SELECT_PROYECTO_CURRICULAR" | translate }}</mat-label>
             <mat-select formControlName="proyectoCurricular" (selectionChange)="onProyectoCurricularChange($event)">
               <mat-option
                 *ngFor="let proyecto of proyectosFiltrados"
@@ -62,12 +62,12 @@
                 selectionForm.get('proyectoCurricular')?.hasError('required') &&
                 selectionForm.touched
               "
-              >Seleccione un proyecto curricular</mat-error
+              >{{ "CODIFICACION.ERRORS.SELECT_PROYECTO_CURRICULAR" | translate }}</mat-error
             >
           </mat-form-field>
 
           <mat-form-field appearance="fill" class="grid-3">
-            <mat-label>Seleccione el año de inicio</mat-label>
+            <mat-label>{{ "CODIFICACION.SELECT_ANO_INICIO" | translate }}</mat-label>
             <mat-select formControlName="anoInicio" (selectionChange)="onAnoInicioChange($event)">
               <mat-option *ngFor="let ano of anosInicio" [value]="ano">
                 {{ ano }}
@@ -78,12 +78,12 @@
                 selectionForm.get('anoInicio')?.hasError('required') &&
                 selectionForm.touched
               "
-              >Seleccione un año de inicio</mat-error
+              >{{ "CODIFICACION.ERRORS.SELECT_ANO_INICIO" | translate }}</mat-error
             >
           </mat-form-field>
 
           <mat-form-field appearance="fill" class="grid-3">
-            <mat-label>Seleccione el listado de admitidos</mat-label>
+            <mat-label>{{ "CODIFICACION.SELECT_LISTADO_ADMITIDOS" | translate }}</mat-label>
             <mat-select formControlName="listaAdmitidos">
               <mat-option *ngFor="let lista of listasAdmitidos" [value]="lista">
                 {{ lista }}
@@ -94,12 +94,12 @@
                 selectionForm.get('listaAdmitidos')?.hasError('required') &&
                 selectionForm.touched
               "
-              >Seleccione un listado de admitidos</mat-error
+              >{{ "CODIFICACION.ERRORS.SELECT_LISTADO_ADMITIDOS" | translate }}</mat-error
             >
           </mat-form-field>
 
           <mat-form-field appearance="fill" class="grid-3">
-            <mat-label>Código de Proyecto Curricular</mat-label>
+            <mat-label>{{ "CODIFICACION.INPUT_PROYECTO_CURRICULAR" | translate }}</mat-label>
             <input
               matInput
               placeholder="Código proyecto curricular"
@@ -111,12 +111,12 @@
                 selectionForm.get('codigoProyectoCurricular')?.hasError('required') &&
                 selectionForm.touched
               "
-              >Sin código proyecto curricular</mat-error
+              >{{ "CODIFICACION.ERRORS.INPUT_PROYECTO_CURRICULAR" | translate }}</mat-error
             >
           </mat-form-field>
 
           <mat-form-field appearance="fill" class="grid-3">
-            <mat-label>Seleccione el período académico</mat-label>
+            <mat-label>{{ "CODIFICACION.SELECT_PERIODO_ACADEMICO" | translate }}</mat-label>
             <mat-select formControlName="periodoAcademico">
               <mat-option
                 *ngFor="let periodo of periodosFiltrados"
@@ -130,12 +130,12 @@
                 selectionForm.get('periodoAcademico')?.hasError('required') &&
                 selectionForm.touched
               "
-              >Seleccione un periodo</mat-error
+              >{{ "CODIFICACION.ERROS.SELECT_PERIODO_ACADEMICO" | translate }}</mat-error
             >
           </mat-form-field>
 
           <mat-form-field appearance="fill" class="grid-3">
-            <mat-label>Plan de estudios</mat-label>
+            <mat-label>{{ "CODIFICACION.INPUT_PLAN_ESTUDIOS" | translate }}</mat-label>
             <input
               matInput
               placeholder="Plan de estudios"
@@ -146,7 +146,7 @@
                 selectionForm.get('planEstudios')?.hasError('required') &&
                 selectionForm.touched
               "
-              >Seleccione un plan de estudios</mat-error
+              >{{ "CODIFICACION.ERROS.INPUT_PLAN_ESTUDIOS" | translate }}</mat-error
             >
           </mat-form-field>
         </div>
@@ -158,7 +158,7 @@
             class="boton-primary"
             type="submit"
           >
-            Aceptar
+          {{ "CODIFICACION.BUTTON_ACEPTAR" | translate }}
           </button>
         </mat-card-actions>
       </form>
@@ -174,19 +174,19 @@
 
         <!-- Apellido Column -->
         <ng-container matColumnDef="apellido">
-          <th mat-header-cell *matHeaderCellDef>Apellidos</th>
+          <th mat-header-cell *matHeaderCellDef>{{ "CODIFICACION.TABLE_COLUMNA_APELLIDOS" | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.apellido }}</td>
         </ng-container>
 
         <!-- Nombre Column -->
         <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef>Nombres</th>
+          <th mat-header-cell *matHeaderCellDef>{{ "CODIFICACION.TABLE_COLUMNA_NOMBRES" | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
         </ng-container>
 
         <!-- Estado Admisión Column -->
         <ng-container matColumnDef="estadoAdmision">
-          <th mat-header-cell *matHeaderCellDef>Estado admisión</th>
+          <th mat-header-cell *matHeaderCellDef>{{ "CODIFICACION.TABLE_COLUMNA_ESTADO_ADMISION" | translate }}</th>
           <td mat-cell *matCellDef="let element">
             {{ element.estadoAdmision }}
           </td>
@@ -194,13 +194,13 @@
 
         <!-- Enfasis Column -->
         <ng-container matColumnDef="enfasis">
-          <th mat-header-cell *matHeaderCellDef>Énfasis</th>
+          <th mat-header-cell *matHeaderCellDef>{{ "CODIFICACION.TABLE_COLUMNA_ENFASIS" | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.enfasis }}</td>
         </ng-container>
 
         <!-- Numero Documento Column -->
         <ng-container matColumnDef="numeroDocumento">
-          <th mat-header-cell *matHeaderCellDef>Número documento</th>
+          <th mat-header-cell *matHeaderCellDef>{{ "CODIFICACION.TABLE_COLUMNA_NUMERO_DOCUMENTO" | translate }}</th>
           <td mat-cell *matCellDef="let element">
             {{ element.numeroDocumento }}
           </td>
@@ -208,7 +208,7 @@
 
         <!-- Código Column -->
         <ng-container matColumnDef="codigo">
-          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <th mat-header-cell *matHeaderCellDef>{{ "CODIFICACION.TABLE_CODIGO" | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.codigo }}</td>
         </ng-container>
 
@@ -223,7 +223,7 @@
             class="boton-primary"
             (click)="descargarListado()"
           >
-            Descargar listado
+          {{ "CODIFICACION.BUTTON_DESCARGAR_LISTADO" | translate }}
           </button>
         </div>
         <div class="right-buttons">
@@ -233,7 +233,7 @@
             class="boton-primary"
             (click)="generarCodigos()"
           >
-            Generar códigos al listado
+          {{ "CODIFICACION.BUTTON_GENERAR_CODIGOS" | translate }}
           </button>
           <button
             mat-flat-button
@@ -241,7 +241,7 @@
             class="boton-primary"
             (click)="asignarCodificacion()"
           >
-            Asignar codificación
+          {{ "CODIFICACION.BUTTON_GENERAR_CODIFICACION" | translate }}
           </button>
         </div>
       </mat-card-actions>
