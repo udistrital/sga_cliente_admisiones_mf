@@ -97,3 +97,8 @@ export interface SelectOption {
   value: number;
   viewValue: string;
 }
+
+export interface planEstudios {
+  id: number;
+  nombre: string;
+}
