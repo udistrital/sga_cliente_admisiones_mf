@@ -188,17 +188,22 @@ export class CodificacionComponent {
   //ACCIONES DE LOS BOTONES
 
   onSubmit() {
+    this.getAdmitidos()
+  }
+
+  getAdmitidos() {
     const idProyecto = this.selectionForm.get('proyectoCurricular')?.value
     const idPeriodo = this.selectionForm.get('periodoAcademico')?.value
     const codigoProyecto = this.selectionForm.get('codigoProyectoCurricular')?.value
     console.log(this.periodoValue);
 
     this.codificacionService
-      .getAdmitidos(idPeriodo, 7, this.periodoValue, codigoProyecto)
+      .getAdmitidos(9, 29, this.periodoValue, codigoProyecto)
       .subscribe(
         {
           next: (data) => {
             this.boolListado = true
+            console.log(data.data)
             this.dataSource = data.data
             console.log(data)
             console.log(this.dataSource)
@@ -206,15 +211,31 @@ export class CodificacionComponent {
           error: (error) => console.error(error)
         }
       );
-
   }
 
   generarCodigos() {
-    // Lógica para generar códigos
+    this.codificacionService.postGenerarCodigos(this.dataSource, 1).subscribe({
+      next: (data) => {
+        console.log(data.data)
+        if (data.data) {
+          this.dataSource = data.data
+        }
+      },
+      error: (error) => console.error(error)
+    });
   }
 
   asignarCodificacion() {
-    // Lógica para asignar codificación
+    this.codificacionService.postGuardarCodigos(this.dataSource).subscribe({
+      next: (data) => {
+        console.log(data)
+        if (data.data) {
+          console.log(data.data)
+          this.getAdmitidos()
+        }
+      },
+      error: (error) => console.error(error)
+    });
   }
 
   descargarListado() {
@@ -276,7 +297,7 @@ export class CodificacionComponent {
   asignarValorPeriodo(periodoId: number) {
     const periodoSeleccionado = this.periodosAcademicos.find(p => p.Id === periodoId);
     if (periodoSeleccionado) {
-      this.periodoValue = periodoSeleccionado.Nombre; 
+      this.periodoValue = periodoSeleccionado.Nombre;
     }
   }
 

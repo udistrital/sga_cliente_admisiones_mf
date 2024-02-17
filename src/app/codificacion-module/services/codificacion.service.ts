@@ -36,6 +36,21 @@ export class CodificacionService {
     );
   }
 
+  postGenerarCodigos(data: Array<Record<string, any>>, sortTipo: number) {
+    this.requestManager.setPath("API.ADMISIONES_MID");
+    return this.requestManager.post(
+      `codificacion/generarCodigos/?tipo_sort=${sortTipo}`, data
+    );
+  }
+
+
+  postGuardarCodigos(data: Array<Record<string, any>>) {
+    this.requestManager.setPath("API.ADMISIONES_MID");
+    return this.requestManager.post(
+      "codificacion/guardarCodigos", data
+    );
+  }
+
   getPeriodosAcademicos() {
     this.requestManager.setPath("API.PARAMETRO_CRUD");
     return this.requestManager.get("periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")

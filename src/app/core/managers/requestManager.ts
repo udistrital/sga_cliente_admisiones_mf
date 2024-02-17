@@ -69,7 +69,10 @@ export class RequestManager {
   post(endpoint: any, element: any) {
     return this.http
       .post<any>(`${this.path}${endpoint}`, element, this.httpOptions)
-      .pipe(catchError(this.errManager.handleError));
+      .pipe(map((res) => {
+        const responseBody = res as { Body?: any };
+        return responseBody?.Body ?? res;
+      }), catchError(this.errManager.handleError));
   }
 
   /**
