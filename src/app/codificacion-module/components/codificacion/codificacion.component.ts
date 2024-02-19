@@ -2,62 +2,20 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { CodificacionService } from "../../services/codificacion.service";
 import {
+  MatSnackBar,
+  MatSnackBarAction,
+  MatSnackBarActions,
+  MatSnackBarLabel,
+  MatSnackBarRef,
+} from '@angular/material/snack-bar';
+
+import {
   Admitido,
   NivelFormacion,
   ProyectoCurricular,
   SelectOption,
   planEstudios,
 } from "../../models/types";
-
-
-
-const ELEMENT_DATA: Admitido[] = [
-  {
-    id: 1,
-    apellido: "González",
-    nombre: "Juan",
-    estadoAdmision: "Admitido",
-    enfasis: "Sistemas",
-    numeroDocumento: "123456789",
-    codigo: "20201-ING-001",
-  },
-  {
-    id: 2,
-    apellido: "Martínez",
-    nombre: "Laura",
-    estadoAdmision: "Lista de espera",
-    enfasis: "Industrial",
-    numeroDocumento: "987654321",
-    codigo: "20201-IND-002",
-  },
-  {
-    id: 3,
-    apellido: "Rodríguez",
-    nombre: "Carlos",
-    estadoAdmision: "Admitido",
-    enfasis: "Mecánica",
-    numeroDocumento: "112233445",
-    codigo: "20201-MEC-003",
-  },
-  {
-    id: 4,
-    apellido: "López",
-    nombre: "Sofía",
-    estadoAdmision: "No admitido",
-    enfasis: "Electrónica",
-    numeroDocumento: "998877665",
-    codigo: "20201-ELEC-004",
-  },
-  {
-    id: 5,
-    apellido: "Hernández",
-    nombre: "Miguel",
-    estadoAdmision: "Admitido",
-    enfasis: "Civil",
-    numeroDocumento: "556677889",
-    codigo: "20201-CIV-005",
-  },
-];
 
 @Component({
   selector: "app-codificacion",
@@ -80,6 +38,9 @@ export class CodificacionComponent {
   codigoProyectoCurricular: any = null;
   boolListado = false
   periodoValue = ""
+  isCodigos = false
+  isGenerarCodigos = false
+
 
   displayedColumns: string[] = [
     "id",
@@ -95,7 +56,8 @@ export class CodificacionComponent {
 
   constructor(
     private fb: FormBuilder,
-    private codificacionService: CodificacionService
+    private codificacionService: CodificacionService,
+    private _snackBar: MatSnackBar
   ) {
     this.selectionForm = this.fb.group({
       nivel: ["", Validators.required],
@@ -106,11 +68,16 @@ export class CodificacionComponent {
         "",
         [Validators.required, Validators.pattern("[0-9]*")],
       ],
-      planEstudios: ["", Validators.required],
+      //planEstudios: ["", Validators.required],
       periodoAcademico: ["", Validators.required],
     });
   }
 
+  openSnackBar(infoSnack: string) {
+    this._snackBar.open(infoSnack, "Aceptar", {
+      duration: 3000
+    })
+  }
   //
 
   ngOnInit() {
@@ -189,26 +156,34 @@ export class CodificacionComponent {
 
   onSubmit() {
     this.getAdmitidos()
+    this.openSnackBar('Cargando información')
   }
 
   getAdmitidos() {
     const idProyecto = this.selectionForm.get('proyectoCurricular')?.value
     const idPeriodo = this.selectionForm.get('periodoAcademico')?.value
     const codigoProyecto = this.selectionForm.get('codigoProyectoCurricular')?.value
-    console.log(this.periodoValue);
 
     this.codificacionService
-      .getAdmitidos(9, 29, this.periodoValue, codigoProyecto)
+      .getAdmitidos(idPeriodo, idProyecto, this.periodoValue, codigoProyecto)
       .subscribe(
         {
           next: (data) => {
             this.boolListado = true
-            console.log(data.data)
+            this.openSnackBar('Información encontrada')
             this.dataSource = data.data
-            console.log(data)
-            console.log(this.dataSource)
+            if (data.data[0].codigo != "") {
+              this.isCodigos = true
+              this.isGenerarCodigos = false
+            }
+
+            if (data.data[0].PuntajeFinal == 0) {
+              this.openSnackBar('Recuerda asignar los puntajes de los estudiantes')
+            }
           },
-          error: (error) => console.error(error)
+          error: (error) => {
+            this.openSnackBar('No se encontró información')
+          }
         }
       );
   }
@@ -216,25 +191,25 @@ export class CodificacionComponent {
   generarCodigos() {
     this.codificacionService.postGenerarCodigos(this.dataSource, 1).subscribe({
       next: (data) => {
-        console.log(data.data)
         if (data.data) {
+          this.openSnackBar('Codigos generados')
           this.dataSource = data.data
+          this.isGenerarCodigos = true
         }
       },
-      error: (error) => console.error(error)
+      error: (error) => this.openSnackBar('Codigos no egenrados')
     });
   }
 
   asignarCodificacion() {
     this.codificacionService.postGuardarCodigos(this.dataSource).subscribe({
       next: (data) => {
-        console.log(data)
         if (data.data) {
-          console.log(data.data)
+          this.openSnackBar('Codificación asignada')
           this.getAdmitidos()
         }
       },
-      error: (error) => console.error(error)
+      error: (error) => this.openSnackBar('Codificación no asignada')
     });
   }
 

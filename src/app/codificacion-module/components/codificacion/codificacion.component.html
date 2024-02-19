@@ -118,7 +118,7 @@
             >
           </mat-form-field>
 
-          <mat-form-field appearance="fill" class="grid-3">
+          <!-- <mat-form-field appearance="fill" class="grid-3">
             <mat-label>{{ "CODIFICACION.INPUT_PLAN_ESTUDIOS" | translate }}</mat-label>
             <mat-select formControlName="planEstudios">
               <mat-option
@@ -135,7 +135,7 @@
               "
               >{{ "CODIFICACION.ERROS.INPUT_PLAN_ESTUDIOS" | translate }}</mat-error
             >
-          </mat-form-field>
+          </mat-form-field> -->
         </div>
 
         <mat-card-actions class="centrar">
@@ -226,6 +226,7 @@
             color="primary"
             class="boton-primary"
             (click)="generarCodigos()"
+            [disabled]="isCodigos"
           >
           {{ "CODIFICACION.BUTTON_GENERAR_CODIGOS" | translate }}
           </button>
@@ -234,6 +235,7 @@
             color="primary"
             class="boton-primary"
             (click)="asignarCodificacion()"
+            [disabled]="!isGenerarCodigos"
           >
           {{ "CODIFICACION.BUTTON_GENERAR_CODIFICACION" | translate }}
           </button>
