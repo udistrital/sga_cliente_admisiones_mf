@@ -32,14 +32,14 @@ export class CodificacionService {
   getAdmitidos(periodoId: number, proyectoId: number, periodoValor: string, codigoProyecto: string) {
     this.requestManager.setPath("API.ADMISIONES_MID");
     return this.requestManager.get(
-      `codificacion/getAdmitidos/?id_periodo=${periodoId}&id_proyecto=${proyectoId}&valor_periodo=${periodoValor}&codigo_proyecto=${codigoProyecto}`
+      `codificacion/admitidos/?id_periodo=${periodoId}&id_proyecto=${proyectoId}&valor_periodo=${periodoValor}&codigo_proyecto=${codigoProyecto}`
     );
   }
 
   postGenerarCodigos(data: Array<Record<string, any>>, sortTipo: number) {
     this.requestManager.setPath("API.ADMISIONES_MID");
     return this.requestManager.post(
-      `codificacion/generarCodigos/?tipo_sort=${sortTipo}`, data
+      `codificacion/codigos/?tipo_sort=${sortTipo}`, data
     );
   }
 
@@ -47,7 +47,7 @@ export class CodificacionService {
   postGuardarCodigos(data: Array<Record<string, any>>) {
     this.requestManager.setPath("API.ADMISIONES_MID");
     return this.requestManager.post(
-      "codificacion/guardarCodigos", data
+      "codificacion/codigos-periodo", data
     );
   }
 
