@@ -1,0 +1,61 @@
+<!-- <nb-card>
+  <nb-card-body>
+      <div class="col-md-12"> -->
+          <table class="table-responsive">
+              <thead>
+                  <!-- <tr><th colspan="5">{{"produccion_academica.producciones_academicas" | translate}}</th></tr> -->
+                  <tr class="subheader">
+                      <th>{{'produccion_academica.titulo_produccion_academica' | translate}}</th>
+                      <th>{{'produccion_academica.tipo_produccion_academica' | translate}}</th>
+                      <th>{{'produccion_academica.resumen' | translate}}</th>
+                      <th>{{'produccion_academica.estado_autor' | translate}}</th>
+                      <th>{{'produccion_academica.soportes' | translate}}</th>
+                  </tr>
+              </thead>
+              <tbody *ngIf="info_produccion_academica">
+                  <ng-container *ngFor="let produccion of info_produccion_academica">
+                    <tr *ngIf="!ViendoSoportes || produccion.VerSoportes">
+                      <td>{{produccion.Titulo}}</td>
+                      <td>{{produccion.SubtipoProduccionId.Nombre}}</td>
+                      <td>{{produccion.Resumen}}</td>
+                      <td>{{produccion.EstadoEnteAutorId.EstadoAutorProduccionId.Nombre}}</td>
+                      <td>
+                        <button mat-button type="button" (click)="verListaDocumentos(produccion)">
+                            <i *ngIf="!produccion.VerSoportes" class="nb-list" title="{{'produccion_academica.soportes' | translate}}"></i>
+                            <i *ngIf="produccion.VerSoportes" class="nb-angle-double-left" title="{{'GLOBAL.regresar' | translate}}"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <ng-container *ngIf="produccion.VerSoportes">
+                        <tr class="subheader">
+                            <th colspan="2">{{ 'GLOBAL.soporte_documento' | translate }}</th>
+                            <th>{{ 'GLOBAL.estado' | translate }} </th>
+                            <th>{{ 'admision.observacion' | translate }} </th>
+                            <th>{{ 'solicitudes.soporte' | translate }} </th>
+                        </tr>
+                        <tr *ngFor="let soporte of produccion.Soportes">
+                            <td colspan="2">{{soporte.nombreDocumento}}</td>
+                            <td>{{soporte.estadoObservacion}}</td>
+                            <td>{{soporte.observacion}}</td>
+                            <td>
+                                <button mat-button type="button" (click)="verDocumento(soporte)">
+                                    <i class="nb-search" title="{{'solicitudes.tooltip_ver_registro' | translate}}"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-container>
+                  </ng-container>
+              </tbody>
+              <tfoot *ngIf="(url_editar && gotoEdit) || (updateDocument && canUpdateDocument)">
+                <tr>
+                  <td colspan="5" style="background-color: lightyellow;">
+                    <span (click)="editar()" class="link"><i
+                      class="ion-edit"></i> {{"GLOBAL.actualizar" | translate}}</span>
+                  </td>
+                </tr>
+              </tfoot>
+          </table>
+<!--       </div>
+  </nb-card-body>
+</nb-card>
+ -->

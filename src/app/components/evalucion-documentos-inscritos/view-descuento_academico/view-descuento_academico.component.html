@@ -1,0 +1,38 @@
+<!-- <nb-card>
+    <nb-card-body>
+        <div class="col-md-12"> -->
+            <table class="table-responsive">
+                <thead>
+                    <!-- <tr><th colspan="4">{{"inscripcion.descuento_matricula" | translate}}</th></tr> -->
+                    <tr class="subheader">
+                      <th>{{ 'GLOBAL.soporte_documento' | translate }}</th>
+                      <th>{{ 'admision.estado' | translate }}</th>
+                      <th>{{ 'admision.observacion' | translate }}</th>
+                      <th>{{ 'solicitudes.soporte' | translate }} </th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="info_descuento">
+                    <tr *ngFor="let descuento of info_descuento">
+                        <td> {{descuento.DescuentosDependenciaId?descuento.DescuentosDependenciaId.TipoDescuentoId?descuento.DescuentosDependenciaId.TipoDescuentoId.Nombre:'':''}} </td>
+                        <td> {{descuento.Soporte?descuento.Soporte.estadoObservacion:''}} </td>
+                        <td> {{descuento.Soporte?descuento.Soporte.observacion:''}} </td>
+                        <td *ngIf="descuento.Soporte !== undefined">
+                            <button mat-button type="button" (click)="abrirDocumento(descuento.Soporte)">
+                                <i class="nb-search" title={{variable}}></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot *ngIf="(url_editar && gotoEdit) || (updateDocument && canUpdateDocument)">
+                  <tr>
+                    <td colspan="4" style="background-color: lightyellow;">
+                      <span (click)="editar()" class="link"><i
+                        class="ion-edit"></i> {{"GLOBAL.actualizar" | translate}}</span>
+                    </td>
+                  </tr>
+                </tfoot>
+            </table>
+<!--         </div>
+    </nb-card-body>
+</nb-card>
+ -->
