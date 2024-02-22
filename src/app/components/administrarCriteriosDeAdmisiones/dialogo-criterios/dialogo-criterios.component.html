@@ -1,0 +1,49 @@
+<div class="dinamic-form">
+  <form novalidate [formGroup]="criterioForm" #fform="ngForm" (ngSubmit)="enviarCriterio()" class="form-horizontal">
+    <fieldset [ngClass]="{'fieldseter':true} ">
+      <legend>
+        {{ 'admision.nuevo_criterio' | translate }}
+      </legend>
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field style="width: 100%;">
+            <input matInput type="text" formControlName="Nombre" placeholder="*{{ 'GLOBAL.nombre' | translate }} " required/>
+            <mat-error *ngIf="criterioForm.get('Nombre')?.hasError('required') && criterioForm.get('Nombre')?.touched" >
+              {{ 'admision.error_nombre_criterio' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row my-2">
+        <div class="col-12">
+          <mat-form-field style="width: 100%;">
+            <input matInput type="text" formControlName="Descripcion" placeholder="*{{ 'GLOBAL.descripcion' | translate }} " />
+            <mat-error *ngIf="criterioForm.get('Descripcion')?.hasError('required') && criterioForm.get('Descripcion')?.touched" >
+              {{ 'admision.error_desc_criterio' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row my-2">
+        <div class="col-12">
+          <mat-form-field style="width: 100%;">
+            <input matInput type="text" formControlName="CodigoAbreviacion" placeholder="*{{ 'GLOBAL.codigo_abreviacion' | translate }} " />
+            <mat-error *ngIf="criterioForm.get('CodigoAbreviacion')?.hasError('required') && criterioForm.get('CodigoAbreviacion')?.touched" >
+              {{ 'admision.error_codigo_criterio' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row my-2" *ngIf="!subcriterio">
+        <div class="col-12">
+          <mat-checkbox formControlName="Asistencia" ><mat-label> {{ 'admision.requiere_asistencia' | translate }}</mat-label></mat-checkbox>
+        </div>
+      </div>  
+      <div class="row">
+        <div class="col-12 ml-auto">
+          <button class="float-right boton-primary" mat-button type="submit" [disabled]="criterioForm.invalid">{{ 'GLOBAL.guardar' | translate }} </button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
