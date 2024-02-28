@@ -10,25 +10,25 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { RequestManager } from './managers/requestManager';
 import { HttpErrorManager } from './managers/errorManager';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { PopUpManager } from './managers/popUpManager';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ReactiveFormsModule } from '@angular/forms';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-import {MatCardModule} from '@angular/material/card';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatIconModule} from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
-import {MatNativeDateModule} from '@angular/material/core';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import { EvaluacionInscripcionService } from './services/evaluacion_inscripcion.service';
 
@@ -53,13 +53,17 @@ import { PerfilComponent } from './components/evalucion-documentos-inscritos/per
 import { ViewInscripcionComponent } from './components/evalucion-documentos-inscritos/view-inscripcion/view-inscripcion.component';
 import { ViewInfoPersonaComponent } from './components/evalucion-documentos-inscritos/view-info-persona/view-info-persona.component';
 import { ViewFormacionAcademicaComponent } from './components/evalucion-documentos-inscritos/view-formacion_academica/view-formacion_academica.component';
-import { ViewIdiomasComponent } from './components/evalucion-documentos-inscritos/evaluacion-documentos-inscritos/view-idiomas/view-idiomas.component';
+import { ViewIdiomasComponent } from './components/evalucion-documentos-inscritos/view-idiomas/view-idiomas.component';
 import { ViewExperienciaLaboralComponent } from './components/evalucion-documentos-inscritos/view-experiencia_laboral/view-experiencia_laboral.component';
 import { ViewProduccionAcademicaComponent } from './components/evalucion-documentos-inscritos/view-produccion_academica/view-produccion_academica.component';
 import { ViewDocumentoProgramaComponent } from './components/evalucion-documentos-inscritos/view-documento_programa/view-documento_programa.component';
 import { ViewDescuentoAcademicoComponent } from './components/evalucion-documentos-inscritos/view-descuento_academico/view-descuento_academico.component';
 import { CampusMidService } from './services/campus_mid.service';
 import { ViewPropuestaGradoComponent } from './components/evalucion-documentos-inscritos/view-propuesta_grado/view-propuesta_grado.component';
+import { StoreModule } from '@ngrx/store';
+import { rootReducer } from './store/rootReducer';
+import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+import { ListService } from './store/services/list.service';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -69,6 +73,7 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
+
     DialogoCriteriosComponent,
     AdministradorCriteriosComponent,
     AsignacionCuposComponent,
@@ -90,15 +95,18 @@ export function createTranslateLoader(http: HttpClient) {
     ViewProduccionAcademicaComponent,
     ViewDocumentoProgramaComponent,
     ViewDescuentoAcademicoComponent,
-    ViewPropuestaGradoComponent
-    
+    ViewPropuestaGradoComponent,
+    ListadoAspiranteComponent
 
 
-    
-    
+
+
+
 
   ],
   imports: [
+    StoreModule.forRoot(rootReducer),
+    NgxExtendedPdfViewerModule,
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
@@ -107,7 +115,6 @@ export function createTranslateLoader(http: HttpClient) {
     MatNativeDateModule,
     MatDialogModule,
     MatInputModule,
-
     MatProgressSpinnerModule,
     MatCardModule,
     MatFormFieldModule,
@@ -121,27 +128,28 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     MatExpansionModule,
     MatIconModule,
- 
+
     HttpClientModule,
     TranslateModule.forRoot({
-      loader:{
-        provide:TranslateLoader,
+      loader: {
+        provide: TranslateLoader,
         useFactory: (createTranslateLoader),
-        deps:[HttpClient]
+        deps: [HttpClient]
       }
     })
   ],
   providers: [
     MatSnackBar,
-   EvaluacionInscripcionService,
-   RequestManager,
-   ParametrosService,
-   SgaMidService,
-   DocumentoService,
-   NotificacionesMidService,
-   CampusMidService
-   
-   
+    EvaluacionInscripcionService,
+    RequestManager,
+    ParametrosService,
+    SgaMidService,
+    DocumentoService,
+    NotificacionesMidService,
+    CampusMidService,
+    ListService
+
+
   ],
   bootstrap: [AppComponent]
 })

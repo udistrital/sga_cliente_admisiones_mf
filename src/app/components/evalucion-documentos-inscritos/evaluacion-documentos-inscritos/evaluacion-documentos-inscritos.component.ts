@@ -447,7 +447,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   revisarDocumento(doc: any) {
     this.folderTagtoReload = "";
     const assignConfig = new MatDialogConfig();
-    assignConfig.width = '1300px';
+    assignConfig.width = '1600px';
     assignConfig.height = '750px';
     assignConfig.data = { documento: doc }
     const dialogo = this.dialog.open(DialogoDocumentosComponent, assignConfig);

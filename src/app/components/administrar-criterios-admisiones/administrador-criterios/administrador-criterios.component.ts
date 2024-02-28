@@ -37,6 +37,9 @@ export class AdministradorCriteriosComponent implements OnInit {
     private admisiones: EvaluacionInscripcionService,
     private popUpManager: PopUpManager,
   ) {
+
+    this.subcriterioSource = new MatTableDataSource()
+    this.subcriterio!= new MatTableDataSource()
     this.inicializarTablas()
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.inicializarTablas()

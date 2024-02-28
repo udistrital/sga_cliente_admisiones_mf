@@ -20,9 +20,9 @@
                       <td>{{produccion.Resumen}}</td>
                       <td>{{produccion.EstadoEnteAutorId.EstadoAutorProduccionId.Nombre}}</td>
                       <td>
-                        <button mat-button type="button" (click)="verListaDocumentos(produccion)">
-                            <i *ngIf="!produccion.VerSoportes" class="nb-list" title="{{'produccion_academica.soportes' | translate}}"></i>
-                            <i *ngIf="produccion.VerSoportes" class="nb-angle-double-left" title="{{'GLOBAL.regresar' | translate}}"></i>
+                        <button class="boton-primary " mat-button type="button" (click)="verListaDocumentos(produccion)">
+                            <mat-icon *ngIf="!produccion.VerSoportes" fontIcon="format_list_bulleted" title="{{'produccion_academica.soportes' | translate}}"></mat-icon>
+                            <mat-icon  *ngIf="produccion.VerSoportes" title="{{'GLOBAL.regresar' | translate}}" >arrow_back</mat-icon>
                         </button>
                       </td>
                     </tr>
@@ -38,8 +38,8 @@
                             <td>{{soporte.estadoObservacion}}</td>
                             <td>{{soporte.observacion}}</td>
                             <td>
-                                <button mat-button type="button" (click)="verDocumento(soporte)">
-                                    <i class="nb-search" title="{{'solicitudes.tooltip_ver_registro' | translate}}"></i>
+                                <button class="boton-primary " mat-button type="button" (click)="verDocumento(soporte)">
+                                    <mat-icon fontIcon="search" title="{{'solicitudes.tooltip_ver_registro' | translate}}" ></mat-icon>
                                 </button>
                             </td>
                         </tr>

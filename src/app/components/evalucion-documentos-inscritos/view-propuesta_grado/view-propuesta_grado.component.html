@@ -21,8 +21,8 @@
                             <br>
                             <p><b>{{"admision.estado" | translate}}:</b> {{info_propuesta_grado.Soporte?info_propuesta_grado.Soporte.estadoObservacion:''}}</p>
                             <p><b>{{"admision.observacion" | translate}}:</b> {{info_propuesta_grado.Soporte?info_propuesta_grado.Soporte.observacion:''}}</p>
-                            <button mat-button type="button" (click)="verPropuesta(info_propuesta_grado.Soporte)">
-                                <i class="nb-search" title={{variable}}></i>
+                            <button class="boton-primary" mat-button type="button" (click)="verPropuesta(info_propuesta_grado.Soporte)">
+                                <mat-icon fontIcon="search"></mat-icon>
                             </button>
                         </td>
                     </tr>

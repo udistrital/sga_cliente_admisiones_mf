@@ -207,16 +207,16 @@
     <!-- <div class="col-md-12" *ngIf="(contTag >= maxTags)"> -->
     <div class="col-md-12" *ngIf="progressDownloadDocs >= 100"
       style="column-gap: 10px;display: flex;justify-content: center;">
-      <button *ngIf="en_revision" mat-raised-button color="primary" (click)="descargar_compilado_zip()">
+      <button *ngIf="en_revision" class="boton-primary" (click)="descargar_compilado_zip()">
         {{ 'admision.descargar_zip' | translate }}
       </button>
-      <button *ngIf="estado_inscripcion=='INSCRITO con Observación' && en_revision" mat-raised-button color="primary"
+      <button *ngIf="estado_inscripcion=='INSCRITO con Observación' && en_revision" class="boton-primary" mat-raised-button color="primary"
         (click)="notificar_observaciones_aspirante()">
         {{ 'admision.notificar_observaciones' | translate }}
       </button>
-      <button *ngIf="imprimir" mat-raised-button color="primary" (click)="editar($event,'salir_preinscripcion')">{{
+      <button *ngIf="imprimir" class="boton-primary" mat-raised-button color="primary" (click)="editar($event,'salir_preinscripcion')">{{
         'GLOBAL.regresar' | translate }}</button>
-      <button *ngIf="imprimir" mat-raised-button color="link" (click)="descargar_comprobante_inscription()">{{
+      <button *ngIf="imprimir" class="boton-primary" mat-raised-button color="link" (click)="descargar_comprobante_inscription()">{{
         'inscripcion.generar_comprobante' | translate }}</button>
     </div>
 

@@ -78,14 +78,14 @@ export class EvaluacionAspirantesComponent implements OnInit {
   percentage_tab_info = [];
   percentage_tab_expe = [];
   percentage_tab_acad = [];
-  proyectos : any;
-  criterios : any;
-  periodos :any = [];
+  proyectos: any;
+  criterios: any;
+  periodos: any = [];
   show_icfes = false;
   show_profile = false;
   show_expe = false;
   show_acad = false;
-  Aspirantes : any;
+  Aspirantes: any;
 
   notas: boolean;
   save: boolean;
@@ -110,11 +110,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
   nivel_load: any;
   selectednivel: any;
   tipo_criterio!: TipoCriterio;
-  dataSourceColumn = ['aspirantes', 'asistencia', 'presentacion', 'expresion', 'compresion', 'acciones']
-   dataSource!: MatTableDataSource<any>;
-   datasourceButtonsTable: boolean = false
+  dataSourceColumn :any = []
+  nameColumns: any
+  dataSource!: MatTableDataSource<any>;
+  datasourceButtonsTable: boolean = false
   settings: any;
-  columnas : any;
+  columnas: any;
   criterio = [];
   cantidad_aspirantes: number = 0;
 
@@ -131,7 +132,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private tercerosService: TercerosService,
     private sgaMidService: SgaMidService,
     private popUpManager: PopUpManager,
-   
+
     private autenticationService: ImplicitAutenticationService,) {
     this.translate = translate;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => { });
@@ -157,7 +158,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.info_persona_id = this.userService.getPersonaId();
       await this.cargarPeriodo();
       await this.loadLevel();
-    } catch (error:any) {
+    } catch (error: any) {
       Swal.fire({
         icon: 'error',
         title: error.status + '',
@@ -214,14 +215,14 @@ export class EvaluacionAspirantesComponent implements OnInit {
     );
   }
 
-  filtrarProyecto(proyecto:any) {
+  filtrarProyecto(proyecto: any) {
     if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
       return true
     }
     if (proyecto['NivelFormacionId']['NivelFormacionPadreId'] !== null) {
       if (proyecto['NivelFormacionId']['NivelFormacionPadreId']['Id'] === this.selectednivel) {
         return true
-      }else{
+      } else {
         return false
       }
     } else {
@@ -238,27 +239,27 @@ export class EvaluacionAspirantesComponent implements OnInit {
         (response: any) => {
           this.autenticationService.getRole().then(
             // (rol: Array <String>) => {
-              (rol:any) => {
-              let r = rol.find((role:any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
+            (rol: any) => {
+              let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
               if (r) {
                 this.proyectos = <any[]>response.filter(
-                  (proyecto:any) => this.filtrarProyecto(proyecto),
+                  (proyecto: any) => this.filtrarProyecto(proyecto),
                 );
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                this.sgaMidService.get('admision/dependencia_vinculacion_tercero/'+id_tercero).subscribe(
+                this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(
-                     (proyecto:any) => dependencias.includes(proyecto.Id)
+                      (proyecto: any) => dependencias.includes(proyecto.Id)
                     );
                     if (dependencias.length > 1) {
-                      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'),this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
+                      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
                       //this.proyectos.forEach(p => { p.Id = undefined })
                     }
                   },
                   (error: any) => {
-                    this.popUpManager.showErrorAlert(this.translate.instant('admision.no_vinculacion_no_rol')+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
+                    this.popUpManager.showErrorAlert(this.translate.instant('admision.no_vinculacion_no_rol') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
                   }
                 );
               }
@@ -278,13 +279,13 @@ export class EvaluacionAspirantesComponent implements OnInit {
       (response: any) => {
         if (response[0].Id !== undefined && response[0] !== '{}') {
           this.criterios = <any>response;
-          this.criterios = this.criterios.filter((e:any) => e.PorcentajeGeneral !== 0);
+          this.criterios = this.criterios.filter((e: any) => e.PorcentajeGeneral !== 0);
           // this.btnCalculo = true;
           this.btnCalculo = false;
           this.selectcriterio = false;
           this.notas = false;
           this.criterio_selected = [];
-          this.criterios.forEach(async (element:any) => {
+          this.criterios.forEach(async (element: any) => {
             await this.criterio_selected.push(element.RequisitoId)
             // await this.loadInfo(element.RequisitoId.Id);
           });
@@ -313,10 +314,19 @@ export class EvaluacionAspirantesComponent implements OnInit {
   createTable() {
     return new Promise(async (resolve, reject) => {
       const IdCriterio = sessionStorage.getItem('tipo_criterio');
-      const data = await this.loadColumn(IdCriterio)
+      const data:any = await this.loadColumn(IdCriterio)
       console.log(IdCriterio)
       console.log(data)
-      
+      const keys = Object.keys(data!);
+      const titles = keys.map(key => data[key].title);
+      console.log(titles)
+      this.columnas = titles
+      this.columnas = titles
+   
+      this.dataSourceColumn = (titles)
+      this.dataSourceColumn.push('acciones')
+      console.log(this.dataSourceColumn)
+
       this.settings = {
         columns: data,
         actions: {
@@ -348,16 +358,16 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.translate.use(language);
   }
 
-  onEditConfirm(event:any) {
+  onEditConfirm(event: any) {
     console.log(event)
     this.guardarEvaluacion(event.newData).then(() => event.confirm.resolve(event.newData))
   }
 
-  devolverdatasourceButtonsTable(){
+  devolverdatasourceButtonsTable() {
     this.datasourceButtonsTable = false
   }
 
-  async guardarEvaluacion(datos:any) {
+  async guardarEvaluacion(datos: any) {
     return new Promise((resolve, reject) => {
       const Evaluacion: any = {};
 
@@ -474,7 +484,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     }
   }
 
-  async perfil_editar(event:any) {
+  async perfil_editar(event: any) {
     this.loading = true;
     this.save = true;
     this.tipo_criterio = new TipoCriterio();
@@ -499,32 +509,32 @@ export class EvaluacionAspirantesComponent implements OnInit {
   async loadAspirantes() {
     return new Promise((resolve, reject) => {
 
-      this.sgaMidService.get('admision/getlistaaspirantespor?id_periodo='+this.periodo.Id+'&id_proyecto='+this.proyectos_selected+'&tipo_lista=2')
-      .subscribe(
-        (response: any) => {
-          if (response.Success && response.Status == "200") {
-            this.Aspirantes = response.Data;
-            this.cantidad_aspirantes = this.Aspirantes.length;
-            console.log(this.Aspirantes)
-             this.dataSource = new MatTableDataSource(this.Aspirantes);
-             setTimeout(() => {
-              this.dataSource.paginator = this.paginator;
-              this.dataSource.sort = this.sort;
+      this.sgaMidService.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2')
+        .subscribe(
+          (response: any) => {
+            if (response.Success && response.Status == "200") {
+              this.Aspirantes = response.Data;
+              this.cantidad_aspirantes = this.Aspirantes.length;
+              console.log(this.Aspirantes)
+              this.dataSource = new MatTableDataSource(this.Aspirantes);
+              setTimeout(() => {
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
               }, 300);
 
-            resolve(this.Aspirantes)
+              resolve(this.Aspirantes)
+            }
+          },
+          (error: HttpErrorResponse) => {
+            reject(error)
+            Swal.fire({
+              icon: 'warning',
+              title: this.translate.instant('admision.titulo_no_aspirantes'),
+              text: this.translate.instant('admision.error_no_aspirantes'),
+              confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+            });
           }
-        },
-        (error: HttpErrorResponse) => {
-          reject(error)
-          Swal.fire({
-            icon: 'warning',
-            title: this.translate.instant('admision.titulo_no_aspirantes'),
-            text: this.translate.instant('admision.error_no_aspirantes'),
-            confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-          });
-        }
-      );
+        );
 
       /* this.inscripcionService.get('inscripcion?query=EstadoInscripcionId__Id:5,ProgramaAcademicoId:' +
         this.proyectos_selected + ',PeriodoId:' + this.periodo.Id + '&sortby=Id&order=asc').subscribe(
@@ -584,7 +594,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                   asistente['Asistencia'] = false
                 }
 
-                this.Aspirantes.forEach((aspirante:any) => {
+                this.Aspirantes.forEach((aspirante: any) => {
                   if (asistente.Aspirantes === aspirante.Aspirantes) {
                     for (const columna in asistente) {
                       aspirante[columna] = asistente[columna]
@@ -601,8 +611,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
             this.verificarEvaluacion();
             resolve(data);
           } else if (response.Response.Code === '404') {
-            this.Aspirantes.forEach((aspirante:any) => {
-              this.columnas.forEach((columna:any) => {
+            this.Aspirantes.forEach((aspirante: any) => {
+              this.columnas.forEach((columna: any) => {
                 aspirante[columna] = '';
                 if (columna === 'Asistencia') {
                   aspirante[columna] = false;
@@ -620,7 +630,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
             resolve('error');
           }
         },
-        (error:any) => {
+        (error: any) => {
           this.popUpManager.showErrorToast(this.translate.instant('admision.error'));
           reject(error);
         },
@@ -628,7 +638,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     });
   }
 
-  itemSelect(event:any): void {
+  itemSelect(event: any): void {
     this.datasourceButtonsTable = true
     if (this.asistencia !== undefined) {
       event.data.Asistencia = this.asistencia;
@@ -652,7 +662,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                 sort: true,
                 sortDirection: 'asc',
                 width: '55%',
-                valuePrepareFunction: (value:any) => {
+                valuePrepareFunction: (value: any) => {
                   return value;
                 },
               };
@@ -666,8 +676,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
                   width: '4%',
                   type: 'custom',
                   renderComponent: CheckboxAssistanceComponent,
-                  onComponentInitFunction: (instance:any) => {
-                    instance.save.subscribe((data:any) => {
+                  onComponentInitFunction: (instance: any) => {
+                    instance.save.subscribe((data: any) => {
                       // sessionStorage.setItem('EstadoInscripcion', data);
                       this.asistencia = data;
                       if (data === '') {
@@ -693,7 +703,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                           title: response[i].Nombre + ' (' + porcentaje.areas[key].Porcentaje + '%)',
                           editable: true,
                           filter: false,
-                          valuePrepareFunction: (value:any) => {
+                          valuePrepareFunction: (value: any) => {
                             return value;
                           },
                         };
@@ -711,7 +721,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                   type: 'number',
                   filter: false,
                   width: '35%',
-                  valuePrepareFunction: (value:any) => {
+                  valuePrepareFunction: (value: any) => {
                     return value;
                   },
                 }

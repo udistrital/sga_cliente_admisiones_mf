@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { PopUpManager } from '../../../managers/popUpManager';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'dialogo-documentos',
@@ -33,7 +33,10 @@ export class DialogoDocumentosComponent implements OnInit {
     this.dialogRef.backdropClick().subscribe(() => this.dialogRef.close());
   }
 
+
+
   ngOnInit() {
+    console.log(this.data)
     this.isPDF = true;
     this.loading = true;
     this.tabName = this.data.documento.tabName || "";
@@ -111,6 +114,11 @@ export class DialogoDocumentosComponent implements OnInit {
     } else {
       this.popUpManager.showErrorAlert(this.translate.instant('GLOBAL.observacion_requerida'))
     }
+  }
+
+
+  seguroUrl(url: string): SafeResourceUrl {
+    return this.sanitization.bypassSecurityTrustResourceUrl(url);
   }
 
   docCargado() {

@@ -1,5 +1,5 @@
-<mat-card style="width: 90vw;">
-    <mat-card-content>
+<mat-card class="card" >
+    <mat-card-content style="width: 100%;">
       <div class=col-12>
         <fieldset [ngClass]="{'fieldseter':true}" >
           <legend>
@@ -56,7 +56,7 @@
           </mat-card>
   
           <!--Formularios------------------------------------------------------------->
-          <mat-card [hidden]="!show_cupos">
+          <mat-card class="card" [hidden]="!show_cupos" >
               <mat-card-content>
                   <mat-tab-group fullWidth >
                       <mat-tab label="{{ 'cupos.cupos' | translate }}" *ngIf="!preinscripcion">

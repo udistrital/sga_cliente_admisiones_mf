@@ -1,4 +1,6 @@
-
+.card{
+  margin-top: 15px;
+}
 
 .mat-expansion-panel-body{
   overflow: auto;
@@ -26,6 +28,11 @@
   vertical-align: middle;
 }
 
+.folder-icon{
+  font-size: 150px;
+width: 100%;
+height: 100%;
+}
 .percentage {
   font-size: 1.6rem;
 }
@@ -53,12 +60,30 @@
   background-color: transparent !important;
 }
 
+
+
+
 th{
  color: black;
 }
 
-.folder{
-  font-size: 1030px;
+.input-table{
+  width: 100%;
+  height: 1.5vw;
+  border: none;
+  background-color: transparent;
+}
+
+.table-button-edit{
+  border:none; 
+  width: 100%; 
+  background: transparent;
+
+}
+.table-button{
+  border:none; 
+  width: 50%; 
+  background: transparent;
 }
 
 .boton-primary {
@@ -71,4 +96,9 @@ th{
   cursor: pointer;
   color: white !important;
   padding: 8px;
+}
+
+
+.m-10{
+  margin: 30px;
 }

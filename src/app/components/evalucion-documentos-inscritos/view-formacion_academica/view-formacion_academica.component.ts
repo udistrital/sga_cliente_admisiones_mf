@@ -322,8 +322,10 @@ export class ViewFormacionAcademicaComponent implements OnInit {
   }
 
   abrirDocumento(documento:any) {
+  
     this.newNuxeoService.getByIdLocal(documento.DocumentoId)
       .subscribe(file => {
+
         documento.Documento = file;
         this.revisar_doc.emit(documento);
       }, error => {

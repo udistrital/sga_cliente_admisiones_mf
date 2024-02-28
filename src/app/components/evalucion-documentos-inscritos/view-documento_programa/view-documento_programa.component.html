@@ -19,8 +19,9 @@
                         <td> {{documento.estadoObservacion}} </td>
                         <td> {{documento.observacion}} </td>
                         <td *ngIf="documento.DocumentoId !== undefined">
-                          <button mat-button type="button" (click)="abrirDocumento(documento)">
-                            <i class="nb-search" title={{variable}}></i></button>
+                          <button class="boton-primary" mat-button type="button" (click)="abrirDocumento(documento)">
+                            <mat-icon fontIcon="search"></mat-icon>
+                        </button>
                         </td>
                     </tr>
                 </tbody>
