@@ -29,7 +29,8 @@
       "TABLE_CODIGO": "Code",
       "BUTTON_DESCARGAR_LISTADO": "Download List",
       "BUTTON_GENERAR_CODIGOS": "Generate Codes",
-      "BUTTON_GENERAR_CODIFICACION": "Assign Codification"
+      "BUTTON_GENERAR_CODIFICACION": "Assign Codification",
+      "TABLE_COLUMNA_PUNTAJE": "score"
     }
   }
   
