@@ -20,6 +20,7 @@ import { AnyService } from 'src/app/services/any.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 @Component({
   selector: 'evaluacion-aspirantes',
@@ -131,6 +132,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private evaluacionService: EvaluacionInscripcionService,
     private tercerosService: TercerosService,
     private sgaMidService: SgaMidService,
+    private sgaMidAdmisiones: SgaAdmisionesMid,
     private popUpManager: PopUpManager,
 
     private autenticationService: ImplicitAutenticationService,) {
@@ -508,10 +510,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   async loadAspirantes() {
     return new Promise((resolve, reject) => {
-
+      console.log(this.nivel_load)
+      console.log('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2')
       this.sgaMidService.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2')
         .subscribe(
           (response: any) => {
+            console.log(response)
             if (response.Success && response.Status == "200") {
               this.Aspirantes = response.Data;
               this.cantidad_aspirantes = this.Aspirantes.length;

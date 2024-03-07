@@ -6,7 +6,10 @@
       </legend>
       <div class="row">
         <div class="col-6" >
+          <!-- <ngx-extended-pdf-viewer [src]="documento" [height]="'65vh'"  (pdfLoaded)="docCargado()" *ngIf="isPDF">
+          </ngx-extended-pdf-viewer> -->
            <iframe [src]="seguroUrl(documento)" width="100%" height="600px" frameborder="0" ></iframe>
+           
           <div class="viewer" *ngIf="!isPDF">
             <img [src]="documento" [alt]="tabName">
           </div>

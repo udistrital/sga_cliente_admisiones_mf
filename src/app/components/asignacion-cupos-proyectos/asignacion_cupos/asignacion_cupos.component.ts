@@ -9,8 +9,8 @@ import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.se
 import { PopUpManager } from '../../../managers/popUpManager';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { UserService } from 'src/app/services/users.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 
 @Component({
@@ -87,7 +87,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     private popUpManager: PopUpManager,
     private projectService: ProyectoAcademicoService,
     private userService: UserService,
-    private sgaMidService: SgaMidService,
+    private sgaAdmisiones: SgaAdmisionesMid,
     private autenticationService: ImplicitAutenticationService,
   ) {
     this.translate = translate;
@@ -194,7 +194,8 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
               
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                this.sgaMidService.get('admision/dependencia_vinculacion_tercero/'+id_tercero).subscribe(
+                console.log('admision/dependencia_vinculacion_tercero/'+id_tercero)
+                this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/'+id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(

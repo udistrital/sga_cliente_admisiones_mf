@@ -24,11 +24,11 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './criterio_admision.component.html',
   styleUrls: ['./criterio_admision.component.scss'],
 })
-export class CriterioAdmisionComponent implements  OnChanges {
+export class CriterioAdmisionComponent implements OnChanges {
 
 
 
-
+  @ViewChild('inputRef') inputRef!: ElementRef;
   @Input('criterios_select')
   set name(inscripcion_id: number) {
     this.inscripcion_id = inscripcion_id;
@@ -45,6 +45,8 @@ export class CriterioAdmisionComponent implements  OnChanges {
 
   @Output() eventChange = new EventEmitter();
   // tslint:disable-next-line: no-output-rename
+
+  
   @Output('result') result: EventEmitter<any> = new EventEmitter();
 
   inscripcion_id!: number;
@@ -110,11 +112,11 @@ export class CriterioAdmisionComponent implements  OnChanges {
 
   settings: any;
   settingsSubcriterio: any;
-  dataSourceColumns = ["criterio","porentaje","acciones"]
+  dataSourceColumns = ["criterio", "porentaje", "acciones"]
   dataSource!: MatTableDataSource<any>;
   dataSourceSubcriterio!: MatTableDataSource<any>;
-  porcentajeCriterioTable:boolean = false
-  porcentajeSubcriterioTable:boolean = false
+  porcentajeCriterioTable: boolean = false
+  porcentajeSubcriterioTable: boolean = false
   data: any[] = [];
   dataSubcriterios: any[] = [];
   porcentajeTotal: number = 0;
@@ -167,6 +169,22 @@ export class CriterioAdmisionComponent implements  OnChanges {
     }
   }
 
+  buttonedit(row: any): void {
+    row.mostrarBotones = !row.mostrarBotones;
+  
+    if (row.mostrarBotones) {
+      // Si se activa el modo de edición, desactiva el resto de los modos de edición en otras filas
+      this.data.forEach((item: any) => {
+        if (item !== row) {
+          item.mostrarBotones = false;
+        }
+      });
+
+      setTimeout(() => {
+        this.inputRef.nativeElement.focus();
+      });
+    }
+  }
   nivel_load() {
     this.projectService.get('nivel_formacion?limit=0').subscribe(
       // (response: NivelFormacion[]) => {
@@ -525,12 +543,12 @@ export class CriterioAdmisionComponent implements  OnChanges {
       },
     }
   }
-  devolverBotoneditarCriterio(){
-    this.porcentajeCriterioTable= false
+  devolverBotoneditarCriterio() {
+    this.porcentajeCriterioTable = false
     this.devolverBotoneditarSubciterio()
   }
-  devolverBotoneditarSubciterio(){
-    this.porcentajeSubcriterioTable= false
+  devolverBotoneditarSubciterio() {
+    this.porcentajeSubcriterioTable = false
   }
   onEdit(event: any) {
     this.porcentajeCriterioTable = true

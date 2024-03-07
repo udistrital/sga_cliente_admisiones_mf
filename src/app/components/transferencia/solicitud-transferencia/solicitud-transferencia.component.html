@@ -1,0 +1,140 @@
+<mat-card *ngIf="process === 'my'">
+    <mat-card-header>
+        {{ 'inscripcion.solicitud_transferencia' | translate }}
+    </mat-card-header>
+    <mat-card-content>
+        <div style="padding: 1rem;">
+            <fieldset class="fieldseter">
+                <legend>
+                    <small>&nbsp; {{ 'inscripcion.inscripcion_general'| translate}}</small>
+                </legend>
+                <div style="display: -webkit-box; text-align-last: left;">
+                    <div class="col-4">
+                        <b>{{ 'inscripcion.periodo' | translate }}</b>: {{ periodo }}
+                    </div>
+                    <div class="col-4">
+                        <b>{{ 'inscripcion.nivel' | translate }}:</b> {{ nivelNombre }}
+                    </div>
+
+                    <div class="col-4">
+                        <b>{{ 'inscripcion.tipo' | translate }}:</b> {{ tipo }}
+                    </div>
+                </div>
+                <br />
+            </fieldset>
+        </div>
+        <div *ngIf="!mostrarDocumento" style="padding: 1rem;">
+            <form class="form-horizontal">
+                <fieldset class="fieldseter">
+                    <legend>
+                        <small>&nbsp; Respuesta de solicitud</small>
+                    </legend>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12">
+                            <mat-form-field style="width: 100%;" class="form-group" floatLabel="always">
+                                <textarea matInput placeholder="{{ 'inscripcion.comentarios' | translate }}" matTextareaAutosize matAutosizeMinRows="3"
+                                    matAutosizeMaxRows="6" [(ngModel)]="comentario" [ngModelOptions]="{standalone: true}" type="text"
+                                    class="col-sm-12 col-xs-12" [disabled]="true"></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <ngx-dinamicform [normalform]="formTransferencia" [modeloData]="dataTransferencia" (result)="validarForm($event)">
+            <div *ngIf="solicitudCreada && mostrarDocumento" class="files-container">
+                <!-- <ngx-download-file-nuxeo (loading)="changeLoading($event)" [idDoc]="file.id" [label]="file.label">
+                </ngx-download-file-nuxeo> -->
+            </div>,.
+        </ngx-dinamicform>
+
+        <div style="padding: 1rem;">
+            <fieldset class="fieldseter" *ngIf="solicitudCreada">
+                <!-- <ngx-inscripcion_general [inscripcion_id]="id" (result)="terminadaInscripcion = $event === 100 ? true : false"
+                    [inscriptionSettings]="inscriptionSettings">
+                </ngx-inscripcion_general> -->
+            </fieldset>
+        </div>
+    </mat-card-content>
+
+    <mat-card-footer>
+        <div class="text-center">
+            <button mat-button type="button" (click)="goback()">
+                {{ 'GLOBAL.cancelar' | translate }}
+            </button>
+            <button [disabled]="!terminadaInscripcion" mat-button type="button" (click)="send()">
+                {{ 'GLOBAL.enviar' | translate }}
+            </button>
+        </div>
+    </mat-card-footer>
+</mat-card>
+
+<mat-card>
+    <mat-card-header>
+        {{ 'inscripcion.solicitud_transferencia' | translate }}
+    </mat-card-header>
+    <mat-card-content>
+        <div style="padding: 1rem;">
+            <fieldset class="fieldseter m-4">
+                <legend>
+                    <small>&nbsp; {{ 'inscripcion.inscripcion_general'| translate}}</small>
+                </legend>
+                <div style="display: -webkit-box; text-align-last: left;">
+                    <div class="col-4">
+                        <b>{{ 'GLOBAL.nombre' | translate }}</b>: {{ nombreEstudiante }}
+                    </div>
+                    <div class="col-4" *ngIf="tipo !== 'Transferencia externa'">
+                        <b>{{ 'GLOBAL.codigo' | translate }}:</b> {{ codigoEstudiante }}
+                    </div>
+
+                    <div class="col-4">
+                        <b>{{ 'GLOBAL.documento' | translate }}:</b> {{ documentoEstudiante }}
+                    </div>
+                </div>
+                <div style="display: -webkit-box; text-align-last: left;">
+                    <div class="col-4">
+                        <b>{{ 'inscripcion.periodo' | translate }}</b>: {{ periodo }}
+                    </div>
+                    <div class="col-4">
+                        <b>{{ 'inscripcion.nivel' | translate }}:</b> {{ nivelNombre }}
+                    </div>
+                    <div class="col-4">
+                        <b>{{ 'inscripcion.tipo' | translate }}:</b> {{ tipo }}
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <ngx-dinamicform [normalform]="formTransferencia" [modeloData]="dataTransferencia">
+            <div *ngIf="solicitudCreada" class="files-container">
+                <!-- <ngx-download-file-nuxeo (loading)="changeLoading($event)" [idDoc]="file.id" [label]="file.label">
+                </ngx-download-file-nuxeo> -->
+            </div>
+        </ngx-dinamicform>
+
+        <ngx-dinamicform [normalform]="formRespuesta" (result)="respuestaForm($event)"
+            (interlaced)="validarFormRespuesta($event)">
+            <div clas="row">
+                <div class="col-6">
+                    <b>{{ 'GLOBAL.nombre' | translate }}</b>: {{ nombreCordinador }}
+                </div>
+                <div class="col-6">
+                    <b>{{ 'GLOBAL.rol' | translate }}:</b> {{ rolCordinador }}
+                </div>
+            </div>
+        </ngx-dinamicform>
+
+    </mat-card-content>
+
+    <mat-card-footer>
+        <div class="text-center ">
+            <button class="boton-primary m-20 " mat-button type="button" (click)="goback()">
+                {{ 'GLOBAL.cancelar' | translate }}
+            </button>
+            <button class="boton-primary m-20" mat-button type="button" (click)="generarMatricula()">
+                {{ 'inscripcion.generar_matricula' | translate }}
+            </button>
+        </div>
+    </mat-card-footer>
+</mat-card>

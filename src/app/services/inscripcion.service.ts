@@ -24,7 +24,7 @@ export class InscripcionService {
     this.requestManager.setPath('INSCRIPCION_SERVICE');
     return this.requestManager.get(endpoint);
   }
-  post(endpoint:string, element:string) {
+  post(endpoint:string, element:any) {
     this.requestManager.setPath('INSCRIPCION_SERVICE');
     return this.requestManager.post(endpoint, element);
   }

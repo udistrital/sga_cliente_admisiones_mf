@@ -64,6 +64,22 @@ import { StoreModule } from '@ngrx/store';
 import { rootReducer } from './store/rootReducer';
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 import { ListService } from './store/services/list.service';
+import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
+import { DocProgramaObligatorioComponent } from './components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component';
+import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
+import { SelectDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/select-documento-proyecto/select-documento-proyecto.component';
+import { ListDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/list-documento-proyecto/list-documento-proyecto.component';
+import { CrudDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-documento-proyecto/crud-documento-proyecto.component';
+import { SolicitudDescuento } from './models/descuento/solicitud_descuento';
+import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
+import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
+import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
+import { DialogoDocumentosTransferenciasComponent } from './components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
+import { CrudInfoPersonaComponent } from './components/transferencia/crud-info_persona/crud-info_persona.component';
+import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
+import { SgaAdmisionesMid } from './services/sga_admisiones_mid.service';
+
+
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -96,7 +112,23 @@ export function createTranslateLoader(http: HttpClient) {
     ViewDocumentoProgramaComponent,
     ViewDescuentoAcademicoComponent,
     ViewPropuestaGradoComponent,
-    ListadoAspiranteComponent
+    ListadoAspiranteComponent,
+    AsignarDocumentosDescuentosComponent,
+    DocProgramaObligatorioComponent,
+    SelectDescuentoProyectoComponent,
+    SelectDocumentoProyectoComponent,
+    ListDocumentoProyectoComponent,
+    CrudDocumentoProyectoComponent,
+    SolicitudTransferenciaComponent,
+    DefSuiteInscripProgramaComponent,
+    TransferenciaComponent,
+    DialogoDocumentosTransferenciasComponent,
+    CrudInfoPersonaComponent,
+    CustomizeButtonComponent,
+    AsignacionCuposComponent
+
+    
+
 
 
 
@@ -147,7 +179,8 @@ export function createTranslateLoader(http: HttpClient) {
     DocumentoService,
     NotificacionesMidService,
     CampusMidService,
-    ListService
+    ListService,
+    SgaAdmisionesMid
 
 
   ],

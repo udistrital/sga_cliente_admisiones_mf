@@ -131,6 +131,7 @@
                     <ng-container *ngIf="title === 'acciones'">
                       <td mat-cell *matCellDef="let row">
                         <!-- Lógica para las acciones -->
+                        <div class="separacion-acciones">
                         <button aria-hidden="false" class="table-button-edit" *ngIf="!datasourceButtonsTable"
                           title="{{ 'admision.tooltip_editar' | translate }}" class="table-button-edit icon"
                           (click)="itemSelect({ data: row })">
@@ -146,6 +147,7 @@
                           (click)="devolverdatasourceButtonsTable()">
                           <mat-icon fontIcon="close"></mat-icon>
                         </button>
+                      </div>
                       </td>
                     </ng-container>
                   </ng-container>
