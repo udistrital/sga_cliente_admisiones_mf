@@ -21,6 +21,7 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { Inscripcion } from 'src/app/models/inscripcion/inscripcion';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'crud-asignacion-cupo',
@@ -67,6 +68,11 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   info_consultar_aspirantes: any;
   niveles!: NivelFormacion[];
   show_posgrado: boolean = false;
+
+  dataSource: any;
+  displayedColumns: string[] = ['inscripcion', 'tipoCupo', 'estado', 'cupos', 'acciones'];
+  totalCupos: number = 0;
+  cupo: any;
 
   constructor(
     private translate: TranslateService,
@@ -120,7 +126,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     });
 
     this.loading = false;
-
+/*
     this.settings_emphasys1 = {
       delete: {
         deleteButtonContent: '<i class="nb-trash"></i>',
@@ -184,6 +190,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         },
       },
     };
+    */
   }
 
   construirFormPregrado() {
@@ -304,12 +311,38 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         }
       });
   }
-
-
-
-  ngOnInit() {
+    
+  ngOnInit(): void {
     this.show_posgrado = this.info_nivel;
+    this.dataSource = new MatTableDataSource([
+      {
+        "inscripcion": "nueva",
+        "tipoCupo": "Normal",
+        "estado": "Activo",
+        "cupos": 10
+      },
+      {
+        "inscripcion": "nueva",
+        "tipoCupo": "Afro",
+        "estado": "Activo",
+        "cupos": 5
+      }
+    ]);
+
+    this.calcularTotalCupos();
+
+    this.dataSource.data.forEach((cupo: any) => {
+      cupo.cupos.subscribe((value: number) => {
+        this.calcularTotalCupos();
+      });
+    });
   }
+
+  calcularTotalCupos(): void {
+    this.totalCupos = this.dataSource.data.reduce((a: number, b: any) => a + b.cupos, 0);
+  }
+
+
 
   ngOnChanges() {
     this.show_posgrado = this.info_nivel;
