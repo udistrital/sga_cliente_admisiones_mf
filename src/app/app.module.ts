@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { PopUpManager } from './managers/popUpManager';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -70,6 +71,8 @@ import { SelectDescuentoProyectoComponent } from './components/asignar-documento
 import { SelectDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/select-documento-proyecto/select-documento-proyecto.component';
 import { ListDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/list-documento-proyecto/list-documento-proyecto.component';
 import { CrudDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-documento-proyecto/crud-documento-proyecto.component';
+import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
+import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
 import { SolicitudDescuento } from './models/descuento/solicitud_descuento';
 import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
@@ -125,15 +128,9 @@ export function createTranslateLoader(http: HttpClient) {
     DialogoDocumentosTransferenciasComponent,
     CrudInfoPersonaComponent,
     CustomizeButtonComponent,
-    AsignacionCuposComponent
-
-    
-
-
-
-
-
-
+    AsignacionCuposComponent,
+    ListadoHistoricoComponent,
+    LiquidacionRecibosComponent
 
   ],
   imports: [
@@ -160,6 +157,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     MatExpansionModule,
     MatIconModule,
+    MatStepperModule,
 
     HttpClientModule,
     TranslateModule.forRoot({
