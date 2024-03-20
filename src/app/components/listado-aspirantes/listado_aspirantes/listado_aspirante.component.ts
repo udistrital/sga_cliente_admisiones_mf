@@ -19,6 +19,7 @@ import { IAppState } from 'src/app/store/app.state';
 import { Store } from '@ngrx/store';
 import { ListService } from 'src/app/store/services/list.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { UserService } from 'src/app/services/users.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { Destination, EmailTemplated } from '../../../models/notificaciones_mid/email_templated';
@@ -80,7 +81,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     Aspirantes = [];
     cuposProyecto!: number;
     estadoAdmitido: any = null;
-    estados:any = [];
+    estados: any = [];
     IdIncripcionSolicitada = null;
     InfoContacto: any;
     cantidad_aspirantes: number = 0;
@@ -109,6 +110,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         private store: Store<IAppState>,
         private listService: ListService,
         private sgaMidService: SgaMidService,
+        private sgaMidAdmisioens: SgaAdmisionesMid,
         private userService: UserService,
         private autenticationService: ImplicitAutenticationService,
         private notificacionesMidService: NotificacionesMidService
@@ -117,7 +119,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.source_emphasys = new MatTableDataSource();
         this.translate = translate;
         this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-         this.createTable();
+            this.createTable();
         });
         this.listService.findInfoContacto();
         this.loadLists();
@@ -127,7 +129,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.inscripcionService.get('estado_inscripcion')
             .subscribe((state: any) => {
                 this.estados = state.map((e: any) => {
-                   
+
                     if (e.Nombre === 'ADMITIDO') {
                         this.estadoAdmitido = e;
                     }
@@ -139,8 +141,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         title: e.Nombre
                     }
                 })
-                 this.createTable()
-                 console.log(this.estados)
+                this.createTable()
+                console.log(this.estados)
             })
     }
 
@@ -232,9 +234,9 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                     filterFunction: (cell?: any, search?: string) => {
                         console.log(cell);
                         console.log(search)
-                         if (search!.length > 0) {
-                             return cell.Nombre.match(RegExp(search!, "i"));
-                         }
+                        if (search!.length > 0) {
+                            return cell.Nombre.match(RegExp(search!, "i"));
+                        }
                     },
                     compareFunction: (direction: any, a: any, b: any) => {
                         let first = a.Nombre.toLowerCase();
@@ -413,7 +415,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                 }
             });
         }
-      
+
     }
 
     loadProyectos() {
@@ -433,7 +435,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                                 );
                             } else {
                                 const id_tercero = this.userService.getPersonaId();
-                                this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                                this.sgaMidAdmisioens.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                                     (respDependencia: any) => {
                                         const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                                         this.proyectos = <any[]>response.filter(
@@ -500,11 +502,14 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.admitidos = [];
 
         this.loading = true;
-        this.sgaMidService.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
+        this.sgaMidAdmisioens.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
             .subscribe(
                 (response: any) => {
-                    if (response.Success && response.Status == "200") {
-                        this.Aspirantes = response.Data;
+                    console.log("response")
+                    console.log(response)
+                    if (response.success == true  && response.status == 200) {
+                        this.Aspirantes = response.data;
+                        console.log(this.Aspirantes)
                         this.admitidos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));
                         this.inscritos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO'));
                         this.cuposAsignados = this.admitidos.length;

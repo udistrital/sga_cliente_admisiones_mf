@@ -29,6 +29,7 @@ import { MODALS } from '../../../models/diccionario/diccionario';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 
 @Component({
@@ -94,6 +95,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     private googleMidService: GoogleService,
     private pivotDocument: PivotDocument,
     private sgaMidService: SgaMidService,
+    private sgaMiAdmisiones : SgaAdmisionesMid,
     private evaluacionInscripcionService: EvaluacionInscripcionService,
     private autenticationService: ImplicitAutenticationService,
     private oikosService: OikosService,
@@ -214,7 +216,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                 );
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                this.sgaMiAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(
@@ -245,11 +247,12 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     // this.dataSource.load([]);
     this.dataSource = new MatTableDataSource()
     this.Aspirantes = [];
-    this.sgaMidService.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
+    console.log('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
+    this.sgaMiAdmisiones.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
       .subscribe(
         (response: any) => {
-          if (response.Success && response.Status == "200") {
-            this.Aspirantes = response.Data;
+          if (response.success == true && response.status == 200) {
+            this.Aspirantes = response.data;
             this.cantidad_inscritos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO").length;
             this.cantidad_inscritos_obs = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO con Observación").length;
             this.cantidad_admitidos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "ADMITIDO").length;
