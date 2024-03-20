@@ -38,7 +38,7 @@
                       <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}:</mat-label>
                       <mat-select [formControl]="Campo1Control"
                                   [(ngModel)]="proyectos_selected"
-                                  (selectionChange)="perfil_editar('info_cupos')"
+                                  (selectionChange)="inscripcion_load()"
                                   [disabled]='selectprograma'>
                           <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                           <mat-option *ngFor="let item of proyectos" [value]="item" [disabled]="!item.Id">
@@ -52,18 +52,18 @@
 
                   <!-- select inscripcion -->
                   <mat-form-field style="width: 100%;">
-                    <mat-label>Selección tipo de inscripción</mat-label>
+                    <mat-label>{{ 'GLOBAL.tipo_inscripcion' | translate }}</mat-label>
                     <mat-select [formControl]="Campo1Control"
-                                [(ngModel)]="proyectos_selected"
+                                [(ngModel)]="tipins_selected"
                                 (selectionChange)="perfil_editar('info_cupos')"
                                 [disabled]='selectprograma'>
                         <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                        <mat-option *ngFor="let item of proyectos" [value]="item" [disabled]="!item.Id">
+                        <mat-option *ngFor="let item of tipoinscripcion" [value]="item" [disabled]="!item.Id">
                             {{item.Nombre}}
                         </mat-option>
                     </mat-select>
                     <mat-error *ngIf="Campo1Control.hasError('required')">
-                      {{ 'cupos.erro_selec_proyecto' | translate }}
+                      {{ 'cupos.erro_selec_inscripcion' | translate }}
                     </mat-error>
                 </mat-form-field>
                   <br/><br/>

@@ -11,6 +11,8 @@ import { ParametrosService } from 'src/app/services/parametros.service';
 import { UserService } from 'src/app/services/users.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
+import { InscripcionService } from 'src/app/services/inscripcion.service';
+import { TipoInscripcion } from 'src/app/models/inscripcion/tipo_inscripcion';
 
 
 @Component({
@@ -49,7 +51,9 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   criterios = [];
   periodos:any[] = [];
   niveles!: NivelFormacion[];
+  tipoinscripcion!: TipoInscripcion[];
   nivelSelect!: NivelFormacion[];
+  tipoinscripcionSelect!: TipoInscripcion[];
 
   show_cupos = false;
   show_profile = false;
@@ -65,6 +69,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   selectedValue: any;
   selectedTipo: any;
   proyectos_selected!: any[] | undefined;
+  tipins_selected!: any[] | undefined;
   criterio_selected!: any[];
   selectTipoIcfes: any;
   selectTipoEntrevista: any;
@@ -86,6 +91,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     private parametrosService: ParametrosService,
     private popUpManager: PopUpManager,
     private projectService: ProyectoAcademicoService,
+    private inscripcionService: InscripcionService,
     private userService: UserService,
     private sgaMidService: SgaMidService,
     private autenticationService: ImplicitAutenticationService,
@@ -152,7 +158,18 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     this.projectService.get('nivel_formacion?limit=0').subscribe(
       // (response: NivelFormacion[]) => {
         (response: any) => {
-        this.niveles = response.filter((nivel:any) => nivel.NivelFormacionPadreId === null && nivel.Nombre === 'Posgrado')
+        this.niveles = response.filter((nivel:any) => nivel.NivelFormacionPadreId === null)//&& nivel.Nombre === 'Posgrado')
+      },
+      error => {
+        this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+      },
+    );
+  }
+
+  inscripcion_load() {
+    this.inscripcionService.get('tipo_inscripcion?limit=0').subscribe(
+        (response: any) => {
+        this.tipoinscripcion = response.filter((  tipoInscripcion:any) => tipoInscripcion.Nombre != null)
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));

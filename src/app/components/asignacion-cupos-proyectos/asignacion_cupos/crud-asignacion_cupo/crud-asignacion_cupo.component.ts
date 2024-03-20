@@ -4,7 +4,7 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angu
 import { FORM_ASIGNACION_CUPO } from './form-asignacion_cupo';
 //import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
 // import 'style-loader!angular2-toaster/toaster.css';
 // import { IAppState } from '../../../@core/store/app.state';
@@ -22,6 +22,8 @@ import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscri
 import { Inscripcion } from 'src/app/models/inscripcion/inscripcion';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'crud-asignacion-cupo',
@@ -57,6 +59,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   programa!: number;
   aspirante!: number;
   periodo: any;
+  show_editar: boolean = false;
   show_calculos_cupos = false;
   // source_emphasys: LocalDataSource = new LocalDataSource();
   // source_emphasys1: LocalDataSource = new LocalDataSource();
@@ -70,7 +73,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   show_posgrado: boolean = false;
 
   dataSource: any;
-  displayedColumns: string[] = ['inscripcion', 'tipoCupo', 'estado', 'cupos', 'acciones'];
+  displayedColumns: string[] = ['NombreInscripcion', 'Nombre', 'Activo', 'CuposHabilitados', 'CuposOpcionados', 'editar', 'eliminar'];
   totalCupos: number = 0;
   cupo: any;
 
@@ -81,7 +84,9 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     private popUpManager: PopUpManager,
     private evaluacionService: EvaluacionInscripcionService,
     // private toasterService: ToasterService,
-    private inscripcionService: InscripcionService,) {
+    private http: HttpClient,
+    private inscripcionService: InscripcionService,
+    private inscripcionMidService: InscripcionMidService,) {
     this.settings_emphasys = {
       delete: {
         deleteButtonContent: '<i class="nb-trash"></i>',
@@ -98,7 +103,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         Nombre: {
           title: this.translate.instant('GLOBAL.cupos'),
           // type: 'string;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
           width: '50%',
@@ -106,7 +111,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         Cupos: {
           title: this.translate.instant('GLOBAL.numero_cupos'),
           // type: 'string;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
           width: '50%',
@@ -126,71 +131,71 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     });
 
     this.loading = false;
-/*
-    this.settings_emphasys1 = {
-      delete: {
-        deleteButtonContent: '<i class="nb-trash"></i>',
-        confirmDelete: true,
-      },
-      actions: {
-        delete: false,
-        edit: false,
-        add: false,
-        position: 'right',
-      },
-      mode: 'external',
-      columns: {
-        TipoDocumento: {
-          title: this.translate.instant('GLOBAL.Tipo'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value;
+    /*
+        this.settings_emphasys1 = {
+          delete: {
+            deleteButtonContent: '<i class="nb-trash"></i>',
+            confirmDelete: true,
           },
-          width: '2%',
-        },
-        NumeroDocumento: {
-          title: this.translate.instant('GLOBAL.Documento'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value;
+          actions: {
+            delete: false,
+            edit: false,
+            add: false,
+            position: 'right',
           },
-          width: '8%',
-        },
-        NombreAspirante: {
-          title: this.translate.instant('GLOBAL.Nombre'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value;
+          mode: 'external',
+          columns: {
+            TipoDocumento: {
+              title: this.translate.instant('GLOBAL.Tipo'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value;
+              },
+              width: '2%',
+            },
+            NumeroDocumento: {
+              title: this.translate.instant('GLOBAL.Documento'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value;
+              },
+              width: '8%',
+            },
+            NombreAspirante: {
+              title: this.translate.instant('GLOBAL.Nombre'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value;
+              },
+              width: '50%',
+            },
+            NotaFinal: {
+              title: this.translate.instant('GLOBAL.Puntaje'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value;
+              },
+              width: '5%',
+            },
+            TipoInscripcionId: {
+              title: this.translate.instant('GLOBAL.TipoInscripcion'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value.Nombre;
+              },
+              width: '25%',
+            },
+            EstadoInscripcionId: {
+              title: this.translate.instant('GLOBAL.Estado'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value.Nombre;
+              },
+              width: '10%',
+            },
           },
-          width: '50%',
-        },
-        NotaFinal: {
-          title: this.translate.instant('GLOBAL.Puntaje'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value;
-          },
-          width: '5%',
-        },
-        TipoInscripcionId: {
-          title: this.translate.instant('GLOBAL.TipoInscripcion'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value.Nombre;
-          },
-          width: '25%',
-        },
-        EstadoInscripcionId: {
-          title: this.translate.instant('GLOBAL.Estado'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value.Nombre;
-          },
-          width: '10%',
-        },
-      },
-    };
-    */
+        };
+        */
   }
 
   construirFormPregrado() {
@@ -213,6 +218,15 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
 
   useLanguage(language: string) {
     this.translate.use(language);
+  }
+  editarFila(data: any) {
+    console.log(data)
+    this.show_editar=true;
+
+  }
+  eliminarFila(data: any) {
+    console.log(data)
+
   }
 
   getIndexFormPregrado(nombre: String): number {
@@ -253,7 +267,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   }
 
   onDeleteEmphasys(event: any) {
-    const findInArray = (value:any, array:any, attr:any) => {
+    const findInArray = (value: any, array: any, attr: any) => {
       for (let i = 0; i < array.length; i += 1) {
         if (array[i][attr] === value) {
           return i;
@@ -285,7 +299,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         this.loading = true;
         if (willDelete.value) {
           console.info(JSON.stringify(this.info_cupos));
-          this.sgamidService.post('admision/postcupos', this.info_cupos)
+          this.inscripcionService.post('cupos', this.info_cupos)
             .subscribe(res => {
               const r = <any>res
               if (r !== null && r.Status === '200') {
@@ -311,35 +325,23 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         }
       });
   }
-    
+
   ngOnInit(): void {
     this.show_posgrado = this.info_nivel;
-    this.dataSource = new MatTableDataSource([
-      {
-        "inscripcion": "nueva",
-        "tipoCupo": "Normal",
-        "estado": "Activo",
-        "cupos": 10
-      },
-      {
-        "inscripcion": "nueva",
-        "tipoCupo": "Afro",
-        "estado": "Activo",
-        "cupos": 5
-      }
-    ]);
-
-    this.calcularTotalCupos();
-
-    this.dataSource.data.forEach((cupo: any) => {
-      cupo.cupos.subscribe((value: number) => {
-        this.calcularTotalCupos();
-      });
-    });
+    this.obtenerCupos();
   }
 
-  calcularTotalCupos(): void {
-    this.totalCupos = this.dataSource.data.reduce((a: number, b: any) => a + b.cupos, 0);
+  obtenerCupos() {
+    this.http.get<any>(`${environment.INSCRIPCION_MID_SERVICE}/cupos/`).subscribe(
+      (response) => {
+        console.log(response);
+        this.dataSource = response.data
+        console.log("Cupos:", this.dataSource);
+      },
+      (error) => {
+        console.error('Error al obtener los cupos:', error);
+      }
+    );
   }
 
 
@@ -348,7 +350,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     this.show_posgrado = this.info_nivel;
 
     if (this.info_proyectos != undefined && this.info_proyectos != null) {
-      this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + Number(this.info_proyectos.Id) + ',PeriodoId:' + Number(this.info_periodo.Id) + '&limit=1').subscribe(
+      this.inscripcionService.get('cupos/?query=ProgramaAcademicoId:' + Number(this.info_proyectos.Id) + ',PeriodoId:' + Number(this.info_periodo.Id) + '&limit=1').subscribe(
         (response: any) => {
           if (response !== null && response !== undefined && response[0].Id !== undefined) {
 
@@ -374,7 +376,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     }
   }
 
-  validarForm(event:any) {
+  validarForm(event: any) {
     if (event.valid) {
       const cupos = event.data.InfoCupos.CuposAsignados
       const datos = [{ Nombre: 'Comunidades Negras', Cupos: Math.trunc((Number(cupos) / 40) * 2) },
@@ -460,8 +462,8 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         if (res !== '[{}]') {
           if (r !== null && r.Type !== 'error') {
             this.loading = false;
-            let filtro = r.filter((filtro:any) => filtro.EstadoInscripcionId.Id === 2 || filtro.EstadoInscripcionId.Id === 4 || filtro.EstadoInscripcionId.Id === 5);
-            filtro = filtro.sort((puntaje_mayor:any, puntaje_menor:any) => puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal)
+            let filtro = r.filter((filtro: any) => filtro.EstadoInscripcionId.Id === 2 || filtro.EstadoInscripcionId.Id === 4 || filtro.EstadoInscripcionId.Id === 5);
+            filtro = filtro.sort((puntaje_mayor: any, puntaje_menor: any) => puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal)
             const data = <Array<any>>filtro;
             // this.source_emphasys.load(data);
 
@@ -537,7 +539,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         const r = <any>res
         if (r !== null && r.Type !== 'error') {
           this.loading = false;
-          r.sort((puntaje_mayor:any, puntaje_menor:any) => puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal)
+          r.sort((puntaje_mayor: any, puntaje_menor: any) => puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal)
           const data = <Array<any>>r;
           // this.source_emphasys.load(data);
 
