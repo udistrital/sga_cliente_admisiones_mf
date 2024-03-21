@@ -1,6 +1,6 @@
 # sga_cliente_admisiones_mf
 
-Cliente para la gestión de inscripciones, parte del Sistema de Gestión Académica. Este proyecto está desarrollado con Angular.
+Cliente para la gestión de admisiones, parte del Sistema de Gestión Académica. Este proyecto está desarrollado con Angular.
 
 ## Especificaciones Técnicas
 
