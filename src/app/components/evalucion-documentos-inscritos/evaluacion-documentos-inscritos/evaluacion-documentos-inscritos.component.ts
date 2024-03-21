@@ -247,8 +247,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     // this.dataSource.load([]);
     this.dataSource = new MatTableDataSource()
     this.Aspirantes = [];
-    console.log('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
-    this.sgaMiAdmisiones.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
+    console.log('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
+    this.sgaMiAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
       .subscribe(
         (response: any) => {
           if (response.success == true && response.status == 200) {

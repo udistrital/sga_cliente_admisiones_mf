@@ -171,7 +171,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         if (willDelete.value) {
           console.info(JSON.stringify(this.info_cupos));
           
-          this.sgaMidAdmisiones.post('admision/postcupos', this.info_cupos)
+          this.sgaMidAdmisiones.post('admision/cupos', this.info_cupos)
             .subscribe(res => {
               console.log(res)
 
@@ -354,34 +354,5 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
           confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
         });
       });
-  }
-
-  mostrartabla() {
-    this.show_listado = true
-
-    this.info_consultar_aspirantes = {
-      Id_proyecto: Number(this.info_cupos.Proyectos.Id),
-      Id_periodo: Number(this.info_cupos.Periodo.Id),
-    }
-    this.sgamidService.post('admision/consulta_aspirantes', this.info_consultar_aspirantes)
-      .subscribe(res => {
-        const r = <any>res
-        if (r !== null && r.Type !== 'error') {
-          this.loading = false;
-          r.sort((puntaje_mayor:any, puntaje_menor:any) => puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal)
-          const data = <Array<any>>r;
-        } else {
-        }
-      },
-        (error: HttpErrorResponse) => {
-          Swal.fire({
-            icon: 'error',
-            title: error.status + '',
-            text: this.translate.instant('ERROR.' + error.status),
-            footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-              this.translate.instant('GLOBAL.info_estado'),
-            confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-          });
-        });
   }
 }

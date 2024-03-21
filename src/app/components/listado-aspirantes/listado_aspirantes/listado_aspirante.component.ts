@@ -502,7 +502,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.admitidos = [];
 
         this.loading = true;
-        this.sgaMidAdmisioens.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
+        this.sgaMidAdmisioens.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
             .subscribe(
                 (response: any) => {
                     console.log("response")

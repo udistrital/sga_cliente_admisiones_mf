@@ -416,7 +416,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       } else {
         console.log('body')
         console.log(JSON.stringify(Evaluacion))
-        this.sgaMidAdmisiones.post('admision/registrar_evaluacion', Evaluacion).subscribe(
+        this.sgaMidAdmisiones.post('admision/evaluacion', Evaluacion).subscribe(
           (response: any) => {
             console.log(response)
             if (response.status === 200) {
@@ -509,7 +509,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   async loadAspirantes() {
     return new Promise((resolve, reject) => {
 
-      this.sgaMidAdmisiones.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2')
+      this.sgaMidAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2')
         .subscribe(
           (response: any) => {
 
@@ -544,8 +544,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   async loadInfo(IdCriterio: number) {
     return new Promise((resolve, reject) => {
-      console.log('admision/consultar_evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio)
-      this.sgaMidAdmisiones.get('admision/consultar_evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio).subscribe(
+      console.log('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio)
+      this.sgaMidAdmisiones.get('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio).subscribe(
         async (response: any) => {
           console.log(response)
 
