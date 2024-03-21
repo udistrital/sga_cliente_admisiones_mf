@@ -1547,7 +1547,8 @@
         "poner_obligatorio": "Set document as required?",
         "quitar_obligatorio": "Set document as optional?",
         "ajuste_ok": "Change made",
-        "ajuste_fail": "The change could not be made"
+        "ajuste_fail": "The change could not be made",
+        "seleccion_facultad": "Select the faculty"
     },
     "descuento_academico": {
         "documento_programa_no_registrado": "Document not registered",
@@ -1718,7 +1719,19 @@
         "descargar_zip": "Download the applicant's documentary compilation",
         "no_vinculacion_no_rol": "Your user is not linked to any academic project and does not have the appropriate role",
         "multiple_vinculacion": "Your user appears linked to more than one academic project",
-        "notificar_observaciones":"Report observations"
+        "notificar_observaciones":"Report observations",
+        "examen_de_estado": "The criterion to parameterize is a state exam?",
+        "titulo_form_examen": "Corresponding level of the state exam",
+        "saber_11": "Does it require Saber 11 (formerly ICFES)?",
+        "saber_pro": "Does it require Saber Pro T and T?",
+        "spn": "Does it require SPN?",
+        "archivo_soporte": "Supporting file",
+        "archivo": "Does it require an attached file?",
+        "seleccion_facultad": "Select the faculty",
+        "ofertar": "Offer project",
+        "ofertar_opcion": "Is it offered as option 2 and 3?",
+        "parametrizacion_puntaje": "Global score parameterization",
+        "valor_minimo": "Minimum value:"
     },
     "cupos": {
         "aviso_periodo": "Period in which the admission quotas are defined",

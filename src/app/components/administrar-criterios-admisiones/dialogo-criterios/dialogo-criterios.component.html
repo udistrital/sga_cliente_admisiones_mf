@@ -39,6 +39,66 @@
           <mat-checkbox formControlName="Asistencia" ><mat-label> {{ 'admision.requiere_asistencia' | translate }}</mat-label></mat-checkbox>
         </div>
       </div>  
+      <div class="row my-2" *ngIf="!subcriterio">
+        <div class="col-12">
+          <mat-checkbox formControlName="ExamenEstado" ><mat-label> {{ 'admision.examen_de_estado' | translate }}</mat-label></mat-checkbox>
+        </div>
+      </div>
+      
+      <!-- Formulario adicional si se va a parametrizar un examen de estado -->
+      <form [formGroup]="examenEstadoForm">
+        <div *ngIf="criterioForm.get('ExamenEstado')?.value">
+          <br>
+          <mat-card>
+            <mat-card-title>
+              <h5>{{ 'admision.titulo_form_examen' | translate }}</h5>
+            </mat-card-title>
+
+            <mat-card-content>
+              <div class="row my-2" *ngIf="!subcriterio">
+                <div class="col-12">
+                  <mat-checkbox formControlName="Saber11" ><mat-label> {{ 'admision.saber_11' | translate }}</mat-label></mat-checkbox>
+                </div>
+              </div>
+              <div class="row my-2" *ngIf="!subcriterio">
+                <div class="col-12">
+                  <mat-checkbox formControlName="SaberPro" ><mat-label> {{ 'admision.saber_pro' | translate }}</mat-label></mat-checkbox>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          
+          <mat-card>
+            <mat-card-title>
+              <h5>SPN</h5>
+            </mat-card-title>
+
+            <mat-card-content>
+              <div class="row my-2" *ngIf="!subcriterio">
+                <div class="col-12">
+                  <mat-checkbox formControlName="SPN" ><mat-label> {{ 'admision.spn' | translate }}</mat-label></mat-checkbox>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card>
+            <mat-card-title>
+              <h5>{{ 'admision.archivo_soporte' | translate }}</h5>
+            </mat-card-title>
+            
+            <mat-card-content>
+              <div class="row my-2" *ngIf="!subcriterio">
+                <div class="col-12">
+                  <mat-checkbox formControlName="ArchivoAdjunto" ><mat-label> {{ 'admision.archivo' | translate }}</mat-label></mat-checkbox>
+                </div>
+              </div> 
+            </mat-card-content>
+          </mat-card>  
+        </div>
+      </form>
+
+      
       <div class="row">
         <div class="col-12 ml-auto">
           <button class="float-right boton-primary" mat-button type="submit" [disabled]="criterioForm.invalid">{{ 'GLOBAL.guardar' | translate }} </button>

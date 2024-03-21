@@ -1583,7 +1583,8 @@
         "poner_obligatorio": "¿Establecer documento como obligatorio?",
         "quitar_obligatorio": "¿Establecer documento como opcional?",
         "ajuste_ok": "Cambio realizado",
-        "ajuste_fail": "No se pudo realizar el cambio"
+        "ajuste_fail": "No se pudo realizar el cambio",
+        "seleccion_facultad": "Seleccionar facultad"
     },
     "descuento_academico": {
         "descuento_academico_no_registrado": "Descuento académico no registrado",
@@ -1756,7 +1757,19 @@
         "titulo_notificacion_success":"Notificación exitosa",
         "desc_notificacion_success":"la notificación de las observaciones se hizo de forma exitosa",
         "titulo_notificacion_error":"Fallo en la notificación",
-        "desc_notificacion_error":"Ocurrió un error al momento de notificar al usuario"
+        "desc_notificacion_error":"Ocurrió un error al momento de notificar al usuario",
+        "examen_de_estado": "El criterio a parametrizar es un examen de estado?",
+        "titulo_form_examen": "Nivel correspondiente del examen de estado",
+        "saber_11": "¿Requiere Saber 11 (antiguo ICFES)?",
+        "saber_pro": "¿Requiere Saber pro T y T?",
+        "spn": "¿Requiere SPN?",
+        "archivo_soporte": "Archivo de soporte",
+        "archivo": "¿Requiere archivo adjunto?",
+        "seleccion_facultad": "Seleccionar facultad",
+        "ofertar": "Ofertar proyecto",
+        "ofertar_opcion": "¿Se oferta como opcion 2 y 3?",
+        "parametrizacion_puntaje": "Parametrización puntaje global minimo",
+        "valor_minimo": "Valor minimo:"
     },
     "cupos": {
         "aviso_periodo": "Período en el cual se define los cupos de admisión",

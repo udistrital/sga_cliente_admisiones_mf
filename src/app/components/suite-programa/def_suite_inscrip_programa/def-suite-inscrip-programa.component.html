@@ -24,12 +24,21 @@
                         </mat-select>
                     </mat-form-field>
 
+                    <!-- select Facultad -->
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>{{ 'admision.seleccion_facultad' | translate }}</mat-label>
+                        <mat-select [(ngModel)]="facultad" (selectionChange)="filtrarPorFacultades(facultad)">
+                            <mat-option> {{ 'GLOBAL.seleccionar' | translate }} </mat-option>
+                            <mat-option *ngFor="let item of facultades" [value]="item.Id"> {{item.Nombre}} </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
                     <!-- select Proyectos -->
                     <mat-form-field style="width: 100%;">
                         <mat-label>{{ 'admision.proyecto' | translate }}:</mat-label>
                         <mat-select [(ngModel)]="proyecto" (selectionChange)="cambioProyecto(proyecto)">
                             <mat-option> {{ 'GLOBAL.seleccionar' | translate }} </mat-option>
-                            <mat-option *ngFor="let item of proyectosFiltered" [value]="item.Id" [disabled]="!item.Id">
+                            <mat-option *ngFor="let item of proyectosFilteredFacultad" [value]="item.Id">
                                 {{item.Nombre}} </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -46,7 +55,7 @@
 
                 </div>
             </div>
-            <div class="container" align="center" *ngIf="periodo && nivel && proyecto && tipoInscrip">
+            <div class="container" align="center" *ngIf="periodo && nivel && facultad && proyecto && tipoInscrip">
                 <div class="row>">
                     <div class="col-12 info-alert"> {{ 'admision.info_uso_select_tags' | translate }} </div>
                 </div><br>

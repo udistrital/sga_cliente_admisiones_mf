@@ -12,7 +12,7 @@
                 <!-- select periodo -->
                 <mat-form-field style="width: 35%;">
                   <mat-label>{{ 'documento_proyecto.aviso_periodo' | translate }}:</mat-label>
-                  <mat-select [(ngModel)]="periodo" [disabled]='false' (selectionChange)="selectPeriodo()">
+                  <mat-select [(ngModel)]="periodo" [disabled]='false' (selectionChange)="cambioPeriodo(periodo)">
                     <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                     <mat-option *ngFor="let item of periodos" [value]="item"> {{item.Nombre}} </mat-option>
                   </mat-select>
@@ -23,24 +23,38 @@
                   <mat-label>{{ 'documento_proyecto.aviso_nivel' | translate }}:</mat-label>
                   <mat-select [formControl]="CampoControl"
                               [(ngModel)]="selectednivel"
-                              (selectionChange)="loadProyectos()" >
+                              (selectionChange)="filtrarPorNivel(selectednivel)" >
                     <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                     <mat-option *ngFor="let item of nivel_load" [value]="item.Id"> {{item.Nombre}} </mat-option>
                   </mat-select>
                   <mat-error *ngIf="CampoControl.hasError('required')">{{ 'documento_proyecto.erro_selec_nivel' | translate }}</mat-error>
                 </mat-form-field>
 
+                 <!-- select Facultad -->
+                 <mat-form-field style="width: 100%;">
+                  <mat-label>{{ 'documento_proyecto.seleccion_facultad' | translate }}</mat-label>
+                  <mat-select [formControl]="Campo1Control" 
+                              [(ngModel)]="facultad" 
+                              (selectionChange)="filtrarPorFacultades(facultad)">
+                      <mat-option> {{ 'GLOBAL.seleccionar' | translate }} </mat-option>
+                      <mat-option *ngFor="let item of facultades" [value]="item.Id"> {{item.Nombre}} </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="Campo1Control.hasError('required')">
+                    {{ 'documento_proyecto.erro_selec_proyecto' | translate }}
+                  </mat-error>
+              </mat-form-field>
+
                 <!-- select proyectos -->
                 <mat-form-field style="width: 100%;">
                   <mat-label>{{ 'documento_proyecto.aviso_proyecto' | translate }}:</mat-label>
-                  <mat-select [formControl]="Campo1Control"
+                  <mat-select [formControl]="Campo2Control"
                               [(ngModel)]="proyectos_selected"
                               (selectionChange)="loadTipoInscripcion()">
                               <!-- (selectionChange)="loadCriterios()" -->
                     <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                    <mat-option *ngFor="let item of proyectos" [value]="item.Id" [disabled]="!item.Id">{{item.Nombre}}</mat-option>
+                    <mat-option *ngFor="let item of proyectosFilteredFacultad" [value]="item.Id" [disabled]="!item.Id">{{item.Nombre}}</mat-option>
                   </mat-select>
-                  <mat-error *ngIf="Campo1Control.hasError('required')">
+                  <mat-error *ngIf="Campo2Control.hasError('required')">
                     {{ 'documento_proyecto.erro_selec_proyecto' | translate }}
                   </mat-error>
                 </mat-form-field>
@@ -48,13 +62,13 @@
                 <!-- select tipo_inscripcion -->
                 <mat-form-field style="width: 100%;">
                   <mat-label>{{ 'documento_proyecto.aviso_tipo_inscripcion' | translate }}:</mat-label>
-                  <mat-select [formControl]="Campo2Control"
+                  <mat-select [formControl]="Campo3Control"
                               [(ngModel)]="tipo_inscripcion_selected"
                               (selectionChange)="savePrograma()">
                     <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                     <mat-option *ngFor="let item of tipos_inscripcion" [value]="item.Id">{{item.Nombre}}</mat-option>
                   </mat-select>
-                  <mat-error *ngIf="Campo2Control.hasError('required')">
+                  <mat-error *ngIf="Campo3Control.hasError('required')">
                     {{ 'documento_proyecto.error_selec_tipo_inscripcion' | translate }}
                   </mat-error>
                 </mat-form-field>

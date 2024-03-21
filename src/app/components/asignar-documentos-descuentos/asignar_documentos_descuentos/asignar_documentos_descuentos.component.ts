@@ -14,6 +14,7 @@ import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { UserService } from 'src/app/services/users.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
+import { OikosService } from 'src/app/services/oikos.service';
 
 @Component({
   selector: 'ngx-asignar_documentos_descuentos',
@@ -35,10 +36,16 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
 
   tipos_inscripcion: any = [];
   tipo_inscripcion_selected: any;
+  proyectosFilteredNivel!: any[];
+  proyectosFilteredFacultad!: any[];
+
+  facultad: any;
+  facultades: any[] = [];
 
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
+  Campo3Control = new FormControl('', [Validators.required]);
 
   loadingGlobal: boolean = false;
 
@@ -51,17 +58,20 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
     private inscripcionService: InscripcionService,
     private userService: UserService,
     private sgaMidService: SgaMidService,
-    private autenticationService: ImplicitAutenticationService,) {
+    private autenticationService: ImplicitAutenticationService,
+    private oikosService: OikosService,) {
     this.translate = translate;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => { });
-    this.loadData();
   }
 
-  async loadData() {
+  async ngOnInit() {
     try {
       this.loadingGlobal = true;
       await this.cargarPeriodo();
       await this.loadLevel();
+      await this.cargarFacultad();
+      await this.loadProyectos();
+      await this.loadTipoInscripcion();
       this.loadingGlobal = false;
     } catch (error: any) {
       Swal.fire({
@@ -103,7 +113,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
 
   loadLevel() {
     this.loading = true;
-    this.projectService.get('nivel_formacion?limit=0').subscribe(
+    this.projectService.get('nivel_formacion?query=Activo:true,NivelFormacionPadreId__isnull:true').subscribe(
       (response: any) => {
         if (response !== null || response !== undefined) {
           this.nivel_load = <any>response;
@@ -116,6 +126,29 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
         this.loadingGlobal = false;
       },
     );
+  }
+
+  cargarFacultad(){
+    return new Promise((resolve, reject) => {
+      this.oikosService.get('dependencia_tipo_dependencia/?query=Activo:true&limit=0')
+        .subscribe((response: any) => {
+          if (response != null && response.Status != '404' 
+              && Object.keys(response[0]).length > 0) {
+                for (let obj of response) {
+                  if (obj.TipoDependenciaId.Id == 2) {
+                    this.facultades.push(obj.DependenciaId);
+                  }
+                }
+                resolve(this.facultades);
+          } else {
+            reject({Facultad: "Bad answer"});
+          }
+        },
+        (error: HttpErrorResponse) => {
+          reject({Facultad: error});
+        });
+    });
+
   }
 
   filtrarProyecto(proyecto: any) {
@@ -133,6 +166,43 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
     }
   }
 
+  filtrarPorNivel(selNivel:any) {
+    this.proyectosFilteredNivel = this.proyectos.filter(
+      (proyect: any) => {
+        if (proyect.NivelFormacionId.Id == selNivel) {
+          return true;
+        } else if (proyect.NivelFormacionId.NivelFormacionPadreId != null) {
+          if (proyect.NivelFormacionId.NivelFormacionPadreId.Id == selNivel) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }      
+    );
+    this.facultad = undefined;
+    this.proyectos_selected = undefined;
+    this.tipo_inscripcion_selected = undefined;
+  }
+
+  filtrarPorFacultades(selProyecto:any) {
+    if (this.proyectosFilteredNivel != undefined && this.proyectosFilteredNivel.length > 0) {
+      this.proyectosFilteredFacultad = this.proyectosFilteredNivel.filter(
+        (proyect) => {
+          if (proyect.FacultadId == selProyecto) {
+            return true;
+          } else {
+            return false;
+          }
+        }      
+      );
+    }
+    this.proyectos_selected = undefined;
+    this.tipo_inscripcion_selected = undefined;
+  }
+
   loadProyectos() {
     this.proyectos_selected = undefined;
     sessionStorage.setItem('ProgramaAcademicoId', "");
@@ -148,9 +218,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
 
               let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin, pendiente vice
               if (r) {
-                this.proyectos = <any[]>response.filter(
-                  (proyecto: any) => this.filtrarProyecto(proyecto),
-                );
+                this.proyectos = response;
               } else {
                 const id_tercero = this.userService.getPersonaId();
                 this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
@@ -210,8 +278,6 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
     this.translate.use(language);
   }
 
-  ngOnInit() {
-  }
 
   ngOnChanges() {
   }
@@ -228,5 +294,12 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
 
   openSelectDescuentoProyectoComponent() {
     this.dialogService.open(SelectDescuentoProyectoComponent);
+  }
+
+  cambioPeriodo(selPeriodo:any) {
+    this.selectednivel = undefined;
+    this.facultad = undefined;
+    this.proyectos_selected = undefined;
+    this.tipo_inscripcion_selected = undefined;
   }
 }
