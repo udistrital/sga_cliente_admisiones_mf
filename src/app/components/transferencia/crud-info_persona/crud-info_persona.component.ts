@@ -13,6 +13,7 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 import * as momentTimezone from 'moment-timezone';
 import * as moment from 'moment';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
+import { encrypt } from 'src/utils/util-encrypt';
 
 @Component({
   selector: 'ngx-crud-info-persona',
@@ -304,7 +305,8 @@ export class CrudInfoPersonaComponent implements OnInit {
         campo.deshabilitar = true;
       });
       window.localStorage.setItem('ente', response.tercero.Id);
-      window.localStorage.setItem('persona_id', response.tercero.Id);
+      const id = encrypt(response.tercero.Id.toString())
+      window.localStorage.setItem('persona_id', id);
       this.info_persona_id = response.tercero.Id;
       sessionStorage.setItem('IdTercero', String(this.info_persona_id));
       this.setPercentage(1);
@@ -331,7 +333,8 @@ export class CrudInfoPersonaComponent implements OnInit {
       const r = <any>res
       if (r !== null && r.Type !== 'error') {
         window.localStorage.setItem('ente', r.Id);
-        window.localStorage.setItem('persona_id', r.Id);
+        const r_id = encrypt(r.Id.toString());
+        window.localStorage.setItem('persona_id', r_id);
         this.info_persona_id = r.Id;
         sessionStorage.setItem('IdTercero', String(this.info_persona_id));
         this.formInfoPersona.campos.splice(this.getIndexForm('VerificarNumeroIdentificacion'),1);
