@@ -24,6 +24,10 @@ import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { UtilidadesService } from 'src/app/services/utilidades.service';
+import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service';
+
 
 @Component({
   selector: 'crud-asignacion-cupo',
@@ -84,6 +88,8 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     private popUpManager: PopUpManager,
     private evaluacionService: EvaluacionInscripcionService,
     // private toasterService: ToasterService,
+    private asignacionCupoService: AsignacionCupoService,
+    private router: Router,
     private http: HttpClient,
     private inscripcionService: InscripcionService,
     private inscripcionMidService: InscripcionMidService,) {
@@ -299,7 +305,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         this.loading = true;
         if (willDelete.value) {
           console.info(JSON.stringify(this.info_cupos));
-          this.inscripcionService.post('cupos', this.info_cupos)
+          this.inscripcionMidService.post('cupos', this.info_cupos)
             .subscribe(res => {
               const r = <any>res
               if (r !== null && r.Status === '200') {
@@ -525,6 +531,11 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
           confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
         });
       });
+  }
+
+  listarComentarios(){
+    this.asignacionCupoService.enviarDatos(this.programa);
+    this.router.navigate(['asignacion-cupos/comentarios-cupos']); 
   }
 
   mostrartabla() {

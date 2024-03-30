@@ -82,7 +82,7 @@
 
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let noticia; columns: displayedColumns;"></tr>
+                        <tr mat-row *matRowDef="let cupo; columns: displayedColumns;"></tr>
                     </table>
 
                 </div>
@@ -90,11 +90,10 @@
             </div>
         </div>
         <div>
-            <mat-label>Comentarios</mat-label>
-            <button class="boton-primary" mat-button type="button">Historico</button>
+            <button class="boton-primary" mat-button type="button" (click)="listarComentarios()">'GLOBAL.comentarios' </button>
         </div>
 
-        <button class="boton-primary" mat-button type="button">Guardar</button>
+        <button class="boton-primary" mat-button type="button" (click)="createCupos()">'GLOBAL.guardar' </button>
     </mat-card-content>
 </mat-card>
 <mat-card [hidden]="!show_editar">

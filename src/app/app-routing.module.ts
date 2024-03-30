@@ -10,6 +10,7 @@ import { EvaluacionDocumentosInscritosComponent } from './components/evalucion-d
 //import { EvaluacionAspirantesComponent } from './components/evaluacion-aspirantes/evaluacion-aspirantes.component';
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
+import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
 //import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
 
 
@@ -25,6 +26,10 @@ const routes: Routes = [
   {
     path:"asignacion-cupos", 
     component: AsignacionCuposComponent
+  },
+  {
+    path:"asignacion-cupos/comentarios-cupos", 
+    component: ComentariosCuposComponent
   },
   {
     path:"documentos-inscritos", 

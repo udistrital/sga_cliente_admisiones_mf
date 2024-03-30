@@ -65,6 +65,7 @@ import { rootReducer } from './store/rootReducer';
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 import { ListService } from './store/services/list.service';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
+import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -98,7 +99,9 @@ export function createTranslateLoader(http: HttpClient) {
     ViewDescuentoAcademicoComponent,
     ViewPropuestaGradoComponent,
     ListadoAspiranteComponent,
-    AdministracionCuentaBancariaComponent
+    AdministracionCuentaBancariaComponent,
+    ComentariosCuposComponent
+
 
 
 
