@@ -14,9 +14,10 @@ import { MatTableModule } from "@angular/material/table";
 import { MatCardModule } from "@angular/material/card";
 
 import { TranslateModule } from "@ngx-translate/core";
+import { ReporteCodificacionComponent } from './components/reporte-codificacion/reporte-codificacion.component';
 
 @NgModule({
-  declarations: [CodificacionComponent],
+  declarations: [CodificacionComponent, ReporteCodificacionComponent],
   imports: [
     CommonModule,
     CodificacionRoutingModule,

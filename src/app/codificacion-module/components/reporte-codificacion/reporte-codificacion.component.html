@@ -1,0 +1,45 @@
+<div>
+    <mat-card class="full-screen-card">
+        <mat-card-header>
+            <mat-card-title>
+                <h1>Generar reporte de codificación</h1>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
+                <div class="grid">
+
+                    <mat-form-field appearance="fill" class="grid-3">
+                        <mat-label>Seleccione el periodo</mat-label>
+                        <mat-select formControlName="periodoAcademico">
+                            <mat-option *ngFor="let periodo of periodosAcademicos" [value]="periodo.Id">
+                                {{ periodo.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="grid-3">
+                        <mat-label>Seleccione la facultad</mat-label>
+                        <mat-select formControlName="facultad" (selectionChange)="onFacultadChange($event)">
+                            <mat-option *ngFor="let facultad of facultades" [value]="facultad.Id">
+                                {{ facultad.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="grid-3">
+                        <mat-label>Seleccione el proyecto curricular</mat-label>
+                        <mat-select formControlName="proyectoCurricular">
+                            <mat-option *ngFor="let proyecto of proyectos" [value]="proyecto.Id">
+                                {{ proyecto.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="centrar">
+                    <button class="primary-button" mat-raised-button color="primary" type="submit">Enviar</button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>
