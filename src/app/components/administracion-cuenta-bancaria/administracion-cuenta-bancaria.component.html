@@ -36,7 +36,7 @@
                         <!-- form -->
                         <mat-form-field style="width: 100%;">
                             <mat-label>{{ 'cupos.selec_cuenta' | translate }}</mat-label>
-                            <mat-select>
+                            <mat-select [formControl]="Campo3Control" [(ngModel)]="cuentasBancarias">
                                 <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                                 <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta">
                                     {{ cuenta.Nombre }} 
@@ -45,7 +45,7 @@
                         </mat-form-field>
 
                         <div>
-                            <button class="boton-primary" mat-button type="button" (click)="guardar()">Guardar</button>
+                            <button class="boton-primary" mat-button type="button" (click)="guardar(cuenta)">Guardar</button>
                         </div>
                         <br /><br />
                         <div>

@@ -79,7 +79,7 @@ export class AdministracionCuentaBancariaComponent {
   selectprograma: boolean = true;
   selectcriterio: boolean = true;
   periodo: any;
-  cuenta: any;
+  //cuenta: any;
   selectednivel: any;
   esPosgrado: boolean = false;
 
@@ -90,9 +90,12 @@ export class AdministracionCuentaBancariaComponent {
   nuevaCuenta: boolean = false;
   dataSource: any;
 
+  cuenta: any[] = [];
+
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
+  Campo3Control = new FormControl('', [Validators.required]);
   constructor(
     private translate: TranslateService,
     private parametrosService: ParametrosService,
@@ -111,9 +114,7 @@ export class AdministracionCuentaBancariaComponent {
     this.nivel_load()
     this.asignacionForm = new FormGroup({
       periodoAcademico: new FormControl(''),
-      tipoRecaudo: new FormControl(''),
       cuentaBancaria: new FormControl(''),
-      soporteDocumental: new FormControl('')
     });
   }
 
@@ -300,8 +301,19 @@ export class AdministracionCuentaBancariaComponent {
     this.obtenerCuentas();
   }
 
-  guardar(): void {
-    console.log(this.asignacionForm.value);
+  guardar(cuenta: any): void {
+    console.log("res",cuenta.Data);
+    cuenta.Data.Activo=true;
+    this.parametrosService.put(`parametro?query=Id:${cuenta.Data.Id}`,cuenta).subscribe(
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.error('Error al guardar la cuenta:', error);
+      }
+    );
+    console.log("form",this.asignacionForm.value);
+
   }
 
   ngOnChanges() {
