@@ -41,5 +41,9 @@
                 </div>
             </form>
         </mat-card-content>
+        <div *ngIf="isDocuments">
+            <button (click)="downloadFile(reportePdf)">a</button>
+            <object [data]="reportePdf | safeUrl " type="application/pdf" id="pdf_view"></object>
+        </div>
     </mat-card>
 </div>
