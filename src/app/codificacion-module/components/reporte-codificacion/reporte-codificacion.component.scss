@@ -41,4 +41,20 @@
 
 .centrar{
     text-align: center;
+    align-items: center;
+}
+
+.table-reporte {
+  padding: 5%;
+  width: 100%;
+}
+
+.blue-snackbar {
+  --mdc-snackbar-container-color: #2196f3;
+  --mat-mdc-snack-bar-button-color: #fff;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+.red-snackbar {
+  background: #da0e3e;
 }

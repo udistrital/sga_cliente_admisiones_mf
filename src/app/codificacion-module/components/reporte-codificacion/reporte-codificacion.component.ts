@@ -5,8 +5,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SgaOikosService } from '../../services/sga_oikos.service';
 import { SgaProyectoAcademicoService } from '../../services/sga_proyecto_academico.service';
 import { SgaAdmisionesMidService } from '../../services/sga_admisiones_mid.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
+import { MatDialog } from '@angular/material/dialog';
+import { ReporteVisualizerComponent } from '../reporte-visualizer/reporte-visualizer.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-reporte-codificacion',
   templateUrl: './reporte-codificacion.component.html',
@@ -16,14 +18,17 @@ export class ReporteCodificacionComponent implements OnInit {
 
 
   reporteForm: FormGroup;
-  periodosAcademicos: PeriodoAcademico[] = [];
+  periodosAcademicos: any[] = [];
   facultades: any[] = [];
   proyectos: any[] = [];
   reportePdf: string = "";
-  reportePdfSanitized: SafeResourceUrl = ""
   reporteExcel: string = "";
   isDocuments: boolean = false
   blobPdf: Blob = new Blob;
+
+  displayedColumns: string[] = ['Periodo', 'Facultad', 'Proyecto', 'Acciones'];
+  dataSource: { Periodo: string, Facultad: string, Proyecto: string }[] = [];
+
 
   constructor(
     private fb: FormBuilder,
@@ -31,7 +36,8 @@ export class ReporteCodificacionComponent implements OnInit {
     private sgaOikosService: SgaOikosService,
     private sgaProyectoAcademicoService: SgaProyectoAcademicoService,
     private sgaAdmisionesMidService: SgaAdmisionesMidService,
-    private sanitizer: DomSanitizer,
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
 
   ) {
     this.reporteForm = this.fb.group({
@@ -50,7 +56,6 @@ export class ReporteCodificacionComponent implements OnInit {
     this.sgaParametrosService.get('periodo?query=&limit=0&sortby=Nombre&order=asc').subscribe(
       (Response: any) => {
         this.periodosAcademicos = Response.Data
-        console.log(this.periodosAcademicos)
       }
     )
   }
@@ -59,7 +64,6 @@ export class ReporteCodificacionComponent implements OnInit {
     this.sgaOikosService.get('dependencia?query=&limit=0&sortby=Nombre&order=asc').subscribe(
       (Response: any) => {
         this.facultades = Response
-        console.log(this.facultades)
       }
     )
   }
@@ -77,7 +81,8 @@ export class ReporteCodificacionComponent implements OnInit {
     this.caragarProyectosAcademicos(facultadId)
   }
 
-  downloadFile(base64: string, sliceSize = 512) {
+  downloadFile(base64: string, fileName: string) {
+    const sliceSize = 512
     const byteCharacters = atob(base64);
     const byteArrays = [];
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
@@ -90,24 +95,52 @@ export class ReporteCodificacionComponent implements OnInit {
       byteArrays.push(byteArray);
     }
     this.blobPdf = new Blob(byteArrays, { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(this.blobPdf, "pdf.pdf");
+    saveAs(this.blobPdf, fileName);
   }
 
-  UrlPdf() {
-    return this.sanitizer.bypassSecurityTrustHtml(this.reportePdf)
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ReporteVisualizerComponent, {
+      width: '80vw',   // Set width to 60 percent of view port width
+      height: '90vh',
+      data: "data:application/pdf;base64," + this.reportePdf
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('The dialog was closed');
+    });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 
   onSubmit() {
     if (this.reporteForm.valid) {
+
+      this.openSnackBar("Generando reporte porfavor espera", "ok")
+
+      this.isDocuments = false
       const idProyecto = this.reporteForm.get('proyectoCurricular')?.value
       const idPeriodo = this.reporteForm.get('periodoAcademico')?.value
+      const idFacultad = this.reporteForm.get('facultad')?.value
+      const nombreProyecto = (this.proyectos.find(element => element.Id === idProyecto)).Nombre
+      const nombreFacultad = (this.facultades.find(element => element.Id === idFacultad)).Nombre
+      const nombrePeriodo = (this.periodosAcademicos.find(element => element.Id === idPeriodo)).Nombre
+      this.dataSource = [
+        { Periodo: nombrePeriodo, Facultad: nombreFacultad, Proyecto: nombreProyecto }
+      ]
 
       this.sgaAdmisionesMidService.get(`reporte/?id_periodo=${idPeriodo}&id_proyecto=${idProyecto}`).subscribe(
         (Response: any) => {
-          this.reporteExcel = Response.data.Excel
-          this.reportePdf = Response.data.Pdf
-          //this.visualizacionPdf = 'data:application/pdf;base64,'+Response.data.Pdf
-          this.isDocuments = true
+          if (Response.status == 200 && Response.success) {
+
+            this.reporteExcel = Response.data.Excel
+            this.reportePdf = Response.data.Pdf
+            this.openSnackBar("Reporte Generado", "Aceptar")
+            this.isDocuments = true
+          } else {
+            this.openSnackBar("Ocurrio un error", "Aceptar")
+          }
         }
       )
 

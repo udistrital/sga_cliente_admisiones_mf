@@ -13,6 +13,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatTableModule } from "@angular/material/table";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from '@angular/material/tooltip'
 
 import { TranslateModule } from "@ngx-translate/core";
 import { ReporteCodificacionComponent } from './components/reporte-codificacion/reporte-codificacion.component';
@@ -34,6 +36,8 @@ import { ReporteVisualizerComponent } from './components/reporte-visualizer/repo
     MatCardModule,
     TranslateModule,
     MatDialogModule,
+    MatIconModule,
+    MatTooltipModule,
   ],
 })
-export class CodificacionModule {}
+export class CodificacionModule { }
