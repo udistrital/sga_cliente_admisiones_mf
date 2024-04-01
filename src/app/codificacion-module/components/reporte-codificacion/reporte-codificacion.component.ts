@@ -117,7 +117,7 @@ export class ReporteCodificacionComponent implements OnInit {
   onSubmit() {
     if (this.reporteForm.valid) {
 
-      this.openSnackBar("Generando reporte porfavor espera", "ok")
+      this.openSnackBar("Generando reporte porfavor espera", "Aceptar")
 
       this.isDocuments = false
       const idProyecto = this.reporteForm.get('proyectoCurricular')?.value
