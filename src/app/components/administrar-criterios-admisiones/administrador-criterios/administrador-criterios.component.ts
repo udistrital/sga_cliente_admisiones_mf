@@ -100,6 +100,7 @@ export class AdministradorCriteriosComponent implements OnInit {
             newCriterio.Subcriterios = [];
             this.criterios.push(newCriterio);
             // this.criterioSource.load(this.criterios);
+            console.log(this.criterios)
             this.criterioSource = new MatTableDataSource(this.criterios)
             this.popUpManager.showSuccessAlert(this.translate.instant('admision.criterio_exito'));
           },

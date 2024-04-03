@@ -11,13 +11,11 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TipoCriterio } from '../../../models/admision/tipo_criterio';
-// import { LocalDataSource } from 'ng2-smart-table';
 import Swal from 'sweetalert2';
 import { FormControl, Validators } from '@angular/forms';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { CheckboxAssistanceComponent } from './checkbox-assistance/checkbox-assistance.component';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
-import { AnyService } from 'src/app/services/any.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -321,19 +319,18 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   createTable() {
     return new Promise(async (resolve, reject) => {
+
       const IdCriterio = sessionStorage.getItem('tipo_criterio');
       const data: any = await this.loadColumn(IdCriterio)
-
-
       const keys = Object.keys(data!);
-
       const titles = keys.map(key => data[key].title);
       const width = keys.map(key => data[key].width);
 
-
-      this.columnas = titles
       this.columnas = titles
       this.widhtColumns = width
+      
+      console.log("columnas")
+      console.log(this.columnas)
 
 
 
@@ -354,7 +351,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   devolverdatasourceButtonsTable() {
-    this.datasourceButtonsTable =  !this.datasourceButtonsTable
+    this.datasourceButtonsTable = !this.datasourceButtonsTable
   }
 
   async guardarEvaluacion(datos: any) {
@@ -456,9 +453,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
     this.sgaMidAdmisiones.put('admision/calcular_nota', Evaluacion).subscribe(
       (response: any) => {
-        console.log(response)
-
-
         if (response.status === 200) {
           this.popUpManager.showSuccessAlert(this.translate.instant('admision.calculo_exito'));
         } else {
@@ -618,8 +612,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   loadColumn(IdCriterio: any) {
     return new Promise((resolve, reject) => {
+      console.log('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0')
       this.evaluacionService.get('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0').subscribe(
         (response: any) => {
+          console.log(response)
+        console.log('requisito/' + IdCriterio)
           this.evaluacionService.get('requisito/' + IdCriterio).subscribe(
             async (res: any) => {
               const data: any = {};
