@@ -10,7 +10,7 @@
           <mat-card  >
               <mat-card-header class="d-block">
                 <!-- select periodo -->
-                <mat-form-field style="width: 35%;">
+                <mat-form-field style="width: 100%;">
                   <mat-label>{{ 'documento_proyecto.aviso_periodo' | translate }}:</mat-label>
                   <mat-select [(ngModel)]="periodo" [disabled]='false' (selectionChange)="selectPeriodo()">
                     <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>

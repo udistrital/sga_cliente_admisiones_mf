@@ -9,7 +9,7 @@
         <mat-card class="card">
           <mat-card-header class="d-block">
             <!-- select periodo -->
-            <mat-form-field style="width: 40%;">
+            <mat-form-field style="width: 100%;">
               <mat-label>{{ 'calendario.periodo' | translate }}:</mat-label>
               <mat-select [(ngModel)]="periodo" (selectionChange)="selectPeriodo()">
                 <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
@@ -57,7 +57,7 @@
   <mat-card-header class="card-header">
     {{ 'admision.resumen_estados_inscripcion' | translate }}
   </mat-card-header>
-  <mat-card-content class="card-content">
+  <mat-card-content class="card-content card-content">
     <label>{{ 'admision.estado_inscrip_solicitada' | translate }}: <b>{{cantidad_inscrip_solicitada}}</b></label>
     <label>{{ 'admision.estado_admitido' | translate }}: <b>{{cantidad_admitidos}}</b></label>
     <label>{{ 'admision.estado_opcionado' | translate }}: <b>{{cantidad_opcionados}}</b></label>
@@ -69,7 +69,7 @@
 </mat-card>
 
 <mat-card class="card-2" [hidden]="!show_listado" accent="info">
-  <mat-card-header class="d-flex justify-content-around align-items-center " style="vertical-align: middle;">
+  <mat-card-header class="d-flex justify-content-around align-items-center card-content-header" style="vertical-align: middle;">
     <label>{{ 'cupos.cupos_proyecto' | translate }}: <b>{{cuposProyecto}}</b></label>
     <label>{{ 'cupos.cupos_disponibles' | translate }} <b>{{(cuposProyecto - cuposAsignados )}}</b></label>
     <button class="btn btn-primary  " style="margin-bottom: 10px;" (click)="admitirInscritos()"
@@ -92,7 +92,7 @@ nbSpinnerMessage="{{ 'GLOBAL.cargando' | translate }}"> -->
           (editConfirm)="onSaveConfirm($event)">
         </ng2-smart-table> -->
 
-        <div class="mat-elevation-z8">
+        <div class="mat-elevation-z8 table-container">
           <table mat-table [dataSource]="source_emphasys" matSort>
 
 

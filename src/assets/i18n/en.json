@@ -1737,6 +1737,7 @@
         "seleccionar_admitidos": "Select admitted",
         "ver_listado_aspirantes": "Show list of applicants",
         "cupos_proyecto": "Number of assigned places",
+        "cupos_disponibles": "Number of places available:",
         "sin_cupos_periodo": "No quotas have been defined for this period or curricular project"
     },
     "calendario": {
