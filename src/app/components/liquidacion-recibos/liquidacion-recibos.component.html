@@ -14,6 +14,15 @@
 
           <div>
             <mat-card-subtitle>Proyecto curricular</mat-card-subtitle>
+            <mat-form-field [formGroup]="firstFormGroup" style="width: 100%;">
+              <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}:</mat-label>
+              <mat-select formControlName="validatorProyecto" required>
+                  <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                  <mat-option *ngFor="let item of proyectos" [value]="item" [disabled]="!item.Id">
+                      {{item.Nombre}}
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>
             <mat-form-field [formGroup]="firstFormGroup">
               <mat-label>Selecciona un Proyecto</mat-label>
               <mat-select formControlName="validatorProyecto" required>
