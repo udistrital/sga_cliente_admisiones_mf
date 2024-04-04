@@ -4,8 +4,8 @@
       <legend>
         &nbsp; {{ 'admision.revisar_docs' | translate }}
       </legend>
-      <div class="row">
-        <div class="col-6" >
+      <div class="row row-xs">
+        <div class="col-6 col-xs" >
           <!-- <ngx-extended-pdf-viewer [src]="documento" [height]="'65vh'"  (pdfLoaded)="docCargado()" *ngIf="isPDF">
           </ngx-extended-pdf-viewer> -->
            <iframe [src]="seguroUrl(documento)" width="100%" height="600px" frameborder="0" ></iframe>
@@ -14,7 +14,7 @@
             <img [src]="documento" [alt]="tabName">
           </div>
         </div>
-        <div class="col-6" style="padding: 5%;">
+        <div class="col-6 col-xs" style="padding: 5%;">
           <div class="row d-flex justify-content-center">
             <h5><mat-label>{{tabName}}</mat-label></h5>
           </div><br>

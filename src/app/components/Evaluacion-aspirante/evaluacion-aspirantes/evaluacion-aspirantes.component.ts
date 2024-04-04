@@ -14,7 +14,7 @@ import { TipoCriterio } from '../../../models/admision/tipo_criterio';
 import Swal from 'sweetalert2';
 import { FormControl, Validators } from '@angular/forms';
 import { PopUpManager } from '../../../managers/popUpManager';
-import { CheckboxAssistanceComponent } from './checkbox-assistance/checkbox-assistance.component';
+import { CheckboxAssistanceComponent } from './checkbox-assistance/checkbox-assistance.component'; 
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { AnyService } from 'src/app/services/any.service';
 import { MatTableDataSource } from '@angular/material/table';
