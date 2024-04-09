@@ -15,7 +15,12 @@ import { DefSuiteInscripProgramaComponent } from './components/suite-programa/de
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 
 
+
 const routes: Routes = [
+  {
+    path: "", // cambiar la ruta del modulo
+    loadChildren: () => import ('./codificacion-module/codificacion.module').then(m => m.CodificacionModule),
+  },
   {
     path:"administrar-criterios", 
     component: AdministradorCriteriosComponent
@@ -56,8 +61,6 @@ const routes: Routes = [
     path:"suite-programa", 
     component: DefSuiteInscripProgramaComponent ,
   },
-
-
 ];
 
 @NgModule({
