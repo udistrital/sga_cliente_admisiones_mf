@@ -13,13 +13,14 @@ import { AsignarDocumentosDescuentosComponent } from './components/asignar-docum
 import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
+import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 
 
 
 const routes: Routes = [
   {
-    path: "", // cambiar la ruta del modulo
-    loadChildren: () => import ('./codificacion-module/codificacion.module').then(m => m.CodificacionModule),
+    path: "codificacion", // cambiar la ruta del modulo
+    loadChildren: () => import ('./components/codificacion-module/codificacion.module').then(m => m.CodificacionModule),
   },
   {
     path:"administrar-criterios", 
