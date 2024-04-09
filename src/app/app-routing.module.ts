@@ -16,11 +16,12 @@ import { TransferenciaComponent } from './components/transferencia/transferencia
 
 
 
+
 const routes: Routes = [
-  {
-    path: "", // cambiar la ruta del modulo
-    loadChildren: () => import ('./codificacion-module/codificacion.module').then(m => m.CodificacionModule),
-  },
+   {
+     path: "codificacion", // cambiar la ruta del modulo
+     loadChildren: () => import ( './components/codificacion-module/codificacion.module').then(m => m.CodificacionModule),
+   },
   {
     path:"administrar-criterios", 
     component: AdministradorCriteriosComponent

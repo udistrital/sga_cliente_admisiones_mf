@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { CodificacionService } from "../../services/codificacion.service";
+import { CodificacionService } from "src/app/services/codificacion.service";
 import {
   MatSnackBar,
   MatSnackBarAction,
@@ -15,7 +15,7 @@ import {
   ProyectoCurricular,
   SelectOption,
   planEstudios,
-} from "../../models/types";
+} from "../../../../models/codificacion/types";
 
 @Component({
   selector: "app-codificacion",

@@ -31,8 +31,8 @@
       "BUTTON_GENERAR_CODIGOS": "Generar Códigos",
       "BUTTON_GENERAR_CODIFICACION": "Asignar Codificación",
       "TABLE_COLUMNA_PUNTAJE": "Puntaje"
-    }
-  },
+    },
+
     "HOME": {
         "TITLE": "SGA",
         "SELECT": "Cambiar idioma",
@@ -2700,5 +2700,4 @@
         "select_vinculacion": "Tipo de vinculación del docente:",
         "select_horas": "Horas asignadas:"
     }
-
 }
