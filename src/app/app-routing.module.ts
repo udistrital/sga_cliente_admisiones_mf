@@ -58,6 +58,7 @@ const routes: Routes = [
     path:"solicitud-transferencia/:id/:process", 
     component: SolicitudTransferenciaComponent,
   },
+  
   {
     path:"suite-programa", 
     component: DefSuiteInscripProgramaComponent ,
