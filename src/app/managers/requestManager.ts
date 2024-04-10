@@ -46,8 +46,7 @@ export class RequestManager {
    * @returns Observable<any>
    */
   get(endpoint: any) {
-    console.log(endpoint)
-    console.log( window.localStorage.getItem('access_token'))
+
     return this.http.get<any>(`${this.path}${endpoint}`, this.httpOptions).pipe(
       map(
         (res) => {
@@ -69,6 +68,7 @@ export class RequestManager {
    * @returns Observable<any>
    */
   post(endpoint: any, element: any) {
+    console.log(`${this.path}${endpoint}`, this.httpOptions)
     return this.http.post<any>(`${this.path}${endpoint}`, element, this.httpOptions).pipe(
       catchError(this.errManager.handleError),
     );

@@ -1,0 +1,22 @@
+button{
+    background-color: transparent;
+    border-radius:10px;
+    outline: none;
+    border: none;
+    color: var(--primary);
+    width: 100%;
+}
+.btn-primary:hover {
+    color: #fff;
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+button:disabled {
+    color: var(--gray);
+    background-color: transparent;
+}
+button:disabled:hover {
+    color: var(--gray);
+    background-color: transparent;
+}

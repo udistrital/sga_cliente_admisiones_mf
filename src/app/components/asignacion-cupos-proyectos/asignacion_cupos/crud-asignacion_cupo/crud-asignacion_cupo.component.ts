@@ -2,18 +2,11 @@ import { FORM_ASIGNACION_CUPO_POSGRADO } from './form-asignacion_cupo_posgrado';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { FORM_ASIGNACION_CUPO } from './form-asignacion_cupo';
-//import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
-// import 'style-loader!angular2-toaster/toaster.css';
-// import { IAppState } from '../../../@core/store/app.state';
-// import { Store } from '@ngrx/store';
-// import { ListService } from '../../../@core/store/services/list.service';
-// import { UserService } from '../../../@core/data/users.service';
-// import { InstitucionEnfasis } from '../../../@core/data/models/proyecto_academico/institucion_enfasis';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
-// import { LocalDataSource } from 'ng2-smart-table';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { MatSelect } from '@angular/material/select';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { NivelFormacion } from 'src/app/models/proyecto_academico/nivel_formacion';
@@ -58,8 +51,6 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   aspirante!: number;
   periodo: any;
   show_calculos_cupos = false;
-  // source_emphasys: LocalDataSource = new LocalDataSource();
-  // source_emphasys1: LocalDataSource = new LocalDataSource();
   porcentaje_subcriterio_total!: number;
   settings_emphasys: any;
   settings_emphasys1: any;
@@ -77,42 +68,12 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   constructor(
     private translate: TranslateService,
     private sgamidService: SgaMidService,
+    private sgaMidAdmisiones: SgaAdmisionesMid,
     private projectService: ProyectoAcademicoService,
     private popUpManager: PopUpManager,
     private evaluacionService: EvaluacionInscripcionService,
     // private toasterService: ToasterService,
     private inscripcionService: InscripcionService,) {
-    this.settings_emphasys = {
-      delete: {
-        deleteButtonContent: '<i class="nb-trash"></i>',
-        confirmDelete: true,
-      },
-      actions: {
-        delete: false,
-        edit: false,
-        add: false,
-        position: 'right',
-      },
-      mode: 'external',
-      columns: {
-        Nombre: {
-          title: this.translate.instant('GLOBAL.cupos'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value;
-          },
-          width: '50%',
-        },
-        Cupos: {
-          title: this.translate.instant('GLOBAL.numero_cupos'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value;
-          },
-          width: '50%',
-        },
-      },
-    };
     this.formAsigancionCupoPregrado = FORM_ASIGNACION_CUPO;
     this.construirFormPregrado();
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -191,10 +152,10 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
       },
     };
     */
+
   }
 
   construirFormPregrado() {
-    // this.formInfoPersona.titulo = this.translate.instant('GLOBAL.info_persona');
     this.formAsigancionCupoPregrado.btn = this.translate.instant('GLOBAL.guardar');
     for (let i = 0; i < this.formAsigancionCupoPregrado.campos.length; i++) {
       this.formAsigancionCupoPregrado.campos[i].label = this.translate.instant('GLOBAL.' + this.formAsigancionCupoPregrado.campos[i].label_i18n);
@@ -203,7 +164,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   }
 
   construirFormPostgrado() {
-    // this.formInfoPersona.titulo = this.translate.instant('GLOBAL.info_persona');
+
     this.formAsigancionCupoPosgrado.btn = this.translate.instant('GLOBAL.guardar');
     for (let i = 0; i < this.formAsigancionCupoPosgrado.campos.length; i++) {
       this.formAsigancionCupoPosgrado.campos[i].label = this.translate.instant('GLOBAL.' + this.formAsigancionCupoPosgrado.campos[i].label_i18n);
@@ -239,7 +200,6 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     const projetc = event.value;
     if (!this.arr_cupos.find((proyectos: any) => projetc.Id === proyectos.Id) && projetc.Id) {
       this.arr_cupos.push(projetc);
-      // this.source_emphasys.load(this.arr_cupos);
       const matSelect: MatSelect = event.source;
       matSelect.writeValue(null);
     } else {
@@ -262,15 +222,12 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
       return -1;
     }
     this.arr_cupos.splice(findInArray(event.data.Id, this.arr_cupos, 'Id'), 1);
-    // this.source_emphasys.load(this.arr_cupos);
   }
 
   createCupos() {
     this.showListadoAspirantes = false;
     this.show_listado = false;
     const opt: any = {
-      // title: this.translate.instant('GLOBAL.crear'),
-      // text: this.translate.instant('GLOBAL.crear') + '?',
       title: this.translate.instant('GLOBAL.actualizar'),
       text: this.translate.instant('GLOBAL.confirmar_actualizar'),
       icon: 'warning',
@@ -285,10 +242,13 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         this.loading = true;
         if (willDelete.value) {
           console.info(JSON.stringify(this.info_cupos));
-          this.sgamidService.post('admision/postcupos', this.info_cupos)
+          
+          this.sgaMidAdmisiones.post('admision/cupos', this.info_cupos)
             .subscribe(res => {
+              console.log(res)
+
               const r = <any>res
-              if (r !== null && r.Status === '200') {
+              if (r !== null && r.status === 200) {
                 this.loading = false;
                 //this.cambiarestados();
                 this.popUpManager.showSuccessAlert(this.translate.instant('GLOBAL.info_cupos') + ' ' + this.translate.instant('GLOBAL.confirmarCrear'));
@@ -422,37 +382,6 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
 
   }
 
-  // cambiarestados() {
-  //   this.info_actualizar_estados = {}
-  //   this.info_actualizar_estados.Proyectos = this.info_cupos.Proyectos;
-  //   this.info_actualizar_estados.Periodo = this.info_cupos.Periodo;
-  //   console.info(JSON.stringify(this.info_actualizar_estados));
-  //   this.sgamidService.post('admision/cambioestado', this.info_actualizar_estados)
-  //     .subscribe(res => {
-  //       const r = <any>res
-  //       if (r !== null && r.Type !== 'error') {
-  //         this.loading = false;
-  //         this.showToast('info', this.translate.instant('GLOBAL.actualizar'),
-  //           this.translate.instant('GLOBAL.info_estado') + ' ' +
-  //           this.translate.instant('GLOBAL.confirmarActualizar'));
-  //         this.eventChange.emit(true);
-  //       } else {
-  //         this.showToast('error', this.translate.instant('GLOBAL.error'),
-  //           this.translate.instant('GLOBAL.error'));
-  //       }
-  //     },
-  //       (error: HttpErrorResponse) => {
-  //         Swal.fire({
-  //           icon:'error',
-  //           title: error.status + '',
-  //           text: this.translate.instant('ERROR.' + error.status),
-  //           footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-  //             this.translate.instant('GLOBAL.info_estado'),
-  //           confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-  //         });
-  //       });
-  // }
-
   cambiarestados() {
     this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + Number(this.info_proyectos.Id) + ',PeriodoId:' + this.info_periodo.Id + '&sortby=Id&order=asc').subscribe(
       (res: any) => {
@@ -524,59 +453,4 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         });
       });
   }
-
-  mostrartabla() {
-    this.show_listado = true
-
-    this.info_consultar_aspirantes = {
-      Id_proyecto: Number(this.info_cupos.Proyectos.Id),
-      Id_periodo: Number(this.info_cupos.Periodo.Id),
-    }
-    this.sgamidService.post('admision/consulta_aspirantes', this.info_consultar_aspirantes)
-      .subscribe(res => {
-        const r = <any>res
-        if (r !== null && r.Type !== 'error') {
-          this.loading = false;
-          r.sort((puntaje_mayor:any, puntaje_menor:any) => puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal)
-          const data = <Array<any>>r;
-          // this.source_emphasys.load(data);
-
-        } else {
-          // this.showToast('error', this.translate.instant('GLOBAL.error'),
-          //   this.translate.instant('GLOBAL.error'));
-        }
-      },
-        (error: HttpErrorResponse) => {
-          Swal.fire({
-            icon: 'error',
-            title: error.status + '',
-            text: this.translate.instant('ERROR.' + error.status),
-            footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-              this.translate.instant('GLOBAL.info_estado'),
-            confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-          });
-        });
-  }
-
-
-  // private showToast(type: string, title: string, body: string) {
-  //   this.config = new ToasterConfig({
-  //     // 'toast-top-full-width', 'toast-bottom-full-width', 'toast-top-left', 'toast-top-center'
-  //     positionClass: 'toast-top-center',
-  //     timeout: 5000,  // ms
-  //     newestOnTop: true,
-  //     tapToDismiss: false, // hide on click
-  //     preventDuplicates: true,
-  //     animation: 'slideDown', // 'fade', 'flyLeft', 'flyRight', 'slideDown', 'slideUp'
-  //     limit: 5,
-  //   });
-  //   const toast: Toast = {
-  //     type: type, // 'default', 'info', 'success', 'warning', 'error'
-  //     title: title,
-  //     body: body,
-  //     showCloseButton: true,
-  //     bodyOutputType: BodyOutputType.TrustedHtml,
-  //   };
-  //   this.toasterService.popAsync(toast);
-  // }
 }

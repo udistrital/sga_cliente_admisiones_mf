@@ -8,18 +8,18 @@ import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscri
 import { Inscripcion } from 'src/app/models/inscripcion/inscripcion';
 import { TercerosService } from 'src/app/services/terceros.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TipoCriterio } from '../../../models/admision/tipo_criterio';
-// import { LocalDataSource } from 'ng2-smart-table';
 import Swal from 'sweetalert2';
 import { FormControl, Validators } from '@angular/forms';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { CheckboxAssistanceComponent } from './checkbox-assistance/checkbox-assistance.component';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
-import { AnyService } from 'src/app/services/any.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+
 
 @Component({
   selector: 'evaluacion-aspirantes',
@@ -38,12 +38,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
     }
     if (this.inscripcion_id !== undefined && this.inscripcion_id !== 0 && this.inscripcion_id.toString() !== ''
       && this.inscripcion_id.toString() !== '0') {
-      // this.getInfoInscripcion();
+
     }
   }
 
   @Output() eventChange = new EventEmitter();
-  // tslint:disable-next-line: no-output-rename
+
   @Output('result') result: EventEmitter<any> = new EventEmitter();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -110,12 +110,14 @@ export class EvaluacionAspirantesComponent implements OnInit {
   nivel_load: any;
   selectednivel: any;
   tipo_criterio!: TipoCriterio;
-  dataSourceColumn :any = []
+  dataSourceColumn: any = []
   nameColumns: any
   dataSource!: MatTableDataSource<any>;
+  datavalor: any = []
   datasourceButtonsTable: boolean = false
   settings: any;
   columnas: any;
+  widhtColumns: any
   criterio = [];
   cantidad_aspirantes: number = 0;
 
@@ -131,6 +133,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private evaluacionService: EvaluacionInscripcionService,
     private tercerosService: TercerosService,
     private sgaMidService: SgaMidService,
+    private sgaMidAdmisiones: SgaAdmisionesMid,
     private popUpManager: PopUpManager,
 
     private autenticationService: ImplicitAutenticationService,) {
@@ -140,7 +143,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.save = true;
     this.notas = false;
     this.showTab = true;
-    // this.dataSource = new LocalDataSource();
     this.loadData();
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.createTable();
@@ -172,7 +174,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
-          console.log(this.periodos)
+
           const r = <any>res;
           if (res !== null && r.Status === '200') {
             this.periodo = res.Data.find((p: any) => p.Activo);
@@ -180,7 +182,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
             resolve(this.periodo);
             const periodos = <any[]>res['Data'];
             periodos.forEach((element: any) => {
-              console.log(element)
+
               this.periodos.push(element);
             });
           }
@@ -189,6 +191,10 @@ export class EvaluacionAspirantesComponent implements OnInit {
             reject(error);
           });
     });
+  }
+
+  buttonedit(row: any): void {
+    row.mostrarBotones = !row.mostrarBotones;
   }
 
   selectPeriodo() {
@@ -247,7 +253,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                 );
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(
@@ -255,7 +261,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                     );
                     if (dependencias.length > 1) {
                       this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
-                      //this.proyectos.forEach(p => { p.Id = undefined })
+
                     }
                   },
                   (error: any) => {
@@ -280,14 +286,14 @@ export class EvaluacionAspirantesComponent implements OnInit {
         if (response[0].Id !== undefined && response[0] !== '{}') {
           this.criterios = <any>response;
           this.criterios = this.criterios.filter((e: any) => e.PorcentajeGeneral !== 0);
-          // this.btnCalculo = true;
+
           this.btnCalculo = false;
           this.selectcriterio = false;
           this.notas = false;
           this.criterio_selected = [];
           this.criterios.forEach(async (element: any) => {
             await this.criterio_selected.push(element.RequisitoId)
-            // await this.loadInfo(element.RequisitoId.Id);
+
           });
           this.viewtab();
         } else {
@@ -313,43 +319,24 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   createTable() {
     return new Promise(async (resolve, reject) => {
+
       const IdCriterio = sessionStorage.getItem('tipo_criterio');
-      const data:any = await this.loadColumn(IdCriterio)
-      console.log(IdCriterio)
-      console.log(data)
+      const data: any = await this.loadColumn(IdCriterio)
       const keys = Object.keys(data!);
       const titles = keys.map(key => data[key].title);
-      console.log(titles)
+      const width = keys.map(key => data[key].width);
+
       this.columnas = titles
-      this.columnas = titles
-   
+      this.widhtColumns = width
+      
+      console.log("columnas")
+      console.log(this.columnas)
+
+
+
+
       this.dataSourceColumn = (titles)
       this.dataSourceColumn.push('acciones')
-      console.log(this.dataSourceColumn)
-
-      this.settings = {
-        columns: data,
-        actions: {
-          edit: true,
-          add: false,
-          delete: false,
-          position: 'right',
-          columnTitle: this.translate.instant('GLOBAL.acciones'),
-          width: '5%',
-        },
-        edit: {
-          editButtonContent:
-            '<i class="nb-edit" title="' + this.translate.instant('GLOBAL.tooltip_editar_registro') +
-            '"></i>',
-          saveButtonContent:
-            '<i class="nb-checkmark-circle" title="' + this.translate.instant('admision.tooltip_guargar') +
-            '"></i>',
-          cancelButtonContent:
-            '<i class="nb-close-circled" title="' + this.translate.instant('admision.tooltip_cancelar') +
-            '"></i>',
-          confirmSave: true,
-        },
-      };
       resolve(this.settings)
     })
   }
@@ -359,18 +346,21 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   onEditConfirm(event: any) {
-    console.log(event)
-    this.guardarEvaluacion(event.newData).then(() => event.confirm.resolve(event.newData))
+
+    this.guardarEvaluacion(event.newData)
   }
 
   devolverdatasourceButtonsTable() {
-    this.datasourceButtonsTable = false
+    this.datasourceButtonsTable = !this.datasourceButtonsTable
   }
 
   async guardarEvaluacion(datos: any) {
+
     return new Promise((resolve, reject) => {
       const Evaluacion: any = {};
-
+      // Evaluacion.Aspirantes = this.Aspirantes;
+      // await this.dataSource.getElements().then(datos => Evaluacion.Aspirantes = datos)
+      // Evaluacion.Aspirantes = this.dataSource.data;
       Evaluacion.Aspirantes = [datos]
       Evaluacion.PeriodoId = this.periodo.Id;
       Evaluacion.ProgramaId = this.proyectos_selected;
@@ -382,6 +372,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       let numero = false;
       const regex = /^[0-9]*$/;
       for (let i = 0; i < aux.length; i++) {
+
         if (aux[i]['Asistencia'] === 's' || aux[i]['Asistencia'] === 'si' || aux[i]['Asistencia'] === 'sí' ||
           aux[i]['Asistencia'] === 'S' || aux[i]['Asistencia'] === 'SI' || aux[i]['Asistencia'] === 'SÍ' ||
           aux[i]['Asistencia'] === 'true' || aux[i]['Asistencia'] === 'True' || aux[i]['Asistencia'] === 'TRUE') {
@@ -390,10 +381,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
           aux[i]['Asistencia'] = ''
         }
         for (let j = 0; j < this.columnas.length; j++) {
+
           if (aux[i][this.columnas[j]] === undefined || aux[i][this.columnas[j]] === '') {
             vacio = true;
             break;
           } else {
+
             if (regex.test(aux[i][this.columnas[j]]) === true) {
               const auxNumero = parseInt(aux[i][this.columnas[j]], 10)
               if (auxNumero >= 0 && auxNumero <= 100) {
@@ -402,24 +395,28 @@ export class EvaluacionAspirantesComponent implements OnInit {
                 break;
               }
             } else {
-              numero = true;
+
+              numero = false;
               break;
             }
+
           }
+
         }
       }
 
       // Validaciones
       if (vacio === true) {
-        this.popUpManager.showToast('info', this.translate.instant('admision.vacio'));
-        // this.popUpManager.showToast('info', this.translate.instant('admision.vacio'), this.translate.instant('GLOBAL.info'));
+        this.popUpManager.showToast(this.translate.instant('admision.vacio'));
       } else if (numero === true) {
-        this.popUpManager.showToast('info', this.translate.instant('admision.vacio'));
-        // this.popUpManager.showToast('info', this.translate.instant('admision.numero'), this.translate.instant('GLOBAL.info'));
+        this.popUpManager.showToast(this.translate.instant('admision.numero'));
       } else {
-        this.sgaMidService.post('admision/registrar_evaluacion', Evaluacion).subscribe(
+        console.log('body')
+        console.log(JSON.stringify(Evaluacion))
+        this.sgaMidAdmisiones.post('admision/evaluacion', Evaluacion).subscribe(
           (response: any) => {
-            if (response.Response.Code === '200') {
+            console.log(response)
+            if (response.status === 200) {
               this.criterio_selected.forEach(criterio => {
                 if (criterio.Id === Evaluacion.CriterioId) {
                   criterio['evaluado'] = true;
@@ -427,9 +424,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
               })
               this.loadInfo(parseInt(Evaluacion.CriterioId, 10));
               resolve('')
-              this.popUpManager.showToast('success', this.translate.instant('admision.registro_exito'));
-              // this.popUpManager.showToast('success', this.translate.instant('admision.registro_exito'), this.translate.instant('GLOBAL.operacion_exitosa'));
-              // this.popUpManager.showSuccessAlert(this.translate.instant('admision.registro_exito'));
+              this.popUpManager.showToast(this.translate.instant('admision.registro_exito'));
             } else {
               reject()
               this.popUpManager.showErrorToast(this.translate.instant('admision.registro_error'));
@@ -443,8 +438,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
       }
     });
   }
-
   async calcularEvaluacion() {
+
     const Evaluacion: any = {};
     Evaluacion.IdPersona = <Array<any>>[];
     Evaluacion.IdPeriodo = this.periodo.Id;
@@ -456,10 +451,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
       Evaluacion.IdPersona[i] = { 'Id': this.Aspirantes[i].Id };
     }
 
-    this.sgaMidService.put('admision/calcular_nota', Evaluacion).subscribe(
+    this.sgaMidAdmisiones.put('admision/calcular_nota', Evaluacion).subscribe(
       (response: any) => {
-
-        if (response.Response.Code === '200') {
+        if (response.status === 200) {
           this.popUpManager.showSuccessAlert(this.translate.instant('admision.calculo_exito'));
         } else {
           this.popUpManager.showErrorToast(this.translate.instant('admision.calculo_error'));
@@ -509,18 +503,21 @@ export class EvaluacionAspirantesComponent implements OnInit {
   async loadAspirantes() {
     return new Promise((resolve, reject) => {
 
-      this.sgaMidService.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2')
+      this.sgaMidAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2')
         .subscribe(
           (response: any) => {
-            if (response.Success && response.Status == "200") {
-              this.Aspirantes = response.Data;
+
+            if (response.success == true && response.status == 200) {
+              this.Aspirantes = response.data;
               this.cantidad_aspirantes = this.Aspirantes.length;
-              console.log(this.Aspirantes)
-              this.dataSource = new MatTableDataSource(this.Aspirantes);
+
+
               setTimeout(() => {
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
               }, 300);
+
+              this.dataSource = new MatTableDataSource(this.Aspirantes);
 
               resolve(this.Aspirantes)
             }
@@ -535,59 +532,21 @@ export class EvaluacionAspirantesComponent implements OnInit {
             });
           }
         );
-
-      /* this.inscripcionService.get('inscripcion?query=EstadoInscripcionId__Id:5,ProgramaAcademicoId:' +
-        this.proyectos_selected + ',PeriodoId:' + this.periodo.Id + '&sortby=Id&order=asc').subscribe(
-          (response: any) => {
-            if (Object.keys(response[0]).length !== 0) {
-              const data = <Array<any>>response.filter((inscripcion) => (inscripcion.PersonaId !== undefined));
-
-              data.forEach(element => {
-                this.tercerosService.get('tercero/' + element.PersonaId).subscribe(
-                  async (res: any) => {
-                    const aspiranteAux = {
-                      Id: res.Id,
-                      Aspirantes: res.NombreCompleto,
-                    };
-                    this.Aspirantes.push(aspiranteAux);
-
-                    if (data.length === this.Aspirantes.length) {
-                      this.dataSource.load(this.Aspirantes);
-                      resolve(this.Aspirantes);
-                    }
-                  },
-                  error => {
-                    this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
-
-                  },
-                );
-              });
-
-            } else {
-              reject('Error');
-              Swal.fire({
-                icon: 'warning',
-                title: this.translate.instant('admision.titulo_no_aspirantes'),
-                text: this.translate.instant('admision.error_no_aspirantes'),
-                confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-              });
-            }
-          },
-          error => {
-            reject(error);
-            this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
-          },
-        ); */
     });
 
   }
 
   async loadInfo(IdCriterio: number) {
     return new Promise((resolve, reject) => {
-      this.sgaMidService.get('admision/consultar_evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio).subscribe(
+      console.log('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio)
+      this.sgaMidAdmisiones.get('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio).subscribe(
         async (response: any) => {
-          if (response.Response.Code === '200') {
-            const data = <Array<any>>response.Response.Body[0].areas;
+          console.log(response)
+
+          if (response.status === 200) {
+
+            const data = <Array<any>>response.data.areas;
+
             if (data !== undefined) {
               await data.forEach(async asistente => {
                 if (asistente['Asistencia'] === '') {
@@ -602,6 +561,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
                   }
                 })
                 //  [this, this.dataSource.load(this.Aspirantes)]
+                const valor = Object.keys(this.Aspirantes[0]);
+                const arreglo = valor.filter(elemento => elemento !== "Id");
+                this.datavalor = arreglo
+                console.log(this.datavalor)
+                this.dataSource = new MatTableDataSource(this.Aspirantes)
               })
 
             } else {
@@ -610,7 +574,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
             this.save = false;
             this.verificarEvaluacion();
             resolve(data);
-          } else if (response.Response.Code === '404') {
+          } else if (response.status === 404) {
             this.Aspirantes.forEach((aspirante: any) => {
               this.columnas.forEach((columna: any) => {
                 aspirante[columna] = '';
@@ -638,6 +602,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     });
   }
 
+
   itemSelect(event: any): void {
     this.datasourceButtonsTable = true
     if (this.asistencia !== undefined) {
@@ -647,8 +612,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   loadColumn(IdCriterio: any) {
     return new Promise((resolve, reject) => {
+      console.log('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0')
       this.evaluacionService.get('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0').subscribe(
         (response: any) => {
+          console.log(response)
+        console.log('requisito/' + IdCriterio)
           this.evaluacionService.get('requisito/' + IdCriterio).subscribe(
             async (res: any) => {
               const data: any = {};

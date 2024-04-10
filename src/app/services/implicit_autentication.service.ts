@@ -1,6 +1,8 @@
  
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
  
  
 @Injectable({
@@ -8,6 +10,7 @@ import { BehaviorSubject, of } from 'rxjs';
 })
  
 export class ImplicitAutenticationService {
+    environment = environment.TOKEN;
     logoutUrl: any;
     params: any;
     payload: any;
@@ -67,5 +70,25 @@ export class ImplicitAutenticationService {
             });
         });
         return rolePromise;
+    }
+
+    public logout(action:any): void {
+        const state = localStorage.getItem('state');
+        const idToken = localStorage.getItem('id_token');
+        if (!!state && !!idToken) {
+            this.logoutUrl = this.environment.SIGN_OUT_URL;
+            this.logoutUrl += '?id_token_hint=' + idToken;
+            this.logoutUrl += '&post_logout_redirect_uri=' + this.environment.SIGN_OUT_REDIRECT_URL;
+            this.logoutUrl += '&state=' + state;
+            this.clearStorage();
+            this.logoutSubject.next(action);
+            window.location.replace(this.logoutUrl);
+        }
+    }
+
+    public clearStorage() {
+        this.isLogin = false;
+        window.localStorage.clear();
+        window.sessionStorage.clear();
     }
 }
