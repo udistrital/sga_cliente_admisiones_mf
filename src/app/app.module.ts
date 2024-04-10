@@ -77,6 +77,7 @@ import { EvaluacionInscripcionService } from './services/evaluacion_inscripcion.
 import { ParametrosService } from './services/parametros.service';
 import { SgaMidService } from './services/sga_mid.service';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
@@ -124,7 +125,7 @@ export function createTranslateLoader(http: HttpClient) {
     DialogoDocumentosTransferenciasComponent,
   ],
   imports: [
-    
+    CodificacionModule,
     FormsModule,
     CommonModule,
     BrowserModule,
