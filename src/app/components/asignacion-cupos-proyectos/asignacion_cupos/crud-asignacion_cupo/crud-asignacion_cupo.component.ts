@@ -14,6 +14,7 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { Inscripcion } from 'src/app/models/inscripcion/inscripcion';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'crud-asignacion-cupo',
@@ -59,6 +60,11 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   niveles!: NivelFormacion[];
   show_posgrado: boolean = false;
 
+  dataSource: any;
+  displayedColumns: string[] = ['inscripcion', 'tipoCupo', 'estado', 'cupos', 'acciones'];
+  totalCupos: number = 0;
+  cupo: any;
+
   constructor(
     private translate: TranslateService,
     private sgamidService: SgaMidService,
@@ -81,6 +87,72 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     });
 
     this.loading = false;
+/*
+    this.settings_emphasys1 = {
+      delete: {
+        deleteButtonContent: '<i class="nb-trash"></i>',
+        confirmDelete: true,
+      },
+      actions: {
+        delete: false,
+        edit: false,
+        add: false,
+        position: 'right',
+      },
+      mode: 'external',
+      columns: {
+        TipoDocumento: {
+          title: this.translate.instant('GLOBAL.Tipo'),
+          // type: 'string;',
+          valuePrepareFunction: (value:any) => {
+            return value;
+          },
+          width: '2%',
+        },
+        NumeroDocumento: {
+          title: this.translate.instant('GLOBAL.Documento'),
+          // type: 'string;',
+          valuePrepareFunction: (value:any) => {
+            return value;
+          },
+          width: '8%',
+        },
+        NombreAspirante: {
+          title: this.translate.instant('GLOBAL.Nombre'),
+          // type: 'string;',
+          valuePrepareFunction: (value:any) => {
+            return value;
+          },
+          width: '50%',
+        },
+        NotaFinal: {
+          title: this.translate.instant('GLOBAL.Puntaje'),
+          // type: 'string;',
+          valuePrepareFunction: (value:any) => {
+            return value;
+          },
+          width: '5%',
+        },
+        TipoInscripcionId: {
+          title: this.translate.instant('GLOBAL.TipoInscripcion'),
+          // type: 'string;',
+          valuePrepareFunction: (value:any) => {
+            return value.Nombre;
+          },
+          width: '25%',
+        },
+        EstadoInscripcionId: {
+          title: this.translate.instant('GLOBAL.Estado'),
+          // type: 'string;',
+          valuePrepareFunction: (value:any) => {
+            return value.Nombre;
+          },
+          width: '10%',
+        },
+      },
+    };
+    */
+
   }
 
   construirFormPregrado() {
@@ -199,12 +271,38 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         }
       });
   }
-
-
-
-  ngOnInit() {
+    
+  ngOnInit(): void {
     this.show_posgrado = this.info_nivel;
+    this.dataSource = new MatTableDataSource([
+      {
+        "inscripcion": "nueva",
+        "tipoCupo": "Normal",
+        "estado": "Activo",
+        "cupos": 10
+      },
+      {
+        "inscripcion": "nueva",
+        "tipoCupo": "Afro",
+        "estado": "Activo",
+        "cupos": 5
+      }
+    ]);
+
+    this.calcularTotalCupos();
+
+    this.dataSource.data.forEach((cupo: any) => {
+      cupo.cupos.subscribe((value: number) => {
+        this.calcularTotalCupos();
+      });
+    });
   }
+
+  calcularTotalCupos(): void {
+    this.totalCupos = this.dataSource.data.reduce((a: number, b: any) => a + b.cupos, 0);
+  }
+
+
 
   ngOnChanges() {
     this.show_posgrado = this.info_nivel;
