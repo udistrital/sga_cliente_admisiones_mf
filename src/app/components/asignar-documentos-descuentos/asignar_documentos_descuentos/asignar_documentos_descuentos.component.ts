@@ -8,11 +8,11 @@ import { FormControl, Validators } from '@angular/forms';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { SelectDocumentoProyectoComponent } from '../select-documento-proyecto/select-documento-proyecto.component';
 import { SelectDescuentoProyectoComponent } from '../select-descuento-proyecto/select-descuento-proyecto.component';
-// import { NbDialogService } from '@nebular/theme';
 import { MatDialog } from '@angular/material/dialog';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { UserService } from 'src/app/services/users.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
+
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 
 @Component({
@@ -50,7 +50,8 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
     private popUpManager: PopUpManager,
     private inscripcionService: InscripcionService,
     private userService: UserService,
-    private sgaMidService: SgaMidService,
+
+    private sgaMidAdmisiones: SgaAdmisionesMid,
     private autenticationService: ImplicitAutenticationService,) {
     this.translate = translate;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => { });
@@ -153,15 +154,15 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
                 );
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
+                this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(
                       (proyecto: any) => dependencias.includes(proyecto.Id)
                     );
                     if (dependencias.length > 1) {
-                      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
-                      //this.proyectos.forEach(p => { p.Id = undefined })
+                      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));
                     }
                   },
                   (error: any) => {

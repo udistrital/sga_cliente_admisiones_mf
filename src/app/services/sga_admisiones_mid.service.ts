@@ -24,8 +24,13 @@ export class SgaAdmisionesMid {
     return this.requestManager.get(endpoint);
   }
 
-  post(endpoint:string, element:any) {
-    this.requestManager.setPath('INSCRIPCION_MID_SERVICE');
+  post(endpoint: any, element: any) {
+    this.requestManager.setPath('SGA_ADMISIONES_MID');
     return this.requestManager.post(endpoint, element);
+  }
+
+  put(endpoint: any, element: any ) {
+    this.requestManager.setPath('SGA_ADMISIONES_MID');
+    return this.requestManager.put(endpoint, element);
   }
 }
