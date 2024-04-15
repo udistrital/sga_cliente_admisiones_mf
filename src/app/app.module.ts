@@ -78,6 +78,10 @@ import { ParametrosService } from './services/parametros.service';
 import { SgaMidService } from './services/sga_mid.service';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { LiquidacionRecibosComponent } from './components/liquidacion/liquidacion-recibos/liquidacion-recibos.component';
+import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
+
+import { LiquidacionTableComponent } from './components/liquidacion/liquidacion-table/liquidacion-table.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
@@ -123,6 +127,9 @@ export function createTranslateLoader(http: HttpClient) {
     AsignarDocumentosDescuentosComponent,
     EvaluacionDocumentosInscritosComponent,
     DialogoDocumentosTransferenciasComponent,
+    LiquidacionRecibosComponent,
+    LiquidacionHistoricoComponent,
+    LiquidacionTableComponent
   ],
   imports: [
     CodificacionModule,

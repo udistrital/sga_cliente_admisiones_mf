@@ -92,16 +92,16 @@ export class CodificacionComponent {
     this.codificacionService
       .getNiveles()
       .subscribe(
-        (resp: NivelFormacion[]) => {
+        (resp: any) => {
           this.todosNiveles = resp;
           this.niveles = [
             { value: -1, viewValue: "Todos" },
             ...resp
-              .filter((nivel) => !nivel.NivelFormacionPadreId)
-              .map((nivel) => ({ value: nivel.Id, viewValue: nivel.Nombre })),
+              .filter((nivel:any) => !nivel.NivelFormacionPadreId)
+              .map((nivel:any) => ({ value: nivel.Id, viewValue: nivel.Nombre })),
           ];
         },
-        (err) => {
+        (err:any) => {
           console.error(err);
         }
       );
@@ -111,8 +111,8 @@ export class CodificacionComponent {
     this.codificacionService
       .getProyectosCurriculares()
       .subscribe(
-        (data) => (this.proyectosCurriculares = data),
-        (error) => console.error(error)
+        (data:any) => (this.proyectosCurriculares = data),
+        (error:any) => console.error(error)
       );
   }
 
@@ -120,11 +120,11 @@ export class CodificacionComponent {
     this.codificacionService
       .getPeriodosAcademicos()
       .subscribe(
-        (data) => {
+        (data:any) => {
           this.periodosAcademicos = data
           this.extraerAnosInicio();
         },
-        (error) => console.error(error)
+        (error:any) => console.error(error)
       );
   }
 
@@ -168,7 +168,7 @@ export class CodificacionComponent {
       .getAdmitidos(idPeriodo, idProyecto, this.periodoValue, codigoProyecto)
       .subscribe(
         {
-          next: (data) => {
+          next: (data:any) => {
             this.boolListado = true
             this.openSnackBar('Información encontrada')
             this.dataSource = data.data
@@ -181,7 +181,7 @@ export class CodificacionComponent {
               this.openSnackBar('Recuerda asignar los puntajes de los estudiantes')
             }
           },
-          error: (error) => {
+          error: (error:any) => {
             this.openSnackBar('No se encontró información')
           }
         }
@@ -190,26 +190,26 @@ export class CodificacionComponent {
 
   generarCodigos() {
     this.codificacionService.postGenerarCodigos(this.dataSource, 1).subscribe({
-      next: (data) => {
+      next: (data:any) => {
         if (data.data) {
           this.openSnackBar('Codigos generados')
           this.dataSource = data.data
           this.isGenerarCodigos = true
         }
       },
-      error: (error) => this.openSnackBar('Codigos no egenrados')
+      error: (error:any) => this.openSnackBar('Codigos no egenrados')
     });
   }
 
   asignarCodificacion() {
     this.codificacionService.postGuardarCodigos(this.dataSource).subscribe({
-      next: (data) => {
+      next: (data:any) => {
         if (data.data) {
           this.openSnackBar('Codificación asignada')
           this.getAdmitidos()
         }
       },
-      error: (error) => this.openSnackBar('Codificación no asignada')
+      error: (error:any) => this.openSnackBar('Codificación no asignada')
     });
   }
 
@@ -303,10 +303,10 @@ export class CodificacionComponent {
       .getPlanDeEstudios(id)
       .subscribe(
         {
-          next: (data) => {
+          next: (data:any) => {
             this.planEstudiosFiltrados = data.Data
           },
-          error: (error) => console.error(error)
+          error: (error:any) => console.error(error)
         }
       );
   }

@@ -14,6 +14,8 @@ import { SolicitudTransferenciaComponent } from './components/transferencia/soli
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { LiquidacionRecibosComponent } from './components/liquidacion/liquidacion-recibos/liquidacion-recibos.component';
+import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 
 
 
@@ -61,6 +63,14 @@ const routes: Routes = [
   {
     path:"suite-programa", 
     component: DefSuiteInscripProgramaComponent ,
+  },
+  {
+    path:"liquidacion-recibos", 
+    component: LiquidacionRecibosComponent ,
+  },
+  {
+    path:"liquidacion-historico", 
+    component: LiquidacionHistoricoComponent ,
   },
 ];
 
