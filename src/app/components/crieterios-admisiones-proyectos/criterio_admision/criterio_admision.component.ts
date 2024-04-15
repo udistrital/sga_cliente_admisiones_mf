@@ -18,17 +18,18 @@ import { NivelFormacion } from 'src/app/models/proyecto_academico/nivel_formacio
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 @Component({
   selector: 'criterio-admision',
   templateUrl: './criterio_admision.component.html',
   styleUrls: ['./criterio_admision.component.scss'],
 })
-export class CriterioAdmisionComponent implements  OnChanges {
+export class CriterioAdmisionComponent implements OnChanges {
 
 
 
-
+  @ViewChild('inputRef') inputRef!: ElementRef;
   @Input('criterios_select')
   set name(inscripcion_id: number) {
     this.inscripcion_id = inscripcion_id;
@@ -39,12 +40,10 @@ export class CriterioAdmisionComponent implements  OnChanges {
     }
     if (this.inscripcion_id !== undefined && this.inscripcion_id !== 0 && this.inscripcion_id.toString() !== ''
       && this.inscripcion_id.toString() !== '0') {
-      // this.getInfoInscripcion();
     }
   }
 
   @Output() eventChange = new EventEmitter();
-  // tslint:disable-next-line: no-output-rename
   @Output('result') result: EventEmitter<any> = new EventEmitter();
 
   inscripcion_id!: number;
@@ -110,11 +109,11 @@ export class CriterioAdmisionComponent implements  OnChanges {
 
   settings: any;
   settingsSubcriterio: any;
-  dataSourceColumns = ["criterio","porentaje","acciones"]
+  dataSourceColumns = ["criterio", "porentaje", "acciones"]
   dataSource!: MatTableDataSource<any>;
   dataSourceSubcriterio!: MatTableDataSource<any>;
-  porcentajeCriterioTable:boolean = false
-  porcentajeSubcriterioTable:boolean = false
+  porcentajeCriterioTable: boolean = false
+  porcentajeSubcriterioTable: boolean = false
   data: any[] = [];
   dataSubcriterios: any[] = [];
   porcentajeTotal: number = 0;
@@ -136,7 +135,7 @@ export class CriterioAdmisionComponent implements  OnChanges {
     private parametrosService: ParametrosService,
     private evaluacionService: EvaluacionInscripcionService,
     private admisiones: EvaluacionInscripcionService,
-    private sgaMidService: SgaMidService,
+    private sgaMidAdmisiones : SgaAdmisionesMid,
     private autenticationService: ImplicitAutenticationService,
   ) {
     this.translate = translate;
@@ -167,6 +166,9 @@ export class CriterioAdmisionComponent implements  OnChanges {
     }
   }
 
+  buttonedit(row: any): void {
+    row.mostrarBotones = !row.mostrarBotones;
+  }
   nivel_load() {
     this.projectService.get('nivel_formacion?limit=0').subscribe(
       // (response: NivelFormacion[]) => {
@@ -179,25 +181,7 @@ export class CriterioAdmisionComponent implements  OnChanges {
     );
   }
 
-  // cargarPeriodo() {
-  //   return new Promise((resolve, reject) => {
-  //     this.parametrosService.get('periodo?query=Activo:true&sortby=Id&order=desc&limit=1')
-  //       .subscribe(res => {
-  //         const periodos = <any[]>res['Data'];
-  //         if (res !== null && res['Success']) {
-  //           this.periodo = <any>periodos[0];
-  //           window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
-  //           resolve(this.periodo);
-  //           periodos.forEach(element => {
-  //             this.periodos.push(element);
-  //           });
-  //         }
-  //       },
-  //         (error: HttpErrorResponse) => {
-  //           reject(error);
-  //         });
-  //   });
-  // }
+
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
@@ -338,7 +322,7 @@ export class CriterioAdmisionComponent implements  OnChanges {
               );
             } else {
               const id_tercero = this.userService.getPersonaId();
-              this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+              this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                 (respDependencia: any) => {
                   const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                   this.proyectos = <any[]>res.filter(
@@ -525,12 +509,12 @@ export class CriterioAdmisionComponent implements  OnChanges {
       },
     }
   }
-  devolverBotoneditarCriterio(){
-    this.porcentajeCriterioTable= false
+  devolverBotoneditarCriterio() {
+    this.porcentajeCriterioTable = false
     this.devolverBotoneditarSubciterio()
   }
-  devolverBotoneditarSubciterio(){
-    this.porcentajeSubcriterioTable= false
+  devolverBotoneditarSubciterio() {
+    this.porcentajeSubcriterioTable = false
   }
   onEdit(event: any) {
     this.porcentajeCriterioTable = true
@@ -647,15 +631,10 @@ export class CriterioAdmisionComponent implements  OnChanges {
                 for (let i = 0; i < res.length; i++) {
                   if (this.requisitoId == r[i].RequisitoId.Id) {
                     const requisitoPut = r[i];
-                    // for recorrer subcriterios
-                    // let PorcentajeEspecifico = [];
+                    
                     const objectConcat = [{}];
                     for (let i = 0; i < this.dataSubcriterios.length; i++) {
-                      // PorcentajeEspecifico.push({
-                      //   Subcriterio: this.dataSubcriterios[i].Criterio,
-                      //   Porcentaje: this.dataSubcriterios[i].Porcentaje,
-                      //   Abreviación: ""
-                      // });
+              
                       const object: any = {};
                       object['Id'] = this.dataSubcriterios[i].Id
                       object['Nombre'] = this.dataSubcriterios[i].Criterio

@@ -4,10 +4,7 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inscripcion } from '../../../models/inscripcion/inscripcion';
 import Swal from 'sweetalert2';
-// import 'style-loader!angular2-toaster/toaster.css';
-// import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 import { FormControl, Validators } from '@angular/forms';
-// import { LocalDataSource } from 'ng2-smart-table';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { ParametrosService } from 'src/app/services/parametros.service';
@@ -22,6 +19,7 @@ import { IAppState } from 'src/app/store/app.state';
 import { Store } from '@ngrx/store';
 import { ListService } from 'src/app/store/services/list.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { UserService } from 'src/app/services/users.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { Destination, EmailTemplated } from '../../../models/notificaciones_mid/email_templated';
@@ -42,9 +40,9 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     @ViewChild(MatSort) sort!: MatSort;
 
 
-    //   config: ToasterConfig;
+
     @Output() eventChange = new EventEmitter();
-    // tslint:disable-next-line: no-output-rename
+
     @Output('result') result: EventEmitter<any> = new EventEmitter();
 
     inscritos: any = [];
@@ -75,7 +73,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     info_consultar_aspirantes: any;
     settings_emphasys: any;
     arr_cupos: any[] = [];
-    //   source_emphasys: LocalDataSource = new LocalDataSource();
+    editButtonTable: boolean = false;
     source_emphasys!: MatTableDataSource<never>
     source_emphasysColumns = ["#", "numero_documento", "nombre_completo", "Telefono", "correoelectronico", "Puntaje", "tipo_de_inscripcion", "enfasis", "estado", "estado_de_recibo", "acciones"]
     show_listado = false;
@@ -83,7 +81,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     Aspirantes = [];
     cuposProyecto!: number;
     estadoAdmitido: any = null;
-    estados = [];
+    estados: any = [];
     IdIncripcionSolicitada = null;
     InfoContacto: any;
     cantidad_aspirantes: number = 0;
@@ -107,12 +105,12 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         private popUpManager: PopUpManager,
         private inscripcionService: InscripcionService,
         private tercerosService: TercerosService,
-        // private toasterService: ToasterService,
         private proyectoAcademicoService: ProyectoAcademicoService,
         private evaluacionService: EvaluacionInscripcionService,
         private store: Store<IAppState>,
         private listService: ListService,
         private sgaMidService: SgaMidService,
+        private sgaMidAdmisioens: SgaAdmisionesMid,
         private userService: UserService,
         private autenticationService: ImplicitAutenticationService,
         private notificacionesMidService: NotificacionesMidService
@@ -131,6 +129,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.inscripcionService.get('estado_inscripcion')
             .subscribe((state: any) => {
                 this.estados = state.map((e: any) => {
+
                     if (e.Nombre === 'ADMITIDO') {
                         this.estadoAdmitido = e;
                     }
@@ -143,10 +142,13 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                     }
                 })
                 this.createTable()
+                console.log(this.estados)
             })
     }
 
+
     createTable() {
+
         this.settings_emphasys = {
             delete: {
                 deleteButtonContent: '<i class="nb-trash"></i>',
@@ -230,9 +232,11 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                 EstadoInscripcionId: {
                     title: this.translate.instant('GLOBAL.Estado'),
                     filterFunction: (cell?: any, search?: string) => {
-                        // if (search.length > 0) {
-                        //     return cell.Nombre.match(RegExp(search, "i"));
-                        // }
+                        console.log(cell);
+                        console.log(search)
+                        if (search!.length > 0) {
+                            return cell.Nombre.match(RegExp(search!, "i"));
+                        }
                     },
                     compareFunction: (direction: any, a: any, b: any) => {
                         let first = a.Nombre.toLowerCase();
@@ -275,6 +279,12 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                 cancelButtonContent: '<i class="nb-close" title="' + this.translate.instant('GLOBAL.cancelar') + '"></i>',
             },
         };
+    }
+
+
+
+    buttonedit(row: any): void {
+        row.mostrarBotones = !row.mostrarBotones;
     }
 
     cargarPeriodo() {
@@ -362,7 +372,12 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     }
 
     onSaveConfirm(event: any) {
-        const newState: any = this.estados.filter((data: any) => (data.value === parseInt(event.newData.EstadoInscripcionId, 10)))[0];
+        console.log(event)
+        console.log(this.estados)
+        console.log(event.newData.EstadoInscripcionId)
+        const newState = this.estados.filter((data: any) => (data.value === parseInt(event.newData.EstadoInscripcionId, 10)))[0];
+        console.log(newState)
+        console.log(this.estados)
         if (newState.value == this.IdIncripcionSolicitada) {
             this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.no_cambiar_inscripcion_solicitada'))
         } else {
@@ -400,6 +415,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                 }
             });
         }
+
     }
 
     loadProyectos() {
@@ -419,7 +435,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                                 );
                             } else {
                                 const id_tercero = this.userService.getPersonaId();
-                                this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                                this.sgaMidAdmisioens.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                                     (respDependencia: any) => {
                                         const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                                         this.proyectos = <any[]>response.filter(
@@ -486,11 +502,14 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.admitidos = [];
 
         this.loading = true;
-        this.sgaMidService.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
+        this.sgaMidAdmisioens.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
             .subscribe(
                 (response: any) => {
-                    if (response.Success && response.Status == "200") {
-                        this.Aspirantes = response.Data;
+                    console.log("response")
+                    console.log(response)
+                    if (response.success == true  && response.status == 200) {
+                        this.Aspirantes = response.data;
+                        console.log(this.Aspirantes)
                         this.admitidos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));
                         this.inscritos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO'));
                         this.cuposAsignados = this.admitidos.length;
@@ -520,83 +539,6 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                     this.popUpManager.showErrorToast(this.translate.instant('admision.no_data'));
                 }
             );
-
-        /* let idTelefono = this.InfoContacto.find(c => c.CodigoAbreviacion == "TELEFONO").Id;
-    
-        this.inscripcionService.get('inscripcion?query=Activo:true,ProgramaAcademicoId:' + this.proyectos_selected.Id + ',PeriodoId:' + this.periodo.Id + '&sortby=NotaFinal&order=desc&limit=0').subscribe(
-          (res: any) => {
-            const r = <any>res
-            if (res !== '[{}]') {
-              if (r !== null && r.Type !== 'error') {
-                this.loading = false;
-                const data = <Array<any>>r;
-                this.admitidos = data.filter((inscripcion) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));
-                this.inscritos = data.filter((inscripcion) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO'));
-                this.cuposAsignados = this.admitidos.length;
-                // this.source_emphasys.load(data);
-                data.forEach(element => {
-                  if (element.PersonaId != undefined) {
-                    this.tercerosService.get('tercero/' + element.PersonaId).subscribe(
-                      async (rTercero: any) => {
-    
-                        let aspiranteAux = {
-                          Inscripcion: element,
-                          NumeroDocumento: undefined,
-                          NombreAspirante: rTercero.NombreCompleto,
-                          Telefono: undefined,
-                          Email: rTercero.UsuarioWSO2,
-                          NotaFinal: element.NotaFinal,
-                          TipoInscripcionId: element.TipoInscripcionId,
-                          EstadoInscripcionId: element.EstadoInscripcionId,
-                          EnfasisId: undefined
-                        }
-    
-                        aspiranteAux.NumeroDocumento = await this.documento(element.PersonaId);
-    
-                        try {
-                          aspiranteAux.Telefono = await this.telefono(element.PersonaId, idTelefono);
-                        } catch (error) {
-                          aspiranteAux.Telefono = undefined;
-                        }
-                        
-    
-                        if(element.EnfasisId != 0){
-                          aspiranteAux.EnfasisId = await this.enfasis(element.EnfasisId);
-                        } else {
-                          aspiranteAux.EnfasisId = {
-                            Nombre: "Por definir",
-                          }
-                        }
-                        
-                        this.Aspirantes.push(aspiranteAux);
-                        this.source_emphasys.load(this.Aspirantes);
-                      },
-                      error => {
-                        this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
-                      }
-                    )
-    
-                  }
-                });
-    
-              } else {
-                this.showToast('error', this.translate.instant('GLOBAL.error'),
-                  this.translate.instant('GLOBAL.error'));
-              }
-            } else {
-              this.popUpManager.showErrorToast(this.translate.instant('admision.no_data'));
-            }
-          },
-          (error: HttpErrorResponse) => {
-            Swal.fire({
-              icon: 'error',
-              title: error.status + '',
-              text: this.translate.instant('ERROR.' + error.status),
-              footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-                this.translate.instant('GLOBAL.info_estado'),
-              confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-            });
-          }); */
     }
 
     enfasis(idEnf: any) {

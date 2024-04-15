@@ -21,12 +21,12 @@ export class ProyectoAcademicoService {
     return this.requestManager.post(endpoint, element);
   }
 
-  put(endpoint: any, element: { Id: any; }) {
+  put(endpoint: any, element:any) {
     this.requestManager.setPath('PROYECTO_ACADEMICO_SERVICE');
     return this.requestManager.put(endpoint, element);
   }
 
-  delete(endpoint: any, element: { Id: any; }) {
+  delete(endpoint: any, element: any) {
     this.requestManager.setPath('PROYECTO_ACADEMICO_SERVICE');
     return this.requestManager.delete(endpoint, element.Id);
   }

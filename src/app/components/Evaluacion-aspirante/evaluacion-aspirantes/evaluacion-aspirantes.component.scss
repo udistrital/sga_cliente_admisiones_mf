@@ -61,8 +61,6 @@ height: 100%;
 }
 
 
-
-
 th{
  color: black;
 }
@@ -101,4 +99,9 @@ th{
 
 .m-10{
   margin: 30px;
+}
+
+.separacion-acciones {
+  display: flex;
+  justify-content: space-around;
 }

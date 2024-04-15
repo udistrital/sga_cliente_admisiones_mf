@@ -1,3 +1,18 @@
+
+import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
+import { DocProgramaObligatorioComponent } from './components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component';
+import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
+import { SelectDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/select-documento-proyecto/select-documento-proyecto.component';
+import { ListDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/list-documento-proyecto/list-documento-proyecto.component';
+import { CrudDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-documento-proyecto/crud-documento-proyecto.component';
+import { SolicitudDescuento } from './models/descuento/solicitud_descuento';
+import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
+import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
+import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
+import { DialogoDocumentosTransferenciasComponent } from './components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
+import { CrudInfoPersonaComponent } from './components/transferencia/crud-info_persona/crud-info_persona.component';
+import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
+import { SgaAdmisionesMid } from './services/sga_admisiones_mid.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -89,14 +104,23 @@ export function createTranslateLoader(http: HttpClient) {
     EvaluacionDocumentosInscritosComponent,
     DialogoDocumentosComponent,
     PerfilComponent,
+    DinamicformComponent,
+    DinamicformComponent,
+    ViewIdiomasComponent,
+    TransferenciaComponent,
+    CrudInfoPersonaComponent,
+    CustomizeButtonComponent,
+    AsignacionCuposComponent,
+    AsignacionCuposComponent,
     ViewInscripcionComponent,
     ViewInfoPersonaComponent,
-    ViewFormacionAcademicaComponent,
-    ViewIdiomasComponent,
-    ViewExperienciaLaboralComponent,
-    ViewProduccionAcademicaComponent,
-    ViewDocumentoProgramaComponent,
-    ViewDescuentoAcademicoComponent,
+    DialogoCriteriosComponent,
+    DialogoCriteriosComponent,
+    CriterioAdmisionComponent,
+    ListadoAspiranteComponent,
+    DialogoDocumentosComponent,
+    DialogPreviewFileComponent,
+    CrudAsignacionCupoComponent,
     ViewPropuestaGradoComponent,
     ListadoAspiranteComponent,
     AdministracionCuentaBancariaComponent,
@@ -110,29 +134,29 @@ export function createTranslateLoader(http: HttpClient) {
 
   ],
   imports: [
-    StoreModule.forRoot(rootReducer),
-    NgxExtendedPdfViewerModule,
-    CommonModule,
-    ReactiveFormsModule,
     FormsModule,
+    CommonModule,
     BrowserModule,
-    AppRoutingModule,
-    MatNativeDateModule,
-    MatDialogModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatTableModule,
-    MatDatepickerModule,
     MatTabsModule,
-    MatPaginatorModule,
-    BrowserAnimationsModule,
-    MatExpansionModule,
     MatIconModule,
+    MatCardModule,
+    MatInputModule,
+    MatTableModule,
+    MatDialogModule,
+    MatSelectModule,
+    AppRoutingModule,
+    MatCheckboxModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatPaginatorModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatAutocompleteModule,
+    BrowserAnimationsModule,
+    MatProgressSpinnerModule,
+    NgxExtendedPdfViewerModule,
+    StoreModule.forRoot(rootReducer),
 
     HttpClientModule,
     TranslateModule.forRoot({
@@ -145,17 +169,17 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   providers: [
     MatSnackBar,
-    EvaluacionInscripcionService,
-    RequestManager,
-    ParametrosService,
+    ListService,
     SgaMidService,
+    RequestManager,
+    SgaAdmisionesMid,
     DocumentoService,
-    NotificacionesMidService,
     CampusMidService,
-    ListService
-
-
+    ParametrosService,
+    NotificacionesMidService,
+    EvaluacionInscripcionService,
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
