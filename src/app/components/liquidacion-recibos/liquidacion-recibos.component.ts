@@ -11,6 +11,9 @@ import { ImplicitAutenticationService } from 'src/app/services/implicit_autentic
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { UserService } from 'src/app/services/users.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatSelectChange } from '@angular/material/select';
+import { LiquidacionService } from 'src/app/services/liquidacion.service';
 
 
 
@@ -66,6 +69,10 @@ export class LiquidacionRecibosComponent {
   niveles!: NivelFormacion[];
   nivelSelect!: NivelFormacion[];
 
+  selectedProyecto: any;
+
+  selectedPeriodo: any;
+
   show_cupos = false;
   show_profile = false;
   show_expe = false;
@@ -90,8 +97,11 @@ export class LiquidacionRecibosComponent {
   selectprograma: boolean = true;
   selectcriterio: boolean = true;
   periodo: any;
+  admitido: any;
+  admitidos: any[] = [];
   selectednivel: any = 2;
   esPosgrado: boolean = false;
+  liquidaciones: any[] = [];
 
   constructor(private _formBuilder: FormBuilder, private translate: TranslateService,
     private parametrosService: ParametrosService,
@@ -99,6 +109,7 @@ export class LiquidacionRecibosComponent {
     private projectService: ProyectoAcademicoService,
     private userService: UserService,
     private sgaAdmisiones: SgaAdmisionesMid,
+    private liquidacionService: LiquidacionService,
     private autenticationService: ImplicitAutenticationService,) {
     const detallesPago: DetallesPago[] = [
       { codigo: '123', cedula: '1234567890', nombreApellido: 'Juan Perez', creditos: 10, cuotas: 3 },
@@ -134,11 +145,37 @@ export class LiquidacionRecibosComponent {
 
 
     this.dataSource.data = combinedData;
-    this.loadProyectos();
+    this.cargarProyectos();
+    this.cargarPeriodo();
   }
 
-  ngOnInit(){
-    this.loadProyectos();
+  ngOnInit() {
+    this.cargarProyectos();
+    this.cargarPeriodo();
+
+    const validatorProyectoControl = this.firstFormGroup.get('validatorProyecto');
+    const validatorPeridoControl = this.firstFormGroup.get('validatorPeriodo');
+
+    if (validatorProyectoControl) {
+      validatorProyectoControl.valueChanges.subscribe(value => {
+        this.selectedProyecto = value;
+        console.log('ID seleccionado:', this.selectedProyecto.Id);
+      });
+    } else {
+      console.error('El control "validatorProyecto" es nulo.');
+    }
+    if (validatorPeridoControl) {
+      validatorPeridoControl.valueChanges.subscribe(value => {
+        this.selectedPeriodo = value;
+        console.log('ID seleccionado:', this.selectedPeriodo.Id);
+      });
+    } else {
+      console.error('El control "validatorProyecto" es nulo.');
+    }
+  }
+
+  ngOnChanges() {
+
   }
 
   foods: Food[] = [
@@ -147,8 +184,12 @@ export class LiquidacionRecibosComponent {
     { value: 'tacos-2', viewValue: 'Tacos' },
   ];
 
+  cargarDatos() {
+    this.cargarAdmitidos(this.selectedPeriodo.Id, this.selectedProyecto.Id);
+  }
 
-  loadProyectos() {
+
+  cargarProyectos() {
     this.projectService.get('proyecto_academico_institucion?limit=0').subscribe(
       (response: any) => {
         this.autenticationService.getRole().then(
@@ -159,7 +200,7 @@ export class LiquidacionRecibosComponent {
               this.proyectos = <any[]>response.filter(
                 (proyecto: any) => this.filtrarProyecto(proyecto),
               );
-                console.log("proyectos",this.proyectos)
+              console.log("proyectos", this.proyectos)
             } else {
               const id_tercero = this.userService.getPersonaId();
               console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
@@ -187,7 +228,7 @@ export class LiquidacionRecibosComponent {
       },
     );
   }
-  filtrarProyecto(proyecto:any) {
+  filtrarProyecto(proyecto: any) {
     console.log(proyecto)
     console.log(this.selectednivel)
     if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
@@ -196,13 +237,140 @@ export class LiquidacionRecibosComponent {
     if (proyecto['NivelFormacionId']['NivelFormacionPadreId'] !== null) {
       if (proyecto['NivelFormacionId']['NivelFormacionPadreId']['Id'] === this.selectednivel) {
         return true
-      }else{
+      } else {
         return false
       }
     } else {
       return false
     }
   }
+
+  cargarPeriodo() {
+    return new Promise((resolve, reject) => {
+      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+        .subscribe((res: any) => {
+          const r = <any>res;
+          if (res !== null && r.Status === '200') {
+            this.periodo = res.Data.find((p: any) => p.Activo);
+            window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
+            resolve(this.periodo);
+            const periodos = <any[]>res['Data'];
+            periodos.forEach(element => {
+
+              this.periodos.push(element);
+            });
+          }
+          console.log("periodos", this.periodos);
+        },
+          (error: HttpErrorResponse) => {
+            reject(error);
+          });
+    });
+  }
+
+  cargarAdmitidos(id_periodo: undefined, id_proyecto: undefined) {
+    return new Promise((resolve, reject) => {
+      const url = `liquidacion/?id_periodo=${id_periodo}&id_proyecto=${id_proyecto}`;
+  
+      this.sgaAdmisiones.get(url).subscribe(
+        (response: { data: any; }) => {
+          console.log('Datos cargados:', response);
+          const data = response.data;
+          console.log('Data:', data);
+          this.admitidos = data;
+          console.log('Data:', this.admitidos);
+          this.admitidos.forEach(row => {
+            row.Seguro = true;
+            row.Carne = true;
+            row.Sistematizacion = true;
+          });
+          resolve(data); // Resuelve la promesa con los datos cargados
+        },
+        (error: any) => {
+          console.error('Error al cargar datos:', error);
+          reject(error); // Rechaza la promesa con el error
+        }
+      );
+    });
+  }
+
+  toggleDescuento(event: MatSelectChange, row: any, descuento: number) {
+    if (event.value === 'true') {
+      if (!row.Descuentos.includes(descuento)) {
+        row.Descuentos.push(descuento);
+      }
+    } else {
+      const index = row.Descuentos.indexOf(descuento);
+      if (index !== -1) {
+        row.Descuentos.splice(index, 1);
+      }
+    }
+  }
+
+  guardarLiquidaciones() {
+    this.admitidos.forEach(row => {
+      const liqDetalle = [];
+      if (row.Seguro) {
+        liqDetalle.push({ tipo_concepto_id: 111, valor: 111 }); //No exixte parametro para seguro 
+      }
+      if (row.Carne) {
+        liqDetalle.push({ tipo_concepto_id: 111, valor: 111 }); //No exixte parametro para carné
+      }
+      if (row.Sistematizacion) {
+        liqDetalle.push({ tipo_concepto_id: 111, valor: 111 }); //No exixte parametro para sistematización 
+      }
+      row.Descuentos.forEach((descuento: any) => {
+        switch (descuento) {
+          case 1:
+            liqDetalle.push({ tipo_concepto_id: 1, valor: 0.1 }); // Certificado electoral
+            break;
+          case 2:
+            liqDetalle.push({ tipo_concepto_id: 2, valor: 0.5 }); // Monitorias
+            break;
+          case 3:
+            liqDetalle.push({ tipo_concepto_id: 3, valor: 0.5 }); // Representante de consejo superior y/o académico
+            break;
+          case 4:
+            liqDetalle.push({ tipo_concepto_id: 4, valor: 1 }); // Mejor saber- pro (ECAES)
+            break;
+          case 5:
+            liqDetalle.push({ tipo_concepto_id: 5, valor: 1 }); // Pariente de personal de planta UD
+            break;
+          case 6:
+            liqDetalle.push({ tipo_concepto_id: 6, valor: 0.3 }); // Egresado UD
+            break;
+          case 7:
+            liqDetalle.push({ tipo_concepto_id: 7, valor: 1 }); // Beca de secretaría de educación
+            break;
+          default:
+            break;
+        }
+      });
+      const liquidacion = {
+        tercero_id: parseInt(row.Documento, 10),
+        periodo_id: this.selectedPeriodo.Id,
+        programa_academico_id: this.selectedProyecto.Id,
+        tipo_programa_id: this.selectednivel,
+        recibo_id: 111, //consecutivo de recibo (?)
+        liqDetalle: liqDetalle
+      };
+      this.liquidaciones.push(liquidacion);
+    });
+    console.log(this.liquidaciones)
+    for (const liquidacion of this.liquidaciones) {
+      console.log(liquidacion)
+      this.liquidacionService.post('liquidacion/', liquidacion)
+        .subscribe(
+          (res: any) => {
+            const r = <any>res;
+            console.log(res);
+          },
+          (error: HttpErrorResponse) => {
+          }
+        );
+    }
+  }
+
 
   descargar = (data: any) => {
     console.log('Descargando...');

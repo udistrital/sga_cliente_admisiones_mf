@@ -37,7 +37,7 @@ import { ParametrosService } from './services/parametros.service';
 import { SgaMidService } from './services/sga_mid.service';
 
 
-import { CheckboxAssistanceComponent } from './components/evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component';
+
 import { AdministradorCriteriosComponent } from './components/administrar-criterios-admisiones/administrador-criterios/administrador-criterios.component';
 import { DialogoCriteriosComponent } from './components/administrar-criterios-admisiones/dialogo-criterios/dialogo-criterios.component';
 import { AsignacionCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/asignacion_cupos.component';
@@ -47,7 +47,7 @@ import { DinamicformComponent } from './components/asignacion-cupos-proyectos/di
 import { CriterioAdmisionComponent } from './components/crieterios-admisiones-proyectos/criterio_admision/criterio_admision.component';
 import { DialogoDocumentosComponent } from './components/evalucion-documentos-inscritos/dialogo-documentos/dialogo-documentos.component';
 import { EvaluacionDocumentosInscritosComponent } from './components/evalucion-documentos-inscritos/evaluacion-documentos-inscritos/evaluacion-documentos-inscritos.component';
-import { EvaluacionAspirantesComponent } from './components/evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
+
 import { DocumentoService } from './services/documento.service';
 import { NotificacionesMidService } from './services/notificaciones_mid.service';
 import { PerfilComponent } from './components/evalucion-documentos-inscritos/perfil/perfil.component';
@@ -81,6 +81,8 @@ import { DialogoDocumentosTransferenciasComponent } from './components/transfere
 import { CrudInfoPersonaComponent } from './components/transferencia/crud-info_persona/crud-info_persona.component';
 import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
 import { SgaAdmisionesMid } from './services/sga_admisiones_mid.service';
+import { CheckboxAssistanceComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component';
+import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
 
 
 
