@@ -1050,7 +1050,20 @@
         "icfes_snp": "List of applicants projects with SNP registration",
         "RteAdmitidos": "Listado de admitidos por periodo y proyecto.",
         "RteAspirantes": "Listado de aspirantes por periodo y proyecto.",
-        "RteInscritos": "Listado de inscritos por periodo y proyecto."
+        "RteInscritos": "Listado de inscritos por periodo y proyecto.",
+        "Reportes": "Reports",
+        "SelectPeriodo": "Select period",
+        "SelectFacultad": "Select faculty",
+        "SelectProyecto": "Select project",
+        "SelectReporte": "Select report type",
+        "SelectDatos": "Select the data that you whant",
+        "Periodo": "Period",
+        "Facultad": "Faculty",
+        "Proyecto": "Project",
+        "Acciones": "Actions"
+
+
+
     },
     "evento": {
         "evento": "Event",

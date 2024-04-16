@@ -1083,7 +1083,19 @@
         "icfes_snp": "Listado por proyectos de los aspirantes con registro SNP",
         "RteAdmitidos": "Listado de admitidos por periodo y proyecto.",
         "RteAspirantes": "Listado de aspirantes por periodo y proyecto.",
-        "RteInscritos": "Listado de inscritos por periodo y proyecto."
+        "RteInscritos": "Listado de inscritos por periodo y proyecto.",
+        "Reportes": "Reportes",
+        "SelectPeriodo": "Selecciona el periodo",
+        "SelectFacultad": "Selecciona la facultad",
+        "SelectProyecto": "Selecciona el proyecto",
+        "SelectReporte": "Selecciona el tipo de reporte",
+        "SelectDatos": "Seleccione los datos que desea consultar",
+        "Periodo": "Periodo",
+        "Facultad": "Facultad",
+        "Proyecto": "Proyecto",
+        "Acciones": "Acciones"
+
+
     },
     "evento": {
         "evento": "Evento",
