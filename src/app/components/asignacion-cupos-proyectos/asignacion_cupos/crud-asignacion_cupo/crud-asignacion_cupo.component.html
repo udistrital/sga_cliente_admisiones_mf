@@ -1,39 +1,86 @@
 <!-- <toaster-container [toasterconfig]="config"></toaster-container> -->
 
-
+<!--
  <ngx-dinamicform *ngIf="!show_posgrado"
                  [normalform]="formAsigancionCupoPregrado"
                  [modeloData]="info_info_persona"
                  (result)="validarForm($event)"
                  [clean]="clean">
 </ngx-dinamicform> 
-<div style="margin-top: 30px;"></div>
  <ngx-dinamicform *ngIf="show_posgrado"
                  [normalform]="formAsigancionCupoPosgrado"
                  [modeloData]="info_info_persona" (result)="validarForm($event)"
                  [clean]="clean">
 </ngx-dinamicform> 
+-->
 
 
-<mat-card [hidden]="!show_calculos_cupos" accent="info">
-    <mat-card-content *ngIf="!show_posgrado">
+
+<mat-card [hidden]="!show_posgrado">
+    <mat-card-content>
+        <div class="container">
+            <mat-label>Cupos admitidos  </mat-label>
+            <mat-label>Cupos opcionados</mat-label>
+          </div>
         <div class="row">
             <div class="col-12">
-                <!-- <ng2-smart-table [settings]="settings_emphasys"
-                                 [(source)]="source_emphasys"
-                                 (delete)="onDeleteEmphasys($event)"
-                                 (create)="onCreateEmphasys($event)">
-                </ng2-smart-table> -->
+                <div class="container">
+
+
+                    <mat-table [dataSource]="dataSource" matSort>
+                        <ng-container matColumnDef="inscripcion">
+                            <mat-header-cell *matHeaderCellDef> Inscripción </mat-header-cell>
+                            <mat-cell *matCellDef="let cupo"> {{cupo.inscripcion}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tipoCupo">
+                            <mat-header-cell *matHeaderCellDef> Tipo cupo </mat-header-cell>
+                            <mat-cell *matCellDef="let cupo"> {{cupo.tipoCupo}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="estado">
+                            <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                            <mat-cell *matCellDef="let cupo"> {{cupo.estado}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cupos">
+                            <mat-header-cell *matHeaderCellDef> Cupos </mat-header-cell>
+                            <mat-cell *matCellDef="let cupo"> {{cupo.cupos}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="acciones">
+                            <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+                            <mat-cell *matCellDef="let cupo">
+                                <button mat-icon-button>
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-icon-button >
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                    </mat-table>
+
+                </div>
             </div>
         </div>
+        <div>
+            <mat-label>Comentarios</mat-label>
+            <button class="boton-primary" mat-button type="button">Historico</button>
+        </div>
+        
+        <button class="boton-primary" mat-button type="button">Guardar</button>
     </mat-card-content>
-
-<mat-card [hidden]="!show_listado" accent="info">
+</mat-card>
+<mat-card [hidden]="show_posgrado">
     <mat-card-content>
         <div class="row">
             <div class="col-12">
-                <!-- <ng2-smart-table [settings]="settings_emphasys1" [(source)]="source_emphasys1">
-                </ng2-smart-table> -->
+                aaaaa2
             </div>
         </div>
     </mat-card-content>

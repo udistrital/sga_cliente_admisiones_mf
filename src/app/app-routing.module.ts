@@ -11,14 +11,19 @@ import { EvaluacionAspirantesComponent } from './components/evaluacion-aspirante
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
 import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
-import { SubTipoProduccionAcademica } from './models/produccion_academica/subtipo_produccion_academica';
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
 import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
+import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+
 
 
 const routes: Routes = [
+  {
+    path: "codificacion", // cambiar la ruta del modulo
+    loadChildren: () => import ('./components/codificacion-module/codificacion.module').then(m => m.CodificacionModule),
+  },
   {
     path:"administrar-criterios", 
     component: AdministradorCriteriosComponent

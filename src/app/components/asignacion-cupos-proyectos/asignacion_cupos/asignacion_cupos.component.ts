@@ -45,9 +45,9 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
   total: boolean = false;
 
-  proyectos:any[] = [];
+  proyectos: any[] = [];
   criterios = [];
-  periodos:any[] = [];
+  periodos: any[] = [];
   niveles!: NivelFormacion[];
   nivelSelect!: NivelFormacion[];
 
@@ -75,7 +75,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   selectprograma: boolean = true;
   selectcriterio: boolean = true;
   periodo: any;
-  selectednivel: any ;
+  selectednivel: any;
   esPosgrado: boolean = false;
 
   CampoControl = new FormControl('', [Validators.required]);
@@ -98,40 +98,18 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     this.nivel_load()
   }
 
-
-  // cargarPeriodo() {
-  //   return new Promise((resolve, reject) => {
-  //     this.coreService.get('periodo/?query=Activo:true&sortby=Id&order=desc&limit=1')
-  //     .subscribe(res => {
-  //       const r = <any>res;
-  //       if (res !== null && r.Type !== 'error') {
-  //         this.periodo = <any>res[0];
-  //         window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
-  //         resolve(this.periodo);
-  //         const periodos = <Array<any>>res;
-  //        periodos.forEach(element => {
-  //           this.periodos.push(element);
-  //         });
-  //       }
-  //     },
-  //     (error: HttpErrorResponse) => {
-  //       reject(error);
-  //     });
-  //   });
-  // }
-
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
-        .subscribe((res:any) => {
+        .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
-            this.periodo = res.Data.find((p:any) => p.Activo);
+            this.periodo = res.Data.find((p: any) => p.Activo);
             window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
             resolve(this.periodo);
             const periodos = <any[]>res['Data'];
             periodos.forEach(element => {
-             
+
               this.periodos.push(element);
             });
           }
@@ -151,8 +129,8 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   nivel_load() {
     this.projectService.get('nivel_formacion?limit=0').subscribe(
       // (response: NivelFormacion[]) => {
-        (response: any) => {
-        this.niveles = response.filter((nivel:any) => nivel.NivelFormacionPadreId === null && nivel.Nombre === 'Posgrado')
+      (response: any) => {
+        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.Nombre === 'Posgrado')
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
@@ -160,7 +138,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     );
   }
 
-  filtrarProyecto(proyecto:any) {
+  filtrarProyecto(proyecto: any) {
     console.log(proyecto)
     console.log(this.selectednivel)
     if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
@@ -169,7 +147,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     if (proyecto['NivelFormacionId']['NivelFormacionPadreId'] !== null) {
       if (proyecto['NivelFormacionId']['NivelFormacionPadreId']['Id'] === this.selectednivel) {
         return true
-      }else{
+      } else {
         return false
       }
     } else {
@@ -185,29 +163,29 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
         (response: any) => {
           this.autenticationService.getRole().then(
             // (rol: Array <String>) => {
-              (rol: any) => {
-              let r = rol.find((role:any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
+            (rol: any) => {
+              let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
               if (r) {
                 this.proyectos = <any[]>response.filter(
-                  (proyecto:any) => this.filtrarProyecto(proyecto),
+                  (proyecto: any) => this.filtrarProyecto(proyecto),
                 );
-              
+
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                console.log('admision/dependencia_vinculacion_tercero/'+id_tercero)
-                this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/'+id_tercero).subscribe(
+                console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
+                this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(
-                      (proyecto:any) => dependencias.includes(proyecto.Id)
+                      (proyecto: any) => dependencias.includes(proyecto.Id)
                     );
                     if (dependencias.length > 1) {
-                      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'),this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
+                      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
                       //this.proyectos.forEach(p => { p.Id = undefined })
                     }
                   },
                   (error: any) => {
-                    this.popUpManager.showErrorAlert(this.translate.instant('admision.no_vinculacion_no_rol')+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
+                    this.popUpManager.showErrorAlert(this.translate.instant('admision.no_vinculacion_no_rol') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
                   }
                 );
               }
@@ -225,14 +203,14 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     this.translate.use(language);
   }
 
-  perfil_editar(event:any): void {
+  perfil_editar(event: any): void {
     switch (event) {
       case 'info_cupos':
         this.show_cupos = true;
         this.validarNvel();
         break;
-        default:
-            this.show_cupos = false;
+      default:
+        this.show_cupos = false;
         break;
     }
   }
@@ -242,9 +220,9 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     console.log(this.selectednivel)
     this.projectService.get('nivel_formacion?query=Id:' + Number(this.selectednivel)).subscribe(
       // (response: NivelFormacion[]) => {
-        (response: any) => {
-          console.log(response)
-        this.nivelSelect = response.filter((nivel:any) => nivel.NivelFormacionPadreId === null)
+      (response: any) => {
+        console.log(response)
+        this.nivelSelect = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null)
         if (this.nivelSelect[0].Nombre === 'Posgrado') {
           this.esPosgrado = true;
         }

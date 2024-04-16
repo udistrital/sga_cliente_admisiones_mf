@@ -1,14 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-// import { LocalDataSource } from 'ng2-smart-table';
+import { MatSort } from '@angular/material/sort';
 import { Criterio } from 'src/app/models/admision/criterio';
-import { DialogoCriteriosComponent } from '../dialogo-criterios/dialogo-criterios.component';
-import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { DialogoCriteriosComponent } from '../dialogo-criterios/dialogo-criterios.component';
+import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 
 @Component({
   selector: 'ngx-administrador-criterios',
@@ -17,41 +16,37 @@ import { MatSort } from '@angular/material/sort';
 })
 export class AdministradorCriteriosComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  criterioColumn = ['nombre', 'descripcion','asistencia','acciones'];
+  criterios!: Criterio[];
+  criterioSettings: any;
+  subcriterioSettings: any;
   criterioSource!: MatTableDataSource<Criterio>
   subcriterioSource!: MatTableDataSource<any>
   subcriterio!: MatTableDataSource<any>
-
-  criterios!: Criterio[];
-  criterioSettings: any;
-  // criterioSource: LocalDataSource;
-
-  subcriterioSettings: any;
   dialogConfig!: MatDialogConfig;
-
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  criterioColumn = ['nombre', 'descripcion', 'asistencia', 'acciones'];
   constructor(
-    private translate: TranslateService,
+
     private dialog: MatDialog,
-    private admisiones: EvaluacionInscripcionService,
     private popUpManager: PopUpManager,
+    private translate: TranslateService,
+    private admisiones: EvaluacionInscripcionService,
+
   ) {
 
+    this.subcriterio != new MatTableDataSource()
     this.subcriterioSource = new MatTableDataSource()
-    this.subcriterio!= new MatTableDataSource()
-    this.inicializarTablas()
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.inicializarTablas()
+
     })
   }
 
   ngOnInit() {
     this.criterios = [];
-    // this.criterioSource = new LocalDataSource();
     this.admisiones.get('requisito?limit=0&query=Activo:true').subscribe(
       (response: any) => {
-        this.criterios = <Criterio[]>response.filter((c:any) => c['RequisitoPadreId'] === null);
+        this.criterios = <Criterio[]>response.filter((c: any) => c['RequisitoPadreId'] === null);
         this.criterios.forEach(criterio => {
           this.admisiones.get('requisito?limit=0&query=Activo:true,RequisitoPadreId.Id:' + criterio.Id).subscribe(
             (response: any) => {
@@ -61,22 +56,21 @@ export class AdministradorCriteriosComponent implements OnInit {
                 criterio.Subcriterios = [];
               }
             },
-            (error:any) => {
+            (error: any) => {
               criterio.Subcriterios = [];
               this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
             },
           );
         });
-        // this.criterioSource.load(this.criterios);
         console.log(this.criterios)
         this.criterioSource = new MatTableDataSource(this.criterios)
 
         setTimeout(() => {
           this.criterioSource.paginator = this.paginator;
           this.criterioSource.sort = this.sort;
-          }, 300);
+        }, 300);
       },
-      (error:any) => {
+      (error: any) => {
         this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
       },
     );
@@ -88,128 +82,12 @@ export class AdministradorCriteriosComponent implements OnInit {
 
   applyFilterProces(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    
     this.criterioSource.filter = filterValue.trim().toLowerCase();
-  
-     if (this.criterioSource.paginator) {
-       this.criterioSource.paginator.firstPage();
-     }
+    if (this.criterioSource.paginator) {
+      this.criterioSource.paginator.firstPage();
+    }
   }
 
-  inicializarTablas() {
-    this.criterioSettings = {
-      columns: {
-        Nombre: {
-          title: this.translate.instant('GLOBAL.nombre'),
-          width: '20%',
-          editable: false,
-        },
-        Descripcion: {
-          title: this.translate.instant('GLOBAL.descripcion'),
-          width: '50%',
-          editable: false,
-        },
-        Asistencia: {
-          title: this.translate.instant('admision.asistencia'),
-          width: '20%',
-          editable: false,
-          valuePrepareFunction: (asist: boolean) =>
-            asist
-              ? this.translate.instant('admision.asistencia')
-              : this.translate.instant('GLOBAL.NA'),
-        },
-      },
-      mode: 'external',
-      actions: {
-        position: 'right',
-        columnTitle: this.translate.instant('GLOBAL.acciones'),
-      },
-      add: {
-        addButtonContent:
-          '<i class="nb-plus" title="' +
-          this.translate.instant('admision.tooltip_crear') +
-          '"></i>',
-      },
-      edit: {
-        editButtonContent:
-          '<i class="nb-edit" title="' +
-          this.translate.instant('admision.tooltip_editar') +
-          '"></i>',
-      },
-      delete: {
-        deleteButtonContent:
-          '<i class="nb-trash" title="' +
-          this.translate.instant('admision.tooltip_eliminar') +
-          '"></i>',
-      },
-      noDataMessage: this.translate.instant('admision.no_criterios'),
-    };
-
-    this.subcriterioSettings = {
-      columns: {
-        Nombre: {
-          title: this.translate.instant('GLOBAL.nombre'),
-          width: '30%',
-          editable: false,
-        },
-        Descripcion: {
-          title: this.translate.instant('GLOBAL.descripcion'),
-          width: '30%',
-          editable: false,
-        },
-        Activo: {
-          title: this.translate.instant('GLOBAL.estado'),
-          width: '30%',
-          editable: false,
-          valuePrepareFunction: (activo: boolean) =>
-            activo
-              ? this.translate.instant('GLOBAL.activo')
-              : this.translate.instant('GLOBAL.inactivo'),
-        },
-      },
-      mode: 'external',
-      actions: {
-        position: 'right',
-        columnTitle: this.translate.instant('GLOBAL.acciones'),
-      },
-      add: {
-        addButtonContent:
-          '<i class="nb-plus" title="' +
-          this.translate.instant('admision.tooltip_crear') +
-          '"></i>',
-        createButtonContent:
-          '<i class="nb-checkmark" title="' +
-          this.translate.instant('admision.tooltip_guardar') +
-          '"></i>',
-        cancelButtonContent:
-          '<i class="nb-close" title="' +
-          this.translate.instant('admision.tooltip_cancelar') +
-          '"></i>',
-      },
-      edit: {
-        editButtonContent:
-          '<i class="nb-edit" title="' +
-          this.translate.instant('admision.tooltip_editar') +
-          '"></i>',
-        saveButtonContent:
-          '<i class="nb-checkmark" title="' +
-          this.translate.instant('admision.tooltip_guargar') +
-          '"></i>',
-        cancelButtonContent:
-          '<i class="nb-close" title="' +
-          this.translate.instant('admision.tooltip_cancelar') +
-          '"></i>',
-      },
-      delete: {
-        deleteButtonContent:
-          '<i class="nb-trash" title="' +
-          this.translate.instant('admision.tooltip_eliminar') +
-          '"></i>',
-        confirmDelete: true,
-      },
-      noDataMessage: this.translate.instant('admision.no_criterios'),
-    };
-  }
 
   agregarCriterio() {
     this.dialogConfig.data = {};
@@ -222,10 +100,11 @@ export class AdministradorCriteriosComponent implements OnInit {
             newCriterio.Subcriterios = [];
             this.criterios.push(newCriterio);
             // this.criterioSource.load(this.criterios);
+            console.log(this.criterios)
             this.criterioSource = new MatTableDataSource(this.criterios)
             this.popUpManager.showSuccessAlert(this.translate.instant('admision.criterio_exito'));
           },
-          (error:any) => {
+          (error: any) => {
             this.popUpManager.showErrorToast(this.translate.instant('admision.error_registro_criterio'));
           },
         );
@@ -233,7 +112,7 @@ export class AdministradorCriteriosComponent implements OnInit {
     });
   }
 
-  editarCriterio(event:any) {
+  editarCriterio(event: any) {
     this.dialogConfig.data = { oldCriterio: event.data };
     const criterioDialog = this.dialog.open(DialogoCriteriosComponent, this.dialogConfig);
     criterioDialog.afterClosed().subscribe((criterio: Criterio) => {
@@ -244,7 +123,7 @@ export class AdministradorCriteriosComponent implements OnInit {
             // this.criterioSource.update(event.data, updatedCriterio);
             this.popUpManager.showSuccessAlert(this.translate.instant('admision.criterio_modificado'));
           },
-          (error:any) => {
+          (error: any) => {
             this.popUpManager.showErrorToast(this.translate.instant('admision.error_modificar_criterio'));
           },
         );
@@ -252,18 +131,18 @@ export class AdministradorCriteriosComponent implements OnInit {
     });
   }
 
-  inactivarCriterio(event:any) {
+  inactivarCriterio(event: any) {
     this.popUpManager.showConfirmAlert(this.translate.instant('admision.seguro_inactivar_criterio')).then(
-      (willDelete:any) => {
+      (willDelete: any) => {
         if (willDelete.value) {
           const criterio = <Criterio>event.data;
           criterio.Activo = false;
           this.admisiones.put('requisito', criterio).subscribe(
-            (response:any) => {
+            (response: any) => {
               this.popUpManager.showSuccessAlert(this.translate.instant('admision.criterio_inactivado'));
               this.ngOnInit();
             },
-            (error:any) => {
+            (error: any) => {
               this.popUpManager.showErrorToast(this.translate.instant('admision.error_inactivar_criterio'));
             },
           );
@@ -272,8 +151,8 @@ export class AdministradorCriteriosComponent implements OnInit {
     );
   }
 
-  agregarSubcriterio(event:any, criterio: Criterio) {
-    this.dialogConfig.data = {sub: true};
+  agregarSubcriterio(event: any, criterio: Criterio) {
+    this.dialogConfig.data = { sub: true };
     const criterioDialog = this.dialog.open(DialogoCriteriosComponent, this.dialogConfig);
     criterioDialog.afterClosed().subscribe((subCriterio: Criterio) => {
       if (subCriterio !== undefined) {
@@ -285,7 +164,7 @@ export class AdministradorCriteriosComponent implements OnInit {
             event.source.load(criterio.Subcriterios);
             this.popUpManager.showSuccessAlert(this.translate.instant('admision.criterio_exito'));
           },
-          (error:any) => {
+          (error: any) => {
             this.popUpManager.showErrorToast(this.translate.instant('admision.error_registro_criterio'));
           },
         );
@@ -293,7 +172,7 @@ export class AdministradorCriteriosComponent implements OnInit {
     });
   }
 
-  editarSubcriterio(event:any) {
+  editarSubcriterio(event: any) {
     this.dialogConfig.data = { oldCriterio: event.data, sub: true };
     const subcriterioDialog = this.dialog.open(DialogoCriteriosComponent, this.dialogConfig);
     subcriterioDialog.afterClosed().subscribe((subcriterio: Criterio) => {
@@ -303,7 +182,7 @@ export class AdministradorCriteriosComponent implements OnInit {
             this.popUpManager.showSuccessAlert(this.translate.instant('admision.criterio_modificado'));
             this.ngOnInit()
           },
-          (error:any) => {
+          (error: any) => {
             this.popUpManager.showErrorToast(this.translate.instant('admision.error_modificar_criterio'));
           },
         );
