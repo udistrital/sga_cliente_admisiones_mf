@@ -1,10 +1,13 @@
 
+
 import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
 import { DocProgramaObligatorioComponent } from './components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component';
 import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
 import { SelectDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/select-documento-proyecto/select-documento-proyecto.component';
 import { ListDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/list-documento-proyecto/list-documento-proyecto.component';
 import { CrudDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-documento-proyecto/crud-documento-proyecto.component';
+import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
+import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
 import { SolicitudDescuento } from './models/descuento/solicitud_descuento';
 import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
@@ -81,7 +84,8 @@ import { ListadoAspiranteComponent } from './components/listado-aspirantes/lista
 import { ListService } from './store/services/list.service';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
-
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
@@ -111,7 +115,8 @@ export function createTranslateLoader(http: HttpClient) {
     CrudInfoPersonaComponent,
     CustomizeButtonComponent,
     AsignacionCuposComponent,
-    AsignacionCuposComponent,
+    ListadoHistoricoComponent,
+    LiquidacionRecibosComponent,
     ViewInscripcionComponent,
     ViewInfoPersonaComponent,
     DialogoCriteriosComponent,
@@ -139,6 +144,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserModule,
     MatTabsModule,
     MatIconModule,
+    MatStepperModule,
     MatCardModule,
     MatInputModule,
     MatTableModule,

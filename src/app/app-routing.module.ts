@@ -15,7 +15,10 @@ import { AsignarDocumentosDescuentosComponent } from './components/asignar-docum
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
-//import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
+import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
+import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
+import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+
 
 
 const routes: Routes = [
@@ -71,6 +74,16 @@ const routes: Routes = [
     path:"suite-programa", 
     component: DefSuiteInscripProgramaComponent ,
   },
+  {
+    path:"listado-historico", 
+    component: ListadoHistoricoComponent ,
+  },
+  {
+    path:"liquidacion-recibos", 
+    component: LiquidacionRecibosComponent ,
+  }
+
+
 ];
 
 @NgModule({
