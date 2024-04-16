@@ -14,6 +14,7 @@ import { SolicitudTransferenciaComponent } from './components/transferencia/soli
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
 
 
 
@@ -61,6 +62,10 @@ const routes: Routes = [
   {
     path:"suite-programa", 
     component: DefSuiteInscripProgramaComponent ,
+  },
+  {
+    path:"reportes-inscritos", 
+    component: RepotesInscripcionesComponent ,
   },
 ];
 
