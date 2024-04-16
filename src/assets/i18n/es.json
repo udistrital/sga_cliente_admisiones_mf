@@ -158,6 +158,7 @@
             "asignacion_cupos": "Asignación de cupos",
             "actualizacion_estado": "Asignación de cupos \npor proyecto",
             "listado_aspirante": "Listar aspirantes",
+            "listar_aspirantes_proyecto": "Listar aspirantes de proyectos activos",
             "administrar_criterios": "Administrar criterios\nde admisión",
             "documentos_descuentos": "Asignación de documentos\ny descuentos por proyecto",
             "solicitud_transferencias": "Solicitud de transferencias",
@@ -1790,7 +1791,11 @@
         "titulo_notificacion_success":"Notificación exitosa",
         "desc_notificacion_success":"la notificación de las observaciones se hizo de forma exitosa",
         "titulo_notificacion_error":"Fallo en la notificación",
-        "desc_notificacion_error":"Ocurrió un error al momento de notificar al usuario"
+        "desc_notificacion_error":"Ocurrió un error al momento de notificar al usuario",
+        "listar_aspirantes_proyecto": "Listar aspirantes de proyectos activos",
+        "proyecto_sin_aspirantes": "Este proyecto no cuenta con aspirantes",
+        "info_lista_proyecto_activos": "Seleccione el período académico (el período actual activo está seleccionado por defecto), seguido por el nivel, para acceder a la lista de proyectos activos en el período seleccionado y a la lista de aspirantes de cada proyecto en el período especificado.",
+        "buscar_en_toda_la_tabla": "Buscar en toda la tabla"
     },
     "cupos": {
         "aviso_periodo": "Período en el cual se define los cupos de admisión",
@@ -1802,7 +1807,7 @@
         "aviso_proyecto": "Selecione el/los proyectos curriculares que desea definir los cupos de admisión",
         "aviso_proyecto_actualizar": "Selecione el/los proyectos curriculares que desea actualizar estado",
         "aviso_proyec": "Seleciones el proyecto curricular que desea listar",
-        "erro_selec_nivel": "Por favor seleccion el nivel!",
+        "error_selec_nivel": "Por favor seleccione el nivel!",
         "erro_selec_proyecto": "Por favor seleccione al menos un proyecto!",
         "cupos": "Definición de los cupos para el periodo y el/los proyectos curriculares selecionados",
         "asignar": "Asignar cupos",

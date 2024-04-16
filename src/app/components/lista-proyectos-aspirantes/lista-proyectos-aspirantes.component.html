@@ -1,0 +1,133 @@
+<mat-card class="mt-3">
+    <div class="p-3">
+        <fieldset [ngClass]="{'fieldseter':true}">
+            <legend>
+                &nbsp; {{ 'admision.listar_aspirantes_proyecto' | translate }}
+            </legend>
+            <div class="px-4 pb-4">
+                <div class="info mt-1 mb-2">
+                    <mat-icon class="info-icon">info</mat-icon> &nbsp;
+                    <span>{{ 'admision.info_lista_proyecto_activos' | translate }}</span>
+                </div>
+                <div class="row px-3 mt-3">
+                    <!-- select periodo -->
+                    <mat-form-field class="mr-3" style="width: 25%;">
+                        <mat-label>{{ 'calendario.periodo' | translate }}:</mat-label>
+                        <mat-select [(ngModel)]="periodo" (selectionChange)="cambiarPeriodo()">
+                            <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                            <mat-option *ngFor="let item of periodos" [value]="item">
+                                {{item.Nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- select Nivel -->
+                    <mat-form-field style="width: 25%;">
+                        <mat-label>{{ 'GLOBAL.nivel' | translate }}:</mat-label>
+                        <mat-select [formControl]="nivelFormControl" [(ngModel)]="nivel"
+                            (selectionChange)="cargarProyectos()">
+                            <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                            <mat-option *ngFor="let item of niveles" [value]="item.Id">
+                                {{item.Nombre}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="nivelFormControl.hasError('required')">{{ 'cupos.error_selec_nivel' |
+                            translate
+                            }}</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div *ngIf="proyectosActivosConListaAspirantes != null">
+                    <hr>
+                    <h5 class="ml-3">Lista de proyectos</h5>
+                    <hr class="mb-3">
+                </div>
+                <mat-accordion>
+                    <mat-expansion-panel *ngFor="let proyecto of proyectosActivosConListaAspirantes; let i = index">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>{{ proyecto.NombreProyecto }}</mat-panel-title>
+                            <mat-panel-description>Aspirantes: <b class="ml-1"> {{
+                                    proyecto.cantidad_aspirantes}}</b></mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <!-- Muestra la información del proyecto si hay aspirantes -->
+                        <div *ngIf="proyecto.cantidad_aspirantes != 0">
+                            <!-- Tarjeta con resumen de estados de inscripción -->
+                            <mat-card class="card-2" status="success" style="border: 1px solid var(--primary);">
+                                <mat-card-header class="card-header">
+                                    {{ 'admision.resumen_estados_inscripcion' | translate }}
+                                </mat-card-header>
+                                <mat-card-content class="card-content">
+                                    <label>{{ 'admision.estado_inscrip_solicitada' | translate }}: <b>{{
+                                            proyecto.cantidad_inscrip_solicitada }}</b></label>
+                                    <label>{{ 'admision.estado_admitido' | translate }}: <b>{{
+                                            proyecto.cantidad_admitidos
+                                            }}</b></label>
+                                    <label>{{ 'admision.estado_opcionado' | translate }}: <b>{{
+                                            proyecto.cantidad_opcionados
+                                            }}</b></label>
+                                    <label>{{ 'admision.estado_no_admitido' | translate }}: <b>{{
+                                            proyecto.cantidad_no_admitidos }}</b></label>
+                                    <label>{{ 'admision.estado_inscrito' | translate }}: <b>{{
+                                            proyecto.cantidad_inscritos
+                                            }}</b></label>
+                                    <label>{{ 'admision.estado_inscrito_observacion' | translate }}: <b>{{
+                                            proyecto.cantidad_inscritos_obs }}</b></label>
+                                    <label>{{ 'admision.total_aspirantes' | translate }}: <b>{{
+                                            proyecto.cantidad_aspirantes
+                                            }}</b></label>
+                                </mat-card-content>
+                            </mat-card>
+
+                            <mat-card class="my-3" *ngIf="proyecto.cuposProyecto != 'noDefinidoCupos'">
+                                <mat-card-header class="d-flex justify-content-center">
+                                    <label class="mr-5">{{ 'cupos.cupos_proyecto' | translate }}:
+                                        <b>{{proyecto.cuposProyecto}}</b></label>
+                                    <label>{{ 'cupos.cupos_disponibles' | translate }} <b>{{(proyecto.cuposProyecto
+                                            -
+                                            proyecto.cantidad_admitidos )}}</b></label>
+                                </mat-card-header>
+                            </mat-card>
+
+                            <div *ngIf="proyecto.cuposProyecto == 'noDefinidoCupos'">
+                                <div class="info my-3 d-flex justify-content-center">
+                                    <span>{{ 'cupos.sin_cupos_periodo' | translate }}</span>
+                                </div>
+                            </div>
+
+                            <div class="search-container">
+                                <input matInput (keyup)="applyFilter($event, proyecto.dataSource)" type="text"
+                                    class="search-input"
+                                    placeholder="{{ 'admision.buscar_en_toda_la_tabla' | translate }}..."
+                                    #input>
+                                <mat-icon class="icon-busqueda" matPrefix>search</mat-icon>
+                            </div>
+
+                            <table mat-table [dataSource]="proyecto.dataSource" class="table-bordered">
+                                <ng-container *ngFor="let columna of aspirantesConstructorTabla"
+                                    [matColumnDef]="columna.columnDef">
+                                    <th mat-header-cell *matHeaderCellDef> <b>{{ columna.header }}</b></th>
+                                    <td mat-cell *matCellDef="let row"> {{ columna.cell(row) }}</td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="aspirantesColumnas"></tr>
+                                <tr mat-row *matRowDef="let row; columns: aspirantesColumnas;"></tr>
+                            </table>
+
+                            <!-- Paginator para la tabla -->
+                        </div>
+
+                        <!-- Mensaje si no hay aspirantes -->
+                        <div *ngIf="proyecto.cantidad_aspirantes == 0">
+                            <div class="info my-3">
+                                <mat-icon class="info-icon">info</mat-icon> &nbsp;
+                                <span>{{ 'admision.proyecto_sin_aspirantes' | translate }}</span>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+
+        </fieldset>
+    </div>
+</mat-card>

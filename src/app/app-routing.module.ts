@@ -14,6 +14,7 @@ import { SolicitudTransferenciaComponent } from './components/transferencia/soli
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-aspirantes/lista-proyectos-aspirantes.component';
 
 
 
@@ -45,6 +46,10 @@ const routes: Routes = [
   {
     path:"listado-aspirantes", 
     component: ListadoAspiranteComponent
+  },
+  {
+    path:"lista-proyectos-aspirantes", 
+    component: ListaProyectosAspirantesComponent
   },
   {
     path:"asignar-descuento-documento", 

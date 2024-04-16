@@ -78,6 +78,8 @@ import { ParametrosService } from './services/parametros.service';
 import { SgaMidService } from './services/sga_mid.service';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-aspirantes/lista-proyectos-aspirantes.component';
+import { MatSortModule } from '@angular/material/sort';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
@@ -123,6 +125,7 @@ export function createTranslateLoader(http: HttpClient) {
     AsignarDocumentosDescuentosComponent,
     EvaluacionDocumentosInscritosComponent,
     DialogoDocumentosTransferenciasComponent,
+    ListaProyectosAspirantesComponent,
   ],
   imports: [
     CodificacionModule,
@@ -145,6 +148,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatNativeDateModule,
     ReactiveFormsModule,
     MatDatepickerModule,
+    MatSortModule,
     MatAutocompleteModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,

@@ -155,6 +155,7 @@
             "asignacion_cupos": "Assignment of quotas",
             "actualizacion_estado": "Assignment of quotas \nfor projects",
             "listado_aspirante": "List applicants",
+            "listar_aspirantes_proyecto": "List applicants for active projects",
             "administrar_criterios": "Manage admission criteria",
             "documentos_descuentos": "Assignment of documents\nand discounts by project",
             "solicitud_transferencias": "Transfer Requests",
@@ -1378,7 +1379,7 @@
         "erro_selec": "Please select at least one academic project!",
         "error_proyecto_ya_existe": "The academic project has already been added!",
         "realizar_preinscripcion": "Pre-registration",
-        "erro_selec_nivel": "Please select the level!",
+        "error_selec_nivel": "Please select the level!",
         "opciones_usuario": "User options",
         "recibos_generados": "Receipts generated (PIN)",
         "generar_recibo": "Generate receipt",
@@ -1752,7 +1753,11 @@
         "descargar_zip": "Download the applicant's documentary compilation",
         "no_vinculacion_no_rol": "Your user is not linked to any academic project and does not have the appropriate role",
         "multiple_vinculacion": "Your user appears linked to more than one academic project",
-        "notificar_observaciones":"Report observations"
+        "notificar_observaciones":"Report observations",
+        "listar_aspirantes_proyecto": "List applicants for active projects",
+        "proyecto_sin_aspirantes": "This project does not have applicants",
+        "info_lista_proyecto_activos": "Select the academic period (the current active period is selected by default), followed by the level, to access the list of active projects in the selected period and the list of applicants for each project in the specified period.",
+        "buscar_en_toda_la_tabla": "search entire table"
     },
     "cupos": {
         "aviso_periodo": "Period in which the admission quotas are defined",
