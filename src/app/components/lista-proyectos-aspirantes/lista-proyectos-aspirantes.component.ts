@@ -1,8 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, QueryList, ViewChildren } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
@@ -18,19 +17,21 @@ import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 })
 export class ListaProyectosAspirantesComponent {
 
-  cuposProyecto: any;
-  periodo: any;
-  nivel: any;
-  proyectosActivosConListaAspirantes: any
+  @ViewChildren(MatPaginator) paginators!: QueryList<MatPaginator>;
 
+  cuposProyecto: any;
+  dataSource: any
+  nivel: any;
+  periodo: any;
+  proyectosActivosConListaAspirantes: any
+  
+  aspirantesColumnas: any[] = []
+  aspirantesConstructorTabla: any[] = [];
   niveles: any[] = [];
   periodos: any[] = [];
 
-  aspirantesConstructorTabla: any[] = [];
-  aspirantesColumnas: any[] = []
   nivelFormControl = new FormControl('', [Validators.required]);
   periodoFormControl = new FormControl('', [Validators.required]);
-  dataSource: any
 
   constructor(
     private admisionesMid: SgaAdmisionesMid,
@@ -42,10 +43,6 @@ export class ListaProyectosAspirantesComponent {
   ) {
     this.cargarNiveles()
     this.cargarPeriodo()
-
-    const data = require("./res.json")
-    this.proyectosActivosConListaAspirantes = data.data
-    this.construirTabla()
   }
 
   cargarPeriodo() {
@@ -89,7 +86,7 @@ export class ListaProyectosAspirantesComponent {
       .subscribe((res: any) => {
         if (res.success) {
           this.proyectosActivosConListaAspirantes = res.data;
-          this.construirTabla()
+          this.cargarInformacionEnPanelesExpansivos()
         } else {
           this.proyectosActivosConListaAspirantes = null
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
@@ -97,29 +94,10 @@ export class ListaProyectosAspirantesComponent {
       })
   }
 
-  cargarCuposParaProyectos() {
-    this.proyectosActivosConListaAspirantes.forEach((proyecto: any) => {
-      this.cargarCantidadCupos(proyecto);
-    });
-  }
-
-  cargarCantidadCupos(proyecto: any) {
-    const proyectoId = proyecto.ProyectoId
-    // const periodoId = this.periodo.Id
-    const periodoId = 40
-
-    this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
-      (response: any) => {
-        if (response !== null && response !== undefined && response[0].Id !== undefined) {
-          proyecto.cuposProyecto = response[0].CuposHabilitados;
-        } else {
-          proyecto.cuposProyecto = "noDefinidoCupos";
-        }
-      },
-      error => {
-        this.popUpManager.showErrorAlert(this.translate.instant('cupos.sin_cupos_periodo'));
-      },
-    );
+  cargarInformacionEnPanelesExpansivos() {
+    this.cargarCuposParaProyectos()
+    this.calcularRecuentosInscripciones()
+    this.construirTabla()
   }
 
   construirTabla() {
@@ -136,13 +114,21 @@ export class ListaProyectosAspirantesComponent {
     ];
 
     this.aspirantesColumnas = this.aspirantesConstructorTabla.map(column => column.columnDef);
+    this.renderizarInformacionYPaginador()
+  }
 
-    this.proyectosActivosConListaAspirantes.forEach((proyecto: any) => {
-      proyecto.dataSource = new MatTableDataSource<any>(proyecto.Aspirantes);
-    });
+  renderizarInformacionYPaginador() {
+    if (this.proyectosActivosConListaAspirantes != null) {
+      this.proyectosActivosConListaAspirantes.forEach((proyecto: any, index: number) => {
+        proyecto.dataSource = new MatTableDataSource<any>(proyecto.Aspirantes);
 
-    this.cargarCuposParaProyectos()
-    this.calcularRecuentosInscripciones()
+        setTimeout(() => {
+          if (this.paginators && this.paginators.toArray()[index]) {
+            proyecto.dataSource.paginator = this.paginators.toArray()[index];
+          }
+        }, 1000)
+      });
+    }
   }
 
   calcularRecuentosInscripciones(): void {
@@ -161,12 +147,38 @@ export class ListaProyectosAspirantesComponent {
     });
   }
 
-  cambiarPeriodo(){
+  cargarCuposParaProyectos() {
+    if (this.proyectosActivosConListaAspirantes != null) {
+      this.proyectosActivosConListaAspirantes.forEach((proyecto: any) => {
+        this.cargarCantidadCupos(proyecto);
+      });
+    }
+  }
+
+  cargarCantidadCupos(proyecto: any) {
+    const proyectoId = proyecto.ProyectoId
+    const periodoId = this.periodo.Id
+
+    this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
+      (response: any) => {
+        if (response !== null && response !== undefined && response[0].Id !== undefined) {
+          proyecto.cuposProyecto = response[0].CuposHabilitados;
+        } else {
+          proyecto.cuposProyecto = "noDefinidoCupos";
+        }
+      },
+      error => {
+        this.popUpManager.showErrorAlert(this.translate.instant('cupos.sin_cupos_periodo'));
+      },
+    );
+  }
+
+  cambiarPeriodo() {
     this.nivelFormControl.setValue('')
     this.proyectosActivosConListaAspirantes = true
   }
 
-  applyFilter(event: Event, datos:any) {
+  buscarTermino(event: Event, datos: any) {
     const filterValue = (event.target as HTMLInputElement).value;
     datos.filter = filterValue.trim().toLowerCase();
   }

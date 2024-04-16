@@ -96,10 +96,9 @@
                             </div>
 
                             <div class="search-container">
-                                <input matInput (keyup)="applyFilter($event, proyecto.dataSource)" type="text"
+                                <input matInput (keyup)="buscarTermino($event, proyecto.dataSource)" type="text"
                                     class="search-input"
-                                    placeholder="{{ 'admision.buscar_en_toda_la_tabla' | translate }}..."
-                                    #input>
+                                    placeholder="{{ 'admision.buscar_en_toda_la_tabla' | translate }}..." #input>
                                 <mat-icon class="icon-busqueda" matPrefix>search</mat-icon>
                             </div>
 
@@ -114,7 +113,8 @@
                                 <tr mat-row *matRowDef="let row; columns: aspirantesColumnas;"></tr>
                             </table>
 
-                            <!-- Paginator para la tabla -->
+                            <mat-paginator [length]="proyecto.dataSource.filteredData.length" [pageSize]="3" [pageSizeOptions]="[3, 5, 10]" showFirstLastButtons #paginator>
+                            </mat-paginator>
                         </div>
 
                         <!-- Mensaje si no hay aspirantes -->
