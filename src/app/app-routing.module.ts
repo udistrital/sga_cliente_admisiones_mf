@@ -20,6 +20,7 @@ import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/li
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 import { LiquidacionRecibosComponent } from './components/liquidacion/liquidacion-recibos/liquidacion-recibos.component';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
+import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
 
 
 
@@ -75,6 +76,10 @@ const routes: Routes = [
   {
     path:"suite-programa", 
     component: DefSuiteInscripProgramaComponent ,
+  },
+  {
+    path:"reportes-inscritos", 
+    component: RepotesInscripcionesComponent ,
   },
   {
     path:"listado-historico", 

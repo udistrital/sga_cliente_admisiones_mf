@@ -83,6 +83,10 @@ import { AdministracionCuentaBancariaComponent } from './components/administraci
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
 //import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
+
+import { SafeUrlPipe } from './core/pipes/safe-url.pipe';
+import { ReporteVisualizerComponent } from './components/reporte-visualizer/reporte-visualizer.component';
 import { LiquidacionRecibosComponent } from './components/liquidacion/liquidacion-recibos/liquidacion-recibos.component';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 
@@ -101,6 +105,7 @@ export function createTranslateLoader(http: HttpClient) {
 
 @NgModule({
   declarations: [
+    SafeUrlPipe,
     AppComponent,
 
     DialogoCriteriosComponent,
@@ -134,6 +139,7 @@ export function createTranslateLoader(http: HttpClient) {
     DialogoCriteriosComponent,
     CriterioAdmisionComponent,
     ListadoAspiranteComponent,
+    ReporteVisualizerComponent,
     DialogoDocumentosComponent,
     DialogPreviewFileComponent,
     CrudAsignacionCupoComponent,
@@ -155,6 +161,7 @@ export function createTranslateLoader(http: HttpClient) {
     AsignarDocumentosDescuentosComponent,
     EvaluacionDocumentosInscritosComponent,
     DialogoDocumentosTransferenciasComponent,
+    RepotesInscripcionesComponent,
     LiquidacionRecibosComponent,
     LiquidacionHistoricoComponent,
     LiquidacionTableComponent
