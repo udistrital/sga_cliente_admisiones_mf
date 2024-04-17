@@ -1,0 +1,40 @@
+<!-- <nb-card>
+    <nb-card-body>
+        <div class="col-md-12"> -->
+            <table class="table-responsive">
+                <thead>
+                    <!-- <tr>
+                        <th colspan="4">{{ 'inscripcion.documento_programa' | translate}}</th>
+                    </tr> -->
+                    <tr class="subheader">
+                        <th>{{ 'GLOBAL.soporte_documento' | translate }}</th>
+                        <th>{{ 'GLOBAL.estado' | translate }} </th>
+                        <th>{{ 'admision.observacion' | translate }} </th>
+                        <th>{{ 'solicitudes.soporte' | translate }} </th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="info_documento_programa">
+                    <tr *ngFor="let documento of info_documento_programa">
+                        <td> {{documento.DocumentoProgramaId.TipoDocumentoProgramaId.Nombre}} </td>
+                        <td> {{documento.estadoObservacion}} </td>
+                        <td> {{documento.observacion}} </td>
+                        <td *ngIf="documento.DocumentoId !== undefined">
+                          <button class="boton-primary" mat-button type="button" (click)="abrirDocumento(documento)">
+                            <mat-icon fontIcon="search"></mat-icon>
+                        </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot *ngIf="(url_editar && gotoEdit) || (updateDocument && canUpdateDocument)">
+                  <tr>
+                    <td colspan="4" style="background-color: lightyellow;">
+                      <span (click)="editar()" class="link"><i
+                        class="ion-edit"></i> {{"GLOBAL.actualizar" | translate}}</span>
+                    </td>
+                  </tr>
+                </tfoot>
+            </table>
+<!--         </div>
+    </nb-card-body>
+</nb-card>
+ -->

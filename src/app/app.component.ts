@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { fromEvent } from 'rxjs';
-import { getCookie } from './core/utils/cookie';
+import { getCookie } from 'src/utils/cookie';
+
 
 @Component({
   selector: 'sga-admisiones-mf',

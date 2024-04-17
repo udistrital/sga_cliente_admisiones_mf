@@ -1,0 +1,138 @@
+table.table-responsive,
+table.rwd_auto {
+  width: 100%;
+  display: inline-table;
+  margin: 0px;
+  //border: black solid 1px;
+  border-collapse: collapse;
+}
+.table-responsive th,
+.rwd_auto th {
+  padding: 5px;
+  text-align: center;
+  //border-bottom: black solid 1px;
+  //border-top: black solid 1px;
+  background-color: rgb(0, 162, 255);
+  color: floralwhite;
+}
+.table-responsive .subheader th {
+  //border-bottom: black solid 1px;
+  //border-top: black solid 1px;
+  background-color: #bdc2c8;
+  font-weight: normal;
+  color: black;
+}
+.table-responsive td,
+.rwd_auto td {
+  //border-bottom: black solid 1px;
+  //border-top: black solid 1px;
+  padding: 5px;
+  text-align: center;
+}
+.rwd {
+  width: 100%;
+  overflow: auto;
+}
+.rwd table.rwd_auto {
+  width: auto;
+  min-width: 100%;
+}
+.rwd_auto th,
+.rwd_auto td {
+  white-space: nowrap;
+}
+
+@media only screen and (max-width: 760px), (min-width: 768px) and (max-width: 1024px) {
+  table.table-responsive,
+  .table-responsive thead,
+  .table-responsive tbody,
+  .table-responsive th,
+  .table-responsive td,
+  .table-responsive tr {
+    display: block;
+  }
+
+  .table-responsive thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  .table-responsive tr {
+    border: 1px solid #ccc;
+  }
+  .table-responsive td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+    text-align: left;
+  }
+  .table-responsive td::before {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+ 
+  .table-responsive td:nth-of-type(1)::before {
+    content: 'Idioma';
+    font-weight: bold;
+    padding: 2px 2px 1px;
+  }
+  .table-responsive td:nth-of-type(2)::before {
+    content: 'Idioma nativo';
+    font-weight: bold;
+    padding: 2px 2px 1px;
+  }
+  .table-responsive td:nth-of-type(3)::before {
+    content: 'Nivel de escritura';
+    font-weight: bold;
+    padding: 2px 2px 1px;
+  }
+  .table-responsive td:nth-of-type(4)::before {
+    content: 'Nivel de escucha';
+    font-weight: bold;
+    padding: 2px 2px 1px;
+  }
+  .table-responsive td:nth-of-type(5)::before {
+    content: 'Nivel de habla';
+    font-weight: bold;
+    padding: 2px 2px 1px;
+  }
+  .table-responsive td:nth-of-type(6)::before {
+    content: 'Nivel de lectura';
+    font-weight: bold;
+    padding: 2px 2px 1px;
+  }
+
+  .descarto {
+    display: none;
+  }
+  .fontsize {
+    font-size: 10px;
+  }
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+  body {
+    width: 320px;
+  }
+  .descarto {
+    display: none;
+  }
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  body {
+    width: 495px;
+  }
+  .descarto {
+    display: none;
+  }
+  .fontsize {
+    font-size: 10px;
+  }
+}
