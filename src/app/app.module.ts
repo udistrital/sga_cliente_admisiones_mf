@@ -15,15 +15,15 @@ import { TransferenciaComponent } from './components/transferencia/transferencia
 import { DialogoDocumentosTransferenciasComponent } from './components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
 import { CrudInfoPersonaComponent } from './components/transferencia/crud-info_persona/crud-info_persona.component';
 import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
-import { SgaAdmisionesMid } from './services/sga_admisiones_mid.service';
+
+import { CheckboxAssistanceComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component';
+import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RequestManager } from './managers/requestManager';
 import { HttpErrorManager } from './managers/errorManager';
@@ -84,12 +84,12 @@ import { ComentariosCuposComponent } from './components/asignacion-cupos-proyect
 //import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { environment } from "src/environments/environment";
-import { CodificacionModule } from "./codificacion-module/codificacion.module";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SpinnerUtilInterceptor, SpinnerUtilModule } from 'spinner-util';
+import { HttpClient } from '@angular/common/http';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
@@ -121,6 +121,9 @@ export function createTranslateLoader(http: HttpClient) {
     AsignacionCuposComponent,
     ListadoHistoricoComponent,
     LiquidacionRecibosComponent,
+    AsignacionCuposComponent,
+    ListadoHistoricoComponent,
+    LiquidacionRecibosComponent,
     ViewInscripcionComponent,
     ViewInfoPersonaComponent,
     DialogoCriteriosComponent,
@@ -131,16 +134,26 @@ export function createTranslateLoader(http: HttpClient) {
     DialogPreviewFileComponent,
     CrudAsignacionCupoComponent,
     ViewPropuestaGradoComponent,
+    EvaluacionAspirantesComponent,
+    ListDocumentoProyectoComponent,
+    CrudDocumentoProyectoComponent,
+    ViewDocumentoProgramaComponent,
+    ViewExperienciaLaboralComponent,
+    ViewFormacionAcademicaComponent,
+    AdministradorCriteriosComponent,
+    ViewDescuentoAcademicoComponent,
+    DocProgramaObligatorioComponent,
+    SolicitudTransferenciaComponent,
+    ViewProduccionAcademicaComponent,
+    DefSuiteInscripProgramaComponent,
+    SelectDescuentoProyectoComponent,
+    SelectDocumentoProyectoComponent,
+    AsignarDocumentosDescuentosComponent,
+    EvaluacionDocumentosInscritosComponent,
+    DialogoDocumentosTransferenciasComponent,
     ListadoAspiranteComponent,
     AdministracionCuentaBancariaComponent,
     ComentariosCuposComponent
-
-
-
-
-
-
-
   ],
   imports: [
     FormsModule,
@@ -148,6 +161,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserModule,
     MatTabsModule,
     MatIconModule,
+    MatStepperModule,
     MatStepperModule,
     MatCardModule,
     MatInputModule,
@@ -167,7 +181,6 @@ export function createTranslateLoader(http: HttpClient) {
     MatProgressSpinnerModule,
     NgxExtendedPdfViewerModule,
     StoreModule.forRoot(rootReducer),
-
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {
@@ -180,9 +193,9 @@ export function createTranslateLoader(http: HttpClient) {
     SpinnerUtilModule,
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: SpinnerUtilInterceptor, multi: true}
+    { provide: HTTP_INTERCEPTORS, useClass: SpinnerUtilInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
 
 
-export class AppModule { }
+  export class AppModule {}
