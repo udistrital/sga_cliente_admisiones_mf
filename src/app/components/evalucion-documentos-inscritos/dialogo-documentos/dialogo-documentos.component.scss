@@ -61,3 +61,14 @@ img {
     color: white !important;
     padding: 8px;
   }
+
+@media (max-width: 750px) {
+  .row-xs{
+    flex-direction: column;
+  }
+
+  .col-xs{
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
