@@ -7,14 +7,17 @@ import { AdministradorCriteriosComponent } from './components/administrar-criter
 import { AsignacionCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/asignacion_cupos.component';
 import { CriterioAdmisionComponent } from './components/crieterios-admisiones-proyectos/criterio_admision/criterio_admision.component';
 import { EvaluacionDocumentosInscritosComponent } from './components/evalucion-documentos-inscritos/evaluacion-documentos-inscritos/evaluacion-documentos-inscritos.component';
+//import { EvaluacionAspirantesComponent } from './components/evaluacion-aspirantes/evaluacion-aspirantes.component';
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
+import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
 import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
+import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
-import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
 import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
-import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
+import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 
 
 
@@ -36,13 +39,21 @@ const routes: Routes = [
     component: AsignacionCuposComponent
   },
   {
+    path:"asignacion-cupos/comentarios-cupos", 
+    component: ComentariosCuposComponent
+  },
+  {
     path:"documentos-inscritos", 
     component: EvaluacionDocumentosInscritosComponent
   },
   {
-    path:"evaluacion-aspirantes", 
-    component: EvaluacionAspirantesComponent
+    path:"administracion-cuenta", 
+    component: AdministracionCuentaBancariaComponent
   },
+  //{
+   // path:"evaluacion-aspirantes", 
+    //component: EvaluacionAspirantesComponent
+  //},
   {
     path:"listado-aspirantes", 
     component: ListadoAspiranteComponent
