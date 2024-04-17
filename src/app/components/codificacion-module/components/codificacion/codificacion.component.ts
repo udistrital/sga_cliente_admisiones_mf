@@ -197,7 +197,7 @@ export class CodificacionComponent {
           this.isGenerarCodigos = true
         }
       },
-      error: (error:any) => this.openSnackBar('Codigos no egenrados')
+      error: (error) => this.openSnackBar('Codigos no generados')
     });
   }
 

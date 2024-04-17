@@ -23,13 +23,11 @@ export class AppComponent {
  
   validateLang() {
     let lang = getCookie('lang') || 'es';
-
     this.whatLang$.subscribe((x:any) => {
       lang = x['detail']['answer'];
       this.translate.setDefaultLang(lang)
     });
     this.translate.setDefaultLang(getCookie('lang') || 'es');
-
   }
 }
 
