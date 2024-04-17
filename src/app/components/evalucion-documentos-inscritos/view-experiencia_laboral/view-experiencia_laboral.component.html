@@ -1,0 +1,48 @@
+<!-- <nb-card>
+    <nb-card-body>
+        <div class="col-md-12"> -->
+<table class="table-responsive">
+    <thead>
+        <!-- <tr><th colspan="8">{{"inscripcion.experiencia_laboral" | translate}}</th></tr> -->
+        <tr class="subheader">
+            <th>{{ 'GLOBAL.nombre_empresa' | translate }}</th>
+            <th>{{ 'GLOBAL.cargo' | translate }}</th>
+            <th>{{ 'GLOBAL.fecha_inicio' | translate }}</th>
+            <th>{{ 'GLOBAL.fecha_fin' | translate }}</th>
+            <th>{{ 'GLOBAL.tipo_vinculacion' | translate }}</th>
+            <th>{{ 'admision.estado' | translate }}</th>
+            <th>{{ 'admision.observacion' | translate }}</th>
+            <th>{{ 'solicitudes.soporte' | translate }}</th>
+        </tr>
+    </thead>
+    <tbody *ngIf="info_experiencia_laboral">
+        <tr *ngFor="let experiencia of info_experiencia_laboral">
+            <td>{{experiencia.NombreEmpresa.NombreCompleto}}</td>
+            <td>{{experiencia.Cargo.Nombre}}</td>
+            <td>{{experiencia.FechaInicio | date:'dd/MM/yyyy'}}</td>
+            <td>{{experiencia.FechaFinalizacion | date:'dd/MM/yyyy'}}</td>
+            <td>{{experiencia.TipoVinculacion.Nombre}}</td>
+            <td>{{experiencia.Soporte?experiencia.Soporte.estadoObservacion:''}}</td>
+            <td>{{experiencia.Soporte?experiencia.Soporte.observacion:''}}</td>
+            <td>
+                <button class="boton-primary" mat-button type="button" (click)="verDocumento(experiencia.Soporte)">
+                    <mat-icon fontIcon="search"></mat-icon>
+                </button>
+                <!-- <a [href]=experiencia.Soporte download="Experiencia{{experiencia.FechaFinalizacion |
+                                date:'yyyy'}}.pdf"><i class="nb-search" title={{variable}}></i></a> -->
+            </td>
+        </tr>
+    </tbody>
+    <tfoot *ngIf="(url_editar && gotoEdit) || (updateDocument && canUpdateDocument)">
+        <tr>
+            <td colspan="8" style="background-color: lightyellow;">
+                <span (click)="editar()" class="link"><i class="ion-edit"></i> {{"GLOBAL.actualizar" |
+                    translate}}</span>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+<!--         </div>
+    </nb-card-body>
+</nb-card>
+ -->

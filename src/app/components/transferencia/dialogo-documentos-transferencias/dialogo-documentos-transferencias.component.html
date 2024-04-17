@@ -1,0 +1,38 @@
+<div class="dinamic-form">
+    <form novalidate [formGroup]="revisionForm" (ngSubmit)="guardarRevision()" class="form-horizontal">
+        <fieldset [ngClass]="{'fieldseter': true} ">
+            <legend>
+                &nbsp; {{ 'admision.revisar_docs' | translate }}
+                <button class="btn btn-danger btn-icon input-group-text btn-tn float-right"
+                    (click)="guardarRevision();">X </button> &nbsp;
+            </legend>
+            <div class="row">
+                <div class="col-6">
+                   <!-- <ngx-extended-pdf-viewer [src]="documento" [height]="'65vh'" [useBrowserLocale]="true"
+                        (pdfLoaded)="docCargado()"> </ngx-extended-pdf-viewer>-->
+                </div>
+                <div class="col-6 d-flex align-items-start flex-column">
+                    <div class="row" style="width: 100%;" *ngIf="!pruebaEspecifica">
+                        <div class="col-12">
+                            <mat-label>{{ 'inscripcion.fecha_especifica' | translate }}: </mat-label>
+                        </div>
+                        <div class="col-12">
+                            <mat-form-field style="width: 100%;" class="form-group" floatLabel="always">
+                                <input matInput [value]="fecha" type="datetime-local" disabled="true" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row" style="width: 100%;">
+                        <div class="col-12">
+                            <mat-label>{{ 'GLOBAL.observacion' | translate }}: </mat-label>
+                        </div>
+                        <div class="col-12">
+                           <!-- <textarea class="observacion" formControlName="observacion" rows="10" disabled
+                                style="width: 100%;"></textarea>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

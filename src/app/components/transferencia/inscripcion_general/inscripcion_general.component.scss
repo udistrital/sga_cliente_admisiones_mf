@@ -1,0 +1,37 @@
+.mat-expansion-panel-header {
+    border-bottom-style: solid;
+    border-bottom-color: #00d977;
+    border-bottom-width: thin;
+}
+
+
+.exp-card {
+    align-content: center;
+    cursor: pointer;
+    width: 13.5rem;
+    height: 16rem;
+    transition: background-color 1s;
+}
+
+.exp-card:hover {
+    background-color: rgb(156, 220, 255);
+}
+
+.icon-form {
+    vertical-align: middle;
+}
+
+.percentage {
+    padding-top: 5%;
+    font-size: 1.6rem;
+}
+
+.mat-button {
+    background-color: rgb(0, 162, 255);
+    color: #fff;
+}
+
+.mat-button:disabled {
+    background-color: #fff;
+    color: #fff;
+}

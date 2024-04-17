@@ -1,0 +1,9 @@
+<!-- <toaster-container [toasterconfig]="config"></toaster-container> -->
+
+<ngx-dinamicform [normalform]="formDocumentoProyecto"
+                 [modeloData]="info_doc_programa"
+                 (result)="validarForm($event)"
+                 [clean]="clean">
+</ngx-dinamicform>
+
+<br/>

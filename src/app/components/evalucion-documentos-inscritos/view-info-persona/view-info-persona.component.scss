@@ -1,0 +1,103 @@
+table.table-responsive,
+table.rwd_auto {
+  width: 100%;
+  display: inline-table;
+  margin: 0px;
+  //border: black solid 1px;
+  border-collapse: collapse;
+}
+.table-responsive th,
+.rwd_auto th {
+  padding: 5px;
+  text-align: center;
+  //border-bottom: black solid 1px;
+  //border-top: black solid 1px;
+  background-color: rgb(0, 162, 255);
+  color: floralwhite;
+}
+.table-responsive .subheader th {
+  //border-bottom: black solid 1px;
+  //border-top: black solid 1px;
+  background-color: #bdc2c8;
+  font-weight: normal;
+  color: black;
+}
+.table-responsive td,
+.rwd_auto td {
+  //border-bottom: black solid 1px;
+  //border-top: black solid 1px;
+  padding: 5px;
+  text-align: center;
+}
+.rwd {
+  width: 100%;
+  overflow: auto;
+}
+.rwd table.rwd_auto {
+  width: auto;
+  min-width: 100%;
+}
+.rwd_auto th,
+.rwd_auto td {
+  white-space: nowrap;
+}
+
+@media only screen and (max-width: 760px), (min-width: 768px) and (max-width: 1024px) {
+  table.table-responsive,
+  .table-responsive thead,
+  .table-responsive tbody,
+  .table-responsive th,
+  .table-responsive td,
+  .table-responsive tr {
+    display: block;
+  }
+
+  .table-responsive thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .table-responsive td {
+    border: none;
+    position: relative;
+    text-align: left;
+  }
+
+  .table-responsive tr {
+    border-bottom: 1px solid #ccc;
+  }
+  .descarto {
+    display: none;
+  }
+  .fontsize {
+    font-size: 10px;
+  }
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+  body {
+    width: 320px;
+  }
+  .descarto {
+    display: none;
+  }
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  body {
+    width: 495px;
+  }
+  .descarto {
+    display: none;
+  }
+  .fontsize {
+    font-size: 10px;
+  }
+}
+
+i.nb-search {
+  font-size: 2rem;
+}
