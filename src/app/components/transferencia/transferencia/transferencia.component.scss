@@ -1,0 +1,24 @@
+.text-center{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+}
+
+.btn-barcode,
+.container-button-column {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+}
+
+th{
+    color: black;
+}
+
+::deep ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom {
+    display: inline-block;
+    text-align: center;
+  }
+

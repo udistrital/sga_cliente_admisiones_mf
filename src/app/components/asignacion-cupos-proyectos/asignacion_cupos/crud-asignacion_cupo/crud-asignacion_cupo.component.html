@@ -1,0 +1,88 @@
+<!-- <toaster-container [toasterconfig]="config"></toaster-container> -->
+
+<!--
+ <ngx-dinamicform *ngIf="!show_posgrado"
+                 [normalform]="formAsigancionCupoPregrado"
+                 [modeloData]="info_info_persona"
+                 (result)="validarForm($event)"
+                 [clean]="clean">
+</ngx-dinamicform> 
+ <ngx-dinamicform *ngIf="show_posgrado"
+                 [normalform]="formAsigancionCupoPosgrado"
+                 [modeloData]="info_info_persona" (result)="validarForm($event)"
+                 [clean]="clean">
+</ngx-dinamicform> 
+-->
+
+
+
+<mat-card [hidden]="!show_posgrado">
+    <mat-card-content>
+        <div class="container">
+            <mat-label>Cupos admitidos  </mat-label>
+            <mat-label>Cupos opcionados</mat-label>
+          </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="container">
+
+
+                    <mat-table [dataSource]="dataSource" matSort>
+                        <ng-container matColumnDef="inscripcion">
+                            <mat-header-cell *matHeaderCellDef> Inscripción </mat-header-cell>
+                            <mat-cell *matCellDef="let cupo"> {{cupo.inscripcion}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tipoCupo">
+                            <mat-header-cell *matHeaderCellDef> Tipo cupo </mat-header-cell>
+                            <mat-cell *matCellDef="let cupo"> {{cupo.tipoCupo}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="estado">
+                            <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                            <mat-cell *matCellDef="let cupo"> {{cupo.estado}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cupos">
+                            <mat-header-cell *matHeaderCellDef> Cupos </mat-header-cell>
+                            <mat-cell *matCellDef="let cupo"> {{cupo.cupos}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="acciones">
+                            <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+                            <mat-cell *matCellDef="let cupo">
+                                <button mat-icon-button>
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-icon-button >
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+                        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                    </mat-table>
+
+                </div>
+            </div>
+        </div>
+        <div>
+            <mat-label>Comentarios</mat-label>
+            <button class="boton-primary" mat-button type="button">Historico</button>
+        </div>
+        
+        <button class="boton-primary" mat-button type="button">Guardar</button>
+    </mat-card-content>
+</mat-card>
+<mat-card [hidden]="show_posgrado">
+    <mat-card-content>
+        <div class="row">
+            <div class="col-12">
+                aaaaa2
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+

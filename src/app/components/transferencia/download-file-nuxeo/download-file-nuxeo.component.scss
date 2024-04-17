@@ -1,0 +1,13 @@
+.element-nuxeo {
+    border-radius: 5px;
+    width: 12rem;
+    margin: 1rem 1rem 0 0;
+    display: -webkit-box;
+    display: flex;
+    border: 1px solid var(--primary);
+    justify-content: center;
+
+    flex-wrap: nowrap;
+    flex-direction: row;
+    padding: 0.5rem;
+}
