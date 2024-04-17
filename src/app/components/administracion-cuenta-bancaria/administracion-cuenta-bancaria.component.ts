@@ -1,28 +1,27 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
-import { Output, EventEmitter } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AnyFn } from '@ngrx/store/src/selector';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import { HttpErrorResponse } from '@angular/common/http';
+import { PopUpManager } from 'src/app/managers/popUpManager';
 import { Inscripcion } from 'src/app/models/inscripcion/inscripcion';
-import { FormControl, Validators } from '@angular/forms';
 import { NivelFormacion } from 'src/app/models/proyecto_academico/nivel_formacion';
-import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
-import { PopUpManager } from '../../../managers/popUpManager';
-import { ParametrosService } from 'src/app/services/parametros.service';
-import { UserService } from 'src/app/services/users.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
-import { InscripcionService } from 'src/app/services/inscripcion.service';
-import { TipoInscripcion } from 'src/app/models/inscripcion/tipo_inscripcion';
-import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
-
+import { ParametrosService } from 'src/app/services/parametros.service';
+import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
+import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { UserService } from 'src/app/services/users.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
-  // tslint:disable-next-line: component-selector
-  selector: 'ngx-asignacion-cupos',
-  templateUrl: './asignacion_cupos.component.html',
-  styleUrls: ['./asignacion_cupos.component.scss'],
+  selector: 'app-administracion-cuenta-bancaria',
+  templateUrl: './administracion-cuenta-bancaria.component.html',
+  styleUrls: ['./administracion-cuenta-bancaria.component.scss']
 })
-export class AsignacionCuposComponent implements OnInit, OnChanges {
+export class AdministracionCuentaBancariaComponent {
   toasterService: any;
+
+  
 
 
 
@@ -50,10 +49,10 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   proyectos: any[] = [];
   criterios = [];
   periodos: any[] = [];
+  cuentas: any;
   niveles!: NivelFormacion[];
-  tipoinscripcion!: TipoInscripcion[];
   nivelSelect!: NivelFormacion[];
-  tipoinscripcionSelect!: TipoInscripcion[];
+  selectedCuenta: any;
 
   show_cupos = false;
   show_profile = false;
@@ -69,31 +68,42 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   selectedValue: any;
   selectedTipo: any;
   proyectos_selected!: any[] | undefined;
-  tipins_selected!: any[] | undefined;
   criterio_selected!: any[];
   selectTipoIcfes: any;
   selectTipoEntrevista: any;
   selectTipoPrueba: any;
+  selectCuenta: any;
   selectTabView: any;
   tag_view_posg!: boolean;
   tag_view_pre!: boolean;
   selectprograma: boolean = true;
   selectcriterio: boolean = true;
   periodo: any;
+  //cuenta: any;
   selectednivel: any;
   esPosgrado: boolean = false;
+
+  tiposRecaudo: any[] = [];
+  cuentasBancarias: any[] = [];
+
+  asignacionForm: FormGroup;
+  nuevaCuenta: boolean = false;
+  dataSource: any;
+
+  cuenta: any[] = [];
 
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
+  Campo3Control = new FormControl('', [Validators.required]);
   constructor(
     private translate: TranslateService,
     private parametrosService: ParametrosService,
     private popUpManager: PopUpManager,
     private projectService: ProyectoAcademicoService,
-    private inscripcionService: InscripcionService,
     private userService: UserService,
-    private sgaAdmisiones: SgaAdmisionesMid,
+    private sgaMidService: SgaMidService,
+    private http: HttpClient,
     private autenticationService: ImplicitAutenticationService,
   ) {
     this.translate = translate;
@@ -102,7 +112,33 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     this.total = true;
     this.cargarPeriodo();
     this.nivel_load()
+    this.asignacionForm = new FormGroup({
+      periodoAcademico: new FormControl(''),
+      cuentaBancaria: new FormControl(''),
+    });
   }
+
+
+  // cargarPeriodo() {
+  //   return new Promise((resolve, reject) => {
+  //     this.coreService.get('periodo/?query=Activo:true&sortby=Id&order=desc&limit=1')
+  //     .subscribe(res => {
+  //       const r = <any>res;
+  //       if (res !== null && r.Type !== 'error') {
+  //         this.periodo = <any>res[0];
+  //         window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
+  //         resolve(this.periodo);
+  //         const periodos = <Array<any>>res;
+  //        periodos.forEach(element => {
+  //           this.periodos.push(element);
+  //         });
+  //       }
+  //     },
+  //     (error: HttpErrorResponse) => {
+  //       reject(error);
+  //     });
+  //   });
+  // }
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
@@ -135,19 +171,8 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   nivel_load() {
     this.projectService.get('nivel_formacion?limit=0').subscribe(
       // (response: NivelFormacion[]) => {
-        (response: any) => {
-        this.niveles = response.filter((nivel:any) => nivel.NivelFormacionPadreId === null)//&& nivel.Nombre === 'Posgrado')
-      },
-      error => {
-        this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-      },
-    );
-  }
-
-  inscripcion_load() {
-    this.inscripcionService.get('tipo_inscripcion?limit=0').subscribe(
-        (response: any) => {
-        this.tipoinscripcion = response.filter((  tipoInscripcion:any) => tipoInscripcion.Nombre != null)
+      (response: any) => {
+        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null)//&& nivel.Nombre === 'Posgrado')
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
@@ -189,8 +214,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
-                this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(
@@ -250,12 +274,49 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     );
   }
 
+  obtenerCuentas() {
+    this.parametrosService.get('parametro?query=TipoParametroId:37').subscribe(
+      (response) => {
+        console.log(response);
+        this.dataSource = response;
+        this.cuentas = this.dataSource.Data
+        console.log("Cuentas:", this.cuentas);
+      },
+      (error) => {
+        console.error('Error al obtener las cuentas:', error);
+      }
+    );
+  }
+
   ngOnInit() {
+    /*
+    this.tiposRecaudo = [
+      { id: 1, nombre: 'Matricula' },
+      { id: 2, nombre: 'Pensiones' }
+    ];
+    this.cuentasBancarias = [
+      { id: 1, numero: '1234567890' },
+      { id: 2, numero: '9876543210' }
+    ];*/
+    this.obtenerCuentas();
+  }
+
+  guardar(cuenta: any): void {
+    console.log("res",cuenta.Data);
+    cuenta.Data.Activo=true;
+    this.parametrosService.put(`parametro?query=Id:${cuenta.Data.Id}`,cuenta).subscribe(
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.error('Error al guardar la cuenta:', error);
+      }
+    );
+    console.log("form",this.asignacionForm.value);
 
   }
 
   ngOnChanges() {
 
   }
-
 }

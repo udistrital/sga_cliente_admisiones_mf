@@ -1030,7 +1030,8 @@
         "ejecutable_programa": "Application executable file support",
         "codigo_fuente": "Software source code support",
         "archivo_video": "Audiovisual production support",
-        "soportes": "Supports list"
+        "soportes": "Supports list",
+        "tipo_inscripcion": "Select the type of enrollment"
     },
     "archivo_icfes": {
         "archivo_icfes": "Icfes file",

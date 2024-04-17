@@ -1,0 +1,45 @@
+<mat-card>
+    <mat-card-content>
+        <div class="container">
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="container">
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+
+                        <ng-container matColumnDef="Comentario">
+                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.nombre_inscripcion' | translate }} </th>
+                            <td mat-cell *matCellDef="let comentario"> {{ comentario.Comentario }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Activo">
+                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.estado' | translate }} </th>
+                            <td mat-cell *matCellDef="let comentario">
+                                <ng-container *ngIf="comentario.Activo">
+                                    Activo
+                                </ng-container>
+                                <ng-container *ngIf="!comentario.Activo">
+                                    Inactivo
+                                </ng-container>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Documento">
+                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.documento' | translate }} </th>
+                            <td mat-cell *matCellDef="let comentario; let i = index">
+                                <button mat-icon-button (click)="verSoporte(comentario)">
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let comentario; columns: displayedColumns;"></tr>
+                    </table>
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </mat-card-content>
