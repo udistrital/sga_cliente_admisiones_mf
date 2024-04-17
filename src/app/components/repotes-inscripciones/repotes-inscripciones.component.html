@@ -1,0 +1,107 @@
+<div>
+    <mat-card class="full-screen-card">
+        <mat-card-header>
+            <mat-card-title>
+                <h1>{{ 'reportes.Reportes' | translate }}</h1>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
+                <div class="grid">
+
+                    <mat-form-field appearance="fill" class="grid-3">
+                        <mat-label>{{ 'reportes.SelectPeriodo' | translate }}</mat-label>
+                        <mat-select formControlName="periodoAcademico">
+                            <mat-option *ngFor="let periodo of periodosAcademicos" [value]="periodo.Id">
+                                {{ periodo.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="grid-3">
+                        <mat-label>{{ 'reportes.SelectFacultad' | translate }}</mat-label>
+                        <mat-select formControlName="facultad" (selectionChange)="onFacultadChange($event)">
+                            <mat-option *ngFor="let facultad of facultades" [value]="facultad.Id">
+                                {{ facultad.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="grid-3">
+                        <mat-label>{{ 'reportes.SelectProyecto' | translate }}</mat-label>
+                        <mat-select formControlName="proyectoCurricular">
+                            <mat-option *ngFor="let proyecto of proyectos" [value]="proyecto.Id">
+                                {{ proyecto.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="grid-3">
+                        <mat-label>{{ 'reportes.SelectReporte' | translate }}</mat-label>
+                        <mat-select formControlName="tipoReporte" (selectionChange)="onReporteChange($event)">
+                            <mat-option *ngFor="let reporte of tipoReporte" [value]="reporte.Codigo">
+                                {{ reporte.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="grid-3">
+                        <mat-label>{{ 'reportes.SelectDatos' | translate }}</mat-label>
+                        <mat-select formControlName="selectColumnas" multiple>
+                            <mat-option *ngFor="let columna of columnas" [value]="columna.Valor">
+                                {{ columna.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="centrar">
+                    <button class="primary-button" mat-raised-button color="primary" type="submit">Generar</button>
+                </div>
+            </form>
+        </mat-card-content>
+        <div *ngIf="isDocuments">
+            <div class="table-reporte">
+
+                <table mat-table [dataSource]="dataSource">
+
+                    <!--- Note that these columns can be defined in any order.
+                              The actual rendered columns are set as a property on the row definition" -->
+
+                    <!-- Periodo Column -->
+                    <ng-container matColumnDef="Periodo">
+                        <th class="centrar" mat-header-cell *matHeaderCellDef> {{ 'reportes.Periodo' | translate }} </th>
+                        <td class="centrar" mat-cell *matCellDef="let element"> {{element.Periodo}} </td>
+                    </ng-container>
+
+                    <!-- Facultad Column -->
+                    <ng-container matColumnDef="Facultad">
+                        <th class="centrar" mat-header-cell *matHeaderCellDef> {{ 'reportes.Facultad' | translate }} </th>
+                        <td class="centrar" mat-cell *matCellDef="let element"> {{element.Facultad}} </td>
+                    </ng-container>
+
+                    <!-- Proyecto Column -->
+                    <ng-container matColumnDef="Proyecto">
+                        <th class="centrar" mat-header-cell *matHeaderCellDef> {{ 'reportes.Proyecto' | translate }} </th>
+                        <td class="centrar" mat-cell *matCellDef="let element"> {{element.Proyecto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Acciones">
+                        <th class="centrar" mat-header-cell *matHeaderCellDef> {{ 'reportes.Acciones' | translate }} </th>
+                        <td class="centrar" mat-cell *matCellDef="let element">
+                            <button mat-icon-button matTooltip="Descargar PDF" (click)="downloadFile(reportePdf, 'ReporteInscritos.pdf')">
+                                <mat-icon fontIcon="picture_as_pdf"></mat-icon>
+                            </button>
+                            <button mat-icon-button matTooltip="Descargar Xlsx" (click)="downloadFile(reporteExcel, 'ReporteInscritos.xlsx')">
+                                <mat-icon fontIcon="table_chart"></mat-icon>
+                            </button>
+                            <button mat-icon-button matTooltip="Ver PDF" (click)="openDialog()">
+                                <mat-icon fontIcon="visibility"></mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+        </div>
+    </mat-card>
+</div>

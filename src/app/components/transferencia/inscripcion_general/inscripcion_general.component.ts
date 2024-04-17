@@ -21,6 +21,7 @@ import { DialogoDocumentosComponent } from '../../evalucion-documentos-inscritos
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { TAGS_INSCRIPCION_PROGRAMA } from '../../evalucion-documentos-inscritos/def_suite_inscrip_programa/def_tags_por_programa';
 import { TimeService } from 'src/app/services/time.service';
+import { decrypt } from 'src/utils/util-encrypt';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -727,9 +728,10 @@ export class InscripcionGeneralComponent implements OnInit, OnChanges {
 
   loadPercentageDescuentos() {
     this.loading = true;
+    const id = decrypt(window.localStorage.getItem('persona_id'));
     return new Promise((resolve, reject) => {
       this.sgaMidService.get('descuento_academico/descuentopersonaperiododependencia?' + 'PersonaId=' +
-        Number(window.localStorage.getItem('persona_id')) + '&DependenciaId=' +
+        Number(id) + '&DependenciaId=' +
         Number(window.sessionStorage.getItem('ProgramaAcademicoId')) + '&PeriodoId=' + Number(window.sessionStorage.getItem('IdPeriodo')))
         .subscribe((res: any) => {
           if (res.Data.Code === '200') {
