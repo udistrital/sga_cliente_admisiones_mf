@@ -72,6 +72,8 @@ import { AdministracionCuentaBancariaComponent } from './components/administraci
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
 //import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-aspirantes/lista-proyectos-aspirantes.component';
+import { MatSortModule } from '@angular/material/sort';
 import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
 
 import { SafeUrlPipe } from './core/pipes/safe-url.pipe';
@@ -151,6 +153,7 @@ export function createTranslateLoader(http: HttpClient) {
     AsignarDocumentosDescuentosComponent,
     EvaluacionDocumentosInscritosComponent,
     DialogoDocumentosTransferenciasComponent,
+    ListaProyectosAspirantesComponent,
     RepotesInscripcionesComponent,
     LiquidacionRecibosComponent,
     LiquidacionHistoricoComponent,
@@ -180,6 +183,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatNativeDateModule,
     ReactiveFormsModule,
     MatDatepickerModule,
+    MatSortModule,
     MatAutocompleteModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,

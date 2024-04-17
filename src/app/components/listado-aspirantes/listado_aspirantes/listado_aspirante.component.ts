@@ -109,7 +109,6 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         private evaluacionService: EvaluacionInscripcionService,
         private store: Store<IAppState>,
         private listService: ListService,
-        private sgaMidService: SgaMidService,
         private sgaMidAdmisioens: SgaAdmisionesMid,
         private userService: UserService,
         private autenticationService: ImplicitAutenticationService,
@@ -119,7 +118,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.source_emphasys = new MatTableDataSource();
         this.translate = translate;
         this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-            this.createTable();
+           
         });
         this.listService.findInfoContacto();
         this.loadLists();
@@ -141,147 +140,9 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         title: e.Nombre
                     }
                 })
-                this.createTable()
                 console.log(this.estados)
             })
     }
-
-
-    createTable() {
-
-        this.settings_emphasys = {
-            delete: {
-                deleteButtonContent: '<i class="nb-trash"></i>',
-                confirmDelete: true,
-            },
-            actions: {
-                delete: false,
-                edit: true,
-                add: false,
-                position: 'right',
-                columnTitle: this.translate.instant('GLOBAL.acciones'),
-            },
-            mode: 'internal',
-            columns: {
-                index: {
-                    title: '#',
-                    filter: false,
-                    valuePrepareFunction: (value: any, row: any, cell: any) => {
-                        return cell.row.index + 1;
-                    },
-                    width: '2%',
-                },
-                NumeroDocumento: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.Documento'),
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '10%',
-                },
-                NombreAspirante: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.Nombre'),
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '15%',
-                },
-                Telefono: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.telefono'),
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '10%',
-                },
-                Email: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.correo_principal'),
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '15%',
-                },
-                NotaFinal: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.Puntaje'),
-                    sort: true,
-                    sortDirection: 'desc',
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '5%',
-                },
-                TipoInscripcion: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.TipoInscripcion'),
-                    valuePrepareFunction: (value: any) => {
-                        return value
-                    },
-                    width: '10%',
-                },
-                Enfasis: {
-                    editable: false,
-                    title: this.translate.instant('enfasis.enfasis'),
-                    valuePrepareFunction: (value: any) => {
-                        return value
-                    },
-                    width: '10%',
-                },
-                EstadoInscripcionId: {
-                    title: this.translate.instant('GLOBAL.Estado'),
-                    filterFunction: (cell?: any, search?: string) => {
-                        console.log(cell);
-                        console.log(search)
-                        if (search!.length > 0) {
-                            return cell.Nombre.match(RegExp(search!, "i"));
-                        }
-                    },
-                    compareFunction: (direction: any, a: any, b: any) => {
-                        let first = a.Nombre.toLowerCase();
-                        let second = b.Nombre.toLowerCase();
-
-                        if (first < second) {
-                            return -1 * direction;
-                        }
-                        if (first > second) {
-                            return direction;
-                        }
-                        return 0;
-                    },
-                    valuePrepareFunction: (cell: any, row: any, test: any) => {
-                        var t = test.column.editor.config.list.find((x: any) => x.value === cell.Id)
-                        if (t)
-                            return t.title
-                    },
-                    width: '10%',
-                    editor: {
-                        type: 'list',
-                        config: {
-                            list: this.estados
-                        },
-                    }
-                },
-                EstadoRecibo: {
-                    editable: false,
-                    title: this.translate.instant('inscripcion.estado_recibo'),
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '5%',
-                },
-            },
-            edit: {
-                confirmSave: true,
-                editButtonContent: '<i class="nb-edit" title="' + this.translate.instant('inscripcion.editar_estado_iscripcion') + '"></i>',
-                saveButtonContent: '<i class="nb-checkmark"  title="' + this.translate.instant('GLOBAL.guardar') + '"></i>',
-                cancelButtonContent: '<i class="nb-close" title="' + this.translate.instant('GLOBAL.cancelar') + '"></i>',
-            },
-        };
-    }
-
-
 
     buttonedit(row: any): void {
         row.mostrarBotones = !row.mostrarBotones;

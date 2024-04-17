@@ -18,6 +18,7 @@ import { DefSuiteInscripProgramaComponent } from './components/suite-programa/de
 import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
 import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-aspirantes/lista-proyectos-aspirantes.component';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
 
@@ -60,6 +61,10 @@ const routes: Routes = [
   {
     path:"listado-aspirantes", 
     component: ListadoAspiranteComponent
+  },
+  {
+    path:"lista-proyectos-aspirantes", 
+    component: ListaProyectosAspirantesComponent
   },
   {
     path:"asignar-descuento-documento", 
