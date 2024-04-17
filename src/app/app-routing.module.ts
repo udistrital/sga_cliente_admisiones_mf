@@ -19,6 +19,7 @@ import { ListadoHistoricoComponent } from './components/listado-historico/listad
 import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
+import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
 
 
 
@@ -84,6 +85,10 @@ const routes: Routes = [
     path:"liquidacion-historico", 
     component: LiquidacionHistoricoComponent ,
   },
+    {path:"reportes-inscritos", 
+    component: RepotesInscripcionesComponent ,
+  },
+
 ];
 
 @NgModule({

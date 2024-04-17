@@ -1,34 +1,35 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatCardModule } from "@angular/material/card";
-import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatDialogModule } from "@angular/material/dialog";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { BrowserModule } from "@angular/platform-browser";
-import { AppRoutingModule } from "./app-routing.module";
-import { AppComponent } from "./app.component";
-import { EvaluacionAspirantesComponent } from "./components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component";
-import { AsignarDocumentosDescuentosComponent } from "./components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component";
-import { CrudDocumentoProyectoComponent } from "./components/asignar-documentos-descuentos/crud-documento-proyecto/crud-documento-proyecto.component";
-import { DocProgramaObligatorioComponent } from "./components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component";
-import { ListDocumentoProyectoComponent } from "./components/asignar-documentos-descuentos/list-documento-proyecto/list-documento-proyecto.component";
-import { SelectDescuentoProyectoComponent } from "./components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component";
-import { SelectDocumentoProyectoComponent } from "./components/asignar-documentos-descuentos/select-documento-proyecto/select-documento-proyecto.component";
-import { LiquidacionRecibosComponent } from "./components/liquidacion-recibos/liquidacion-recibos.component";
-import { LiquidacionHistoricoComponent } from "./components/liquidacion/liquidacion-historico/liquidacion-historico.component";
-import { LiquidacionTableComponent } from "./components/liquidacion/liquidacion-table/liquidacion-table.component";
-import { ListadoHistoricoComponent } from "./components/listado-historico/listado-historico.component";
-import { DefSuiteInscripProgramaComponent } from "./components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component";
-import { CrudInfoPersonaComponent } from "./components/transferencia/crud-info_persona/crud-info_persona.component";
-import { CustomizeButtonComponent } from "./components/transferencia/customize-button/customize-button.component";
-import { DialogoDocumentosTransferenciasComponent } from "./components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component";
-import { SolicitudTransferenciaComponent } from "./components/transferencia/solicitud-transferencia/solicitud-transferencia.component";
-import { TransferenciaComponent } from "./components/transferencia/transferencia/transferencia.component";
-import { RequestManager } from "./managers/requestManager";
+
+
+import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
+import { DocProgramaObligatorioComponent } from './components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component';
+import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
+import { SelectDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/select-documento-proyecto/select-documento-proyecto.component';
+import { ListDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/list-documento-proyecto/list-documento-proyecto.component';
+import { CrudDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-documento-proyecto/crud-documento-proyecto.component';
+import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
+import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
+import { SolicitudDescuento } from './models/descuento/solicitud_descuento';
+import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
+import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
+import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
+import { DialogoDocumentosTransferenciasComponent } from './components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
+import { CrudInfoPersonaComponent } from './components/transferencia/crud-info_persona/crud-info_persona.component';
+import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
+
+import { CheckboxAssistanceComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component';
+import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
+import { RequestManager } from './managers/requestManager';
+import { HttpErrorManager } from './managers/errorManager';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -71,12 +72,20 @@ import { AdministracionCuentaBancariaComponent } from './components/administraci
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
 //import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
+
+import { SafeUrlPipe } from './core/pipes/safe-url.pipe';
+import { ReporteVisualizerComponent } from './components/reporte-visualizer/reporte-visualizer.component';
+import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
+
+import { LiquidacionTableComponent } from './components/liquidacion/liquidacion-table/liquidacion-table.component';
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { environment } from "src/environments/environment";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SpinnerUtilInterceptor, SpinnerUtilModule } from 'spinner-util';
+import { HttpClient } from '@angular/common/http';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
@@ -84,6 +93,7 @@ export function createTranslateLoader(http: HttpClient) {
 
 @NgModule({
   declarations: [
+    SafeUrlPipe,
     AppComponent,
 
     DialogoCriteriosComponent,
@@ -110,12 +120,16 @@ export function createTranslateLoader(http: HttpClient) {
     AsignacionCuposComponent,
     ListadoHistoricoComponent,
     LiquidacionRecibosComponent,
+    AsignacionCuposComponent,
+    ListadoHistoricoComponent,
+    LiquidacionRecibosComponent,
     ViewInscripcionComponent,
     ViewInfoPersonaComponent,
     DialogoCriteriosComponent,
     DialogoCriteriosComponent,
     CriterioAdmisionComponent,
     ListadoAspiranteComponent,
+    ReporteVisualizerComponent,
     DialogoDocumentosComponent,
     DialogPreviewFileComponent,
     CrudAsignacionCupoComponent,
@@ -137,9 +151,13 @@ export function createTranslateLoader(http: HttpClient) {
     AsignarDocumentosDescuentosComponent,
     EvaluacionDocumentosInscritosComponent,
     DialogoDocumentosTransferenciasComponent,
+    RepotesInscripcionesComponent,
     LiquidacionRecibosComponent,
     LiquidacionHistoricoComponent,
-    LiquidacionTableComponent
+    LiquidacionTableComponent,
+    ListadoAspiranteComponent,
+    AdministracionCuentaBancariaComponent,
+    ComentariosCuposComponent
   ],
   imports: [
     FormsModule,
@@ -147,6 +165,8 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserModule,
     MatTabsModule,
     MatIconModule,
+    MatStepperModule,
+    MatStepperModule,
     MatCardModule,
     MatInputModule,
     MatTableModule,
@@ -165,7 +185,6 @@ export function createTranslateLoader(http: HttpClient) {
     MatProgressSpinnerModule,
     NgxExtendedPdfViewerModule,
     StoreModule.forRoot(rootReducer),
-
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {
@@ -178,9 +197,9 @@ export function createTranslateLoader(http: HttpClient) {
     SpinnerUtilModule,
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: SpinnerUtilInterceptor, multi: true}
+    { provide: HTTP_INTERCEPTORS, useClass: SpinnerUtilInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
 
 
-export class AppModule { }
+  export class AppModule {}
