@@ -55,3 +55,8 @@ th{
     display: flex;
     justify-content: space-around;
   }
+
+.table-container {
+    overflow: overlay;
+    margin: 10px;
+}

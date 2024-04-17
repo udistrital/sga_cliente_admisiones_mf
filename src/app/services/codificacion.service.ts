@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { RequestManager } from "src/app/core/managers/requestManager";
+import { RequestManager } from "../managers/requestManager";
 import { map, catchError } from 'rxjs/operators';
 
 @Injectable({

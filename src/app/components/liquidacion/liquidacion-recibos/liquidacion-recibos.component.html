@@ -1,0 +1,52 @@
+<mat-card class="card" style="margin-top: 20px;">
+    <mat-card-content style="width: 100%; ">
+        <div class=col-12>
+            <fieldset [ngClass]="{'fieldseter':true}">
+                <legend>
+                    &nbsp; {{ 'liquidacion.recibos' | translate }}
+                </legend>
+
+                <div style="margin-top: 20px;">
+
+                    <mat-form-field style="width: 35%;">
+                        <mat-label>{{ 'liquidacion.periodo_academico' | translate }}:</mat-label>
+                        <mat-select [formControl]="CampoControl">
+                            <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                            <mat-option *ngFor="let item of nivel_load" [value]="item.Id">{{item.Nombre}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="CampoControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate }}</mat-error>
+                    </mat-form-field>
+                    
+                    <mat-form-field style="width: 75%;">
+                        <mat-label>{{ 'liquidacion.semestre' | translate }}:</mat-label>
+                        <mat-select [formControl]="Campo1Control">
+                            <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                            <mat-option *ngFor="let item of proyectos" [value]="item.Id">{{item.Nombre}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="Campo1Control.hasError('required')">{{ 'admision.error_proyecto' | translate }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field style="width: 75%;">
+                        <mat-label>{{ 'liquidacion.proyecto' | translate }}:</mat-label>
+                        <mat-select [formControl]="Campo2Control">
+                            <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                             <mat-option *ngFor="let item of periodos" [value]="item"> {{item.Nombre}} </mat-option> 
+                        </mat-select>
+                        <mat-error *ngIf="Campo1Control.hasError('required')">{{ 'admision.error_proyecto' | translate }}</mat-error>
+                    </mat-form-field>
+
+                    <div class="container" >
+                        <div class="row justify-content-md-center">
+                            <button class="boton-primary">{{
+                                'GLOBAL.continuar' | translate }}</button>
+                        </div>
+                    </div>
+                    <br /><br />
+                </div>
+            </fieldset>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<app-liquidacion-table [recibosUrl]="tablaRecibo"></app-liquidacion-table>
+

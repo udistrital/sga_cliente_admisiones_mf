@@ -1,6 +1,7 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AnyFn } from '@ngrx/store/src/selector';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { Inscripcion } from 'src/app/models/inscripcion/inscripcion';
@@ -10,6 +11,7 @@ import { ParametrosService } from 'src/app/services/parametros.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { UserService } from 'src/app/services/users.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-administracion-cuenta-bancaria',
@@ -47,8 +49,10 @@ export class AdministracionCuentaBancariaComponent {
   proyectos: any[] = [];
   criterios = [];
   periodos: any[] = [];
+  cuentas: any;
   niveles!: NivelFormacion[];
   nivelSelect!: NivelFormacion[];
+  selectedCuenta: any;
 
   show_cupos = false;
   show_profile = false;
@@ -68,12 +72,14 @@ export class AdministracionCuentaBancariaComponent {
   selectTipoIcfes: any;
   selectTipoEntrevista: any;
   selectTipoPrueba: any;
+  selectCuenta: any;
   selectTabView: any;
   tag_view_posg!: boolean;
   tag_view_pre!: boolean;
   selectprograma: boolean = true;
   selectcriterio: boolean = true;
   periodo: any;
+  //cuenta: any;
   selectednivel: any;
   esPosgrado: boolean = false;
 
@@ -82,10 +88,14 @@ export class AdministracionCuentaBancariaComponent {
 
   asignacionForm: FormGroup;
   nuevaCuenta: boolean = false;
+  dataSource: any;
+
+  cuenta: any[] = [];
 
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
+  Campo3Control = new FormControl('', [Validators.required]);
   constructor(
     private translate: TranslateService,
     private parametrosService: ParametrosService,
@@ -93,6 +103,7 @@ export class AdministracionCuentaBancariaComponent {
     private projectService: ProyectoAcademicoService,
     private userService: UserService,
     private sgaMidService: SgaMidService,
+    private http: HttpClient,
     private autenticationService: ImplicitAutenticationService,
   ) {
     this.translate = translate;
@@ -103,9 +114,7 @@ export class AdministracionCuentaBancariaComponent {
     this.nivel_load()
     this.asignacionForm = new FormGroup({
       periodoAcademico: new FormControl(''),
-      tipoRecaudo: new FormControl(''),
       cuentaBancaria: new FormControl(''),
-      soporteDocumental: new FormControl('')
     });
   }
 
@@ -265,7 +274,22 @@ export class AdministracionCuentaBancariaComponent {
     );
   }
 
+  obtenerCuentas() {
+    this.parametrosService.get('parametro?query=TipoParametroId:37').subscribe(
+      (response) => {
+        console.log(response);
+        this.dataSource = response;
+        this.cuentas = this.dataSource.Data
+        console.log("Cuentas:", this.cuentas);
+      },
+      (error) => {
+        console.error('Error al obtener las cuentas:', error);
+      }
+    );
+  }
+
   ngOnInit() {
+    /*
     this.tiposRecaudo = [
       { id: 1, nombre: 'Matricula' },
       { id: 2, nombre: 'Pensiones' }
@@ -273,11 +297,23 @@ export class AdministracionCuentaBancariaComponent {
     this.cuentasBancarias = [
       { id: 1, numero: '1234567890' },
       { id: 2, numero: '9876543210' }
-    ];
+    ];*/
+    this.obtenerCuentas();
   }
 
-  guardar(): void {
-    console.log(this.asignacionForm.value);
+  guardar(cuenta: any): void {
+    console.log("res",cuenta.Data);
+    cuenta.Data.Activo=true;
+    this.parametrosService.put(`parametro?query=Id:${cuenta.Data.Id}`,cuenta).subscribe(
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.error('Error al guardar la cuenta:', error);
+      }
+    );
+    console.log("form",this.asignacionForm.value);
+
   }
 
   ngOnChanges() {

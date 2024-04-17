@@ -35,6 +35,7 @@
               }
             ],
             "styles": [
+              "src/assets/styles/sga-theme-angular-material.scss",
               "src/styles.scss"
             ],
             "scripts": [],
