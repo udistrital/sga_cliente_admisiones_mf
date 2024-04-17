@@ -1,3 +1,21 @@
+
+
+import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
+import { DocProgramaObligatorioComponent } from './components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component';
+import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
+import { SelectDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/select-documento-proyecto/select-documento-proyecto.component';
+import { ListDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/list-documento-proyecto/list-documento-proyecto.component';
+import { CrudDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-documento-proyecto/crud-documento-proyecto.component';
+import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
+import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
+import { SolicitudDescuento } from './models/descuento/solicitud_descuento';
+import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
+import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
+import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
+import { DialogoDocumentosTransferenciasComponent } from './components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
+import { CrudInfoPersonaComponent } from './components/transferencia/crud-info_persona/crud-info_persona.component';
+import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
+import { SgaAdmisionesMid } from './services/sga_admisiones_mid.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -29,6 +47,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatStepperModule } from '@angular/material/stepper';
 
 import { EvaluacionInscripcionService } from './services/evaluacion_inscripcion.service';
 
@@ -36,7 +55,7 @@ import { ParametrosService } from './services/parametros.service';
 import { SgaMidService } from './services/sga_mid.service';
 
 
-import { CheckboxAssistanceComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component'; 
+//import { CheckboxAssistanceComponent } from './components/evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component';
 import { AdministradorCriteriosComponent } from './components/administrar-criterios-admisiones/administrador-criterios/administrador-criterios.component';
 import { DialogoCriteriosComponent } from './components/administrar-criterios-admisiones/dialogo-criterios/dialogo-criterios.component';
 import { AsignacionCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/asignacion_cupos.component';
@@ -46,7 +65,7 @@ import { DinamicformComponent } from './components/asignacion-cupos-proyectos/di
 import { CriterioAdmisionComponent } from './components/crieterios-admisiones-proyectos/criterio_admision/criterio_admision.component';
 import { DialogoDocumentosComponent } from './components/evalucion-documentos-inscritos/dialogo-documentos/dialogo-documentos.component';
 import { EvaluacionDocumentosInscritosComponent } from './components/evalucion-documentos-inscritos/evaluacion-documentos-inscritos/evaluacion-documentos-inscritos.component';
-import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component'; 
+//import { EvaluacionAspirantesComponent } from './components/evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
 import { DocumentoService } from './services/documento.service';
 import { NotificacionesMidService } from './services/notificaciones_mid.service';
 import { PerfilComponent } from './components/evalucion-documentos-inscritos/perfil/perfil.component';
@@ -64,23 +83,10 @@ import { StoreModule } from '@ngrx/store';
 import { rootReducer } from './store/rootReducer';
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 import { ListService } from './store/services/list.service';
-import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
-import { DocProgramaObligatorioComponent } from './components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component';
-import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
-import { SelectDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/select-documento-proyecto/select-documento-proyecto.component';
-import { ListDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/list-documento-proyecto/list-documento-proyecto.component';
-import { CrudDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-documento-proyecto/crud-documento-proyecto.component';
-import { SolicitudDescuento } from './models/descuento/solicitud_descuento';
-import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
-import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
-import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
-import { DialogoDocumentosTransferenciasComponent } from './components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
-import { CrudInfoPersonaComponent } from './components/transferencia/crud-info_persona/crud-info_persona.component';
-import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
-import { SgaAdmisionesMid } from './services/sga_admisiones_mid.service';
-
-
-
+import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
+import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
+//import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
@@ -98,36 +104,33 @@ export function createTranslateLoader(http: HttpClient) {
     DinamicformComponent,
     DialogoCriteriosComponent,
     DialogPreviewFileComponent,
-    EvaluacionAspirantesComponent,
-    CheckboxAssistanceComponent,
+    //EvaluacionAspirantesComponent,
+    //CheckboxAssistanceComponent,
     EvaluacionDocumentosInscritosComponent,
     DialogoDocumentosComponent,
     PerfilComponent,
-    ViewInscripcionComponent,
-    ViewInfoPersonaComponent,
-    ViewFormacionAcademicaComponent,
+    DinamicformComponent,
+    DinamicformComponent,
     ViewIdiomasComponent,
-    ViewExperienciaLaboralComponent,
-    ViewProduccionAcademicaComponent,
-    ViewDocumentoProgramaComponent,
-    ViewDescuentoAcademicoComponent,
-    ViewPropuestaGradoComponent,
-    ListadoAspiranteComponent,
-    AsignarDocumentosDescuentosComponent,
-    DocProgramaObligatorioComponent,
-    SelectDescuentoProyectoComponent,
-    SelectDocumentoProyectoComponent,
-    ListDocumentoProyectoComponent,
-    CrudDocumentoProyectoComponent,
-    SolicitudTransferenciaComponent,
-    DefSuiteInscripProgramaComponent,
     TransferenciaComponent,
-    DialogoDocumentosTransferenciasComponent,
     CrudInfoPersonaComponent,
     CustomizeButtonComponent,
-    AsignacionCuposComponent
-
-    
+    AsignacionCuposComponent,
+    ListadoHistoricoComponent,
+    LiquidacionRecibosComponent,
+    ViewInscripcionComponent,
+    ViewInfoPersonaComponent,
+    DialogoCriteriosComponent,
+    DialogoCriteriosComponent,
+    CriterioAdmisionComponent,
+    ListadoAspiranteComponent,
+    DialogoDocumentosComponent,
+    DialogPreviewFileComponent,
+    CrudAsignacionCupoComponent,
+    ViewPropuestaGradoComponent,
+    ListadoAspiranteComponent,
+    AdministracionCuentaBancariaComponent,
+    ComentariosCuposComponent
 
 
 
@@ -137,29 +140,30 @@ export function createTranslateLoader(http: HttpClient) {
 
   ],
   imports: [
-    StoreModule.forRoot(rootReducer),
-    NgxExtendedPdfViewerModule,
-    CommonModule,
-    ReactiveFormsModule,
     FormsModule,
+    CommonModule,
     BrowserModule,
-    AppRoutingModule,
-    MatNativeDateModule,
-    MatDialogModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatTableModule,
-    MatDatepickerModule,
     MatTabsModule,
-    MatPaginatorModule,
-    BrowserAnimationsModule,
-    MatExpansionModule,
     MatIconModule,
+    MatStepperModule,
+    MatCardModule,
+    MatInputModule,
+    MatTableModule,
+    MatDialogModule,
+    MatSelectModule,
+    AppRoutingModule,
+    MatCheckboxModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatPaginatorModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatAutocompleteModule,
+    BrowserAnimationsModule,
+    MatProgressSpinnerModule,
+    NgxExtendedPdfViewerModule,
+    StoreModule.forRoot(rootReducer),
 
     HttpClientModule,
     TranslateModule.forRoot({
@@ -172,18 +176,17 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   providers: [
     MatSnackBar,
-    EvaluacionInscripcionService,
-    RequestManager,
-    ParametrosService,
-    SgaMidService,
-    DocumentoService,
-    NotificacionesMidService,
-    CampusMidService,
     ListService,
-    SgaAdmisionesMid
-
-
+    SgaMidService,
+    RequestManager,
+    SgaAdmisionesMid,
+    DocumentoService,
+    CampusMidService,
+    ParametrosService,
+    NotificacionesMidService,
+    EvaluacionInscripcionService,
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

@@ -44,6 +44,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
     private evaluacionInscripcionService: EvaluacionInscripcionService,
     private userService: UserService,
     private sgaMidService: SgaMidService,
+    private sgaMidAdmisiones: SgaMidService,
     private autenticationService: ImplicitAutenticationService,
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -65,6 +66,8 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
       this.loading = false;
     }
   }
+
+  
 
   cargarPeriodo(){
     return new Promise((resolve, reject) => {
@@ -115,7 +118,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
                       this.proyectos = response;
                     } else {
                       const id_tercero = this.userService.getPersonaId();
-                      this.sgaMidService.get('admision/dependencia_vinculacion_tercero/'+id_tercero).subscribe(
+                      this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/'+id_tercero).subscribe(
                         (respDependencia: any) => {
                           const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                           this.proyectos = <any[]>response.filter(

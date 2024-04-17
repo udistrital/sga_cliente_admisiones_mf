@@ -182,7 +182,7 @@ nbSpinnerMessage="{{ 'GLOBAL.cargando' | translate }}"> -->
                   </button>
                   <button *ngIf="row.mostrarBotones" aria-hidden="false"
                     title="{{ 'admision.tooltip_editar' | translate }}" class="boton-primary">
-                    <mat-icon fontIcon="check" (click)="onSaveConfirm({newData:row})"></mat-icon>
+                    <mat-icon fontIcon="check" (click)="onSaveConfirm({newData:row}); buttonedit(row)" ></mat-icon>
                   </button>
                   <button *ngIf="row.mostrarBotones" aria-hidden="false"
                     title="{{ 'admision.tooltip_editar' | translate }}" class="boton-primary" (click)="buttonedit(row)">

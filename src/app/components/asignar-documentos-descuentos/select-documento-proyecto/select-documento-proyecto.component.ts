@@ -50,9 +50,9 @@ export class SelectDocumentoProyectoComponent implements OnInit {
     this.loading = true;
     this.loadData();
     this.loadDataProyecto();
-    this.cargarCampos();
+  
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.cargarCampos();
+
     });
   }
 
@@ -61,42 +61,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
      this.dialogRef.close();
   }
 
-  cargarCampos() {
-    this.settings = {
-      delete: {
-        deleteButtonContent: '<i class="nb-trash"></i>',
-        confirmDelete: true,
-      },
-      actions: {
-        edit: false,
-        add: false,
-        columnTitle: this.translate.instant('GLOBAL.eliminar'),
-        position: 'right',
-      },
-      mode: 'external',
-      columns: {
-        Nombre: {
-          title: this.translate.instant('GLOBAL.nombre'),
-          valuePrepareFunction: (value: any) => {
-            return value;
-          },
-          width: '80%',
-        },
-        Obligatorio: {
-          title: this.translate.instant('documento_proyecto.obligatorio'),
-          editable: false,
-          filter: false,
-          type: 'custom',
-          renderComponent: DocProgramaObligatorioComponent,
-          onComponentInitFunction: (instance: any) => {
-            instance.checkboxVal.subscribe((val: any) => {
-              this.onUpdate(val)
-            })
-          },
-        }
-      },
-    };
-  }
+ 
 
   handleCheckboxChange(event: any) {
     this.onUpdate(event)
@@ -263,10 +228,12 @@ export class SelectDocumentoProyectoComponent implements OnInit {
               });
 
             } else {
-              // this.showToast('error', this.translate.instant('GLOBAL.error'), this.translate.instant('documento_proyecto.documento_no_eliminado'));
+              this.popUpManager.showErrorToast(this.translate.instant('GLOBAL.error'));
+              
             }
           }, () => {
-            // this.showToast('error', this.translate.instant('GLOBAL.error'), this.translate.instant('documento_proyecto.documento_no_eliminado'));
+            this.popUpManager.showErrorToast(this.translate.instant('GLOBAL.error'));
+           
           });
         }
       });
@@ -393,25 +360,4 @@ export class SelectDocumentoProyectoComponent implements OnInit {
        this.source.paginator.firstPage();
      }
   }
-
-  // private showToast(type: string, title: string, body: string) {
-  //   this.config = new ToasterConfig({
-  //     // 'toast-top-full-width', 'toast-bottom-full-width', 'toast-top-left', 'toast-top-center'
-  //     positionClass: 'toast-top-center',
-  //     timeout: 5000,  // ms
-  //     newestOnTop: true,
-  //     tapToDismiss: false, // hide on click
-  //     preventDuplicates: true,
-  //     animation: 'slideDown', // 'fade', 'flyLeft', 'flyRight', 'slideDown', 'slideUp'
-  //     limit: 5,
-  //   });
-  //   const toast: Toast = {
-  //     type: type, // 'default', 'info', 'success', 'warning', 'error'
-  //     title: title,
-  //     body: body,
-  //     showCloseButton: true,
-  //     bodyOutputType: BodyOutputType.TrustedHtml,
-  //   };
-  //   this.toasterService.popAsync(toast);
-  // }
 }

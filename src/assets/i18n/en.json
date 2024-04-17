@@ -1,4 +1,38 @@
 {
+    "CODIFICACION": {
+      "TITLE": "Codification",
+      "VARIABLES_START": "Start Variables",
+      "SELECT_LEVEL": "Select Level",
+      "ERRORS": {
+        "SELECT_LEVEL": "Please select a level",
+        "SELECT_SUBLEVEL": "Please select a sublevel",
+        "SELECT_PROYECTO_CURRICULAR": "Please select a curricular project",
+        "SELECT_ANO_INICIO": "Please select a start year",
+        "SELECT_LISTADO_ADMITIDOS": "Please select an admitted list",
+        "INPUT_PROYECTO_CURRICULAR": "Please enter a curricular project code",
+        "SELECT_PERIODO_ACADEMICO": "Please select an academic period",
+        "INPUT_PLAN_ESTUDIOS": "Please enter a study plan"
+      },
+      "SELECT_SUBLEVEL": "Select Sublevel",
+      "SELECT_PROYECTO_CURRICULAR": "Select Curricular Project",
+      "SELECT_ANO_INICIO": "Select Start Year",
+      "SELECT_LISTADO_ADMITIDOS": "Select Admitted List",
+      "INPUT_PROYECTO_CURRICULAR": "Curricular Project Code",
+      "SELECT_PERIODO_ACADEMICO": "Select Academic Period",
+      "INPUT_PLAN_ESTUDIOS": "Study Plan",
+      "BUTTON_ACEPTAR": "Accept",
+      "TABLE_COLUMNA_APELLIDOS": "Last Names",
+      "TABLE_COLUMNA_NOMBRES": "First Names",
+      "TABLE_COLUMNA_ESTADO_ADMISION": "Admission Status",
+      "TABLE_COLUMNA_ENFASIS": "Emphasis",
+      "TABLE_COLUMNA_NUMERO_DOCUMENTO": "Document Number",
+      "TABLE_CODIGO": "Code",
+      "BUTTON_DESCARGAR_LISTADO": "Download List",
+      "BUTTON_GENERAR_CODIGOS": "Generate Codes",
+      "BUTTON_GENERAR_CODIFICACION": "Assign Codification",
+      "TABLE_COLUMNA_PUNTAJE": "score"
+    },
+  
     "HOME": {
         "TITLE": "SGA",
         "SELECT": "Change language",
@@ -995,7 +1029,8 @@
         "ejecutable_programa": "Application executable file support",
         "codigo_fuente": "Software source code support",
         "archivo_video": "Audiovisual production support",
-        "soportes": "Supports list"
+        "soportes": "Supports list",
+        "tipo_inscripcion": "Select the type of enrollment"
     },
     "archivo_icfes": {
         "archivo_icfes": "Icfes file",

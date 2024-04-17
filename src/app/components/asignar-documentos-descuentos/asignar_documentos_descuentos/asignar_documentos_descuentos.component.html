@@ -36,7 +36,6 @@
                   <mat-select [formControl]="Campo1Control"
                               [(ngModel)]="proyectos_selected"
                               (selectionChange)="loadTipoInscripcion()">
-                              <!-- (selectionChange)="loadCriterios()" -->
                     <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                     <mat-option *ngFor="let item of proyectos" [value]="item.Id" [disabled]="!item.Id">{{item.Nombre}}</mat-option>
                   </mat-select>
@@ -72,9 +71,6 @@
                       </mat-card-content>
                     </mat-card>
                   </div>
-
-
-                  <!-- <div class="col-sm-6 col-md-4 col-lg-3" align="center" id="info_basica" *ngIsGranted="['VICERRECTOR', 'ASESOR_VICE']" > -->
                       <div class="col-sm-6 col-md-4 col-lg-3" align="center" id="info_basica" *ngIsGranted="['VICERRECTOR', 'ASESOR_VICE']" >
                     <mat-card class="exp-card"
                              (click)="openSelectDescuentoProyectoComponent()">
@@ -84,14 +80,11 @@
                       </mat-card-content>
                     </mat-card>
                   </div>
-
                 </div>
 
               </mat-card-header>
-
           </mat-card>
         </div>
-
       </fieldset>
     </div>
   </mat-card-content>

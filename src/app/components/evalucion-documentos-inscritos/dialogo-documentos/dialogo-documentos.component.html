@@ -1,5 +1,5 @@
 <div class="dinamic-form">
-  <form novalidate [formGroup]="revisionForm" class="form-horizontal" >
+  <form novalidate [formGroup]="revisionForm" class="form-horizontal">
     <fieldset [ngClass]="{'fieldseter': true} ">
       <legend>
         &nbsp; {{ 'admision.revisar_docs' | translate }}
@@ -8,8 +8,9 @@
         <div class="col-6 col-xs" >
           <!-- <ngx-extended-pdf-viewer [src]="documento" [height]="'65vh'"  (pdfLoaded)="docCargado()" *ngIf="isPDF">
           </ngx-extended-pdf-viewer> -->
-           <iframe [src]="seguroUrl(documento)" width="100%" height="600px" frameborder="0" ></iframe>
-           
+          <!-- <iframe [src]="seguroUrl(documento)" width="100%" height="600px" frameborder="0" ></iframe> -->
+          <ngx-doc-viewer [url]="documento" viewer="pdf" style="width:100%;height:100%;"></ngx-doc-viewer>
+          <!-- <iframe [src]="seguroUrl(documento)" width="100%" height="600px" frameborder="0"></iframe> -->
           <div class="viewer" *ngIf="!isPDF">
             <img [src]="documento" [alt]="tabName">
           </div>
@@ -21,7 +22,8 @@
           <div class="row">
             <mat-form-field style="width: 100%;" appearance="fill">
               <mat-label>{{ 'GLOBAL.soporte_documento' | translate }}</mat-label>
-              <input matInput placeholder="{{ 'GLOBAL.placeholder_soporte_documento' | translate }}" value="{{nombreDocumento}}" readonly>
+              <input matInput placeholder="{{ 'GLOBAL.placeholder_soporte_documento' | translate }}"
+                value="{{nombreDocumento}}" readonly>
             </mat-form-field>
           </div>
           <div class="row">
@@ -33,18 +35,21 @@
           <div class="row">
             <mat-form-field style="width: 100%;" appearance="fill">
               <mat-label>{{ 'GLOBAL.observacion' | translate }}</mat-label>
-              <textarea matInput rows="5" placeholder="{{ 'GLOBAL.placeholder_observacion' | translate }}" formControlName="observacion" [readonly]="observando">
+              <textarea matInput rows="5" placeholder="{{ 'GLOBAL.placeholder_observacion' | translate }}"
+                formControlName="observacion" [readonly]="observando">
               </textarea>
             </mat-form-field>
           </div>
           <br><br><br>
           <div class="row" *ngIf="!observando">
             <div class="col-6 d-flex justify-content-center">
-              <button class="boton-primary-succes" mat-raised-button color="warn" (click)="guardarRevision('NoAprueba')">{{ 'admision.btn_doc_No_aprobar' |
+              <button class="boton-primary-succes" mat-raised-button color="warn"
+                (click)="guardarRevision('NoAprueba')">{{ 'admision.btn_doc_No_aprobar' |
                 translate }}</button>
             </div>
             <div class="col-6 d-flex justify-content-center">
-              <button class="boton-primary-warn" mat-raised-button color="primary" (click)="guardarRevision('Aprueba')">{{ 'admision.btn_doc_aprobar' |
+              <button class="boton-primary-warn" mat-raised-button color="primary"
+                (click)="guardarRevision('Aprueba')">{{ 'admision.btn_doc_aprobar' |
                 translate }}</button>
             </div>
           </div>
