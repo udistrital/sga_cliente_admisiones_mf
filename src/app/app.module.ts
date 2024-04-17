@@ -1,4 +1,4 @@
-import { CheckboxAssistanceComponent } from './components/evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component';
+
 import { AdministradorCriteriosComponent } from './components/administrar-criterios-admisiones/administrador-criterios/administrador-criterios.component';
 import { DialogoCriteriosComponent } from './components/administrar-criterios-admisiones/dialogo-criterios/dialogo-criterios.component';
 import { AsignacionCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/asignacion_cupos.component';
@@ -8,7 +8,7 @@ import { DinamicformComponent } from './components/asignacion-cupos-proyectos/di
 import { CriterioAdmisionComponent } from './components/crieterios-admisiones-proyectos/criterio_admision/criterio_admision.component';
 import { DialogoDocumentosComponent } from './components/evalucion-documentos-inscritos/dialogo-documentos/dialogo-documentos.component';
 import { EvaluacionDocumentosInscritosComponent } from './components/evalucion-documentos-inscritos/evaluacion-documentos-inscritos/evaluacion-documentos-inscritos.component';
-import { EvaluacionAspirantesComponent } from './components/evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
+
 import { DocumentoService } from './services/documento.service';
 import { NotificacionesMidService } from './services/notificaciones_mid.service';
 import { PerfilComponent } from './components/evalucion-documentos-inscritos/perfil/perfil.component';
@@ -82,6 +82,8 @@ import { LiquidacionRecibosComponent } from './components/liquidacion/liquidacio
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 
 import { LiquidacionTableComponent } from './components/liquidacion/liquidacion-table/liquidacion-table.component';
+import { CheckboxAssistanceComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component';
+import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');

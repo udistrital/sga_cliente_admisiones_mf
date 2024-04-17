@@ -1,4 +1,5 @@
-import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,7 +12,9 @@ import { A, B } from 'src/app/models/liquidacion/Variables';
   styleUrls: ['./liquidacion-table.component.scss']
 })
 
-export class LiquidacionTableComponent {
+export class LiquidacionTableComponent implements OnInit{
+  mostrarFormulario: boolean = false;
+
   variableA: A = {
     A1: {
       "1": 0,
@@ -107,11 +110,16 @@ export class LiquidacionTableComponent {
   dataSource = new MatTableDataSource<liquidacion>;
 
 
+  @ViewChild('tablaContainer')
+  tablaContainer!: ElementRef;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.generarRegistros()
     this.obtenerClaves(this.variableA, this.variableB)
 
+  }
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
   }
 
   generarRegistros() {
@@ -235,6 +243,14 @@ export class LiquidacionTableComponent {
   }
 
 
+  async guardar() {
+    try {
+      const tablaHTML = await this.http.get('ruta/a/tu/archivo/tabla.html', { responseType: 'text' }).toPromise();
+      this.tablaContainer.nativeElement.innerHTML = tablaHTML;
+    } catch (error) {
+      console.error('Error al cargar la tabla:', error);
+    }
+  }
 
 
 }

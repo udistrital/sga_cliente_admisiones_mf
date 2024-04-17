@@ -169,7 +169,7 @@
                         </mat-card-footer>
                     </mat-card>
 
-                    <mat-card class="exp-card" align="center" [ngClass]="{'isSelected':tagsObject.perfil.selected}">
+                    <mat-card class="exp-card" [ngClass]="{'isSelected':tagsObject.perfil.selected}">
                         <mat-card-header>{{ 'inscripcion.perfil' | translate }}</mat-card-header>
                         <mat-card-content class="icon-form" (click)="clickTag('Yes_perfil')"
                             title="{{ 'GLOBAL.seleccionar' | translate }}">
