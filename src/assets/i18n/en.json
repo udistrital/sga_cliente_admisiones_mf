@@ -1030,7 +1030,8 @@
         "ejecutable_programa": "Application executable file support",
         "codigo_fuente": "Software source code support",
         "archivo_video": "Audiovisual production support",
-        "soportes": "Supports list"
+        "soportes": "Supports list",
+        "tipo_inscripcion": "Select the type of enrollment"
     },
     "archivo_icfes": {
         "archivo_icfes": "Icfes file",
@@ -1772,6 +1773,7 @@
         "seleccionar_admitidos": "Select admitted",
         "ver_listado_aspirantes": "Show list of applicants",
         "cupos_proyecto": "Number of assigned places",
+        "cupos_disponibles": "Number of places available:",
         "sin_cupos_periodo": "No quotas have been defined for this period or curricular project"
     },
     "calendario": {

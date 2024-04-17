@@ -6,7 +6,7 @@
 
 export const environment = {
     production: false,
-    apiUrl:"http://localhost:4204/",
+    apiUrl:"http://localhost:4207/",
     NUXEO: {
       PATH: 'https://documental.portaloas.udistrital.edu.co/nuxeo/',
       CREDENTIALS: {
@@ -77,6 +77,7 @@ export const environment = {
     DESCUENTO_ACADEMICO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/matriculas_descuentos_crud/v2/',
     PAGO_SERVICE: 'http://prueba.campusvirtual.udistrital.edu.co/pagos/',
     RECIBO_SERVICE: 'http://api.planestic.udistrital.edu.co:9017/v1/',
+    INSCRIPCION_MID_SERVICE: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8543/v1/',
     // CIDC_SERVICE: 'http://200.69.103.88:3114/api/v1/',
     CIDC_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/siciud_crud/v1/',
     // EVALUACION_INSCRIPCION_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/evaluacion_inscripcion_crud/v2/',
@@ -89,6 +90,7 @@ export const environment = {
     //ESPACIOS_ACADEMICOS_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/espacios_academicos_crud/v1/',
     PLAN_TRABAJO_DOCENTE_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/plan_trabajo_docente_crud/v1/',
     PLAN_ESTUDIOS_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/planes_estudios_crud/v1/',
+    LIQUIDACION_SERVICE: 'http://localhost:8080/v1/',
     //PLAN_ESTUDIOS_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8537/v1/',
     //PLAN_ESTUDIOS_SERVICE: 'http://localhost:8925/v1/',
   };

@@ -96,3 +96,18 @@ th{
   margin-right: 10px;
   background-color: #03678f;
 }
+
+.table-container {
+  overflow: overlay;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 650px) {
+  .card-content{
+    flex-direction: column;
+  }
+}
