@@ -61,7 +61,7 @@ export interface Metodologia {
   FechaModificacion: string;
 }
 
-interface PeriodoAcademico {
+export interface PeriodoAcademico {
   Id: number;
   Nombre: string;
   Descripcion: string;

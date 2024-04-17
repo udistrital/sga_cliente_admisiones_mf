@@ -48,13 +48,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
-
 import { EvaluacionInscripcionService } from './services/evaluacion_inscripcion.service';
-
 import { ParametrosService } from './services/parametros.service';
 import { SgaMidService } from './services/sga_mid.service';
-
-
 //import { CheckboxAssistanceComponent } from './components/evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component';
 import { AdministradorCriteriosComponent } from './components/administrar-criterios-admisiones/administrador-criterios/administrador-criterios.component';
 import { DialogoCriteriosComponent } from './components/administrar-criterios-admisiones/dialogo-criterios/dialogo-criterios.component';
@@ -87,6 +83,13 @@ import { AdministracionCuentaBancariaComponent } from './components/administraci
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
 //import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from "@angular/common/http";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { environment } from "src/environments/environment";
+import { CodificacionModule } from "./codificacion-module/codificacion.module";
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SpinnerUtilInterceptor, SpinnerUtilModule } from 'spinner-util';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
@@ -169,24 +172,17 @@ export function createTranslateLoader(http: HttpClient) {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+    }),
+    CodificacionModule,
+    SpinnerUtilModule,
   ],
   providers: [
-    MatSnackBar,
-    ListService,
-    SgaMidService,
-    RequestManager,
-    SgaAdmisionesMid,
-    DocumentoService,
-    CampusMidService,
-    ParametrosService,
-    NotificacionesMidService,
-    EvaluacionInscripcionService,
+    {provide: HTTP_INTERCEPTORS, useClass: SpinnerUtilInterceptor, multi: true}
   ],
-  bootstrap: [AppComponent]
-})
+  bootstrap: [AppComponent],
+
 
 export class AppModule { }
