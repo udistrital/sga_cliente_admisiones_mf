@@ -12,7 +12,8 @@
 .exp-card {
   align-content: center;
   cursor: pointer;
-  width: 13.5rem;
+  width: 100%;
+  max-width: 13.5rem;
   height: 14.5rem;
   transition: background-color 1s;
 }

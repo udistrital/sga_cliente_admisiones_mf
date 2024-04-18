@@ -10,7 +10,7 @@
           <mat-card  >
               <mat-card-header class="d-block">
                 <!-- select periodo -->
-                <mat-form-field style="width: 35%;">
+                <mat-form-field style="width: 100%;">
                   <mat-label>{{ 'documento_proyecto.aviso_periodo' | translate }}:</mat-label>
                   <mat-select [(ngModel)]="periodo" [disabled]='false' (selectionChange)="cambioPeriodo(periodo)">
                     <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
@@ -50,7 +50,6 @@
                   <mat-select [formControl]="Campo2Control"
                               [(ngModel)]="proyectos_selected"
                               (selectionChange)="loadTipoInscripcion()">
-                              <!-- (selectionChange)="loadCriterios()" -->
                     <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                     <mat-option *ngFor="let item of proyectosFilteredFacultad" [value]="item.Id" [disabled]="!item.Id">{{item.Nombre}}</mat-option>
                   </mat-select>
@@ -86,9 +85,6 @@
                       </mat-card-content>
                     </mat-card>
                   </div>
-
-
-                  <!-- <div class="col-sm-6 col-md-4 col-lg-3" align="center" id="info_basica" *ngIsGranted="['VICERRECTOR', 'ASESOR_VICE']" > -->
                       <div class="col-sm-6 col-md-4 col-lg-3" align="center" id="info_basica" *ngIsGranted="['VICERRECTOR', 'ASESOR_VICE']" >
                     <mat-card class="exp-card"
                              (click)="openSelectDescuentoProyectoComponent()">
@@ -98,14 +94,11 @@
                       </mat-card-content>
                     </mat-card>
                   </div>
-
                 </div>
 
               </mat-card-header>
-
           </mat-card>
         </div>
-
       </fieldset>
     </div>
   </mat-card-content>

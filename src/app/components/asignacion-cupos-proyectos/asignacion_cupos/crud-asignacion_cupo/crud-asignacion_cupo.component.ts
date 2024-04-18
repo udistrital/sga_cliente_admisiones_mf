@@ -2,18 +2,11 @@ import { FORM_ASIGNACION_CUPO_POSGRADO } from './form-asignacion_cupo_posgrado';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { FORM_ASIGNACION_CUPO } from './form-asignacion_cupo';
-//import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
-// import 'style-loader!angular2-toaster/toaster.css';
-// import { IAppState } from '../../../@core/store/app.state';
-// import { Store } from '@ngrx/store';
-// import { ListService } from '../../../@core/store/services/list.service';
-// import { UserService } from '../../../@core/data/users.service';
-// import { InstitucionEnfasis } from '../../../@core/data/models/proyecto_academico/institucion_enfasis';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
-// import { LocalDataSource } from 'ng2-smart-table';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { MatSelect } from '@angular/material/select';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { NivelFormacion } from 'src/app/models/proyecto_academico/nivel_formacion';
@@ -21,6 +14,13 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { Inscripcion } from 'src/app/models/inscripcion/inscripcion';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
+import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { UtilidadesService } from 'src/app/services/utilidades.service';
+import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service';
+
 
 @Component({
   selector: 'crud-asignacion-cupo',
@@ -56,9 +56,8 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   programa!: number;
   aspirante!: number;
   periodo: any;
+  show_editar: boolean = false;
   show_calculos_cupos = false;
-  // source_emphasys: LocalDataSource = new LocalDataSource();
-  // source_emphasys1: LocalDataSource = new LocalDataSource();
   porcentaje_subcriterio_total!: number;
   settings_emphasys: any;
   settings_emphasys1: any;
@@ -68,14 +67,24 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   niveles!: NivelFormacion[];
   show_posgrado: boolean = false;
 
+  dataSource: any;
+  displayedColumns: string[] = ['NombreInscripcion', 'Nombre', 'Activo', 'CuposHabilitados', 'CuposOpcionados', 'editar', 'eliminar'];
+  totalCupos: number = 0;
+  cupo: any;
+
   constructor(
     private translate: TranslateService,
     private sgamidService: SgaMidService,
+    private sgaMidAdmisiones: SgaAdmisionesMid,
     private projectService: ProyectoAcademicoService,
     private popUpManager: PopUpManager,
     private evaluacionService: EvaluacionInscripcionService,
     // private toasterService: ToasterService,
-    private inscripcionService: InscripcionService,) {
+    private asignacionCupoService: AsignacionCupoService,
+    private router: Router,
+    private http: HttpClient,
+    private inscripcionService: InscripcionService,
+    private inscripcionMidService: InscripcionMidService,) {
     this.settings_emphasys = {
       delete: {
         deleteButtonContent: '<i class="nb-trash"></i>',
@@ -92,7 +101,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         Nombre: {
           title: this.translate.instant('GLOBAL.cupos'),
           // type: 'string;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
           width: '50%',
@@ -100,7 +109,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         Cupos: {
           title: this.translate.instant('GLOBAL.numero_cupos'),
           // type: 'string;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
           width: '50%',
@@ -120,74 +129,74 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     });
 
     this.loading = false;
-
-    this.settings_emphasys1 = {
-      delete: {
-        deleteButtonContent: '<i class="nb-trash"></i>',
-        confirmDelete: true,
-      },
-      actions: {
-        delete: false,
-        edit: false,
-        add: false,
-        position: 'right',
-      },
-      mode: 'external',
-      columns: {
-        TipoDocumento: {
-          title: this.translate.instant('GLOBAL.Tipo'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value;
+    /*
+        this.settings_emphasys1 = {
+          delete: {
+            deleteButtonContent: '<i class="nb-trash"></i>',
+            confirmDelete: true,
           },
-          width: '2%',
-        },
-        NumeroDocumento: {
-          title: this.translate.instant('GLOBAL.Documento'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value;
+          actions: {
+            delete: false,
+            edit: false,
+            add: false,
+            position: 'right',
           },
-          width: '8%',
-        },
-        NombreAspirante: {
-          title: this.translate.instant('GLOBAL.Nombre'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value;
+          mode: 'external',
+          columns: {
+            TipoDocumento: {
+              title: this.translate.instant('GLOBAL.Tipo'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value;
+              },
+              width: '2%',
+            },
+            NumeroDocumento: {
+              title: this.translate.instant('GLOBAL.Documento'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value;
+              },
+              width: '8%',
+            },
+            NombreAspirante: {
+              title: this.translate.instant('GLOBAL.Nombre'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value;
+              },
+              width: '50%',
+            },
+            NotaFinal: {
+              title: this.translate.instant('GLOBAL.Puntaje'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value;
+              },
+              width: '5%',
+            },
+            TipoInscripcionId: {
+              title: this.translate.instant('GLOBAL.TipoInscripcion'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value.Nombre;
+              },
+              width: '25%',
+            },
+            EstadoInscripcionId: {
+              title: this.translate.instant('GLOBAL.Estado'),
+              // type: 'string;',
+              valuePrepareFunction: (value:any) => {
+                return value.Nombre;
+              },
+              width: '10%',
+            },
           },
-          width: '50%',
-        },
-        NotaFinal: {
-          title: this.translate.instant('GLOBAL.Puntaje'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value;
-          },
-          width: '5%',
-        },
-        TipoInscripcionId: {
-          title: this.translate.instant('GLOBAL.TipoInscripcion'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value.Nombre;
-          },
-          width: '25%',
-        },
-        EstadoInscripcionId: {
-          title: this.translate.instant('GLOBAL.Estado'),
-          // type: 'string;',
-          valuePrepareFunction: (value:any) => {
-            return value.Nombre;
-          },
-          width: '10%',
-        },
-      },
-    };
+        };
+        */
   }
 
   construirFormPregrado() {
-    // this.formInfoPersona.titulo = this.translate.instant('GLOBAL.info_persona');
     this.formAsigancionCupoPregrado.btn = this.translate.instant('GLOBAL.guardar');
     for (let i = 0; i < this.formAsigancionCupoPregrado.campos.length; i++) {
       this.formAsigancionCupoPregrado.campos[i].label = this.translate.instant('GLOBAL.' + this.formAsigancionCupoPregrado.campos[i].label_i18n);
@@ -196,7 +205,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   }
 
   construirFormPostgrado() {
-    // this.formInfoPersona.titulo = this.translate.instant('GLOBAL.info_persona');
+
     this.formAsigancionCupoPosgrado.btn = this.translate.instant('GLOBAL.guardar');
     for (let i = 0; i < this.formAsigancionCupoPosgrado.campos.length; i++) {
       this.formAsigancionCupoPosgrado.campos[i].label = this.translate.instant('GLOBAL.' + this.formAsigancionCupoPosgrado.campos[i].label_i18n);
@@ -206,6 +215,15 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
 
   useLanguage(language: string) {
     this.translate.use(language);
+  }
+  editarFila(data: any) {
+    console.log(data)
+    this.show_editar=true;
+
+  }
+  eliminarFila(data: any) {
+    console.log(data)
+
   }
 
   getIndexFormPregrado(nombre: String): number {
@@ -232,7 +250,6 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     const projetc = event.value;
     if (!this.arr_cupos.find((proyectos: any) => projetc.Id === proyectos.Id) && projetc.Id) {
       this.arr_cupos.push(projetc);
-      // this.source_emphasys.load(this.arr_cupos);
       const matSelect: MatSelect = event.source;
       matSelect.writeValue(null);
     } else {
@@ -246,7 +263,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   }
 
   onDeleteEmphasys(event: any) {
-    const findInArray = (value:any, array:any, attr:any) => {
+    const findInArray = (value: any, array: any, attr: any) => {
       for (let i = 0; i < array.length; i += 1) {
         if (array[i][attr] === value) {
           return i;
@@ -255,15 +272,12 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
       return -1;
     }
     this.arr_cupos.splice(findInArray(event.data.Id, this.arr_cupos, 'Id'), 1);
-    // this.source_emphasys.load(this.arr_cupos);
   }
 
   createCupos() {
     this.showListadoAspirantes = false;
     this.show_listado = false;
     const opt: any = {
-      // title: this.translate.instant('GLOBAL.crear'),
-      // text: this.translate.instant('GLOBAL.crear') + '?',
       title: this.translate.instant('GLOBAL.actualizar'),
       text: this.translate.instant('GLOBAL.confirmar_actualizar'),
       icon: 'warning',
@@ -278,10 +292,12 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         this.loading = true;
         if (willDelete.value) {
           console.info(JSON.stringify(this.info_cupos));
-          this.sgamidService.post('admision/postcupos', this.info_cupos)
+          this.inscripcionMidService.post('cupos', this.info_cupos)
             .subscribe(res => {
+              console.log(res)
+
               const r = <any>res
-              if (r !== null && r.Status === '200') {
+              if (r !== null && r.status === 200) {
                 this.loading = false;
                 //this.cambiarestados();
                 this.popUpManager.showSuccessAlert(this.translate.instant('GLOBAL.info_cupos') + ' ' + this.translate.instant('GLOBAL.confirmarCrear'));
@@ -305,17 +321,31 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
       });
   }
 
-
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.show_posgrado = this.info_nivel;
+    this.obtenerCupos();
   }
+
+  obtenerCupos() {
+    this.http.get<any>(`${environment.INSCRIPCION_SERVICE}/cupos/`).subscribe(
+      (response) => {
+        console.log(response);
+        this.dataSource = response.data
+        console.log("Cupos:", this.dataSource);
+      },
+      (error) => {
+        console.error('Error al obtener los cupos:', error);
+      }
+    );
+  }
+
+
 
   ngOnChanges() {
     this.show_posgrado = this.info_nivel;
 
     if (this.info_proyectos != undefined && this.info_proyectos != null) {
-      this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + Number(this.info_proyectos.Id) + ',PeriodoId:' + Number(this.info_periodo.Id) + '&limit=1').subscribe(
+      this.inscripcionService.get('cupos/?query=ProgramaAcademicoId:' + Number(this.info_proyectos.Id) + ',PeriodoId:' + Number(this.info_periodo.Id) + '&limit=1').subscribe(
         (response: any) => {
           if (response !== null && response !== undefined && response[0].Id !== undefined) {
 
@@ -341,7 +371,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     }
   }
 
-  validarForm(event:any) {
+  validarForm(event: any) {
     if (event.valid) {
       const cupos = event.data.InfoCupos.CuposAsignados
       const datos = [{ Nombre: 'Comunidades Negras', Cupos: Math.trunc((Number(cupos) / 40) * 2) },
@@ -389,37 +419,6 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
 
   }
 
-  // cambiarestados() {
-  //   this.info_actualizar_estados = {}
-  //   this.info_actualizar_estados.Proyectos = this.info_cupos.Proyectos;
-  //   this.info_actualizar_estados.Periodo = this.info_cupos.Periodo;
-  //   console.info(JSON.stringify(this.info_actualizar_estados));
-  //   this.sgamidService.post('admision/cambioestado', this.info_actualizar_estados)
-  //     .subscribe(res => {
-  //       const r = <any>res
-  //       if (r !== null && r.Type !== 'error') {
-  //         this.loading = false;
-  //         this.showToast('info', this.translate.instant('GLOBAL.actualizar'),
-  //           this.translate.instant('GLOBAL.info_estado') + ' ' +
-  //           this.translate.instant('GLOBAL.confirmarActualizar'));
-  //         this.eventChange.emit(true);
-  //       } else {
-  //         this.showToast('error', this.translate.instant('GLOBAL.error'),
-  //           this.translate.instant('GLOBAL.error'));
-  //       }
-  //     },
-  //       (error: HttpErrorResponse) => {
-  //         Swal.fire({
-  //           icon:'error',
-  //           title: error.status + '',
-  //           text: this.translate.instant('ERROR.' + error.status),
-  //           footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-  //             this.translate.instant('GLOBAL.info_estado'),
-  //           confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-  //         });
-  //       });
-  // }
-
   cambiarestados() {
     this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + Number(this.info_proyectos.Id) + ',PeriodoId:' + this.info_periodo.Id + '&sortby=Id&order=asc').subscribe(
       (res: any) => {
@@ -427,8 +426,8 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         if (res !== '[{}]') {
           if (r !== null && r.Type !== 'error') {
             this.loading = false;
-            let filtro = r.filter((filtro:any) => filtro.EstadoInscripcionId.Id === 2 || filtro.EstadoInscripcionId.Id === 4 || filtro.EstadoInscripcionId.Id === 5);
-            filtro = filtro.sort((puntaje_mayor:any, puntaje_menor:any) => puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal)
+            let filtro = r.filter((filtro: any) => filtro.EstadoInscripcionId.Id === 2 || filtro.EstadoInscripcionId.Id === 4 || filtro.EstadoInscripcionId.Id === 5);
+            filtro = filtro.sort((puntaje_mayor: any, puntaje_menor: any) => puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal)
             const data = <Array<any>>filtro;
             // this.source_emphasys.load(data);
 
@@ -492,6 +491,11 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
       });
   }
 
+  listarComentarios(){
+    this.asignacionCupoService.enviarDatos(this.programa);
+    this.router.navigate(['asignacion-cupos/comentarios-cupos']); 
+  }
+
   mostrartabla() {
     this.show_listado = true
 
@@ -504,7 +508,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
         const r = <any>res
         if (r !== null && r.Type !== 'error') {
           this.loading = false;
-          r.sort((puntaje_mayor:any, puntaje_menor:any) => puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal)
+          r.sort((puntaje_mayor: any, puntaje_menor: any) => puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal)
           const data = <Array<any>>r;
           // this.source_emphasys.load(data);
 

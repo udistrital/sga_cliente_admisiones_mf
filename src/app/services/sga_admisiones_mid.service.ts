@@ -1,3 +1,4 @@
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
@@ -22,5 +23,15 @@ export class SgaAdmisionesMid {
   get(endpoint: any): any {
     this.requestManager.setPath('SGA_ADMISIONES_MID');
     return this.requestManager.get(endpoint);
+  }
+
+  post(endpoint: any, element: any) {
+    this.requestManager.setPath('SGA_ADMISIONES_MID');
+    return this.requestManager.post(endpoint, element);
+  }
+
+  put(endpoint: any, element: any ) {
+    this.requestManager.setPath('SGA_ADMISIONES_MID');
+    return this.requestManager.put(endpoint, element);
   }
 }

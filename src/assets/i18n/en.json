@@ -1,4 +1,38 @@
 {
+    "CODIFICACION": {
+      "TITLE": "Codification",
+      "VARIABLES_START": "Start Variables",
+      "SELECT_LEVEL": "Select Level",
+      "ERRORS": {
+        "SELECT_LEVEL": "Please select a level",
+        "SELECT_SUBLEVEL": "Please select a sublevel",
+        "SELECT_PROYECTO_CURRICULAR": "Please select a curricular project",
+        "SELECT_ANO_INICIO": "Please select a start year",
+        "SELECT_LISTADO_ADMITIDOS": "Please select an admitted list",
+        "INPUT_PROYECTO_CURRICULAR": "Please enter a curricular project code",
+        "SELECT_PERIODO_ACADEMICO": "Please select an academic period",
+        "INPUT_PLAN_ESTUDIOS": "Please enter a study plan"
+      },
+      "SELECT_SUBLEVEL": "Select Sublevel",
+      "SELECT_PROYECTO_CURRICULAR": "Select Curricular Project",
+      "SELECT_ANO_INICIO": "Select Start Year",
+      "SELECT_LISTADO_ADMITIDOS": "Select Admitted List",
+      "INPUT_PROYECTO_CURRICULAR": "Curricular Project Code",
+      "SELECT_PERIODO_ACADEMICO": "Select Academic Period",
+      "INPUT_PLAN_ESTUDIOS": "Study Plan",
+      "BUTTON_ACEPTAR": "Accept",
+      "TABLE_COLUMNA_APELLIDOS": "Last Names",
+      "TABLE_COLUMNA_NOMBRES": "First Names",
+      "TABLE_COLUMNA_ESTADO_ADMISION": "Admission Status",
+      "TABLE_COLUMNA_ENFASIS": "Emphasis",
+      "TABLE_COLUMNA_NUMERO_DOCUMENTO": "Document Number",
+      "TABLE_CODIGO": "Code",
+      "BUTTON_DESCARGAR_LISTADO": "Download List",
+      "BUTTON_GENERAR_CODIGOS": "Generate Codes",
+      "BUTTON_GENERAR_CODIFICACION": "Assign Codification",
+      "TABLE_COLUMNA_PUNTAJE": "score"
+    },
+  
     "HOME": {
         "TITLE": "SGA",
         "SELECT": "Change language",
@@ -121,6 +155,7 @@
             "asignacion_cupos": "Assignment of quotas",
             "actualizacion_estado": "Assignment of quotas \nfor projects",
             "listado_aspirante": "List applicants",
+            "listar_aspirantes_proyecto": "List applicants for active projects",
             "administrar_criterios": "Manage admission criteria",
             "documentos_descuentos": "Assignment of documents\nand discounts by project",
             "solicitud_transferencias": "Transfer Requests",
@@ -195,6 +230,7 @@
         "inactivo": "Inactive",
         "aceptar": "Accept",
         "cancelar": "Cancel",
+        "continuar": "Continue",
         "salir": "Get out",
         "eliminar": "Remove",
         "actualizar": "Update",
@@ -995,7 +1031,8 @@
         "ejecutable_programa": "Application executable file support",
         "codigo_fuente": "Software source code support",
         "archivo_video": "Audiovisual production support",
-        "soportes": "Supports list"
+        "soportes": "Supports list",
+        "tipo_inscripcion": "Select the type of enrollment"
     },
     "archivo_icfes": {
         "archivo_icfes": "Icfes file",
@@ -1016,7 +1053,20 @@
         "icfes_snp": "List of applicants projects with SNP registration",
         "RteAdmitidos": "Listado de admitidos por periodo y proyecto.",
         "RteAspirantes": "Listado de aspirantes por periodo y proyecto.",
-        "RteInscritos": "Listado de inscritos por periodo y proyecto."
+        "RteInscritos": "Listado de inscritos por periodo y proyecto.",
+        "Reportes": "Reports",
+        "SelectPeriodo": "Select period",
+        "SelectFacultad": "Select faculty",
+        "SelectProyecto": "Select project",
+        "SelectReporte": "Select report type",
+        "SelectDatos": "Select the data that you whant",
+        "Periodo": "Period",
+        "Facultad": "Faculty",
+        "Proyecto": "Project",
+        "Acciones": "Actions"
+
+
+
     },
     "evento": {
         "evento": "Event",
@@ -1344,7 +1394,7 @@
         "erro_selec": "Please select at least one academic project!",
         "error_proyecto_ya_existe": "The academic project has already been added!",
         "realizar_preinscripcion": "Pre-registration",
-        "erro_selec_nivel": "Please select the level!",
+        "error_selec_nivel": "Please select the level!",
         "opciones_usuario": "User options",
         "recibos_generados": "Receipts generated (PIN)",
         "generar_recibo": "Generate receipt",
@@ -1731,7 +1781,11 @@
         "ofertar": "Offer project",
         "ofertar_opcion": "Is it offered as option 2 and 3?",
         "parametrizacion_puntaje": "Global score parameterization",
-        "valor_minimo": "Minimum value:"
+        "valor_minimo": "Minimum value:",
+        "listar_aspirantes_proyecto": "List applicants for active projects",
+        "proyecto_sin_aspirantes": "This project does not have applicants",
+        "info_lista_proyecto_activos": "Select the academic period (the current active period is selected by default), followed by the level, to access the list of active projects in the selected period and the list of applicants for each project in the specified period.",
+        "buscar_en_toda_la_tabla": "search entire table"
     },
     "cupos": {
         "aviso_periodo": "Period in which the admission quotas are defined",
@@ -1750,6 +1804,7 @@
         "seleccionar_admitidos": "Select admitted",
         "ver_listado_aspirantes": "Show list of applicants",
         "cupos_proyecto": "Number of assigned places",
+        "cupos_disponibles": "Number of places available:",
         "sin_cupos_periodo": "No quotas have been defined for this period or curricular project"
     },
     "calendario": {
@@ -2594,5 +2649,41 @@
         "select_nombre": "Teacher's name:",
         "select_vinculacion": "Type of teacher connection:",
         "select_horas": "Assigned hours:"
+    },
+    "liquidacion": {
+        "recibos": "Curriculum project information",
+        "plantilla": "Template",
+        "proyecto": "Project",
+        "periodo_academico": "Academic period",
+        "semestre": "Semester",
+        "generar_recibo": "Generate receipt",
+        "descargar_listado": "Download list",
+        "conjunto_recibos": "Download set of receipts",
+        "asignar_recibo": "Assign receipts to students",
+        "pbm_titulo": "PBM Tuition Fee Receipt Liquidation",
+        "datos_estudiante": "Student Information",
+        "seleccion": "Selection",
+        "caso": "Case",
+        "puntaje": "Score",
+        "variable_a": "Variable A",
+        "variable_b": "Variable B",
+        "variable_globales": "Global Variables",
+        "a1": "A1 (Place of Responsible Residence)",
+        "a2": "A2 (Last Year High School Tuition Fee)",
+        "a3": "A3 (Monthly Gross Family Income)",
+        "b1": "B1 (Place of Responsible Residence)",
+        "b2": "B2 (Parents' or Guardian's Residence)",
+        "b3": "B3 (Family Unit)",
+        "b4": "B4 (Applicant's Employment Situation)",
+        "g1": "PBM (Basic Tuition Fee Points)",
+        "g2": "Systematization (One-time)",
+        "g3": "Student ID Card (One-time)",
+        "g4": "Student Insurance (Semester)",
+        "total":"Total",
+        "acciones":"Actions",
+        "codigo": "Code",
+        "documento": "Document",
+        "nombres": "Names",
+        "apellidos": "Surnames"
     }
 }

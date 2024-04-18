@@ -35,56 +35,26 @@ export class SelectDescuentoProyectoComponent implements OnInit {
 
   constructor(private translate: TranslateService,
     private descuentoService: DescuentoAcademicoService,
-    // private dialogRef: NbDialogRef<SelectDescuentoProyectoComponent>,
+
     private popUpManager: PopUpManager,
-    // private toasterService: ToasterService
+
   ) {
     this.loading = true;
     this.loadData();
     this.loadDataProyecto();
-    this.cargarCampos();
+
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.cargarCampos();
+
     });
   }
 
   @Input() asDialog!: boolean;
 
   dismissDialog() {
-    // this.dialogRef.close();
+
   }
 
-  cargarCampos() {
-    this.settings = {
-      delete: {
-        deleteButtonContent: '<i class="nb-trash"></i>',
-        confirmDelete: true,
-      },
-      actions: {
-        edit: false,
-        add: false,
-        columnTitle: this.translate.instant('GLOBAL.eliminar'),
-        position: 'right',
-      },
-      mode: 'external',
-      columns: {
-        Nombre: {
-          title: this.translate.instant('GLOBAL.nombre'),
-          valuePrepareFunction: (value: any) => {
-            return value;
-          },
-          width: '75%',
-        },
-        PorcentajeDescuento: {
-          title: this.translate.instant('GLOBAL.porcentaje'),
-          valuePrepareFunction: (value: any) => {
-            return value;
-          },
-          width: '5%',
-        },
-      },
-    };
-  }
+
 
   useLanguage(language: string) {
     this.translate.use(language);
@@ -155,7 +125,7 @@ export class SelectDescuentoProyectoComponent implements OnInit {
               }
             }
 
-            this.descuentoService.post('descuentos_dependencia', descuentoNuevo).subscribe((response:any) => {
+            this.descuentoService.post('descuentos_dependencia', descuentoNuevo).subscribe((response: any) => {
               Swal.close();
               if (response.Type !== 'error') {
 
@@ -175,10 +145,13 @@ export class SelectDescuentoProyectoComponent implements OnInit {
                 });
 
               } else {
-                this.showToast('error', this.translate.instant('GLOBAL.error'), this.translate.instant('descuento_academico.descuento_no_creado'));
+                this.popUpManager.showErrorToast( this.translate.instant('GLOBAL.error'));
+                this.popUpManager.showErrorToast( this.translate.instant('descuento_academico.descuento_no_creado'));
               }
             }, () => {
-              this.showToast('error', this.translate.instant('GLOBAL.error'), this.translate.instant('descuento_academico.descuento_no_creado'));
+              this.popUpManager.showErrorToast( this.translate.instant('GLOBAL.error'));
+              this.popUpManager.showErrorToast( this.translate.instant('descuento_academico.descuento_no_creado'));
+
             });
           }
         });
@@ -226,7 +199,7 @@ export class SelectDescuentoProyectoComponent implements OnInit {
           descuentoModificado.Activo = false;
           descuentoModificado.TipoDescuentoId = descuento;
 
-          this.descuentoService.put('descuentos_dependencia', descuentoModificado).subscribe((res:any) => {
+          this.descuentoService.put('descuentos_dependencia', descuentoModificado).subscribe((res: any) => {
             Swal.close()
             if (res.Type !== 'error') {
 
@@ -246,10 +219,12 @@ export class SelectDescuentoProyectoComponent implements OnInit {
               });
 
             } else {
-              this.showToast('error', this.translate.instant('GLOBAL.error'), this.translate.instant('descuento_academico.descuento_no_eliminado'));
+              this.popUpManager.showErrorToast(this.translate.instant('GLOBAL.error'));
+
             }
           }, () => {
-            this.showToast('error', this.translate.instant('GLOBAL.error'), this.translate.instant('descuento_academico.descuento_no_eliminado'));
+            this.popUpManager.showErrorToast(this.translate.instant('GLOBAL.error'));
+
           });
         }
       });
@@ -320,24 +295,5 @@ export class SelectDescuentoProyectoComponent implements OnInit {
     });
   }
 
-  private showToast(type: string, title: string, body: string) {
-    // this.config = new ToasterConfig({
-    //   // 'toast-top-full-width', 'toast-bottom-full-width', 'toast-top-left', 'toast-top-center'
-    //   positionClass: 'toast-top-center',
-    //   timeout: 5000,  // ms
-    //   newestOnTop: true,
-    //   tapToDismiss: false, // hide on click
-    //   preventDuplicates: true,
-    //   animation: 'slideDown', // 'fade', 'flyLeft', 'flyRight', 'slideDown', 'slideUp'
-    //   limit: 5,
-    // });
-    // const toast: Toast = {
-    //   type: type, // 'default', 'info', 'success', 'warning', 'error'
-    //   title: title,
-    //   body: body,
-    //   showCloseButton: true,
-    //   bodyOutputType: BodyOutputType.TrustedHtml,
-    // };
-    // this.toasterService.popAsync(toast);
-  }
+
 }

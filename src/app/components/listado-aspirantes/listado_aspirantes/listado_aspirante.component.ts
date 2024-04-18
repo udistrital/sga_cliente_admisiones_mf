@@ -19,6 +19,7 @@ import { IAppState } from 'src/app/store/app.state';
 import { Store } from '@ngrx/store';
 import { ListService } from 'src/app/store/services/list.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { UserService } from 'src/app/services/users.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { Destination, EmailTemplated } from '../../../models/notificaciones_mid/email_templated';
@@ -80,7 +81,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     Aspirantes = [];
     cuposProyecto!: number;
     estadoAdmitido: any = null;
-    estados:any = [];
+    estados: any = [];
     IdIncripcionSolicitada = null;
     InfoContacto: any;
     cantidad_aspirantes: number = 0;
@@ -108,7 +109,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         private evaluacionService: EvaluacionInscripcionService,
         private store: Store<IAppState>,
         private listService: ListService,
-        private sgaMidService: SgaMidService,
+        private sgaMidAdmisioens: SgaAdmisionesMid,
         private userService: UserService,
         private autenticationService: ImplicitAutenticationService,
         private notificacionesMidService: NotificacionesMidService
@@ -117,7 +118,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.source_emphasys = new MatTableDataSource();
         this.translate = translate;
         this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-         this.createTable();
+           
         });
         this.listService.findInfoContacto();
         this.loadLists();
@@ -127,7 +128,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.inscripcionService.get('estado_inscripcion')
             .subscribe((state: any) => {
                 this.estados = state.map((e: any) => {
-                   
+
                     if (e.Nombre === 'ADMITIDO') {
                         this.estadoAdmitido = e;
                     }
@@ -139,147 +140,9 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         title: e.Nombre
                     }
                 })
-                 this.createTable()
-                 console.log(this.estados)
+                console.log(this.estados)
             })
     }
-
-
-    createTable() {
-
-        this.settings_emphasys = {
-            delete: {
-                deleteButtonContent: '<i class="nb-trash"></i>',
-                confirmDelete: true,
-            },
-            actions: {
-                delete: false,
-                edit: true,
-                add: false,
-                position: 'right',
-                columnTitle: this.translate.instant('GLOBAL.acciones'),
-            },
-            mode: 'internal',
-            columns: {
-                index: {
-                    title: '#',
-                    filter: false,
-                    valuePrepareFunction: (value: any, row: any, cell: any) => {
-                        return cell.row.index + 1;
-                    },
-                    width: '2%',
-                },
-                NumeroDocumento: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.Documento'),
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '10%',
-                },
-                NombreAspirante: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.Nombre'),
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '15%',
-                },
-                Telefono: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.telefono'),
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '10%',
-                },
-                Email: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.correo_principal'),
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '15%',
-                },
-                NotaFinal: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.Puntaje'),
-                    sort: true,
-                    sortDirection: 'desc',
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '5%',
-                },
-                TipoInscripcion: {
-                    editable: false,
-                    title: this.translate.instant('GLOBAL.TipoInscripcion'),
-                    valuePrepareFunction: (value: any) => {
-                        return value
-                    },
-                    width: '10%',
-                },
-                Enfasis: {
-                    editable: false,
-                    title: this.translate.instant('enfasis.enfasis'),
-                    valuePrepareFunction: (value: any) => {
-                        return value
-                    },
-                    width: '10%',
-                },
-                EstadoInscripcionId: {
-                    title: this.translate.instant('GLOBAL.Estado'),
-                    filterFunction: (cell?: any, search?: string) => {
-                        console.log(cell);
-                        console.log(search)
-                         if (search!.length > 0) {
-                             return cell.Nombre.match(RegExp(search!, "i"));
-                         }
-                    },
-                    compareFunction: (direction: any, a: any, b: any) => {
-                        let first = a.Nombre.toLowerCase();
-                        let second = b.Nombre.toLowerCase();
-
-                        if (first < second) {
-                            return -1 * direction;
-                        }
-                        if (first > second) {
-                            return direction;
-                        }
-                        return 0;
-                    },
-                    valuePrepareFunction: (cell: any, row: any, test: any) => {
-                        var t = test.column.editor.config.list.find((x: any) => x.value === cell.Id)
-                        if (t)
-                            return t.title
-                    },
-                    width: '10%',
-                    editor: {
-                        type: 'list',
-                        config: {
-                            list: this.estados
-                        },
-                    }
-                },
-                EstadoRecibo: {
-                    editable: false,
-                    title: this.translate.instant('inscripcion.estado_recibo'),
-                    valuePrepareFunction: (value: any) => {
-                        return value;
-                    },
-                    width: '5%',
-                },
-            },
-            edit: {
-                confirmSave: true,
-                editButtonContent: '<i class="nb-edit" title="' + this.translate.instant('inscripcion.editar_estado_iscripcion') + '"></i>',
-                saveButtonContent: '<i class="nb-checkmark"  title="' + this.translate.instant('GLOBAL.guardar') + '"></i>',
-                cancelButtonContent: '<i class="nb-close" title="' + this.translate.instant('GLOBAL.cancelar') + '"></i>',
-            },
-        };
-    }
-
-
 
     buttonedit(row: any): void {
         row.mostrarBotones = !row.mostrarBotones;
@@ -413,7 +276,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                 }
             });
         }
-      
+
     }
 
     loadProyectos() {
@@ -433,7 +296,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                                 );
                             } else {
                                 const id_tercero = this.userService.getPersonaId();
-                                this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                                this.sgaMidAdmisioens.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                                     (respDependencia: any) => {
                                         const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                                         this.proyectos = <any[]>response.filter(
@@ -500,11 +363,14 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.admitidos = [];
 
         this.loading = true;
-        this.sgaMidService.get('admision/getlistaaspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
+        this.sgaMidAdmisioens.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
             .subscribe(
                 (response: any) => {
-                    if (response.Success && response.Status == "200") {
-                        this.Aspirantes = response.Data;
+                    console.log("response")
+                    console.log(response)
+                    if (response.success == true  && response.status == 200) {
+                        this.Aspirantes = response.data;
+                        console.log(this.Aspirantes)
                         this.admitidos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));
                         this.inscritos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO'));
                         this.cuposAsignados = this.admitidos.length;

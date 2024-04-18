@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -8,10 +9,19 @@ export class UtilidadesService {
 
     static userArray: any[];
     static jsonArray: any[];
+  static enviarDatos: any;
+  static datosSeleccionados$: any;
 
     constructor(
         private translate: TranslateService,
     ) {
+    }
+
+    private datosSeleccionados = new BehaviorSubject<any>(null);
+    datosSeleccionados$ = this.datosSeleccionados.asObservable();
+
+    enviarDatos(datos: any) {
+      this.datosSeleccionados.next(datos);
     }
 
     static getSumArray(array:any): any {

@@ -14,27 +14,23 @@ import { TipoDocumentoPrograma } from 'src/app/models/documento/tipo_documento_p
   styleUrls: ['./crud-documento-proyecto.component.scss'],
 })
 export class CrudDocumentoProyectoComponent implements OnInit {
-  // config: ToasterConfig;
-  documento_id!: number;
 
+  clean!: boolean;
+  documento_id!: number;
+  info_doc_programa!: any;
+  formDocumentoProyecto: any;
+  regDocumentoProyecto: any;
+
+  @Output() eventChange = new EventEmitter();
   @Input('documento_id')
   set name(documento_id: number) {
     this.documento_id = documento_id;
     this.loadDocumentoProyecto();
   }
 
-  @Output() eventChange = new EventEmitter();
-
-  info_doc_programa!: any;
-  formDocumentoProyecto: any;
-  regDocumentoProyecto: any;
-  clean!: boolean;
-
   constructor(private translate: TranslateService,
-    private proyectoAcademicoService: ProyectoAcademicoService,
     private inscripcionService: InscripcionService,
-    // private toasterService: ToasterService
-    ) {
+  ) {
     this.formDocumentoProyecto = FORM_DOCUMENTO_PROYECTO;
     this.construirForm();
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -155,7 +151,7 @@ export class CrudDocumentoProyectoComponent implements OnInit {
     this.loadDocumentoProyecto();
   }
 
-  validarForm(event:any) {
+  validarForm(event: any) {
     if (event.valid) {
       if (this.info_doc_programa === undefined) {
         this.createDocumentoProyecto(event.data.TipoDocumentoPrograma);

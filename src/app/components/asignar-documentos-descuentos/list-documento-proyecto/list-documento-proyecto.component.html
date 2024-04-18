@@ -7,12 +7,6 @@
   </legend>
 
   <mat-card style="width: 70vw; display: grid;">
-    <!-- <toaster-container [toasterconfig]="config"></toaster-container> -->
-
-    <!-- <ng2-smart-table [settings]="settings" [source]="source"
-                     (delete)="onDelete($event)" (rowSelect)="itemselec($event)"
-                     (edit)="onEdit($event)" (create)="onCreate($event)">
-    </ng2-smart-table> -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; margin:  20px 0px;">
       <div
         style=" display: flex; justify-content: flex-start; margin: 0px 0px; flex-direction: row; align-items: flex-end; margin-bottom: 10px; margin-left: 10px;">
@@ -27,7 +21,7 @@
         <mat-icon class="icon-search" matPrefix>search</mat-icon>
       </div>
     </div>
-    <div class="mat-elevation-z8">
+    <div class="mat-elevation-z8 table-container">
       <table mat-table [dataSource]="source" matSort>
 
         <ng-container matColumnDef="acciones">

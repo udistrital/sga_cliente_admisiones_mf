@@ -1,0 +1,140 @@
+*{
+  margin: 0;
+  box-sizing: border-box;
+}
+
+mat-card {
+  margin: 10px;
+  overflow: hidden;
+}
+
+mat-form-field {
+  width: 100%; /* Ajusta el ancho para pantallas móviles */
+}
+
+fieldset {
+  border: solid 1px #03678f;
+  border-radius: 3px;
+}
+
+legend {
+  padding: 1em;
+}
+
+mat-card {
+  padding: 10px;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.grid-3 {
+  flex: 1 1 calc(33.333% - 10px); // Ajuste para pantallas más grandes
+  margin: 5px;
+}
+
+.grid-2 {
+  flex: 1 1 calc(50% - 10px); // Ajuste para pantallas más grandes
+  margin: 5px;
+}
+
+@media screen and (max-width: 800px) {
+  .grid-3 {
+    flex-basis: calc(50% - 10px); // Dos columnas en pantallas medianas
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .grid-3 {
+    flex-basis: 100%; /* Asegura que los elementos de la grilla tomen todo el ancho */
+    margin: 10px 0; /* Añade un margen vertical para evitar la superposición */
+  }
+  .grid-2 {
+    flex-basis: 100%; /* Asegura que los elementos de la grilla tomen todo el ancho */
+    margin: 10px 0; /* Añade un margen vertical para evitar la superposición */
+  }
+}
+
+.centrar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.left-button {
+  margin-right: auto; /* Empuja todo lo que esté a la derecha hacia el centro o extremo derecho */
+}
+
+.right-buttons button:not(:last-child) {
+  margin-right: 16px; /* Añade margen en la parte derecha de todos los botones, excepto el último */
+}
+
+.right-buttons {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1; /* Asegura que los botones de la derecha usen todo el espacio disponible */
+  margin: 8px;
+}
+
+
+.container_table{
+  padding: 30px 10px;
+}
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 600px) {
+  mat-card-actions {
+    flex-direction: column;
+    align-items: stretch; /* Hace que los botones se estiren para ocupar el ancho completo */
+  }
+
+  .left-button,
+  .right-buttons {
+    width: 100%; /* Asegura que los botones ocupen el ancho completo */
+    justify-content: center; /* Centra los botones en dispositivos móviles */
+    margin: 8px 0; /* Añade un poco de margen vertical entre botones */
+  }
+
+  .left-button button,
+  .right-buttons button {
+    width: calc(100% - 16px); /* Ajusta el ancho para tener en cuenta el margen */
+    margin: 8px; /* Añade margen alrededor de los botones para evitar que se peguen */
+  }
+
+  /* Espaciado entre botones de la derecha */
+  .right-buttons button:not(:last-child) {
+    margin-bottom: 16px; /* Añade margen en la parte inferior de todos los botones, excepto el último */
+  }
+
+  /* Cambia el orden para que el botón derecho quede de último */
+  .right-buttons {
+    order: 2; /* Coloca los botones de la derecha al final */
+  }
+
+  .left-button {
+    order: 1; /* Asegura que el botón izquierdo venga primero */
+  }
+}
+
+.mt {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 600px) {
+  .mt {
+    width: 100%;
+    overflow-x: auto; /* Habilita el desplazamiento horizontal */
+  }
+}
+

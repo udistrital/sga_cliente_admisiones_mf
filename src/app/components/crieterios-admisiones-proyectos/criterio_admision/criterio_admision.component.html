@@ -56,7 +56,7 @@
                                 {{ 'admision.erro_selec_proyecto' | translate }}
                             </mat-error>
                         </mat-form-field>
-                        <!--ngx-loading [hidden]="!loading"></ngx-loading-->
+
 
                         <!-- select criterios -->
                         <mat-form-field style="width: 100%;">
@@ -154,7 +154,7 @@
                                                 translate}} </th>
                                             <td mat-cell *matCellDef="let row">
                                                 <input type="text" class="input-table" [(ngModel)]="row.Porcentaje"
-                                                    [disabled]="!porcentajeCriterioTable"  #inputRef>
+                                                [disabled]="!row.mostrarBotones" #inputRef>
                                             </td>
                                         </ng-container>
 
@@ -166,7 +166,7 @@
                                                     <button aria-hidden="false" *ngIf="!row.mostrarBotones"
                                                         title="{{'admision.tooltip_editar' | translate}}"
                                                         class="table-button-edit icon"
-                                                        (click)="onEdit({data: row, isSelected:false });buttonedit(row)  ">
+                                                        (click)="onEdit({data: row, isSelected:false });buttonedit(row)">
                                                         <mat-icon fontIcon="edit"></mat-icon>
                                                     </button>
                                                     <button aria-hidden="false" *ngIf="row.mostrarBotones"
@@ -218,10 +218,6 @@
                                 <div *ngIf="mostrarSubcriterio">
                                     <br />
                                     <mat-label>{{ 'admision.subcriterios' | translate }}</mat-label>
-                                    <!-- <ng2-smart-table [settings]="settingsSubcriterio"
-                                             [source]="dataSourceSubcriterio"
-                                             (rowSelect)="onEditSubcriterio($event)">
-                            </ng2-smart-table> -->
 
 
 
@@ -244,7 +240,7 @@
                                                     translate}} </th>
                                                 <td mat-cell *matCellDef="let row"> <input type="text"
                                                         class="input-table" [(ngModel)]="row.Porcentaje"
-                                                        [disabled]=" !porcentajeSubcriterioTable"> </td>
+                                                        [disabled]=" !row.mostrarBotones "> </td>
                                             </ng-container>
 
                                             <ng-container matColumnDef="acciones">
@@ -253,27 +249,25 @@
                                                     translate}} </th>
                                                 <td mat-cell *matCellDef="let row">
                                                     <div class="separacion-acciones">
-                                                        <button aria-hidden="false" *ngIf=" !porcentajeSubcriterioTable"
+                                                        <button aria-hidden="false" *ngIf=" !row.mostrarBotones"
                                                             title="{{'admision.tooltip_editar' | translate}}"
                                                             class="table-button-edit icon"
-                                                            (click)="onEditSubcriterio({data: row})">
+                                                            (click)="onEditSubcriterio({data: row}); buttonedit(row)">
                                                             <mat-icon fontIcon="edit"></mat-icon>
                                                         </button>
-                                                        <button aria-hidden="false" *ngIf=" porcentajeSubcriterioTable"
+                                                        <button aria-hidden="false" *ngIf=" row.mostrarBotones"
                                                             title="{{'admision.tooltip_guargar' | translate}}"
                                                             class="table-button icon"
-                                                            (click)=" calcularPorcentajeSubcriterio();devolverBotoneditarSubciterio() ">
+                                                            (click)=" calcularPorcentajeSubcriterio();buttonedit(row) ">
                                                             <mat-icon fontIcon="check"></mat-icon>
                                                         </button>
-                                                        <button aria-hidden="false" *ngIf=" porcentajeSubcriterioTable"
+                                                        <button aria-hidden="false" *ngIf=" row.mostrarBotones"
                                                             title="{{'admision.tooltip_cancelar' | translate}}"
                                                             class="table-button icon"
-                                                            (click)="devolverBotoneditarSubciterio()">
+                                                            (click)="buttonedit(row)">
                                                             <mat-icon fontIcon="close"></mat-icon>
                                                         </button>
                                                     </div>
-
-
                                             </ng-container>
 
                                             <tr mat-header-row *matHeaderRowDef="dataSourceColumns"></tr>
@@ -302,43 +296,13 @@
                                 <br />
 
                             </div>
-
-                            <!-- <div class="col-sm-6 col-md-4 col-lg-3" align="center" id="info_basica" *ngIf="selectTipoIcfes==true">
-                        <nb-card class="exp-card" (click)="perfil_editar('info_icfes')">
-                            <nb-card-header>{{ 'admision.info_icfes' | translate }}</nb-card-header>
-                            <nb-card-body class="icon-form">
-                                <i class="fa fa-graduation-cap fa-5x"></i>
-                            </nb-card-body>
-                        </nb-card>
-
-                        <ng2-smart-table [settings]="settings" [source]="dataSource" (rowSelect)="onEdit($event)"></ng2-smart-table>
-                        <mat-label>{{ 'admision.total' | translate }}: {{ porcentajeTotal }} %</mat-label>
-                    </div>
-
-                    <div class="col-sm-6 col-md-4 col-lg-3" align="center" id="formacion_academica" *ngIf="selectTipoEntrevista==true">
-                        <nb-card class="exp-card" (click)="perfil_editar('info_entrevista')">
-                            <nb-card-header>{{ 'admision.entrevista' | translate }}</nb-card-header>
-                            <nb-card-body class="icon-form">
-                                <i class="fa fa-address-card-o fa-5x"></i>
-                            </nb-card-body>
-                        </nb-card>
-                    </div>
-
-                    <div class="col-sm-6 col-md-4 col-lg-3" align="center" id="formacion_academica" *ngIf="selectTipoPrueba==true">
-                        <nb-card class="exp-card" (click)="perfil_editar('info_prueba')">
-                            <nb-card-header>{{ 'admision.prueba' | translate }}</nb-card-header>
-                            <nb-card-body class="icon-form">
-                                <i class="fa fa-address-card-o fa-5x"></i>
-                            </nb-card-body>
-                        </nb-card>
-                    </div> -->
                         </div>
                     </mat-card-content>
                 </mat-card>
 
                 <!--Formularios------------------------------------------------------------->
 
-                <!-- <nb-card [hidden]="!show_info_pregrado"> -->
+
                 <mat-card [hidden]="!show_icfes">
                     <mat-card-content>
                         <div class="row">
@@ -351,12 +315,7 @@
                             </div>
                         </div>
                         <mat-tab-group fullWidth>
-                            <!--<mat-tab Title="{{ 'admision.criterio_icfes' | translate }}"
-                            [active]="preinscripcion"> -->
                             <mat-tab>
-                                <!-- <ngx-crud-criterio-icfes [info_proyectos]="this.proyectos_selected"
-                                                 [info_periodo]="this.periodo">
-                        </ngx-crud-criterio-icfes> -->
                             </mat-tab>
                         </mat-tab-group>
                     </mat-card-content>

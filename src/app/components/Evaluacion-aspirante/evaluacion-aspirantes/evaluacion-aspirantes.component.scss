@@ -96,8 +96,15 @@ th{
   padding: 8px;
 }
 
-
 .m-10{
   margin: 30px;
 }
 
+.table-container {
+  overflow: overlay;
+}
+
+.separacion-acciones {
+  display: flex;
+  justify-content: space-around;
+}

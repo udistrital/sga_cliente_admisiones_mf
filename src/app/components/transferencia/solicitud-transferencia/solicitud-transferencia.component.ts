@@ -12,6 +12,7 @@ import { TransferenciaInternaReintegro } from 'src/app/models/inscripcion/transf
 import { HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @Component({
   selector: 'solicitud-transferencia',

@@ -20,6 +20,7 @@ import { ImplicitAutenticationService } from 'src/app/services/implicit_autentic
 import { MatTableDataSource } from '@angular/material/table';
 import { OikosService } from 'src/app/services/oikos.service';
 import { forEach } from 'lodash';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 @Component({
   selector: 'criterio-admision',
@@ -41,14 +42,10 @@ export class CriterioAdmisionComponent implements OnChanges {
     }
     if (this.inscripcion_id !== undefined && this.inscripcion_id !== 0 && this.inscripcion_id.toString() !== ''
       && this.inscripcion_id.toString() !== '0') {
-      // this.getInfoInscripcion();
     }
   }
 
   @Output() eventChange = new EventEmitter();
-  // tslint:disable-next-line: no-output-rename
-
-  
   @Output('result') result: EventEmitter<any> = new EventEmitter();
 
   ofertarOpcion2!: FormGroup;
@@ -149,7 +146,7 @@ export class CriterioAdmisionComponent implements OnChanges {
     private parametrosService: ParametrosService,
     private evaluacionService: EvaluacionInscripcionService,
     private admisiones: EvaluacionInscripcionService,
-    private sgaMidService: SgaMidService,
+    private sgaMidAdmisiones : SgaAdmisionesMid,
     private autenticationService: ImplicitAutenticationService,
     private oikosService: OikosService,
     private builder: FormBuilder,
@@ -192,19 +189,6 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   buttonedit(row: any): void {
     row.mostrarBotones = !row.mostrarBotones;
-  
-    if (row.mostrarBotones) {
-      // Si se activa el modo de edición, desactiva el resto de los modos de edición en otras filas
-      this.data.forEach((item: any) => {
-        if (item !== row) {
-          item.mostrarBotones = false;
-        }
-      });
-
-      setTimeout(() => {
-        this.inputRef.nativeElement.focus();
-      });
-    }
   }
   nivel_load() {
     this.projectService.get('nivel_formacion?limit=0').subscribe(
@@ -218,25 +202,7 @@ export class CriterioAdmisionComponent implements OnChanges {
     );
   }
 
-  // cargarPeriodo() {
-  //   return new Promise((resolve, reject) => {
-  //     this.parametrosService.get('periodo?query=Activo:true&sortby=Id&order=desc&limit=1')
-  //       .subscribe(res => {
-  //         const periodos = <any[]>res['Data'];
-  //         if (res !== null && res['Success']) {
-  //           this.periodo = <any>periodos[0];
-  //           window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
-  //           resolve(this.periodo);
-  //           periodos.forEach(element => {
-  //             this.periodos.push(element);
-  //           });
-  //         }
-  //       },
-  //         (error: HttpErrorResponse) => {
-  //           reject(error);
-  //         });
-  //   });
-  // }
+
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
@@ -432,7 +398,7 @@ export class CriterioAdmisionComponent implements OnChanges {
               );
             } else {
               const id_tercero = this.userService.getPersonaId();
-              this.sgaMidService.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+              this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                 (respDependencia: any) => {
                   const dependencias = <Number[]>respDependencia.Data.DependenciaId;
                   this.proyectos = <any[]>res.filter(
@@ -754,15 +720,10 @@ export class CriterioAdmisionComponent implements OnChanges {
                 for (let i = 0; i < res.length; i++) {
                   if (this.requisitoId == r[i].RequisitoId.Id) {
                     const requisitoPut = r[i];
-                    // for recorrer subcriterios
-                    // let PorcentajeEspecifico = [];
+                    
                     const objectConcat = [{}];
                     for (let i = 0; i < this.dataSubcriterios.length; i++) {
-                      // PorcentajeEspecifico.push({
-                      //   Subcriterio: this.dataSubcriterios[i].Criterio,
-                      //   Porcentaje: this.dataSubcriterios[i].Porcentaje,
-                      //   Abreviación: ""
-                      // });
+              
                       const object: any = {};
                       object['Id'] = this.dataSubcriterios[i].Id
                       object['Nombre'] = this.dataSubcriterios[i].Criterio

@@ -7,16 +7,29 @@ import { AdministradorCriteriosComponent } from './components/administrar-criter
 import { AsignacionCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/asignacion_cupos.component';
 import { CriterioAdmisionComponent } from './components/crieterios-admisiones-proyectos/criterio_admision/criterio_admision.component';
 import { EvaluacionDocumentosInscritosComponent } from './components/evalucion-documentos-inscritos/evaluacion-documentos-inscritos/evaluacion-documentos-inscritos.component';
-import { EvaluacionAspirantesComponent } from './components/evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
+import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component'; 
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
+import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
 import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
-import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
-import { SubTipoProduccionAcademica } from './models/produccion_academica/subtipo_produccion_academica';
-import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
+import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
+import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
+import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
+import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
+import { CodificacionModule } from './components/codificacion-module/codificacion.module';
+import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-aspirantes/lista-proyectos-aspirantes.component';
+import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
+import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
+
+
 
 
 const routes: Routes = [
+  {
+    path: "codificacion", // cambiar la ruta del modulo
+    loadChildren: () => import ('./components/codificacion-module/codificacion.module').then(m => m.CodificacionModule),
+  },
   {
     path:"administrar-criterios", 
     component: AdministradorCriteriosComponent
@@ -30,16 +43,28 @@ const routes: Routes = [
     component: AsignacionCuposComponent
   },
   {
+    path:"asignacion-cupos/comentarios-cupos", 
+    component: ComentariosCuposComponent
+  },
+  {
     path:"documentos-inscritos", 
     component: EvaluacionDocumentosInscritosComponent
   },
   {
-    path:"evaluacion-aspirantes", 
-    component: EvaluacionAspirantesComponent
+    path:"administracion-cuenta", 
+    component: AdministracionCuentaBancariaComponent
   },
+  //{
+   // path:"evaluacion-aspirantes", 
+    //component: EvaluacionAspirantesComponent
+  //},
   {
     path:"listado-aspirantes", 
     component: ListadoAspiranteComponent
+  },
+  {
+    path:"lista-proyectos-aspirantes", 
+    component: ListaProyectosAspirantesComponent
   },
   {
     path:"asignar-descuento-documento", 
@@ -57,7 +82,17 @@ const routes: Routes = [
     path:"suite-programa", 
     component: DefSuiteInscripProgramaComponent ,
   },
-
+  {
+    path:"liquidacion-recibos", 
+    component: LiquidacionRecibosComponent ,
+  },
+  {
+    path:"liquidacion-historico", 
+    component: LiquidacionHistoricoComponent ,
+  },
+    {path:"reportes-inscritos", 
+    component: RepotesInscripcionesComponent ,
+  },
 
 ];
 

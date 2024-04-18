@@ -1,0 +1,1496 @@
+{
+    "success": true,
+    "status": 200,
+    "message": "Solicitud exitosa",
+    "data": [
+        {
+            "Aspirantes": [],
+            "NombreProyecto": "Doctorado Estudio Artisticos",
+            "ProyectoId": 28
+        },
+        {
+            "Aspirantes": [
+                {
+                    "Email": "aspirante01@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-04-10T00:00:00Z",
+                        "FechaCreacion": "2024-04-09 20:39:11.920553 +0000 +0000",
+                        "FechaModificacion": "2024-04-09 20:39:11.92064 +0000 +0000",
+                        "Id": 638,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 9866,
+                        "ProgramaAcademicoId": 26,
+                        "ReciboInscripcion": "",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "TRANSEXT",
+                            "Descripcion": "Inscripción de una transferencia externa",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "Id": 10,
+                            "NivelId": 2,
+                            "Nombre": "Transferencia externa",
+                            "NumeroOrden": 5
+                        }
+                    },
+                    "NombreAspirante": "Prueba Aspirante uno ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1234456",
+                    "Telefono": "4567889",
+                    "TipoInscripcion": "Transferencia externa",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "TRANSEXT",
+                        "Descripcion": "Inscripción de una transferencia externa",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "Id": 10,
+                        "NivelId": 2,
+                        "Nombre": "Transferencia externa",
+                        "NumeroOrden": 5
+                    }
+                },
+                {
+                    "Email": "aspirante01@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-04-10T00:00:00Z",
+                        "FechaCreacion": "2024-04-09 20:39:11.214923 +0000 +0000",
+                        "FechaModificacion": "2024-04-09 20:39:11.215006 +0000 +0000",
+                        "Id": 637,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 9866,
+                        "ProgramaAcademicoId": 26,
+                        "ReciboInscripcion": "",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "TRANSEXT",
+                            "Descripcion": "Inscripción de una transferencia externa",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "Id": 10,
+                            "NivelId": 2,
+                            "Nombre": "Transferencia externa",
+                            "NumeroOrden": 5
+                        }
+                    },
+                    "NombreAspirante": "Prueba Aspirante uno ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1234456",
+                    "Telefono": "4567889",
+                    "TipoInscripcion": "Transferencia externa",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "TRANSEXT",
+                        "Descripcion": "Inscripción de una transferencia externa",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "Id": 10,
+                        "NivelId": 2,
+                        "Nombre": "Transferencia externa",
+                        "NumeroOrden": 5
+                    }
+                },
+                {
+                    "Email": "aspirante01@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-04-09T00:00:00Z",
+                        "FechaCreacion": "2024-04-09 16:33:29.013581 +0000 +0000",
+                        "FechaModificacion": "2024-04-09 16:33:29.013667 +0000 +0000",
+                        "Id": 635,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 9866,
+                        "ProgramaAcademicoId": 26,
+                        "ReciboInscripcion": "",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "TRANSEXT",
+                            "Descripcion": "Inscripción de una transferencia externa",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "Id": 10,
+                            "NivelId": 2,
+                            "Nombre": "Transferencia externa",
+                            "NumeroOrden": 5
+                        }
+                    },
+                    "NombreAspirante": "Prueba Aspirante uno ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1234456",
+                    "Telefono": "4567889",
+                    "TipoInscripcion": "Transferencia externa",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "TRANSEXT",
+                        "Descripcion": "Inscripción de una transferencia externa",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "Id": 10,
+                        "NivelId": 2,
+                        "Nombre": "Transferencia externa",
+                        "NumeroOrden": 5
+                    }
+                }
+            ],
+            "NombreProyecto": "Maestría en ciencias de la información y las comunicaciones ",
+            "ProyectoId": 26
+        },
+        {
+            "Aspirantes": [
+                {
+                    "Email": "correo@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "Pago",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-01-15T00:00:00Z",
+                        "FechaCreacion": "2024-01-15 17:34:37.518646 +0000 +0000",
+                        "FechaModificacion": "2024-01-15 22:31:35.791545 +0000 +0000",
+                        "Id": 555,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 59806,
+                        "ProgramaAcademicoId": 29,
+                        "ReciboInscripcion": "8702/2021",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "Franz Gregorio Kafka Samsa",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "4546498",
+                    "Telefono": "3233633663",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                }
+            ],
+            "NombreProyecto": "Maestría en Ingeniería Civil",
+            "ProyectoId": 29
+        },
+        {
+            "Aspirantes": [
+                {
+                    "Email": "fdbarretos@correo.udistrital.edu.co",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "Vencido",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2023-10-27T00:00:00Z",
+                        "FechaCreacion": "2023-10-27 11:52:13.494789 +0000 +0000",
+                        "FechaModificacion": "2023-10-27 11:52:14.343522 +0000 +0000",
+                        "Id": 524,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 9436,
+                        "ProgramaAcademicoId": 32,
+                        "ReciboInscripcion": "50427/2023",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "Fabian  David Barreto Sanchez",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1118559031",
+                    "Telefono": "3173382506",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                }
+            ],
+            "NombreProyecto": "Maestría Estudios Artísticos  ",
+            "ProyectoId": 32
+        },
+        {
+            "Aspirantes": [
+                {
+                    "Email": "utest01",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "Vencido",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-01-15T00:00:00Z",
+                        "FechaCreacion": "2024-01-15 18:12:42.295991 +0000 +0000",
+                        "FechaModificacion": "2024-01-15 18:12:42.711977 +0000 +0000",
+                        "Id": 558,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 94,
+                        "ProgramaAcademicoId": 51,
+                        "ReciboInscripcion": "50445/2023",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "Fabian David Barreto Sanchez",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "11112111",
+                    "Telefono": "4529122",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                }
+            ],
+            "NombreProyecto": "nuevo probando",
+            "ProyectoId": 51
+        },
+        {
+            "Aspirantes": [
+                {
+                    "Email": "correoaspirante15@correo.com",
+                    "Enfasis": "Enfasis 1",
+                    "EnfasisId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "ENF1",
+                        "Descripcion": "Enfasis 1",
+                        "FechaCreacion": "2019-11-15 00:43:28.581532 +0000 +0000",
+                        "FechaModificacion": "2024-02-06 16:52:24.503968 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Enfasis 1",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "ADM",
+                        "Descripcion": "El aspirante es admitido",
+                        "FechaCreacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                        "FechaModificacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                        "Id": 2,
+                        "Nombre": "ADMITIDO",
+                        "NumeroOrden": 2
+                    },
+                    "EstadoRecibo": "Pago",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 1,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "ADM",
+                            "Descripcion": "El aspirante es admitido",
+                            "FechaCreacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                            "FechaModificacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                            "Id": 2,
+                            "Nombre": "ADMITIDO",
+                            "NumeroOrden": 2
+                        },
+                        "FechaAceptaTerminos": "2024-01-12T00:00:00Z",
+                        "FechaCreacion": "2024-01-12 15:05:22.248966 +0000 +0000",
+                        "FechaModificacion": "2024-04-09 09:37:53.77337 +0000 +0000",
+                        "Id": 553,
+                        "NotaFinal": 406.4,
+                        "PeriodoId": 40,
+                        "PersonaId": 59842,
+                        "ProgramaAcademicoId": 27,
+                        "ReciboInscripcion": "8702/2021",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "Prueba aspirante15 prueba prueba",
+                    "NotaFinal": 406.4,
+                    "NumeroDocumento": "94989794",
+                    "Telefono": "3173382506",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                },
+                {
+                    "Email": "aspirante18@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "ADM",
+                        "Descripcion": "El aspirante es admitido",
+                        "FechaCreacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                        "FechaModificacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                        "Id": 2,
+                        "Nombre": "ADMITIDO",
+                        "NumeroOrden": 2
+                    },
+                    "EstadoRecibo": "Pago",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "ADM",
+                            "Descripcion": "El aspirante es admitido",
+                            "FechaCreacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                            "FechaModificacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                            "Id": 2,
+                            "Nombre": "ADMITIDO",
+                            "NumeroOrden": 2
+                        },
+                        "FechaAceptaTerminos": "2024-01-15T00:00:00Z",
+                        "FechaCreacion": "2024-01-15 18:14:04.99727 +0000 +0000",
+                        "FechaModificacion": "2024-03-05 08:16:26.524172 +0000 +0000",
+                        "Id": 559,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 59844,
+                        "ProgramaAcademicoId": 27,
+                        "ReciboInscripcion": "8702/2021",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "prueba prueba prueba prueba",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1111111111",
+                    "Telefono": "55555555",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                },
+                {
+                    "Email": "aspirante17@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "Pago",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-01-16T00:00:00Z",
+                        "FechaCreacion": "2024-01-23 00:32:00.773242 +0000 +0000",
+                        "FechaModificacion": "2024-02-11 21:43:54.134049 +0000 +0000",
+                        "Id": 566,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 59845,
+                        "ProgramaAcademicoId": 27,
+                        "ReciboInscripcion": "8702/2021",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "prueba aspirante vva ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1234567788",
+                    "Telefono": "12345677",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                },
+                {
+                    "Email": "aspirante17@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCOBS",
+                        "Descripcion": "Aspirante inscrito tiene documentos no aprobados",
+                        "FechaCreacion": "2023-04-18 17:09:59.510881 +0000 +0000",
+                        "FechaModificacion": "2023-04-18 17:09:59.510992 +0000 +0000",
+                        "Id": 6,
+                        "Nombre": "INSCRITO con Observación",
+                        "NumeroOrden": 6
+                    },
+                    "EstadoRecibo": "Pago",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCOBS",
+                            "Descripcion": "Aspirante inscrito tiene documentos no aprobados",
+                            "FechaCreacion": "2023-04-18 17:09:59.510881 +0000 +0000",
+                            "FechaModificacion": "2023-04-18 17:09:59.510992 +0000 +0000",
+                            "Id": 6,
+                            "Nombre": "INSCRITO con Observación",
+                            "NumeroOrden": 6
+                        },
+                        "FechaAceptaTerminos": "2024-01-16T00:00:00Z",
+                        "FechaCreacion": "2024-01-15 19:15:47.859732 +0000 +0000",
+                        "FechaModificacion": "2024-03-06 01:36:41.537261 +0000 +0000",
+                        "Id": 560,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 59845,
+                        "ProgramaAcademicoId": 27,
+                        "ReciboInscripcion": "8702/2021",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "prueba aspirante vva ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1234567788",
+                    "Telefono": "12345677",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                },
+                {
+                    "Email": "correo@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "ADM",
+                        "Descripcion": "El aspirante es admitido",
+                        "FechaCreacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                        "FechaModificacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                        "Id": 2,
+                        "Nombre": "ADMITIDO",
+                        "NumeroOrden": 2
+                    },
+                    "EstadoRecibo": "Vencido",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "ADM",
+                            "Descripcion": "El aspirante es admitido",
+                            "FechaCreacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                            "FechaModificacion": "2020-09-09 08:06:21.078846 +0000 +0000",
+                            "Id": 2,
+                            "Nombre": "ADMITIDO",
+                            "NumeroOrden": 2
+                        },
+                        "FechaAceptaTerminos": "2024-01-29T00:00:00Z",
+                        "FechaCreacion": "2024-01-29 13:37:40.936672 +0000 +0000",
+                        "FechaModificacion": "2024-03-17 10:45:38.291759 +0000 +0000",
+                        "Id": 597,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 59806,
+                        "ProgramaAcademicoId": 27,
+                        "ReciboInscripcion": "50462/2023",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "Franz Gregorio Kafka Samsa",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "4546498",
+                    "Telefono": "3233633663",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                },
+                {
+                    "Email": "aspirante52@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "Vencido",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-01-25T00:00:00Z",
+                        "FechaCreacion": "2024-01-25 11:18:48.761282 +0000 +0000",
+                        "FechaModificacion": "2024-01-25 11:18:49.051798 +0000 +0000",
+                        "Id": 578,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 59848,
+                        "ProgramaAcademicoId": 27,
+                        "ReciboInscripcion": "50460/2023",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "Juan  Ramirez ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1010246935",
+                    "Telefono": "3124572390",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                },
+                {
+                    "Email": "aspirante51@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "Vencido",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-01-25T00:00:00Z",
+                        "FechaCreacion": "2024-01-25 11:15:34.675664 +0000 +0000",
+                        "FechaModificacion": "2024-01-25 11:15:35.084866 +0000 +0000",
+                        "Id": 577,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 59847,
+                        "ProgramaAcademicoId": 27,
+                        "ReciboInscripcion": "50459/2023",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "ana ana perez perez",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1010246321",
+                    "Telefono": "3203451278",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                },
+                {
+                    "Email": "aspirante50@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "Pago",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-01-16T00:00:00Z",
+                        "FechaCreacion": "2024-01-16 10:05:05.491901 +0000 +0000",
+                        "FechaModificacion": "2024-01-16 10:12:30.16142 +0000 +0000",
+                        "Id": 561,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 59846,
+                        "ProgramaAcademicoId": 27,
+                        "ReciboInscripcion": "8702/2021",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "Pedro  Rondon ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1010245234",
+                    "Telefono": "3124236547",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                },
+                {
+                    "Email": "correo@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "Pago",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-01-25T00:00:00Z",
+                        "FechaCreacion": "2024-01-25 16:07:22.251753 +0000 +0000",
+                        "FechaModificacion": "2024-01-25 16:07:22.85459 +0000 +0000",
+                        "Id": 579,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 59805,
+                        "ProgramaAcademicoId": 27,
+                        "ReciboInscripcion": "8702/2021",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "Franz Gregorio Kafka Samsa",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "4546498",
+                    "Telefono": "555555",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                },
+                {
+                    "Email": "aspirante06",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "Vencido",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-02-01T00:00:00Z",
+                        "FechaCreacion": "2024-01-31 19:43:57.977639 +0000 +0000",
+                        "FechaModificacion": "2024-01-31 19:43:58.529443 +0000 +0000",
+                        "Id": 598,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 9871,
+                        "ProgramaAcademicoId": 27,
+                        "ReciboInscripcion": "50463/2023",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "NUEPOS",
+                            "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                            "Id": 15,
+                            "NivelId": 2,
+                            "Nombre": "Nueva",
+                            "NumeroOrden": 2
+                        }
+                    },
+                    "NombreAspirante": "Prueba Aspirante Seis ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1234453",
+                    "Telefono": "23122213",
+                    "TipoInscripcion": "Nueva",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "NUEPOS",
+                        "Descripcion": "Inscripción de un aspirante nuevo nivel posgrado",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "FechaModificacion": "2020-01-14 00:07:37.339022 +0000 +0000",
+                        "Id": 15,
+                        "NivelId": 2,
+                        "Nombre": "Nueva",
+                        "NumeroOrden": 2
+                    }
+                }
+            ],
+            "NombreProyecto": "Posgrado Prueba",
+            "ProyectoId": 27
+        },
+        {
+            "Aspirantes": [],
+            "NombreProyecto": "Prueba de codigo interno",
+            "ProyectoId": 53
+        },
+        {
+            "Aspirantes": [],
+            "NombreProyecto": "Prueba enfasis`",
+            "ProyectoId": 48
+        },
+        {
+            "Aspirantes": [
+                {
+                    "Email": "aspirante01@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-04-10T00:00:00Z",
+                        "FechaCreacion": "2024-04-09 22:51:21.267352 +0000 +0000",
+                        "FechaModificacion": "2024-04-09 22:51:21.267444 +0000 +0000",
+                        "Id": 649,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 9866,
+                        "ProgramaAcademicoId": 58,
+                        "ReciboInscripcion": "",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "TRANSEXT",
+                            "Descripcion": "Inscripción de una transferencia externa",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "Id": 10,
+                            "NivelId": 2,
+                            "Nombre": "Transferencia externa",
+                            "NumeroOrden": 5
+                        }
+                    },
+                    "NombreAspirante": "Prueba Aspirante uno ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1234456",
+                    "Telefono": "4567889",
+                    "TipoInscripcion": "Transferencia externa",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "TRANSEXT",
+                        "Descripcion": "Inscripción de una transferencia externa",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "Id": 10,
+                        "NivelId": 2,
+                        "Nombre": "Transferencia externa",
+                        "NumeroOrden": 5
+                    }
+                },
+                {
+                    "Email": "aspirante01@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-04-10T00:00:00Z",
+                        "FechaCreacion": "2024-04-09 22:49:24.838302 +0000 +0000",
+                        "FechaModificacion": "2024-04-09 22:49:24.838407 +0000 +0000",
+                        "Id": 648,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 9866,
+                        "ProgramaAcademicoId": 58,
+                        "ReciboInscripcion": "",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "TRANSEXT",
+                            "Descripcion": "Inscripción de una transferencia externa",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "Id": 10,
+                            "NivelId": 2,
+                            "Nombre": "Transferencia externa",
+                            "NumeroOrden": 5
+                        }
+                    },
+                    "NombreAspirante": "Prueba Aspirante uno ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1234456",
+                    "Telefono": "4567889",
+                    "TipoInscripcion": "Transferencia externa",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "TRANSEXT",
+                        "Descripcion": "Inscripción de una transferencia externa",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "Id": 10,
+                        "NivelId": 2,
+                        "Nombre": "Transferencia externa",
+                        "NumeroOrden": 5
+                    }
+                },
+                {
+                    "Email": "aspirante01@correo.com",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-04-10T00:00:00Z",
+                        "FechaCreacion": "2024-04-09 22:47:52.759292 +0000 +0000",
+                        "FechaModificacion": "2024-04-09 22:47:52.759382 +0000 +0000",
+                        "Id": 647,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 9866,
+                        "ProgramaAcademicoId": 58,
+                        "ReciboInscripcion": "",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "TRANSEXT",
+                            "Descripcion": "Inscripción de una transferencia externa",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                            "Id": 10,
+                            "NivelId": 2,
+                            "Nombre": "Transferencia externa",
+                            "NumeroOrden": 5
+                        }
+                    },
+                    "NombreAspirante": "Prueba Aspirante uno ",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "1234456",
+                    "Telefono": "4567889",
+                    "TipoInscripcion": "Transferencia externa",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "TRANSEXT",
+                        "Descripcion": "Inscripción de una transferencia externa",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "FechaModificacion": "2020-01-08 12:22:40.315085 +0000 +0000",
+                        "Id": 10,
+                        "NivelId": 2,
+                        "Nombre": "Transferencia externa",
+                        "NumeroOrden": 5
+                    }
+                }
+            ],
+            "NombreProyecto": "Prueba posgrado n",
+            "ProyectoId": 58
+        },
+        {
+            "Aspirantes": [],
+            "NombreProyecto": "Doctorado interinstitucional en educación",
+            "ProyectoId": 30
+        },
+        {
+            "Aspirantes": [
+                {
+                    "Email": "utest01",
+                    "Enfasis": "Por definir",
+                    "EnfasisId": {
+                        "Nombre": "Por definir"
+                    },
+                    "EstadoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "INSCSOL",
+                        "Descripcion": "La inscripción fue solicitada",
+                        "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                        "Id": 1,
+                        "Nombre": "Inscripción solicitada",
+                        "NumeroOrden": 1
+                    },
+                    "EstadoRecibo": "Vencido",
+                    "Inscripcion": {
+                        "AceptaTerminos": true,
+                        "Activo": true,
+                        "EnfasisId": 0,
+                        "EstadoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "INSCSOL",
+                            "Descripcion": "La inscripción fue solicitada",
+                            "FechaCreacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "FechaModificacion": "2019-12-06 13:59:46.407272 +0000 +0000",
+                            "Id": 1,
+                            "Nombre": "Inscripción solicitada",
+                            "NumeroOrden": 1
+                        },
+                        "FechaAceptaTerminos": "2024-01-15T00:00:00Z",
+                        "FechaCreacion": "2024-01-15 11:09:18.911048 +0000 +0000",
+                        "FechaModificacion": "2024-01-15 11:09:19.30864 +0000 +0000",
+                        "Id": 554,
+                        "NotaFinal": 0,
+                        "PeriodoId": 40,
+                        "PersonaId": 94,
+                        "ProgramaAcademicoId": 31,
+                        "ReciboInscripcion": "50443/2023",
+                        "TipoInscripcionId": {
+                            "Activo": true,
+                            "CodigoAbreviacion": "MOVACA",
+                            "Descripcion": "Inscripción de una movilidad académica",
+                            "Especial": false,
+                            "FechaCreacion": "2020-01-08 12:22:40.319793 +0000 +0000",
+                            "FechaModificacion": "2020-01-08 12:22:40.319793 +0000 +0000",
+                            "Id": 12,
+                            "NivelId": 2,
+                            "Nombre": "Movilidad Académica",
+                            "NumeroOrden": 7
+                        }
+                    },
+                    "NombreAspirante": "Fabian David Barreto Sanchez",
+                    "NotaFinal": 0,
+                    "NumeroDocumento": "11112111",
+                    "Telefono": "4529122",
+                    "TipoInscripcion": "Movilidad Académica",
+                    "TipoInscripcionId": {
+                        "Activo": true,
+                        "CodigoAbreviacion": "MOVACA",
+                        "Descripcion": "Inscripción de una movilidad académica",
+                        "Especial": false,
+                        "FechaCreacion": "2020-01-08 12:22:40.319793 +0000 +0000",
+                        "FechaModificacion": "2020-01-08 12:22:40.319793 +0000 +0000",
+                        "Id": 12,
+                        "NivelId": 2,
+                        "Nombre": "Movilidad Académica",
+                        "NumeroOrden": 7
+                    }
+                }
+            ],
+            "NombreProyecto": "Maestría en Ingeniería Industrial",
+            "ProyectoId": 31
+        }
+    ]
+}
