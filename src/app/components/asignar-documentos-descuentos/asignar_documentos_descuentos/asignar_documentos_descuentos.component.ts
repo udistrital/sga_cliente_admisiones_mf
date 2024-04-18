@@ -57,7 +57,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
     private popUpManager: PopUpManager,
     private inscripcionService: InscripcionService,
     private userService: UserService,
-
+    private oikosService: OikosService,
     private sgaMidAdmisiones: SgaAdmisionesMid,
     private autenticationService: ImplicitAutenticationService,) {
     this.translate = translate;
