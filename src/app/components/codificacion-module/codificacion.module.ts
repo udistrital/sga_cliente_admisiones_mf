@@ -17,13 +17,14 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from '@angular/material/tooltip'
 
 import { TranslateModule } from "@ngx-translate/core";
-import { ReporteCodificacionComponent } from './components/reporte-codificacion/reporte-codificacion.component';
 
-import { SafeUrlPipe } from "../core/pipes/safe-url.pipe";
-import { ReporteVisualizerComponent } from './components/reporte-visualizer/reporte-visualizer.component';
+
+import { SafeUrlPipe } from "src/app/core/pipes/safe-url.pipe";
+import { ReporteVisualizerComponent } from "../reporte-visualizer/reporte-visualizer.component";
+import { RepotesInscripcionesComponent } from "../repotes-inscripciones/repotes-inscripciones.component";
 
 @NgModule({
-  declarations: [CodificacionComponent, ReporteCodificacionComponent, SafeUrlPipe, ReporteVisualizerComponent],
+  declarations: [CodificacionComponent, RepotesInscripcionesComponent, SafeUrlPipe, ReporteVisualizerComponent],
   imports: [
     CommonModule,
     CodificacionRoutingModule,
