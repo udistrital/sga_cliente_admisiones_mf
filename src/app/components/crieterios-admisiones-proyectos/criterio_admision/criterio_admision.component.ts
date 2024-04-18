@@ -51,7 +51,8 @@ export class CriterioAdmisionComponent implements OnChanges {
   
   @Output('result') result: EventEmitter<any> = new EventEmitter();
 
-  ofertarOpcion!: FormGroup;
+  ofertarOpcion2!: FormGroup;
+  ofertarOpcion3!: FormGroup;
 
   inscripcion_id!: number;
   info_persona_id!: number;
@@ -157,7 +158,10 @@ export class CriterioAdmisionComponent implements OnChanges {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
     });
     // this.dataSource = new LocalDataSource();
-    this.ofertarOpcion = this.builder.group({
+    this.ofertarOpcion2 = this.builder.group({
+      opcion:[false, Validators.required],
+    });
+    this.ofertarOpcion3 = this.builder.group({
       opcion:[false, Validators.required],
     });
     this.total = true;
@@ -310,7 +314,8 @@ export class CriterioAdmisionComponent implements OnChanges {
             const criterio_aux: any = this.criterios.find((e: any) => e.Id === element.RequisitoId.Id)
             const subcriterios_aux = JSON.parse(element.PorcentajeEspecifico).areas
             criterio_aux['Porcentaje'] = element.PorcentajeGeneral
-            const ofertarOpcion_aux = element.OfertarOpcion
+            const ofertarOpcion_aux2 = element.OfertarOpcion2
+            const ofertarOpcion_aux3 = element.OfertarOpcion3
 
             if (element.PuntajeMinimoExamenEstado) {
               const valorMinimo_aux = element.PuntajeMinimoExamenEstado
@@ -327,7 +332,8 @@ export class CriterioAdmisionComponent implements OnChanges {
               }
             });
             this.criterio_selected.push(criterio_aux)
-            this.ofertarOpcion.controls['opcion'].setValue(ofertarOpcion_aux);
+            this.ofertarOpcion2.controls['opcion'].setValue(ofertarOpcion_aux2);
+            this.ofertarOpcion3.controls['opcion'].setValue(ofertarOpcion_aux3);
             
           });
 
@@ -335,7 +341,8 @@ export class CriterioAdmisionComponent implements OnChanges {
           this.viewtab();
         } else {
           this.criterio_selected = []
-          this.ofertarOpcion.controls['opcion'].setValue(false);
+          this.ofertarOpcion2.controls['opcion'].setValue(false);
+          this.ofertarOpcion3.controls['opcion'].setValue(false);
           this.valorMinimo = 0;
           this.Campo2Control = new FormControl(this.criterio_selected)
           // this.viewtab();
@@ -909,8 +916,11 @@ export class CriterioAdmisionComponent implements OnChanges {
     requisitoPost.RequisitoId = { 'Id': this.dataSource.data[i].Id };
     requisitoPost.Activo = true;
     requisitoPost.PorcentajeEspecifico = '{}';
-    requisitoPost.OfertarOpcion = this.ofertarOpcion.value.opcion;
+    requisitoPost.OfertarOpcion2 = this.ofertarOpcion2.value.opcion;
+    requisitoPost.OfertarOpcion3 = this.ofertarOpcion3.value.opcion;
     requisitoPost.PuntajeMinimoExamenEstado = Number(this.valorMinimo);
+
+    console.log("ACAAAAAAAAAAAAAAAAAAA",requisitoPost)
 
     this.evaluacionService.post('requisito_programa_academico', requisitoPost)
       .subscribe(res => {
