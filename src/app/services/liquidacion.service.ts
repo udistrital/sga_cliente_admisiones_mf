@@ -37,4 +37,3 @@ export class LiquidacionService {
     return this.requestManager.delete(endpoint, element.Id);
   }
 }
-

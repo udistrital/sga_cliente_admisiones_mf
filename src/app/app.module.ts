@@ -31,17 +31,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { PopUpManager } from './managers/popUpManager';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -89,7 +78,6 @@ import { RepotesInscripcionesComponent } from './components/repotes-inscripcione
 
 import { SafeUrlPipe } from './core/pipes/safe-url.pipe';
 import { ReporteVisualizerComponent } from './components/reporte-visualizer/reporte-visualizer.component';
-import { LiquidacionRecibosComponent } from './components/liquidacion/liquidacion-recibos/liquidacion-recibos.component';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 
 import { LiquidacionTableComponent } from './components/liquidacion/liquidacion-table/liquidacion-table.component';
@@ -118,12 +106,14 @@ export function createTranslateLoader(http: HttpClient) {
     DinamicformComponent,
     DialogoCriteriosComponent,
     DialogPreviewFileComponent,
-    //EvaluacionAspirantesComponent,
-    //CheckboxAssistanceComponent,
+    EvaluacionAspirantesComponent,
+    CheckboxAssistanceComponent,
     EvaluacionDocumentosInscritosComponent,
     DialogoDocumentosComponent,
+    AdministracionCuentaBancariaComponent,
     PerfilComponent,
     DinamicformComponent,
+    ListadoHistoricoComponent,
     DinamicformComponent,
     ViewIdiomasComponent,
     TransferenciaComponent,
@@ -167,7 +157,7 @@ export function createTranslateLoader(http: HttpClient) {
     RepotesInscripcionesComponent,
     LiquidacionRecibosComponent,
     LiquidacionHistoricoComponent,
-    LiquidacionTableComponent
+    LiquidacionTableComponent,
     ListadoAspiranteComponent,
     AdministracionCuentaBancariaComponent,
     ComentariosCuposComponent
