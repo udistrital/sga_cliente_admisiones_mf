@@ -14,6 +14,7 @@ export class DialogoCriteriosComponent implements OnInit {
 
   criterio!: any;
   criterioForm!: FormGroup;
+  examenEstadoForm!: FormGroup;
   subcriterio: boolean;
 
   constructor(
@@ -33,6 +34,13 @@ export class DialogoCriteriosComponent implements OnInit {
       Descripcion: ['', Validators.required],
       CodigoAbreviacion: ['', Validators.required],
       Asistencia: [false, Validators.required],
+      ExamenEstado: [false, Validators.required],
+    });
+    this.examenEstadoForm = this.builder.group({
+      Saber11:[false, Validators.required],
+      SaberPro:[false, Validators.required],
+      SPN:[false, Validators.required],
+      ArchivoAdjunto: [false, Validators.required],
     });
     if (this.data.oldCriterio !== undefined) {
       this.criterioForm.setValue({
@@ -40,6 +48,13 @@ export class DialogoCriteriosComponent implements OnInit {
         Descripcion: this.data.oldCriterio.Descripcion,
         CodigoAbreviacion: this.data.oldCriterio.CodigoAbreviacion,
         Asistencia: this.data.oldCriterio.Asistencia,
+        ExamenEstado: this.data.oldCriterio.ExamenEstado,
+      });
+      this.examenEstadoForm.setValue({
+        Saber11: this.data.oldCriterio.Subcriterios.find((subcriterio: any) => subcriterio.Nombre === 'Saber11') !== undefined,
+        SaberPro: this.data.oldCriterio.Subcriterios.find((subcriterio: any) => subcriterio.Nombre === 'SaberPro') !== undefined,
+        SPN: this.data.oldCriterio.Subcriterios.find((subcriterio: any) => subcriterio.Nombre === 'SPN') !== undefined,
+        ArchivoAdjunto: this.data.oldCriterio.Subcriterios.find((subcriterio: any) => subcriterio.Nombre === 'ArchivoAdjunto') !== undefined,
       });
     }
   }
@@ -57,6 +72,10 @@ export class DialogoCriteriosComponent implements OnInit {
           this.criterio.Activo = true;
           this.criterio.NumeroOrden = 1;
           this.criterio.RequisitoPadreId = null;
+
+          if (this.criterioForm.value.ExamenEstado === true) {
+            this.criterio.Subcriterios = this.subcriteriosExamenEstado();
+          }
         } else {
           this.criterio = this.data.oldCriterio;
           this.criterio.Nombre = this.criterioForm.value.Nombre;
@@ -64,9 +83,27 @@ export class DialogoCriteriosComponent implements OnInit {
           this.criterio.CodigoAbreviacion = this.criterioForm.value.CodigoAbreviacion;
           this.criterio.Asistencia = this.criterioForm.value.Asistencia;
         }
+        console.log(this.criterio);
         this.dialogRef.close(this.criterio);
       }
     });
+  }
+
+  subcriteriosExamenEstado(){
+    const subcriterios = [];
+    for (const controlName in this.examenEstadoForm.controls) {
+      console.log(controlName);
+
+      if (this.examenEstadoForm.get(controlName)?.value) {
+        const subcriterio = new Criterio();
+        subcriterio.Activo = true;
+        subcriterio.Nombre = controlName;
+        subcriterio.Descripcion = controlName;
+        subcriterio.CodigoAbreviacion = controlName;
+        subcriterios.push(subcriterio);
+      }
+    }
+    return subcriterios;
   }
 
 }

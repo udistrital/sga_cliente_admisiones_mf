@@ -93,9 +93,24 @@ export class AdministradorCriteriosComponent implements OnInit {
     this.dialogConfig.data = {};
     const criterioDialog = this.dialog.open(DialogoCriteriosComponent, this.dialogConfig);
     criterioDialog.afterClosed().subscribe((criterio: Criterio) => {
+      console.log("Criterioooooooooooooooooo",criterio)
       if (criterio !== undefined) {
         this.admisiones.post('requisito', criterio).subscribe(
           (response: any) => {
+            if(criterio.Subcriterios && criterio.Subcriterios.length > 0){
+              criterio.Subcriterios.forEach((subcriterio:any) => {
+                subcriterio.RequisitoPadreId = { Id: response.Id };
+                this.admisiones.post('requisito', subcriterio).subscribe(
+                  (response: any) => {
+                    console.log("AAAAAAAAAAAAAAAAAAAAAA",response)
+                  },
+                  (error:any) => {
+                    this.popUpManager.showErrorToast(this.translate.instant('admision.error_registro_criterio'));
+                  },
+                );
+              });
+            }
+            console.log("AAAAAAAAAAAAAAAAAAAAAA",response)
             const newCriterio: Criterio = <Criterio>response;
             newCriterio.Subcriterios = [];
             this.criterios.push(newCriterio);
@@ -161,7 +176,6 @@ export class AdministradorCriteriosComponent implements OnInit {
           (response: any) => {
             const newSubcriterio: Criterio = <Criterio>response;
             criterio.Subcriterios.push(newSubcriterio);
-            event.source.load(criterio.Subcriterios);
             this.popUpManager.showSuccessAlert(this.translate.instant('admision.criterio_exito'));
           },
           (error: any) => {
