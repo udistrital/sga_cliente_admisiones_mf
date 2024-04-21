@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OikosService } from 'src/app/services/oikos.service';
@@ -21,12 +21,14 @@ export class RepotesInscripcionesComponent {
   periodosAcademicos: any[] = [];
   facultades: any[] = [];
   proyectos: any[] = [];
+  niveles: any[] = [];
   reportePdf: string = "";
   reporteExcel: string = "";
   isDocuments: boolean = false
   blobPdf: Blob = new Blob;
   columnas: any[] = []
   tipoReporte = tipoReporteInscritos
+  generalReport: boolean = false
 
   displayedColumns: string[] = ['Periodo', 'Facultad', 'Proyecto', 'Acciones'];
   dataSource: { Periodo: string, Facultad: string, Proyecto: string }[] = [];
@@ -48,6 +50,7 @@ export class RepotesInscripcionesComponent {
       proyectoCurricular: ["", Validators.required],
       tipoReporte: ["", Validators.required],
       selectColumnas: ["", Validators.required],
+      selectNiveles: [""],
     });
   }
 
@@ -80,12 +83,31 @@ export class RepotesInscripcionesComponent {
     )
   }
 
+  caragarNivelesAcademicos() {
+    this.sgaProyectoAcademicoService.get(`nivel_formacion?query=&limit=0&sortby=Nombre&order=asc`).subscribe(
+      (Response: any) => {
+        this.niveles = Response
+      }
+    )
+  }
+
   onFacultadChange(event: any) {
     const facultadId = event.value;
     this.caragarProyectosAcademicos(facultadId)
   }
 
+  onNivelAcademicoChange(event: any) {
+    this.reporteForm.get('proyectoCurricular')?.setValue(event.value)
+    this.reporteForm.get('facultad')?.setValue(0)
+  }
+
   onReporteChange(event: any) {
+    if (event.value == 4) {
+      this.caragarNivelesAcademicos()
+      this.generalReport = true
+    } else {
+      this.generalReport = false
+    }
     this.reporteForm.get('selectColumnas')?.setValue([])
     this.columnas = this.tipoReporte[event.value - 1].Columnas
   }
@@ -141,8 +163,16 @@ export class RepotesInscripcionesComponent {
       const idProyecto = this.reporteForm.get('proyectoCurricular')?.value
       const idPeriodo = this.reporteForm.get('periodoAcademico')?.value
       const idFacultad = this.reporteForm.get('facultad')?.value
-      const nombreProyecto = (this.proyectos.find(element => element.Id === idProyecto)).Nombre
-      const nombreFacultad = (this.facultades.find(element => element.Id === idFacultad)).Nombre
+      let nombreProyecto = ""
+      let nombreFacultad = ""
+      if( this.generalReport){
+        nombreProyecto = (this.niveles.find(element => element.Id === idProyecto)).Nombre
+        nombreFacultad = (this.niveles.find(element => element.Id === idProyecto)).Nombre
+      }else {
+        nombreProyecto = (this.proyectos.find(element => element.Id === idProyecto)).Nombre
+        nombreFacultad = (this.facultades.find(element => element.Id === idFacultad)).Nombre
+      }
+      
       const nombrePeriodo = (this.periodosAcademicos.find(element => element.Id === idPeriodo)).Nombre
       this.dataSource = [
         { Periodo: nombrePeriodo, Facultad: nombreFacultad, Proyecto: nombreProyecto }

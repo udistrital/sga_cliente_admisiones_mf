@@ -102,4 +102,47 @@ export const tipoReporteInscritos = [{
         "Nombre": "Estado",
         "Valor": "G"
       }]
-  },]
+  },
+  {
+    "Nombre": "Listar todos los Aspirantes",
+    "Codigo": 4,
+    "Columnas": [{
+        "Nombre": "#",
+        "Valor": "A"
+      },
+      {
+        "Nombre": "Documento",
+        "Valor": "B"
+      },
+      {
+        "Nombre": "Nombre",
+        "Valor": "C"
+      },
+      {
+        "Nombre": "Teléfono",
+        "Valor": "D"
+      }, {
+        "Nombre": "Correo",
+        "Valor": "E"
+      },
+      {
+        "Nombre": "Puntaje",
+        "Valor": "F"
+      },
+      {
+        "Nombre": "Tipo de inscripción",
+        "Valor": "G"
+      },
+      {
+        "Nombre": "Enfasis",
+        "Valor": "H"
+      },
+      {
+        "Nombre": "Estado inscripción",
+        "Valor": "I"
+      },
+      {
+        "Nombre": "Estado recibo",
+        "Valor": "J"
+      }]
+  }]

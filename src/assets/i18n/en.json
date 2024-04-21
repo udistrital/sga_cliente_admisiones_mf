@@ -1063,9 +1063,8 @@
         "Periodo": "Period",
         "Facultad": "Faculty",
         "Proyecto": "Project",
-        "Acciones": "Actions"
-
-
+        "Acciones": "Actions",
+        "SelectNivel": "Select level"
 
     },
     "evento": {
