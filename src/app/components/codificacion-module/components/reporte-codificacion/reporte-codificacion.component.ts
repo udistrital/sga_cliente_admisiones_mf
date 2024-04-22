@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OikosService } from 'src/app/services/oikos.service';
@@ -6,29 +6,24 @@ import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.se
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { saveAs } from 'file-saver';
 import { MatDialog } from '@angular/material/dialog';
-import { ReporteVisualizerComponent } from '../reporte-visualizer/reporte-visualizer.component';
+import { ReporteVisualizerComponent } from 'src/app/components/reporte-visualizer/reporte-visualizer.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { tipoReporteInscritos } from 'src/app/models/reportes/tipo-reportes-inscripciones';
-
 @Component({
-  selector: 'app-repotes-inscripciones',
-  templateUrl: './repotes-inscripciones.component.html',
-  styleUrls: ['./repotes-inscripciones.component.scss']
+  selector: 'app-reporte-codificacion',
+  templateUrl: './reporte-codificacion.component.html',
+  styleUrls: ['./reporte-codificacion.component.scss']
 })
-export class RepotesInscripcionesComponent {
+export class ReporteCodificacionComponent implements OnInit {
+
 
   reporteForm: FormGroup;
   periodosAcademicos: any[] = [];
   facultades: any[] = [];
   proyectos: any[] = [];
-  niveles: any[] = [];
   reportePdf: string = "";
   reporteExcel: string = "";
   isDocuments: boolean = false
   blobPdf: Blob = new Blob;
-  columnas: any[] = []
-  tipoReporte = tipoReporteInscritos
-  generalReport: boolean = false
 
   displayedColumns: string[] = ['Periodo', 'Facultad', 'Proyecto', 'Acciones'];
   dataSource: { Periodo: string, Facultad: string, Proyecto: string }[] = [];
@@ -48,9 +43,6 @@ export class RepotesInscripcionesComponent {
       periodoAcademico: ["", Validators.required],
       facultad: ["", Validators.required],
       proyectoCurricular: ["", Validators.required],
-      tipoReporte: ["", Validators.required],
-      selectColumnas: ["", Validators.required],
-      selectNiveles: [""],
     });
   }
 
@@ -83,33 +75,9 @@ export class RepotesInscripcionesComponent {
     )
   }
 
-  caragarNivelesAcademicos() {
-    this.sgaProyectoAcademicoService.get(`nivel_formacion?query=&limit=0&sortby=Nombre&order=asc`).subscribe(
-      (Response: any) => {
-        this.niveles = Response
-      }
-    )
-  }
-
   onFacultadChange(event: any) {
     const facultadId = event.value;
     this.caragarProyectosAcademicos(facultadId)
-  }
-
-  onNivelAcademicoChange(event: any) {
-    this.reporteForm.get('proyectoCurricular')?.setValue(event.value)
-    this.reporteForm.get('facultad')?.setValue(0)
-  }
-
-  onReporteChange(event: any) {
-    if (event.value == 4) {
-      this.caragarNivelesAcademicos()
-      this.generalReport = true
-    } else {
-      this.generalReport = false
-    }
-    this.reporteForm.get('selectColumnas')?.setValue([])
-    this.columnas = this.tipoReporte[event.value - 1].Columnas
   }
 
   downloadFile(base64: string, fileName: string) {
@@ -141,7 +109,6 @@ export class RepotesInscripcionesComponent {
     });
   }
 
-
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
@@ -152,33 +119,17 @@ export class RepotesInscripcionesComponent {
       this.openSnackBar("Generando reporte porfavor espera", "Aceptar")
 
       this.isDocuments = false
-
-      const dataReporte = {
-        "Proyecto": this.reporteForm.get('proyectoCurricular')?.value,
-        "Periodo": this.reporteForm.get('periodoAcademico')?.value,
-        "Reporte": this.reporteForm.get('tipoReporte')?.value,
-        "Columnas": this.reporteForm.get('selectColumnas')?.value
-      }
-
       const idProyecto = this.reporteForm.get('proyectoCurricular')?.value
       const idPeriodo = this.reporteForm.get('periodoAcademico')?.value
       const idFacultad = this.reporteForm.get('facultad')?.value
-      let nombreProyecto = ""
-      let nombreFacultad = ""
-      if( this.generalReport){
-        nombreProyecto = (this.niveles.find(element => element.Id === idProyecto)).Nombre
-        nombreFacultad = (this.niveles.find(element => element.Id === idProyecto)).Nombre
-      }else {
-        nombreProyecto = (this.proyectos.find(element => element.Id === idProyecto)).Nombre
-        nombreFacultad = (this.facultades.find(element => element.Id === idFacultad)).Nombre
-      }
-      
+      const nombreProyecto = (this.proyectos.find(element => element.Id === idProyecto)).Nombre
+      const nombreFacultad = (this.facultades.find(element => element.Id === idFacultad)).Nombre
       const nombrePeriodo = (this.periodosAcademicos.find(element => element.Id === idPeriodo)).Nombre
       this.dataSource = [
         { Periodo: nombrePeriodo, Facultad: nombreFacultad, Proyecto: nombreProyecto }
       ]
 
-      this.sgaAdmisionesMidService.post('reporte', dataReporte).subscribe(
+      this.sgaAdmisionesMidService.get(`reporte/?id_periodo=${idPeriodo}&id_proyecto=${idProyecto}`).subscribe(
         (Response: any) => {
           if (Response.status == 200 && Response.success) {
 
@@ -194,7 +145,8 @@ export class RepotesInscripcionesComponent {
 
     } else {
       // Display an error message or handle invalid form state
-      //console.log('Please fill in all required fields.');
+      console.log('Please fill in all required fields.');
     }
   }
+
 }
