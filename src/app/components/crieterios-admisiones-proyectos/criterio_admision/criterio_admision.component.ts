@@ -534,11 +534,10 @@ export class CriterioAdmisionComponent implements OnChanges {
         this.dataSubcriterios = [];
         this.dataSubcriterios.push({});
       }
-      // this.dataSourceSubcriterio = new LocalDataSource();
+       //this.dataSourceSubcriterio = new MatTableDataSource<any>([]);
       const subcriterios = event.data.Subcriterios;
       if (subcriterios != undefined && subcriterios.length > 0) {
-        // this.dataSourceSubcriterio.load(this.dataSubcriterios);
-        this.dataSourceSubcriterio = new MatTableDataSource(subcriterios)
+        this.dataSourceSubcriterio = new MatTableDataSource(this.dataSubcriterios)
 
         this.settingsSubcriterio = {
           columns: {

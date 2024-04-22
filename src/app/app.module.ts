@@ -82,6 +82,7 @@ import { LiquidacionRecibosComponent } from './components/liquidacion/liquidacio
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 
 import { LiquidacionTableComponent } from './components/liquidacion/liquidacion-table/liquidacion-table.component';
+import { SoporteConfiguracionComponent } from './components/soporte-configuracion/soporte-configuracion.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
@@ -129,7 +130,8 @@ export function createTranslateLoader(http: HttpClient) {
     DialogoDocumentosTransferenciasComponent,
     LiquidacionRecibosComponent,
     LiquidacionHistoricoComponent,
-    LiquidacionTableComponent
+    LiquidacionTableComponent,
+    SoporteConfiguracionComponent
   ],
   imports: [
     CodificacionModule,

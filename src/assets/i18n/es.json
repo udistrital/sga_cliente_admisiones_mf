@@ -2737,6 +2737,14 @@
         "nombres":"Nombres",
         "apellidos":"Apellidos"
 
+    },
+
+    "soporte-configuracion":{
+        "orden":"Orden",
+        "convocatoria":"Convocatoria",
+        "generacion":"Generación",
+        "usuario":"Usuario",
+        "nodata":"No se encontraron historicos"
     }
 
 }

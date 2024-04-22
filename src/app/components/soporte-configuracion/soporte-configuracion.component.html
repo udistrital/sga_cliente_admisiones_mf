@@ -1,0 +1,233 @@
+<mat-card class="card" style="margin-top: 20px;">
+    <mat-card-content style="width: 100%; ">
+        <fieldset [ngClass]="{'fieldseter':true}">
+            <div class=col-12>
+                <div class="title">
+                    <legend>
+                        &nbsp; Soporte de configuracion del sistema para convocatorias
+                    </legend>
+                </div>
+                <div class="aviso_criterio" align="center">
+                    <label class="fondo_aviso">
+                        <strong>{{ 'admision.nota' | translate }}:</strong> A continuación usted podra generar el
+                        comprobante de configuracion del sistema para una convocatoria especifica, para ello
+                        debera seleccionar las variables iniciales requeridas.
+                    </label>
+                </div>
+                <div>
+                    <fieldset [ngClass]="{'fieldseter':true}">
+                        <legend>
+                            &nbsp; Historicos
+                        </legend>
+                        <div>
+                            <table mat-table [dataSource]="dataSource" matSort class="tabla">
+                                <ng-container matColumnDef="orden">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
+                                        {{'soporte-configuracion.orden' | translate}} </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.orden}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="convocatoria">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
+                                        {{'soporte-configuracion.convocatoria' | translate}} </th>
+                                    <td mat-cell *matCellDef="let row">{{row.convocatoria}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="generacion">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
+                                        {{'soporte-configuracion.generacion' | translate}} </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{row.generacion}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="usuario">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
+                                        {{'soporte-configuracion.usuario' | translate}} </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{row.usuario}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="+">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-mas">
+                                        <input class="boton-column" type="button" value="+">
+                                    </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <button aria-hidden="false" title="{{'admision.tooltip_eliminar' | translate}}"
+                                            class="boton-table">
+                                            <mat-icon>get_app</mat-icon>
+                                        </button>
+                                        <button aria-hidden="false" title="{{'admision.tooltip_eliminar' | translate}}"
+                                            class="boton-table">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                        <button aria-hidden="false" title="{{'admision.tooltip_eliminar' | translate}}"
+                                            class="boton-table">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="columns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+
+                                <!-- Row shown when there is no matching data. -->
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" colspan="4">{{'soporte-configuracion.nodata' | translate}}</td>
+                                </tr>
+                            </table>
+                            <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true" class="paginator">
+                            </mat-paginator>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <button class="boton-primary">{{
+                            'GLOBAL.continuar' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </mat-card-content>
+</mat-card>
+
+<mat-card class="card" style="margin-top: 20px;">
+    <mat-card-content style="width: 100%; ">
+        <fieldset [ngClass]="{'fieldseter':true}">
+            <div class=col-12>
+                <div class="title">
+                    <legend>
+                    </legend>
+                </div>
+
+
+                <div>
+                    <fieldset [ngClass]="{'fieldseter':true}">
+                        <legend>
+                            &nbsp; Variables
+                        </legend>
+                        <div>
+                            <mat-form-field style="width: 35%;">
+                                <mat-label>{{ 'admision.periodo_' | translate }}:</mat-label>
+                                <mat-select [(ngModel)]="periodo" (selectionChange)="selectPeriodo()">
+                                    <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                                    <mat-option *ngFor="let item of periodos" [value]="item.id"> {{item.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="CampoControl.hasError('required')">{{ 'admision.erro_selec_nivel' |
+                                    translate
+                                    }}</mat-error>
+                            </mat-form-field>
+
+                            <!-- Nivel -->
+                            <mat-form-field style="width: 75%;">
+                                <mat-label>{{ 'admision.nivel' | translate }}:</mat-label>
+                                <mat-select [formControl]="Campo1Control" [(ngModel)]="fecha"
+                                    (selectionChange)="loadProyectos()">
+                                    <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                                    <mat-option *ngFor="let item of fechas" [value]="item.id"> {{item.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="Campo1Control.hasError('required')">{{ 'admision.erro_selec_nivel' |
+                                    translate
+                                    }}</mat-error>
+                            </mat-form-field>
+
+                            <!-- Proyecto académico -->
+                            <mat-form-field style="width: 75%;">
+                                <mat-label>{{ 'admision.proyecto' | translate }}:</mat-label>
+                                <mat-select [formControl]="Campo2Control" [(ngModel)]="nivel"
+                                    (selectionChange)="loadInscritos()">
+                                    <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                                    <mat-option *ngFor="let item of niveles" [value]="item.id"
+                                        [disabled]="!item.id">{{item.nombre}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="Campo2Control.hasError('required')">{{ 'admision.error_proyecto' |
+                                    translate
+                                    }}</mat-error>
+                            </mat-form-field>
+                            <br /><br />
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <button class="boton-primary">{{
+                            'GLOBAL.continuar' | translate }}</button>
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+    </mat-card-content>
+</mat-card>
+
+<mat-card class="card" style="margin-top: 20px;">
+    <mat-card-content style="width: 100%; ">
+        <fieldset [ngClass]="{'fieldseter':true}">
+            <div class=col-12>
+                <div class="title">
+                    <legend>
+                        &nbsp; Resumen Informacion
+                    </legend>
+                </div>
+
+
+                <div>
+                    <fieldset [ngClass]="{'fieldseter':true}">
+                        <legend>
+                            &nbsp; Calendario
+                        </legend>
+                        <div>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div>
+                    <fieldset [ngClass]="{'fieldseter':true}">
+                        <legend>
+                            &nbsp; Derechos Pecuniarios
+                        </legend>
+                        <div>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div>
+                    <fieldset [ngClass]="{'fieldseter':true}">
+                        <legend>
+                            &nbsp; Proyectos Curriculares
+                        </legend>
+                        <div>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div>
+                    <fieldset [ngClass]="{'fieldseter':true}">
+                        <legend>
+                            &nbsp; Criterios y subCriterios
+                        </legend>
+                        <div>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div>
+                    <fieldset [ngClass]="{'fieldseter':true}">
+                        <legend>
+                            &nbsp; Suite de inscripcion
+                        </legend>
+                        <div>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <button class="boton-primary">{{
+                            'GLOBAL.continuar' | translate }}</button>
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+    </mat-card-content>
+</mat-card>

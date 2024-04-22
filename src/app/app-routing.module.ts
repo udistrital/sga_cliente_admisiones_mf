@@ -16,6 +16,7 @@ import { TransferenciaComponent } from './components/transferencia/transferencia
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 import { LiquidacionRecibosComponent } from './components/liquidacion/liquidacion-recibos/liquidacion-recibos.component';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
+import { SoporteConfiguracionComponent } from './components/soporte-configuracion/soporte-configuracion.component';
 
 
 
@@ -72,6 +73,10 @@ const routes: Routes = [
     path:"liquidacion-historico", 
     component: LiquidacionHistoricoComponent ,
   },
+  // {
+  //   path:"soporte-configuracion", 
+  //   component: SoporteConfiguracionComponent ,
+  // },
 ];
 
 @NgModule({
