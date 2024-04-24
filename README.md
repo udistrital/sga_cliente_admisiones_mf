@@ -19,7 +19,6 @@ Cliente para la gestión de admisiones, parte del Sistema de Gestión Académica
 
 
 
-
 ### Variables de Entorno
 
 ```javascript
