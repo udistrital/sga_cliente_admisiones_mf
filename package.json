@@ -8,7 +8,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:single-spa:sga-cliente-admisiones-mf": "ng build sga-cliente-admisiones-mf --configuration production",
-    "serve:single-spa:sga-cliente-admisiones-mf": "ng s --project sga-cliente-admisiones-mf --disable-host-check --port 4207 --live-reload false"
+    "serve:single-spa:sga-cliente-admisiones-mf": "ng s --project sga-cliente-admisiones-mf --disable-host-check --port 4207 --live-reload false",
+    "build:prod": "ng build --progress --configuration=production",
+    "build:test": "ng build --progress --configuration=development"
   },
   "private": true,
   "dependencies": {
