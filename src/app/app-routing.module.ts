@@ -21,6 +21,7 @@ import { CodificacionModule } from './components/codificacion-module/codificacio
 import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-aspirantes/lista-proyectos-aspirantes.component';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
+import { SoporteConfiguracionComponent } from './components/soporte-configuracion/soporte-configuracion.component';
 
 
 
@@ -93,6 +94,9 @@ const routes: Routes = [
     {path:"reportes-inscritos", 
     component: RepotesInscripcionesComponent ,
   },
+{path:"soporte-configuracion", 
+component: SoporteConfiguracionComponent ,
+},
 
 ];
 
