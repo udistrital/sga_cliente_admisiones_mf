@@ -2769,6 +2769,36 @@
         "nombres":"Nombres",
         "apellidos":"Apellidos"
 
+    },
+    "listado_pregrado": {
+        "listar": "Listar",
+        "periodo": "Periodo",
+        "seleccion_periodo": "Selecciona un Periodo",
+        "nivel": "Nivel",
+        "seleccion_nivel": "Selecciona un Nivel",
+        "proyecto_curricular": "Proyecto Curricular",
+        "seleccion_proyecto": "Selecciona un Proyecto",
+        "facultad": "Facultad",
+        "seleccion_facultad": "Selecciona una facultad",
+        "consultar": "Consultar",
+        "tabla_resumen": "Resumen estados aspirantes",
+        "resumen_estado": "Datos generales",
+        "aspirantes": "Aspirantes:",
+        "inscritos": "Inscritos:",
+        "orden": "#",
+        "documento": "Número de documento",
+        "nombre_completo": "Nombre completo",
+        "telefono": "Teléfono",
+        "correo": "Correo electrónico",
+        "puntaje": "Puntaje",
+        "tipo_inscripcion": "Tipo de inscripción",
+        "estado_inscripcion": "Estado de inscripción",
+        "estado_recibo": "Estado de recibo",
+        "credencial": "Credencial",
+        "identificacion_examen_estado": "Identificación examen estado",
+        "codigo_proyecto": "Código proyecto",
+        "snp": "SNP",
+        "descargar": "Descargar SNP"
     }
 
 }
