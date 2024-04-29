@@ -2795,10 +2795,27 @@
         "estado_inscripcion": "Estado de inscripción",
         "estado_recibo": "Estado de recibo",
         "credencial": "Credencial",
-        "identificacion_examen_estado": "Identificación examen estado",
+        "identificacion_examen_estado": "Número de documento al presenrtar examen de estado",
         "codigo_proyecto": "Código proyecto",
         "snp": "SNP",
-        "descargar": "Descargar SNP"
+        "descargar": "Descargar SNP",
+        "regresar": "Regresar",
+        "resumen_estado_grid": "Resumen estado de inscripción de aspirantes",
+        "inscripcion_solicitada": "Inscripcion solicitada: ",
+        "admitido": "Admitido: ",
+        "opcionado": "Opcionado: ",
+        "no_admitido": "No admitido: ",
+        "inscrito": "Inscrito: ",
+        "inscrito_ob": "Inscrito con observacion: ",
+        "total": "Total aspirantes: ",
+        "acciones": "Acciones"
+    },
+    "cargue_snp": {
+        "tabla_resumen": "Resumen SNP",
+        "total": "Total global:",
+        "pendientes": "Pendientes de cargue:",
+        "cargados": "Cargados:",
+        "cargar": "Cargar archivo"
     }
 
 }

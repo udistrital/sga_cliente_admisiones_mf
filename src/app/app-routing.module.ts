@@ -22,6 +22,7 @@ import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
+import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 
 
 
@@ -97,6 +98,10 @@ const routes: Routes = [
   {
     path:"listado-pregrado", 
     component: ListadoAspirantesPregradoComponent ,
+  },
+  {
+    path:"snp", 
+    component: CargueSnpComponent ,
   },
 ];
 

@@ -11,14 +11,9 @@ interface Food {
 
 interface colums {
   Orden: number;
-  // Documento: string;
   NombreCompleto: string;
   Telefono: string;
   Correo: string;
-  Puntaje: number;
-  TipoInscripcion: string;
-  EstadoInscripcion: string;
-  EstadoRecibo: string;
   Credencial: string;
   IdentificacionEnExamenEstado: string;
   CodigoProyecto: string;
@@ -35,11 +30,12 @@ interface Tile {
 
 
 @Component({
-  selector: 'ngx-listado-aspirantes-pregrado',
-  templateUrl: './listado-aspirantes-pregrado.component.html',
-  styleUrls: ['./listado-aspirantes-pregrado.component.scss']
+  selector: 'ngx-cargue-snp',
+  templateUrl: './cargue-snp.component.html',
+  styleUrls: ['./cargue-snp.component.scss']
 })
-export class ListadoAspirantesPregradoComponent {
+export class CargueSnpComponent {
+
   formulario: boolean = false;
   dataSource = new MatTableDataSource<any>();
 
@@ -51,17 +47,13 @@ export class ListadoAspirantesPregradoComponent {
     'Credencial',
     'IdentificacionEnExamenEstado',
     'NombreCompleto',
-    'Telefono',
     'Correo',
+    'Telefono',
     'CodigoProyecto',
-    'TipoInscripcion',
-    'Puntaje',
-    'EstadoInscripcion',
-    'EstadoRecibo',
     'SNP',
-    // 'Documento',
     'Acciones'
   ];
+
 
 
   firstFormGroup = this._formBuilder.group({
@@ -82,11 +74,7 @@ export class ListadoAspirantesPregradoComponent {
   ];
 
   tiles: Tile[] = [
-    {text: '0', cols: 7, rows: 1, color: '#03678F', textColor: 'white'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
+    {text: '0', cols: 3, rows: 1, color: '#03678F', textColor: 'white'},
     {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
     {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
     {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
@@ -102,12 +90,8 @@ export class ListadoAspirantesPregradoComponent {
         NombreCompleto: 'Juan Perez',
         Telefono: '1234567890',
         Correo: 'juan.perez@example.com',
-        Puntaje: 100,
-        TipoInscripcion: 'Tipo 1',
-        EstadoInscripcion: 'Inscrito',
-        EstadoRecibo: 'Pagado',
         Credencial: 'Credencial 1',
-        IdentificacionEnExamenEstado: '11111111',
+        IdentificacionEnExamenEstado: 'Identificado',
         CodigoProyecto: 'Proyecto 1',
         SNP: 'SNP 1'
       },
@@ -116,12 +100,8 @@ export class ListadoAspirantesPregradoComponent {
         NombreCompleto: 'Maria Rodriguez',
         Telefono: '0987654321',
         Correo: 'maria.rodriguez@example.com',
-        Puntaje: 95,
-        TipoInscripcion: 'Tipo 2',
-        EstadoInscripcion: 'Inscrito',
-        EstadoRecibo: 'Pagado',
         Credencial: 'Credencial 2',
-        IdentificacionEnExamenEstado: '22222222',
+        IdentificacionEnExamenEstado: 'Identificado',
         CodigoProyecto: 'Proyecto 2',
         SNP: 'SNP 2'
       }
@@ -134,7 +114,7 @@ export class ListadoAspirantesPregradoComponent {
     console.log('Editando la fila con orden:', orden);
     if (this.editingRowId === orden) {
       this.editingRowId = null;
-      this.formulario = false;
+      this.formulario = false; 
     } else {
       this.editingRowId = orden;
       this.formulario = true;

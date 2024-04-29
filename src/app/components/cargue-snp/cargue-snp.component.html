@@ -61,7 +61,7 @@
 
     </mat-step>
     <mat-step [stepControl]="secondFormGroup">
-      <ng-template matStepLabel>{{ 'listado_pregrado.tabla_resumen' | translate }}</ng-template>
+      <ng-template matStepLabel>{{ 'cargue_snp.tabla_resumen' | translate }}</ng-template>
       <br><br>
         <mat-card>
           <mat-card-header>
@@ -69,54 +69,31 @@
           </mat-card-header>
           <br><br>
           <mat-card-content>
-            <mat-grid-list cols="7" rowHeight="40px">
+            <mat-grid-list cols="3" rowHeight="40px">
               <!-- Elemento 1 -->
-              <mat-grid-tile colspan="7" rowspan="1" [style.background]="tiles[0].color" [style.color]="tiles[0].textColor">
-                <h6>{{ 'listado_pregrado.resumen_estado_grid' | translate }}</h6>
+              <mat-grid-tile colspan="3" rowspan="1" [style.background]="tiles[0].color" [style.color]="tiles[0].textColor">
+                <h6>{{ 'cargue_snp.tabla_resumen' | translate }}</h6>
                 
               </mat-grid-tile>
               
               <!-- Elemento 2 -->
               <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[1].color" [style.color]="tiles[1].textColor">
-                <p>{{ 'listado_pregrado.inscripcion_solicitada' | translate }}</p>
+                <p>{{ 'cargue_snp.total' | translate }}</p>
                 <p>{{ tiles[1].text }}</p>
               </mat-grid-tile>
               
               <!-- Elemento 3 -->
               <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[2].color" [style.color]="tiles[2].textColor">
-                <p>{{ 'listado_pregrado.admitido' | translate }}</p>
+                <p>{{ 'cargue_snp.pendientes' | translate }}</p>
                 <p>{{ tiles[2].text }}</p>
               </mat-grid-tile>
               
               <!-- Elemento 4 -->
               <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[3].color" [style.color]="tiles[3].textColor">
-                <p>{{ 'listado_pregrado.opcionado' | translate }}</p>
+                <p>{{ 'cargue_snp.cargados' | translate }}</p>
                 <p>{{ tiles[3].text }}</p>
               </mat-grid-tile>
               
-              <!-- Elemento 5 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[4].color" [style.color]="tiles[4].textColor">
-                <p>{{ 'listado_pregrado.no_admitido' | translate }}</p>
-                <p>{{ tiles[4].text }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 6 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[5].color" [style.color]="tiles[5].textColor">
-                <p>{{ 'listado_pregrado.inscrito' | translate }}</p>
-                <p>{{ tiles[5].text }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 7 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[6].color" [style.color]="tiles[6].textColor">
-                <p>{{ 'listado_pregrado.inscrito_ob' | translate }}</p>
-                <p>{{ tiles[6].text }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 8 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[7].color" [style.color]="tiles[7].textColor">
-                <p>{{ 'listado_pregrado.total' | translate }}</p>
-                <p>{{ tiles[7].text }}</p>
-              </mat-grid-tile>
             </mat-grid-list>
           </mat-card-content>
         </mat-card>
@@ -131,46 +108,6 @@
                   <td mat-cell *matCellDef="let row"> {{row.data.Orden}} </td>
                 </ng-container>
               
-                <ng-container matColumnDef="Documento">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.documento' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.Documento}} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="NombreCompleto">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.nombre_completo' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.NombreCompleto}} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="Telefono">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.telefono' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.Telefono}} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="Correo">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.correo' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.Correo}} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="Puntaje">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.puntaje' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.Puntaje}} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="TipoInscripcion">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.tipo_inscripcion' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.TipoInscripcion}} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="EstadoInscripcion">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.estado_inscripcion' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.EstadoInscripcion}} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="EstadoRecibo">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.estado_recibo' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.EstadoRecibo}} </td>
-                </ng-container>
-              
                 <ng-container matColumnDef="Credencial">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.credencial' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.data.Credencial}} </td>
@@ -179,6 +116,21 @@
                 <ng-container matColumnDef="IdentificacionEnExamenEstado">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.identificacion_examen_estado' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.data.IdentificacionEnExamenEstado}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="NombreCompleto">
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.nombre_completo' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.data.NombreCompleto}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Correo">
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.correo' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.data.Correo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Telefono">
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.telefono' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.data.Telefono}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="CodigoProyecto">
@@ -223,21 +175,13 @@
 
             <div class="button-container" style="display: flex; justify-content: center;">
               <div class="button-stepper">
-                <button mat-stroked-button class="btn boton-primary">{{ 'listado_pregrado.descargar' | translate }}</button>
+                <button mat-stroked-button class="btn boton-primary">{{ 'cargue_snp.cargar' | translate }}</button>
               </div>
             </div>
 
 
           </mat-card-content>
         </mat-card>
-
-        <br><br>
-
-        <div class="button-container" style="display: flex; justify-content: center;">
-          <div class="button-stepper">
-            <button mat-stroked-button class="btn boton-primary">{{ 'listado_pregrado.regresar' | translate }}</button>
-          </div>
-        </div>
 
     </mat-step>
   </mat-stepper>

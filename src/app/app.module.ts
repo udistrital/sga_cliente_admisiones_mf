@@ -95,6 +95,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
+import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 
 
@@ -168,6 +170,7 @@ export function createTranslateLoader(http: HttpClient) {
     AdministracionCuentaBancariaComponent,
     ComentariosCuposComponent,
     ListadoAspirantesPregradoComponent,
+    CargueSnpComponent,
   ],
   imports: [
     NgxDocViewerModule,
@@ -193,6 +196,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatDatepickerModule,
     MatSortModule,
     MatAutocompleteModule,
+    MatGridListModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     NgxExtendedPdfViewerModule,
