@@ -328,13 +328,13 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   loadPerfil(event: any) {
-    this.aspirante = event.Data;
-    this.tercerosService.get('datos_identificacion?query=Activo:true,numero:' + event.Data.Identificacion).subscribe(
+    this.aspirante = event.data;
+    this.tercerosService.get('datos_identificacion?query=Activo:true,numero:' + event.data.Identificacion).subscribe(
       (response: any) => {
         this.projectService.get('proyecto_academico_institucion/' + this.proyectos_selected).subscribe(
           (res: any) => {
             this.proyecto = res;
-            this.inscripcion_id = event.Data['Credencial'];
+            this.inscripcion_id = event.data['Credencial'];
             this.inscripcionService.get('inscripcion?query=Id:' + this.inscripcion_id).subscribe(
               // (resp: any[]) => {
               (resp: any = []) => {
@@ -362,13 +362,13 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                         this.info_persona_id = TercerosAsociadoInscripcion;
                         this.pivotDocument.updateInfo({
                           TerceroId: TercerosAsociadoInscripcion,
-                          IdInscripcion: event.Data['Credencial'],
+                          IdInscripcion: event.data['Credencial'],
                           ProgramaAcademicoId: this.proyectos_selected.toString(),
                           ProgramaAcademico: res.Nombre,
                           IdPeriodo: this.periodo.Id
                         })
                         sessionStorage.setItem('TerceroId', TercerosAsociadoInscripcion.toString());
-                        sessionStorage.setItem('IdInscripcion', event.Data['Credencial']);
+                        sessionStorage.setItem('IdInscripcion', event.data['Credencial']);
                         sessionStorage.setItem('ProgramaAcademicoId', this.proyectos_selected.toString());
                         sessionStorage.setItem('ProgramaAcademico', res.Nombre);
                         sessionStorage.setItem('IdPeriodo', this.periodo.Id);
