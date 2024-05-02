@@ -112,9 +112,14 @@ mat-table {
 }
 
 .form-container {
+  overflow: overlay;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 1em;
+}
+
+.form-container mat-form-field {
+  width: 100%;
 }
 
 .flex-container {
@@ -133,4 +138,23 @@ mat-table {
 .flex {
   display: flex;
   justify-content: space-between;
+}
+
+button-disabled {
+  background-color: #ccc;
+  color: black !important;
+  cursor: not-allowed;
+  border: black solid 1px !important;
+}
+
+@media(width > 580px) {
+  .form-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(width > 800px) {
+  .form-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

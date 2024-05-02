@@ -3,6 +3,9 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
+import { OikosService } from 'src/app/services/oikos.service';
+import { ParametrosService } from 'src/app/services/parametros.service';
+import { PopUpManager } from 'src/app/managers/popUpManager';
 
 interface Food {
   value: string;
@@ -16,6 +19,7 @@ interface colums {
   Correo: string;
   Credencial: string;
   IdentificacionEnExamenEstado: string;
+  IdentificacionActual: string;
   CodigoProyecto: string;
   SNP: string;
 }
@@ -46,6 +50,7 @@ export class CargueSnpComponent {
     'Orden',
     'Credencial',
     'IdentificacionEnExamenEstado',
+    'IdentificacionActual',
     'NombreCompleto',
     'Correo',
     'Telefono',
@@ -59,7 +64,6 @@ export class CargueSnpComponent {
   firstFormGroup = this._formBuilder.group({
     validatorProyecto: ['', Validators.required],
     validatorPeriodo: ['', Validators.required],
-    validatorNivel: ['', Validators.required],
     validatorFacultad: ['', Validators.required],
   });
   secondFormGroup = this._formBuilder.group({
@@ -80,7 +84,19 @@ export class CargueSnpComponent {
     {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
   ];
 
-  constructor(private _formBuilder: FormBuilder, private dialog: MatDialog, private translate: TranslateService) {
+  //****************************************************//
+  proyectosCurriculares!: any[]
+  periodos!: any[]
+  facultades!: any[]
+
+  constructor(
+    private _formBuilder: FormBuilder,
+    private dialog: MatDialog,
+    private translate: TranslateService,
+    private oikosService: OikosService,
+    private parametrosService: ParametrosService,
+    private popUpManager: PopUpManager
+  ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
     });
 
@@ -92,6 +108,7 @@ export class CargueSnpComponent {
         Correo: 'juan.perez@example.com',
         Credencial: 'Credencial 1',
         IdentificacionEnExamenEstado: 'Identificado',
+        IdentificacionActual: '11111112',
         CodigoProyecto: 'Proyecto 1',
         SNP: 'SNP 1'
       },
@@ -102,12 +119,59 @@ export class CargueSnpComponent {
         Correo: 'maria.rodriguez@example.com',
         Credencial: 'Credencial 2',
         IdentificacionEnExamenEstado: 'Identificado',
+        IdentificacionActual: '22111112',
         CodigoProyecto: 'Proyecto 2',
         SNP: 'SNP 2'
       }
     ];
 
     this.dataSource.data = columns.map(info => ({data: info}));
+  }
+
+  async ngOnInit() {
+    await this.cargarSelects();
+  }
+
+  async cargarSelects() {
+    await this.cargarPeriodos();
+    await this.cargarFacultades();
+  }
+
+  cargarFacultades() {
+    return new Promise((resolve, reject) => {
+      this.oikosService.get('dependencia_padre/FacultadesConProyectos?Activo:true&limit=0')
+        .subscribe((res: any) => {
+          this.facultades = res;
+          console.log(this.facultades);
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.facultades_error'));
+            console.log(error);
+            reject([]);
+          });
+    });
+  }
+
+  cargarPeriodos() {
+    return new Promise((resolve, reject) => {
+      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+        .subscribe((res: any) => {
+          this.periodos = res.Data;
+          console.log(this.periodos);
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.periodo_error'));
+            console.log(error);
+            reject([]);
+          });
+    });
+  }
+
+  onFacultadChange(event: any) {
+    const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
+    this.proyectosCurriculares = facultad.Opciones;
   }
 
   editar = (orden: any) => {
