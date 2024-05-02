@@ -416,7 +416,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
         this.sgaMidAdmisiones.post('admision/evaluacion', Evaluacion).subscribe(
           (response: any) => {
             console.log(response)
-            if (response.status === 200) {
+            if (response.Status === 200) {
               this.criterio_selected.forEach(criterio => {
                 if (criterio.Id === Evaluacion.CriterioId) {
                   criterio['evaluado'] = true;
@@ -453,7 +453,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
     this.sgaMidAdmisiones.put('admision/calcular_nota', Evaluacion).subscribe(
       (response: any) => {
-        if (response.status === 200) {
+        if (response.Status === 200) {
           this.popUpManager.showSuccessAlert(this.translate.instant('admision.calculo_exito'));
         } else {
           this.popUpManager.showErrorToast(this.translate.instant('admision.calculo_error'));
@@ -507,8 +507,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
         .subscribe(
           (response: any) => {
 
-            if (response.success == true && response.status == 200) {
-              this.Aspirantes = response.data;
+            if (response.Success == true && response.Status == 200) {
+              this.Aspirantes = response.Data;
               this.cantidad_aspirantes = this.Aspirantes.length;
 
 
@@ -543,9 +543,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
         async (response: any) => {
           console.log(response)
 
-          if (response.status === 200) {
+          if (response.Status === 200) {
 
-            const data = <Array<any>>response.data.areas;
+            const data = <Array<any>>response.Data.areas;
 
             if (data !== undefined) {
               await data.forEach(async asistente => {
@@ -574,7 +574,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
             this.save = false;
             this.verificarEvaluacion();
             resolve(data);
-          } else if (response.status === 404) {
+          } else if (response.Status === 404) {
             this.Aspirantes.forEach((aspirante: any) => {
               this.columnas.forEach((columna: any) => {
                 aspirante[columna] = '';

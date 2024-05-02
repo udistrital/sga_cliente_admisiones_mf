@@ -251,8 +251,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     this.sgaMiAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
       .subscribe(
         (response: any) => {
-          if (response.success == true && response.status == 200) {
-            this.Aspirantes = response.data;
+          if (response.Success == true && response.Status == 200) {
+            this.Aspirantes = response.Data;
             this.cantidad_inscritos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO").length;
             this.cantidad_inscritos_obs = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO con Observación").length;
             this.cantidad_admitidos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "ADMITIDO").length;
@@ -328,13 +328,13 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   loadPerfil(event: any) {
-    this.aspirante = event.data;
-    this.tercerosService.get('datos_identificacion?query=Activo:true,numero:' + event.data.Identificacion).subscribe(
+    this.aspirante = event.Data;
+    this.tercerosService.get('datos_identificacion?query=Activo:true,numero:' + event.Data.Identificacion).subscribe(
       (response: any) => {
         this.projectService.get('proyecto_academico_institucion/' + this.proyectos_selected).subscribe(
           (res: any) => {
             this.proyecto = res;
-            this.inscripcion_id = event.data['Credencial'];
+            this.inscripcion_id = event.Data['Credencial'];
             this.inscripcionService.get('inscripcion?query=Id:' + this.inscripcion_id).subscribe(
               // (resp: any[]) => {
               (resp: any = []) => {
@@ -362,13 +362,13 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                         this.info_persona_id = TercerosAsociadoInscripcion;
                         this.pivotDocument.updateInfo({
                           TerceroId: TercerosAsociadoInscripcion,
-                          IdInscripcion: event.data['Credencial'],
+                          IdInscripcion: event.Data['Credencial'],
                           ProgramaAcademicoId: this.proyectos_selected.toString(),
                           ProgramaAcademico: res.Nombre,
                           IdPeriodo: this.periodo.Id
                         })
                         sessionStorage.setItem('TerceroId', TercerosAsociadoInscripcion.toString());
-                        sessionStorage.setItem('IdInscripcion', event.data['Credencial']);
+                        sessionStorage.setItem('IdInscripcion', event.Data['Credencial']);
                         sessionStorage.setItem('ProgramaAcademicoId', this.proyectos_selected.toString());
                         sessionStorage.setItem('ProgramaAcademico', res.Nombre);
                         sessionStorage.setItem('IdPeriodo', this.periodo.Id);
