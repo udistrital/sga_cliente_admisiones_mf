@@ -180,10 +180,10 @@ export class RepotesInscripcionesComponent {
 
       this.sgaAdmisionesMidService.post('reporte', dataReporte).subscribe(
         (Response: any) => {
-          if (Response.Status == 200 && Response.Success) {
+          if (Response.status == 200 && Response.success) {
 
-            this.reporteExcel = Response.Data.Excel
-            this.reportePdf = Response.Data.Pdf
+            this.reporteExcel = Response.data.Excel
+            this.reportePdf = Response.data.Pdf
             this.openSnackBar("Reporte Generado", "Aceptar")
             this.isDocuments = true
           } else {

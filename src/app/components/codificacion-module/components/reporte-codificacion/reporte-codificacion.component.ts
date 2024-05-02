@@ -131,10 +131,10 @@ export class ReporteCodificacionComponent implements OnInit {
 
       this.sgaAdmisionesMidService.get(`reporte/?id_periodo=${idPeriodo}&id_proyecto=${idProyecto}`).subscribe(
         (Response: any) => {
-          if (Response.Status == 200 && Response.Success) {
+          if (Response.status == 200 && Response.success) {
 
-            this.reporteExcel = Response.Data.Excel
-            this.reportePdf = Response.Data.Pdf
+            this.reporteExcel = Response.data.Excel
+            this.reportePdf = Response.data.Pdf
             this.openSnackBar("Reporte Generado", "Aceptar")
             this.isDocuments = true
           } else {

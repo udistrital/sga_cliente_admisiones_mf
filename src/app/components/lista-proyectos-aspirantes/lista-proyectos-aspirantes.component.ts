@@ -84,8 +84,8 @@ export class ListaProyectosAspirantesComponent {
     this.admisionesMid.get(
       "admision/aspirantes-de-proyectos-activos?id-nivel=" + nivel + "&id-periodo=" + periodo + "&tipo-lista=3")
       .subscribe((res: any) => {
-        if (res.Success) {
-          this.proyectosActivosConListaAspirantes = res.Data;
+        if (res.success) {
+          this.proyectosActivosConListaAspirantes = res.data;
           this.cargarInformacionEnPanelesExpansivos()
         } else {
           this.proyectosActivosConListaAspirantes = null
