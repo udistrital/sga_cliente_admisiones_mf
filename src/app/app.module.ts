@@ -135,6 +135,7 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   imports: [
     CodificacionModule,
+    NgxDocViewerModule,
     FormsModule,
     CommonModule,
     BrowserModule,
@@ -147,7 +148,6 @@ export function createTranslateLoader(http: HttpClient) {
     MatSelectModule,
     AppRoutingModule,
     MatCheckboxModule,
-    NgxDocViewerModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatPaginatorModule,
