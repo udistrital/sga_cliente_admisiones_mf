@@ -2684,5 +2684,13 @@
         "documento": "Document",
         "nombres": "Names",
         "apellidos": "Surnames"
+    },
+
+    "soporte-configuracion":{
+        "orden":"Order",
+        "convocatoria":"Call",
+        "Generacion":"Generation",
+        "Usuario":"User",
+        "nodata":"No historical data found"
     }
 }
