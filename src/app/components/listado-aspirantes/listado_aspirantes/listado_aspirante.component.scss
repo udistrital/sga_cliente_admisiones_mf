@@ -76,3 +76,19 @@ th{
   display: flex;
   justify-content: space-around;
 }
+
+.table-container {
+  overflow: overlay;
+}
+
+@media (max-width: 800px) {
+  .card-content{
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 650px) {
+  .card-content-header{
+    flex-direction: column;
+  }
+}

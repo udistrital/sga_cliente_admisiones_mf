@@ -158,6 +158,7 @@
             "asignacion_cupos": "Asignación de cupos",
             "actualizacion_estado": "Asignación de cupos \npor proyecto",
             "listado_aspirante": "Listar aspirantes",
+            "listar_aspirantes_proyecto": "Listar aspirantes de proyectos activos",
             "administrar_criterios": "Administrar criterios\nde admisión",
             "documentos_descuentos": "Asignación de documentos\ny descuentos por proyecto",
             "solicitud_transferencias": "Solicitud de transferencias",
@@ -787,7 +788,8 @@
         "direccion_entidad": "Dirección de la entidad",
         "placeholder_direccion_entidad": "Ej: Cra 8 # 40-78 Piso 1",
         "item": "Ítem",
-        "evaluar": "Evaluar"
+        "evaluar": "Evaluar",
+        "tipo_inscripcion": "Seleccione el tipo de inscripción"
     },
     "ERROR": {
         "general": "La solicitud no pudo ser cumplida",
@@ -1084,7 +1086,20 @@
         "icfes_snp": "Listado por proyectos de los aspirantes con registro SNP",
         "RteAdmitidos": "Listado de admitidos por periodo y proyecto.",
         "RteAspirantes": "Listado de aspirantes por periodo y proyecto.",
-        "RteInscritos": "Listado de inscritos por periodo y proyecto."
+        "RteInscritos": "Listado de inscritos por periodo y proyecto.",
+        "Reportes": "Reportes",
+        "SelectPeriodo": "Selecciona el periodo",
+        "SelectFacultad": "Selecciona la facultad",
+        "SelectProyecto": "Selecciona el proyecto",
+        "SelectReporte": "Selecciona el tipo de reporte",
+        "SelectDatos": "Seleccione los datos que desea consultar",
+        "Periodo": "Periodo",
+        "Facultad": "Facultad",
+        "Proyecto": "Proyecto",
+        "Acciones": "Acciones",
+        "SelectNivel": "Selecciona el nivel"
+
+
     },
     "evento": {
         "evento": "Evento",
@@ -1618,7 +1633,8 @@
         "poner_obligatorio": "¿Establecer documento como obligatorio?",
         "quitar_obligatorio": "¿Establecer documento como opcional?",
         "ajuste_ok": "Cambio realizado",
-        "ajuste_fail": "No se pudo realizar el cambio"
+        "ajuste_fail": "No se pudo realizar el cambio",
+        "seleccion_facultad": "Seleccionar facultad"
     },
     "descuento_academico": {
         "descuento_academico_no_registrado": "Descuento académico no registrado",
@@ -1791,7 +1807,23 @@
         "titulo_notificacion_success":"Notificación exitosa",
         "desc_notificacion_success":"la notificación de las observaciones se hizo de forma exitosa",
         "titulo_notificacion_error":"Fallo en la notificación",
-        "desc_notificacion_error":"Ocurrió un error al momento de notificar al usuario"
+        "desc_notificacion_error":"Ocurrió un error al momento de notificar al usuario",
+        "examen_de_estado": "El criterio a parametrizar es un examen de estado?",
+        "titulo_form_examen": "Nivel correspondiente del examen de estado",
+        "saber_11": "¿Requiere Saber 11 (antiguo ICFES)?",
+        "saber_pro": "¿Requiere Saber pro T y T?",
+        "spn": "¿Requiere SPN?",
+        "archivo_soporte": "Archivo de soporte",
+        "archivo": "¿Requiere archivo adjunto?",
+        "seleccion_facultad": "Seleccionar facultad",
+        "ofertar": "Ofertar proyecto",
+        "ofertar_opcion": "¿Se oferta como opcion 2 y 3?",
+        "parametrizacion_puntaje": "Parametrización puntaje global minimo",
+        "valor_minimo": "Valor minimo:",
+        "listar_aspirantes_proyecto": "Listar aspirantes de proyectos activos",
+        "proyecto_sin_aspirantes": "Este proyecto no cuenta con aspirantes",
+        "info_lista_proyecto_activos": "Seleccione el período académico (el período actual activo está seleccionado por defecto), seguido por el nivel, para acceder a la lista de proyectos activos en el período seleccionado y a la lista de aspirantes de cada proyecto en el período especificado.",
+        "buscar_en_toda_la_tabla": "Buscar en toda la tabla"
     },
     "cupos": {
         "aviso_periodo": "Período en el cual se define los cupos de admisión",
@@ -1803,7 +1835,7 @@
         "aviso_proyecto": "Selecione el/los proyectos curriculares que desea definir los cupos de admisión",
         "aviso_proyecto_actualizar": "Selecione el/los proyectos curriculares que desea actualizar estado",
         "aviso_proyec": "Seleciones el proyecto curricular que desea listar",
-        "erro_selec_nivel": "Por favor seleccion el nivel!",
+        "error_selec_nivel": "Por favor seleccione el nivel!",
         "erro_selec_proyecto": "Por favor seleccione al menos un proyecto!",
         "cupos": "Definición de los cupos para el periodo y el/los proyectos curriculares selecionados",
         "asignar": "Asignar cupos",

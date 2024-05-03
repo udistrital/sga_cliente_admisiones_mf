@@ -155,6 +155,7 @@
             "asignacion_cupos": "Assignment of quotas",
             "actualizacion_estado": "Assignment of quotas \nfor projects",
             "listado_aspirante": "List applicants",
+            "listar_aspirantes_proyecto": "List applicants for active projects",
             "administrar_criterios": "Manage admission criteria",
             "documentos_descuentos": "Assignment of documents\nand discounts by project",
             "solicitud_transferencias": "Transfer Requests",
@@ -1030,7 +1031,8 @@
         "ejecutable_programa": "Application executable file support",
         "codigo_fuente": "Software source code support",
         "archivo_video": "Audiovisual production support",
-        "soportes": "Supports list"
+        "soportes": "Supports list",
+        "tipo_inscripcion": "Select the type of enrollment"
     },
     "archivo_icfes": {
         "archivo_icfes": "Icfes file",
@@ -1051,7 +1053,19 @@
         "icfes_snp": "List of applicants projects with SNP registration",
         "RteAdmitidos": "Listado de admitidos por periodo y proyecto.",
         "RteAspirantes": "Listado de aspirantes por periodo y proyecto.",
-        "RteInscritos": "Listado de inscritos por periodo y proyecto."
+        "RteInscritos": "Listado de inscritos por periodo y proyecto.",
+        "Reportes": "Reports",
+        "SelectPeriodo": "Select period",
+        "SelectFacultad": "Select faculty",
+        "SelectProyecto": "Select project",
+        "SelectReporte": "Select report type",
+        "SelectDatos": "Select the data that you whant",
+        "Periodo": "Period",
+        "Facultad": "Faculty",
+        "Proyecto": "Project",
+        "Acciones": "Actions",
+        "SelectNivel": "Select level"
+
     },
     "evento": {
         "evento": "Event",
@@ -1379,7 +1393,7 @@
         "erro_selec": "Please select at least one academic project!",
         "error_proyecto_ya_existe": "The academic project has already been added!",
         "realizar_preinscripcion": "Pre-registration",
-        "erro_selec_nivel": "Please select the level!",
+        "error_selec_nivel": "Please select the level!",
         "opciones_usuario": "User options",
         "recibos_generados": "Receipts generated (PIN)",
         "generar_recibo": "Generate receipt",
@@ -1582,7 +1596,8 @@
         "poner_obligatorio": "Set document as required?",
         "quitar_obligatorio": "Set document as optional?",
         "ajuste_ok": "Change made",
-        "ajuste_fail": "The change could not be made"
+        "ajuste_fail": "The change could not be made",
+        "seleccion_facultad": "Select the faculty"
     },
     "descuento_academico": {
         "documento_programa_no_registrado": "Document not registered",
@@ -1753,7 +1768,23 @@
         "descargar_zip": "Download the applicant's documentary compilation",
         "no_vinculacion_no_rol": "Your user is not linked to any academic project and does not have the appropriate role",
         "multiple_vinculacion": "Your user appears linked to more than one academic project",
-        "notificar_observaciones":"Report observations"
+        "notificar_observaciones":"Report observations",
+        "examen_de_estado": "The criterion to parameterize is a state exam?",
+        "titulo_form_examen": "Corresponding level of the state exam",
+        "saber_11": "Does it require Saber 11 (formerly ICFES)?",
+        "saber_pro": "Does it require Saber Pro T and T?",
+        "spn": "Does it require SPN?",
+        "archivo_soporte": "Supporting file",
+        "archivo": "Does it require an attached file?",
+        "seleccion_facultad": "Select the faculty",
+        "ofertar": "Offer project",
+        "ofertar_opcion": "Is it offered as option 2 and 3?",
+        "parametrizacion_puntaje": "Global score parameterization",
+        "valor_minimo": "Minimum value:",
+        "listar_aspirantes_proyecto": "List applicants for active projects",
+        "proyecto_sin_aspirantes": "This project does not have applicants",
+        "info_lista_proyecto_activos": "Select the academic period (the current active period is selected by default), followed by the level, to access the list of active projects in the selected period and the list of applicants for each project in the specified period.",
+        "buscar_en_toda_la_tabla": "search entire table"
     },
     "cupos": {
         "aviso_periodo": "Period in which the admission quotas are defined",
@@ -1772,6 +1803,7 @@
         "seleccionar_admitidos": "Select admitted",
         "ver_listado_aspirantes": "Show list of applicants",
         "cupos_proyecto": "Number of assigned places",
+        "cupos_disponibles": "Number of places available:",
         "sin_cupos_periodo": "No quotas have been defined for this period or curricular project"
     },
     "calendario": {

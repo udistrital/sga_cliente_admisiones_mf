@@ -10,6 +10,8 @@ import { TAGS_INSCRIPCION_PROGRAMA } from './def_tags_por_programa';
 import { UserService } from 'src/app/services/users.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
+import { OikosService } from 'src/app/services/oikos.service';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @Component({
   selector: 'def-suite-inscrip-programa',
@@ -23,13 +25,16 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   periodo!: any;
   periodos!: any[];
   nivel: any;
+  facultad: any;
   niveles!: any[];
   proyecto!: any;
   proyectos!: any[];
-  proyectosFiltered!: any[];
+  proyectosFilteredNivel!: any[];
+  proyectosFilteredFacultad!: any[];
   tipoInscrip: any;
   tiposInscrip!: any[];
   tiposInscripFiltered!: any[];
+  facultades: any[] = [];
 
   tagsObject:any = undefined;
   nuevaSuite: boolean = false;
@@ -46,6 +51,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
     private sgaMidService: SgaMidService,
     private sgaMidAdmisiones: SgaMidService,
     private autenticationService: ImplicitAutenticationService,
+    private oikosService: OikosService,
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
 
@@ -58,6 +64,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
       this.loading = true;
       await this.cargarPeriodo();
       await this.cargarNivel();
+      await this.cargarFacultad();
       await this.cargarProyectos();
       await this.cargarTipoInscripcion();
       this.loading = false;
@@ -89,7 +96,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   cargarNivel(){
     return new Promise((resolve, reject) => {
-      this.projectService.get('nivel_formacion?query=Activo:true,NivelFormacionPadreId__isnull:true&limit=2')
+      this.projectService.get('nivel_formacion?query=Activo:true,NivelFormacionPadreId__isnull:true')
         .subscribe((response: any) => {
           if (response != null && response.Status != '404' 
               && Object.keys(response[0]).length > 0) {
@@ -105,9 +112,32 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
     });
   }
 
+  cargarFacultad(){
+    return new Promise((resolve, reject) => {
+      this.oikosService.get('dependencia_tipo_dependencia/?query=Activo:true&limit=0')
+        .subscribe((response: any) => {
+          if (response != null && response.Status != '404' 
+              && Object.keys(response[0]).length > 0) {
+                for (let obj of response) {
+                  if (obj.TipoDependenciaId.Id == 2) {
+                    this.facultades.push(obj.DependenciaId);
+                  }
+                }
+                resolve(this.facultades);
+          } else {
+            reject({Facultad: "Bad answer"});
+          }
+        },
+        (error: HttpErrorResponse) => {
+          reject({Facultad: error});
+        });
+    });
+
+  }
+
   cargarProyectos(){
     return new Promise((resolve, reject) => {
-      this.projectService.get('proyecto_academico_institucion?query=Activo:true&limit=0&fields=Id,Nombre,NivelFormacionId')
+      this.projectService.get('proyecto_academico_institucion?query=Activo:true&limit=0&fields=Id,Nombre,NivelFormacionId,FacultadId')
         .subscribe((response: any) => {
           if (response != null && response.Status != '404' 
               && Object.keys(response[0]).length > 0) {
@@ -167,13 +197,14 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   cambioPeriodo(selPeriodo:any) {
     this.nivel = undefined;
+    this.facultad = undefined;
     this.proyecto = undefined;
     this.tipoInscrip = undefined;
     this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
   }
   
   filtrarPorNivel(selNivel:any) {
-    this.proyectosFiltered = this.proyectos.filter(
+    this.proyectosFilteredNivel = this.proyectos.filter(
       (proyect) => {
         if (proyect.NivelFormacionId.Id == selNivel) {
           return true;
@@ -193,6 +224,24 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
         return (tipo.NivelId == selNivel);
       }
     );
+    this.facultad = undefined;
+    this.proyecto = undefined;
+    this.tipoInscrip = undefined;
+    this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
+  }
+
+  filtrarPorFacultades(selProyecto:any) {
+    if (this.proyectosFilteredNivel != undefined && this.proyectosFilteredNivel.length > 0) {
+      this.proyectosFilteredFacultad = this.proyectosFilteredNivel.filter(
+        (proyect) => {
+          if (proyect.FacultadId == selProyecto) {
+            return true;
+          } else {
+            return false;
+          }
+        }      
+      );
+    }
     this.proyecto = undefined;
     this.tipoInscrip = undefined;
     this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
@@ -205,7 +254,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   cambioTipoInscrip(selTipoInscrip:any) {
     this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
-    if (this.periodo && this.nivel && this.proyecto && this.tipoInscrip) {
+    if (this.periodo && this.nivel && this.facultad && this.proyecto && this.tipoInscrip) {
       this.loading = true;
       this.evaluacionInscripcionService.get('tags_por_dependencia?query=Activo:true,PeriodoId:'+this.periodo+',DependenciaId:'+this.proyecto+',TipoInscripcionId:'+this.tipoInscrip)
         .subscribe((response: any) => {
@@ -278,7 +327,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   }
 
   guardar() {
-    if (this.periodo && this.nivel && this.proyecto && this.tipoInscrip) {
+    if (this.periodo && this.nivel && this.facultad && this.proyecto && this.tipoInscrip) {
       if (this.nuevaSuite) {
         let postData = {
           Activo: true,

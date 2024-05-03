@@ -1,10 +1,22 @@
-import { Component, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TranslateService } from '@ngx-translate/core';
+import { PopUpManager } from 'src/app/managers/popUpManager';
 import { liquidacion } from 'src/app/models/liquidacion/liquidacion';
 import { A, B } from 'src/app/models/liquidacion/Variables';
+import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
+import { ParametrosService } from 'src/app/services/parametros.service';
+import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+import { UserService } from 'src/app/services/users.service';
+import { NivelFormacion } from 'src/app/models/proyecto_academico/nivel_formacion';
+import { LiquidacionService } from 'src/app/services/liquidacion.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatSelectChange } from '@angular/material/select';
+import { elementAt } from 'rxjs';
 
 @Component({
   selector: 'app-liquidacion-recibos',
@@ -14,31 +26,454 @@ import { A, B } from 'src/app/models/liquidacion/Variables';
 
 export class LiquidacionRecibosComponent {
 
-  nivel_load = [
-    { Id: 1, Nombre: 'Nivel 1' },
-    { Id: 2, Nombre: 'Nivel 2' },
-    { Id: 3, Nombre: 'Nivel 3' }
-  ];
+  @Input()
+  recibosUrl!: string;
 
-  proyectos = [
-    { Id: 1, Nombre: 'Proyecto 1' },
-    { Id: 2, Nombre: 'Proyecto 2' },
-    { Id: 3, Nombre: 'Proyecto 3' }
-  ];
+  selectedProyecto: any;
+  selectedPeriodo: any;
+  proyectos: any[] = [];
+  periodos: any[] = [];
+  niveles!: NivelFormacion[];
+  nivelSelect!: NivelFormacion[];
+  selectednivel: any = 1;
+  periodo: any;
+  tabla: boolean = false;
+  liquidaciones: any[] = [];
+  admitido: any;
+  admitidos: any[] = [];
 
-  periodos=[
-    { "Nombre": "Periodo 1" },
-    { "Nombre": "Periodo 2" },
-    { "Nombre": "Periodo 3" }
-  ]
+  constructor(private _formBuilder: FormBuilder, private translate: TranslateService,
+    private parametrosService: ParametrosService,
+    private popUpManager: PopUpManager,
+    private projectService: ProyectoAcademicoService,
+    private userService: UserService,
+    private sgaAdmisiones: SgaAdmisionesMid,
+    private liquidacionService: LiquidacionService,
+    private autenticationService: ImplicitAutenticationService,) {
+
+    this.cargarProyectos();
+    this.cargarPeriodo();
+  }
+
 
   tablaRecibo:boolean=true
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
 
+  firstFormGroup = this._formBuilder.group({
+    validatorProyecto: ['', Validators.required],
+    validatorPeriodo: ['', Validators.required],
+    validatorSemestre: ['', Validators.required]
+  });
 
+
+  ngOnInit() {
+    this.cargarProyectos();
+    this.cargarPeriodo();
+    this.generarRegistros();
+
+    const validatorProyectoControl = this.firstFormGroup.get('validatorProyecto');
+    const validatorPeridoControl = this.firstFormGroup.get('validatorPeriodo');
+
+    if (validatorProyectoControl) {
+      validatorProyectoControl.valueChanges.subscribe(value => {
+        this.selectedProyecto = value;
+        console.log('ID seleccionado:', this.selectedProyecto.Id);
+      });
+    } else {
+      console.error('El control "validatorProyecto" es nulo.');
+    }
+    if (validatorPeridoControl) {
+      validatorPeridoControl.valueChanges.subscribe(value => {
+        this.selectedPeriodo = value;
+        console.log('ID seleccionado:', this.selectedPeriodo.Id);
+      });
+    } else {
+      console.error('El control "validatorProyecto" es nulo.');
+    }
+  }
+
+  cargarProyectos() {
+    this.projectService.get('proyecto_academico_institucion?limit=0').subscribe(
+      (response: any) => {
+        this.autenticationService.getRole().then(
+          // (rol: Array <String>) => {
+          (rol: any) => {
+            let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
+            if (r) {
+              this.proyectos = <any[]>response.filter(
+                (proyecto: any) => this.filtrarProyecto(proyecto),
+              );
+              console.log("proyectos", this.proyectos)
+            } else {
+              const id_tercero = this.userService.getPersonaId();
+              console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
+              this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                (respDependencia: any) => {
+                  const dependencias = <Number[]>respDependencia.Data.DependenciaId;
+                  this.proyectos = <any[]>response.filter(
+                    (proyecto: any) => dependencias.includes(proyecto.Id)
+                  );
+                  if (dependencias.length > 1) {
+                    this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
+                    //this.proyectos.forEach(p => { p.Id = undefined })
+                  }
+                },
+                (error: any) => {
+                  this.popUpManager.showErrorAlert(this.translate.instant('admision.no_vinculacion_no_rol') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
+                }
+              );
+            }
+          }
+        );
+      },
+      error => {
+        this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+      },
+    );
+  }
+  filtrarProyecto(proyecto: any) {
+    console.log(proyecto)
+    console.log(this.selectednivel)
+    if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
+      return true
+    }
+    if (proyecto['NivelFormacionId']['NivelFormacionPadreId'] !== null) {
+      if (proyecto['NivelFormacionId']['NivelFormacionPadreId']['Id'] === this.selectednivel) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+  }
+
+  cargarPeriodo() {
+    return new Promise((resolve, reject) => {
+      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+        .subscribe((res: any) => {
+          const r = <any>res;
+          if (res !== null && r.Status === '200') {
+            this.periodo = res.Data.find((p: any) => p.Activo);
+            window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
+            resolve(this.periodo);
+            const periodos = <any[]>res['Data'];
+            periodos.forEach(element => {
+
+              this.periodos.push(element);
+            });
+          }
+          console.log("periodos", this.periodos);
+        },
+          (error: HttpErrorResponse) => {
+            reject(error);
+          });
+    });
+  }
+
+  mostrarTabla() {
+    console.log("Mostrando tabla...");
+    this.tabla = true;
+    this.cargarAdmitidos(this.selectedPeriodo,this.selectednivel)
+  }
   
+
+  mostrarFormulario: boolean = false;
+
+  variableA: A = {
+    A1: {
+      "1": 0,
+      "2": 25,
+      "3": 45,
+      "4": 75,
+      "5": 95,
+      "6": 100,
+      "No Informa": 100,
+      "Area Rural": 20,
+      "Ciudad menor de 100mil habitantes": 45,
+      "Ciudad mayor de 100mil habitantes": 70
+    },
+    A2: {
+      "Entre 0 y,004": 15,
+      "Entre 0.0041 y 0.08": 20,
+      "Entre 0.081 y 0.12": 30,
+      "Entre 0.121 y 0.16": 40,
+      "Entre 0.161 y 0.2": 50,
+      "Entre 0.21 y 0,3": 60,
+      "Entre 0.31 y 0.4": 70,
+      "Entre 0.41 y 0.5": 80,
+      "Entre 0.51 y 0.6": 90,
+      "Entre 0.61 y 0.7": 100,
+      "No informa": 100,
+    },
+    A3: {
+      "Entre 0 y 2": 15,
+      "Entre 2,1 y 2,5": 25,
+      "Entre 2,5 y 3": 30,
+      "Entre 3 y 4": 35,
+      "Entre 4 y 5": 40,
+      "Entre 5 y 5,5": 45,
+      "Entre 5,5 y 6": 50,
+      "Entre 6 y 6,5": 55,
+      "Entre 6,5 y 7": 60,
+      "Entre 7 y 7,5": 70,
+      "Entre 7,5 y 8": 75,
+      "Entre 8 y 9,5": 80,
+      "Entre 9,5 y 11": 85,
+      "Entre 11 y 14": 90,
+      "Entre 14 y 18": 95,
+      ">18": 100,
+      "No informa": 100,
+    }
+  }
+
+
+  variableB: B = {
+    B1: {
+      "Estrato 1 y 2 o rural": 0.6,
+      "Estrato 3 y 4 ciudad < 100 mil hab, no estratificada": 0.9,
+      "Estrato 5 y 6, > 100 mil habitantes no estratificada": 1,
+
+    },
+    B2: {
+      "Fuera del Perimetro Urbano": 0.9,
+      "Dentro del Perimetro Urbano": 1,
+
+    },
+    B3: {
+      "Vive solo o es casado": 0.85,
+      "Otros": 1,
+    },
+    B4: {
+      "Trabaja": 0.9,
+      "No trabaja": 1,
+    }
+  }
+
+  data: liquidacion[] = []
+  llavesA1: string[] = []
+  valorA1: number[] = []
+  llavesA2: string[] = []
+  valorA2: number[] = []
+  llavesA3: string[] = []
+  valorA3: number[] = []
+  llavesB1: string[] = []
+  valorB1: number[] = []
+  llavesB2: string[] = []
+  valorB2: number[] = []
+  llavesB3: string[] = []
+  valorB3: number[] = []
+  llavesB4: string[] = []
+  valorB4: number[] = []
+  PBM!: number
+  mostrarElementosLiquidacion!: boolean;
+ 
+  displayedColumns: string[] = ['seleccion', 'codigo', 'documento', 'nombres', 'apellidos', 'A1', 'puntaje1', 'A2', 'puntaje2', 'A3', 'puntaje3', 'B1', 'puntaje4', 'B2', 'puntaje5', 'B3', 'puntaje6', 'B4', 'puntaje7', 'G1', 'G2', 'G3', 'G4', 'total', 'acciones'];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  dataSource = new MatTableDataSource<liquidacion>;
+
+  generarRegistros() {
+    for (let i = 0; i < 20; i++) {
+      const liquidaciondata: liquidacion = {
+        seleccion: true,
+        codigo: i + 1,
+        documetno: 100000000 + i,
+        nombres: "Nombre" + (i + 1),
+        apellidos: "Apellido" + (i + 1),
+        A: {
+          A1: "1",
+          puntajeA1: this.variableA.A1["1"],
+          A2: "Entre 0 y,004",
+          puntajeA2: this.variableA.A2["Entre 0 y,004"],
+          A3: "Entre 0 y 2",
+          puntajeA3: this.variableA.A3["Entre 0 y 2"],
+        },
+        B: {
+          B1: "Estrato 1 y 2 o rural",
+          puntajeB1: this.variableB.B1["Estrato 1 y 2 o rural"],
+          B2: "Fuera del Perimetro Urbano",
+          puntajeB2: this.variableB.B2["Fuera del Perimetro Urbano"],
+          B3: "Vive solo o es casado",
+          puntajeB3: this.variableB.B3["Vive solo o es casado"],
+          B4: "Trabaja",
+          puntajeB4: this.variableB.B4["Trabaja"],
+        },
+        general: {
+          pbm: 10,
+        },
+      };
+      this.data.push(liquidaciondata);
+      this.dataSource = new MatTableDataSource(this.data);
+
+      setTimeout(() => {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }, 300);
+
+    }
+
+  }
+
+  obtenerClaves(variableA: A, variableB: B) {
+    const { A1, A2, A3 } = variableA
+    const { B1, B2, B3, B4 } = variableB
+    const calves = Object.keys(A1)
+    const calves2 = Object.keys(A2)
+    const calves3 = Object.keys(A3)
+    const calves4 = Object.keys(B1)
+    const calves5 = Object.keys(B2)
+    const calves6 = Object.keys(B3)
+    const calves7 = Object.keys(B4)
+    calves.forEach(llave => this.llavesA1.push(llave))
+    calves2.forEach(llave => this.llavesA2.push(llave))
+    calves3.forEach(llave => this.llavesA3.push(llave))
+    calves4.forEach(llave => this.llavesB1.push(llave))
+    calves5.forEach(llave => this.llavesB2.push(llave))
+    calves6.forEach(llave => this.llavesB3.push(llave))
+    calves7.forEach(llave => this.llavesB4.push(llave))
+    this.valorA1 = Object.values(this.variableA.A1);
+    this.valorA2 = Object.values(this.variableA.A2);
+    this.valorA3 = Object.values(this.variableA.A3);
+    this.valorA1 = Object.values(this.variableB.B1);
+    this.valorA2 = Object.values(this.variableB.B2);
+    this.valorA3 = Object.values(this.variableB.B3);
+    this.valorA3 = Object.values(this.variableB.B4);
+
+  }
+
+
+
+  actualizarpuntaje(element: liquidacion, caso: string) {
+    switch (caso) {
+      case 'A1':
+        element.A.puntajeA1 = this.variableA.A1[element.A.A1];
+        break;
+      case 'A2':
+        element.A.puntajeA2 = this.variableA.A2[element.A.A2];;
+        break;
+      case 'A3':
+        element.A.puntajeA3 = this.variableA.A3[element.A.A3];;
+        break;
+      case 'B1':
+        element.B.puntajeB1 = this.variableB.B1[element.B.B1];;
+        break;
+      case 'B2':
+        element.B.puntajeB2 = this.variableB.B2[element.B.B2];;
+        break;
+      case 'B3':
+        element.B.puntajeB3 = this.variableB.B3[element.B.B3];;
+        break;
+      case 'B4':
+        element.B.puntajeB4 = this.variableB.B4[element.B.B4];;
+        break;
+    }
+    this.calculoPBM(element)
+  }
+
+  calculoPBM(element: liquidacion) {
+    const { puntajeA1, puntajeA2, puntajeA3 } = element.A
+    const { puntajeB1, puntajeB2, puntajeB3, puntajeB4 } = element.B
+    element.general.pbm = (puntajeA1 * 0.35) + (puntajeA2 * 0.25) + (puntajeA3 * 0.4) * (puntajeB1 * puntajeB2 * puntajeB3 * puntajeB4)
+  }
+
+  applyFilterProces(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('recibosUrl' in changes) {
+      const recibosUrlChange = changes['recibosUrl'];
+      console.log(this.recibosUrl)
+
+    }
+  }
+
+  cargarAdmitidos(id_periodo: undefined, id_proyecto: undefined) {
+    return new Promise((resolve, reject) => {
+      const url = `liquidacion/?id_periodo=${id_periodo}&id_proyecto=${id_proyecto}`;
+  
+      this.sgaAdmisiones.get(url).subscribe(
+        (response: { data: any; }) => {
+          console.log('Datos cargados:', response);
+          const data = response.data;
+          console.log('Data:', data);
+          this.admitidos = data;
+          console.log('Data:', this.admitidos);
+          this.admitidos.forEach(element => {
+            element.Seguro = true;
+            element.Carne = true;
+            element.Sistematizacion = true;
+            element.a1='1';
+            element.a2='1';
+            element.a3='1';
+            element.b1='1';
+            element.b2='1';
+            element.b3='1';
+            element.b4='1';
+            element.pbm=10;
+          });
+          resolve(data); // Resuelve la promesa con los datos cargados
+        },
+        (error: any) => {
+          console.error('Error al cargar datos:', error);
+          reject(error); // Rechaza la promesa con el error
+        }
+      );
+    });
+  }
+
+  guardarLiquidaciones() {
+    this.admitidos.forEach(row => {
+      const liqDetalle = [];
+      if (row.Seguro) {
+        liqDetalle.push({ tipo_concepto_id: 111, valor: 111 }); //No exixte parametro para seguro 
+      }
+      if (row.Carne) {
+        liqDetalle.push({ tipo_concepto_id: 111, valor: 111 }); //No exixte parametro para carné
+      }
+      if (row.Sistematizacion) {
+        liqDetalle.push({ tipo_concepto_id: 111, valor: 111 }); //No exixte parametro para sistematización 
+      }
+      if (row.pbm) { 
+        if (typeof row.pbm === 'number') {
+          liqDetalle.push({ tipo_concepto_id: 111, valor: row.pbm }); //No exixte parametro para pbm
+      } else {
+        liqDetalle.push({ tipo_concepto_id: 111, valor: -1}); //No exixte parametro para pbm
+      }
+      }
+
+      const liquidacion = {
+        tercero_id: parseInt(row.Documento, 10),
+        periodo_id: this.selectedPeriodo.Id,
+        programa_academico_id: this.selectedProyecto.Id,
+        tipo_programa_id: this.selectednivel,
+        recibo_id: 111, //consecutivo de recibo (?)
+        liqDetalle: liqDetalle
+      };
+      this.liquidaciones.push(liquidacion);
+    });
+    console.log(this.liquidaciones)
+    for (const liquidacion of this.liquidaciones) {
+      console.log(liquidacion)
+      this.liquidacionService.post('liquidacion/', liquidacion)
+        .subscribe(
+          (res: any) => {
+            const r = <any>res;
+            console.log(res);
+          },
+          (error: HttpErrorResponse) => {
+          }
+        );
+    }
+  }
+
 }
 
 

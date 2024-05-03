@@ -7,7 +7,7 @@
             <div class="container" style="padding: 2%;">
                 <div class="row">
                     <!-- select periodo -->
-                    <mat-form-field style="width: 35%;">
+                    <mat-form-field style="width: 100%;">
                         <mat-label>{{ 'admision.periodo' | translate }}:</mat-label>
                         <mat-select [(ngModel)]="periodo" (selectionChange)="cambioPeriodo(periodo)">
                             <mat-option> {{ 'GLOBAL.seleccionar' | translate }} </mat-option>
@@ -24,12 +24,21 @@
                         </mat-select>
                     </mat-form-field>
 
+                    <!-- select Facultad -->
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>{{ 'admision.seleccion_facultad' | translate }}</mat-label>
+                        <mat-select [(ngModel)]="facultad" (selectionChange)="filtrarPorFacultades(facultad)">
+                            <mat-option> {{ 'GLOBAL.seleccionar' | translate }} </mat-option>
+                            <mat-option *ngFor="let item of facultades" [value]="item.Id"> {{item.Nombre}} </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
                     <!-- select Proyectos -->
                     <mat-form-field style="width: 100%;">
                         <mat-label>{{ 'admision.proyecto' | translate }}:</mat-label>
                         <mat-select [(ngModel)]="proyecto" (selectionChange)="cambioProyecto(proyecto)">
                             <mat-option> {{ 'GLOBAL.seleccionar' | translate }} </mat-option>
-                            <mat-option *ngFor="let item of proyectosFiltered" [value]="item.Id" [disabled]="!item.Id">
+                            <mat-option *ngFor="let item of proyectosFilteredFacultad" [value]="item.Id">
                                 {{item.Nombre}} </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -46,11 +55,11 @@
 
                 </div>
             </div>
-            <div class="container" align="center" *ngIf="periodo && nivel && proyecto && tipoInscrip">
+            <div class="container" align="center" *ngIf="periodo && nivel && facultad && proyecto && tipoInscrip">
                 <div class="row>">
                     <div class="col-12 info-alert"> {{ 'admision.info_uso_select_tags' | translate }} </div>
                 </div><br>
-                <div class="row">
+                <div class="row container-center">
                     <mat-card class="exp-card" align="center"
                         [ngClass]="{'isSelected':tagsObject.info_persona.selected}">
                         <mat-card-header>{{ 'inscripcion.info_basica' | translate }}</mat-card-header>
@@ -169,7 +178,7 @@
                         </mat-card-footer>
                     </mat-card>
 
-                    <mat-card class="exp-card" align="center" [ngClass]="{'isSelected':tagsObject.perfil.selected}">
+                    <mat-card class="exp-card" [ngClass]="{'isSelected':tagsObject.perfil.selected}">
                         <mat-card-header>{{ 'inscripcion.perfil' | translate }}</mat-card-header>
                         <mat-card-content class="icon-form" (click)="clickTag('Yes_perfil')"
                             title="{{ 'GLOBAL.seleccionar' | translate }}">
