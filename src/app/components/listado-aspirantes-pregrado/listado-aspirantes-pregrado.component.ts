@@ -289,7 +289,7 @@ export class ListadoAspirantesPregradoComponent {
   descargarArchivo() {
     console.log("Descargando...")
     // Contenido del archivo de texto
-    const contenidoArchivo = 'Este es el contenido del archivo de texto que se descargará.';
+    const contenidoArchivo = this.inscritosData.map(objeto => `${objeto.snp}, ${objeto.num_doc_icfes}`).join('\n');
 
     // Crear un objeto Blob con el contenido del archivo
     const blob = new Blob([contenidoArchivo], { type: 'text/plain' });
