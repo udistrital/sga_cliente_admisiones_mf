@@ -111,7 +111,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   selectednivel: any;
   tipo_criterio!: TipoCriterio;
   dataSourceColumn: any = []
-  nameColumns: any
+  nameColumns: string[] = []
   dataSource!: MatTableDataSource<any>;
   datavalor: any = []
   datasourceButtonsTable: boolean = false
@@ -326,17 +326,18 @@ export class EvaluacionAspirantesComponent implements OnInit {
       const titles = keys.map(key => data[key].title);
       const width = keys.map(key => data[key].width);
 
+
       this.columnas = titles
       this.widhtColumns = width
-      
-      console.log("columnas")
-      console.log(this.columnas)
+
+
 
 
 
 
       this.dataSourceColumn = (titles)
       this.dataSourceColumn.push('acciones')
+      console.log(this.dataSourceColumn)
       resolve(this.settings)
     })
   }
@@ -346,6 +347,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   onEditConfirm(event: any) {
+    console.log(event)
 
     this.guardarEvaluacion(event.newData)
   }
@@ -411,11 +413,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
       } else if (numero === true) {
         this.popUpManager.showToast(this.translate.instant('admision.numero'));
       } else {
-        console.log('body')
-        console.log(JSON.stringify(Evaluacion))
+
         this.sgaMidAdmisiones.post('admision/evaluacion', Evaluacion).subscribe(
           (response: any) => {
-            console.log(response)
             if (response.Status === 200) {
               this.criterio_selected.forEach(criterio => {
                 if (criterio.Id === Evaluacion.CriterioId) {
@@ -438,6 +438,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       }
     });
   }
+
   async calcularEvaluacion() {
 
     const Evaluacion: any = {};
@@ -502,10 +503,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   async loadAspirantes() {
     return new Promise((resolve, reject) => {
-
+      console.log(this.sgaMidAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2'))
       this.sgaMidAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2')
         .subscribe(
           (response: any) => {
+            console.log(response)
 
             if (response.Success == true && response.Status == 200) {
               this.Aspirantes = response.Data;
@@ -535,24 +537,20 @@ export class EvaluacionAspirantesComponent implements OnInit {
     });
 
   }
-
   async loadInfo(IdCriterio: number) {
+    this.datavalor = []
     return new Promise((resolve, reject) => {
       console.log('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio)
       this.sgaMidAdmisiones.get('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio).subscribe(
         async (response: any) => {
           console.log(response)
-
           if (response.Status === 200) {
-
             const data = <Array<any>>response.Data.areas;
-
             if (data !== undefined) {
               await data.forEach(async asistente => {
                 if (asistente['Asistencia'] === '') {
                   asistente['Asistencia'] = false
                 }
-
                 this.Aspirantes.forEach((aspirante: any) => {
                   if (asistente.Aspirantes === aspirante.Aspirantes) {
                     for (const columna in asistente) {
@@ -560,13 +558,32 @@ export class EvaluacionAspirantesComponent implements OnInit {
                     }
                   }
                 })
-                //  [this, this.dataSource.load(this.Aspirantes)]
-                const valor = Object.keys(this.Aspirantes[0]);
-                const arreglo = valor.filter(elemento => elemento !== "Id");
-                this.datavalor = arreglo
-                console.log(this.datavalor)
-                this.dataSource = new MatTableDataSource(this.Aspirantes)
               })
+
+              console.log("jola")
+
+              this.Aspirantes.forEach((item: any) => {
+                this.nameColumns.forEach((column) => {
+                  if (!item.hasOwnProperty(column)) {
+                    item[column] = ""
+                  }
+                })
+              })
+
+              const tieneAsistencia = this.columnas.some((item: any) => item === 'Asistencia');
+              if (tieneAsistencia) {
+
+              } else {
+                this.Aspirantes.forEach((item: any, index: any) => {
+                  delete this.Aspirantes[index].Asistencia
+                })
+              }
+              const valor = Object.keys(this.Aspirantes[0]);
+              const arreglo = valor.filter(elemento => elemento !== "Id");
+              this.datavalor = arreglo
+              console.log(this.datavalor)
+              console.log(this.Aspirantes)
+              this.dataSource = new MatTableDataSource(this.Aspirantes)
 
             } else {
               this.btnCalculo = true;
@@ -590,7 +607,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
           } else {
             this.popUpManager.showErrorToast(this.translate.instant('admision.error'));
             // this.dataSource.load([]);
-            this.dataSource = new MatTableDataSource()
+            this.dataSource = new MatTableDataSource<any>([])
             resolve('error');
           }
         },
@@ -611,12 +628,14 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   loadColumn(IdCriterio: any) {
+    this.nameColumns = []
     return new Promise((resolve, reject) => {
-      console.log('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0')
+
       this.evaluacionService.get('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0').subscribe(
         (response: any) => {
-          console.log(response)
-        console.log('requisito/' + IdCriterio)
+          for (let i = 0; i < response.length; i++) {
+            this.nameColumns.push(response[i].Nombre)
+          }
           this.evaluacionService.get('requisito/' + IdCriterio).subscribe(
             async (res: any) => {
               const data: any = {};
@@ -656,7 +675,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                 };
               }
 
-              if (response.length > 1) {
+              if (response.length > 0) {
                 porcentaje = await this.getPercentageSub(IdCriterio)
 
                 for (const key in porcentaje.areas) {
@@ -682,17 +701,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                 }
 
               } else {
-                this.columnas.push('Puntuacion');
-                data.Puntuacion = {
-                  title: 'Puntaje',
-                  editable: true,
-                  type: 'number',
-                  filter: false,
-                  width: '35%',
-                  valuePrepareFunction: (value: any) => {
-                    return value;
-                  },
-                }
+
               }
               resolve(data);
             },
@@ -716,8 +725,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   ngOnChanges() {
     this.columnas = [];
-    // this.dataSource.load([]);
-    this.dataSource = new MatTableDataSource()
+    this.dataSource = new MatTableDataSource<any>([])
     this.Aspirantes = [];
     for (let i = 0; i < this.Aspirantes.length; i++) {
       this.Aspirantes[i].Asistencia = false;
@@ -729,6 +737,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:' +
         this.proyectos_selected + ',PeriodoId:' + this.periodo.Id + ',RequisitoId:' + IdCriterio).subscribe(
           (Res: any) => {
+
             const porcentaje = JSON.parse(Res[0].PorcentajeEspecifico);
             resolve(porcentaje);
           },
