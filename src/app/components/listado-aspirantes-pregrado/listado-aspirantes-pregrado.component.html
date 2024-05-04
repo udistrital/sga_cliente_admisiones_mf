@@ -43,7 +43,7 @@
           </div>
 
         <div class="button-stepper">
-          <button mat-stroked-button matStepperNext class="btn boton-primary" [disabled]="!firstFormGroup.valid" [ngClass]="{'button-disabled': !firstFormGroup.valid}">{{ 'listado_pregrado.consultar' | translate }}</button>
+          <button mat-stroked-button matStepperNext class="btn boton-primary" (click)="generarBusqueda(stepper)" [disabled]="!firstFormGroup.valid" [ngClass]="{'button-disabled': !firstFormGroup.valid}">{{ 'listado_pregrado.consultar' | translate }}</button>
         </div>
 
         </mat-card-content>
@@ -118,77 +118,77 @@
 
                 <ng-container matColumnDef="Orden">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.orden' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.Orden}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.numeral}} </td>
                 </ng-container>
               
-                <ng-container matColumnDef="Documento">
+                <!-- <ng-container matColumnDef="Documento">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.documento' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.data.Documento}} </td>
-                </ng-container>
+                </ng-container> -->
               
                 <ng-container matColumnDef="NombreCompleto">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.nombre_completo' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.NombreCompleto}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.nombre_completo}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="Telefono">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.telefono' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.Telefono}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.telefono}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="Correo">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.correo' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.Correo}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.correo}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="Puntaje">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.puntaje' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.Puntaje}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.puntaje}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="TipoInscripcion">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.tipo_inscripcion' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.TipoInscripcion}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.tipo_inscripcion}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="EstadoInscripcion">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.estado_inscripcion' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.EstadoInscripcion}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.estado_inscripcion}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="EstadoRecibo">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.estado_recibo' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.EstadoRecibo}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.estado_recibo}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="Credencial">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.credencial' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.Credencial}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.credencial}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="IdentificacionEnExamenEstado">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.identificacion_examen_estado' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.IdentificacionEnExamenEstado}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.num_doc_icfes}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="IdentificacionActual">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.identificacion_examen_estado' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.IdentificacionActual}} </td>
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.documento' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.num_doc_actual}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="CodigoProyecto">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.codigo_proyecto' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.CodigoProyecto}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.cod_proyecto}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="SNP">
                   <th mat-header-cell *matHeaderCellDef>{{ 'listado_pregrado.snp' | translate }}</th>
                   <td mat-cell *matCellDef="let row">
-                    <div *ngIf="editingRowId === row.data.Orden; else notEditing">
-                      <input [(ngModel)]="row.data.SNP" (blur)="editingRowId = null" />
+                    <div *ngIf="editingRowId === row.numeral; else notEditing">
+                      <input [(ngModel)]="row.snp" (blur)="editingRowId = null" />
                     </div>
                     <ng-template #notEditing>
-                      {{ row.data.SNP }}
+                      {{ row.snp }}
                     </ng-template>
                   </td>
                 </ng-container>
@@ -198,7 +198,7 @@
                   <th mat-header-cell *matHeaderCellDef class="border-right">{{ 'listado_pregrado.acciones' | translate }}</th>
                   <td mat-cell *matCellDef="let row" class="border-right ">
                     <div class="action-container">
-                      <button mat-icon-button (click)="editar(row.data.Orden)" style="margin-right: 10px;">
+                      <button mat-icon-button (click)="editar(row.numeral)" style="margin-right: 10px;">
                         <mat-icon>edit</mat-icon>
                       </button>
                     </div>
@@ -218,7 +218,7 @@
 
             <div class="button-container" style="display: flex; justify-content: center;">
               <div class="button-stepper">
-                <button mat-stroked-button class="btn boton-primary">{{ 'listado_pregrado.descargar' | translate }}</button>
+                <button mat-stroked-button class="btn boton-primary" (click)="descargarArchivo()">{{ 'listado_pregrado.descargar' | translate }}</button>
               </div>
             </div>
 
