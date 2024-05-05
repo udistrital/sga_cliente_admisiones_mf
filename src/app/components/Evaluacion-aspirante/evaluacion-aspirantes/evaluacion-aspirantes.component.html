@@ -63,7 +63,7 @@
               <!-- Tag de criterios -->
               <div class="row">
 
-                <div class="col-sm-6 col-md-4 col-lg-3 folder" align="center" id="info_basica"
+                <div class="col-sm-6 col-md-4 col-lg-3 folder" style="margin-bottom: 20px;" align="center" id="info_basica"
                   *ngFor=" let criterio of criterio_selected">
 
                   <mat-card class="exp-card" (click)="perfil_editar(criterio)">
@@ -120,12 +120,11 @@
                       {{ title }}
                     </th>
 
-
                     <ng-container *ngIf="title == 'Aspirants' ||  title == 'Aspirantes'">
                       <td mat-cell *matCellDef="let row"> {{row.Aspirantes}} </td>
                     </ng-container>
 
-                    <ng-container *ngIf="title == 'Attendance'||  title == 'Asistencia'">
+                    <ng-container *ngIf="title == 'Attendance'||  title == 'Asistencia' ">
                       <td mat-cell *matCellDef="let row">
                         <input *ngIf="!row.mostrarBotones" type="checkbox" class="input-table"
                           [(ngModel)]="row.Asistencia" [disabled]="!row.mostrarBotones">
@@ -134,12 +133,10 @@
                       </td>
 
                     </ng-container>
-                    <ng-container *ngIf="title !=='Aspirants' && title !=='Attendance' && title !=='acciones'">
-                      
+                    <ng-container *ngIf="title !=='Aspirants' && title !=='Attendance' && title !=='acciones' || title == 'Asistencia' || title == 'Aspirantes'">
                       <td mat-cell *matCellDef="let row"><input type="text" class="input-table"
                           [(ngModel)]="row[datavalor[i]]" [disabled]="!row.mostrarBotones">
                         </td>
-                          
                     </ng-container>
 
                     <ng-container *ngIf="title !== 'acciones'">

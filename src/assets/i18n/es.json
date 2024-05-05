@@ -2815,7 +2815,13 @@
         "total": "Total global:",
         "pendientes": "Pendientes de cargue:",
         "cargados": "Cargados:",
-        "cargar": "Cargar archivo"
+        "cargar": "Cargar archivo"},
+    "soporte-configuracion":{
+        "orden":"Orden",
+        "convocatoria":"Convocatoria",
+        "generacion":"Generación",
+        "usuario":"Usuario",
+        "nodata":"No se encontraron historicos"
     }
 
 }

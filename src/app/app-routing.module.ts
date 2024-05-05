@@ -20,11 +20,10 @@ import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/li
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-aspirantes/lista-proyectos-aspirantes.component';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
+import { SoporteConfiguracionComponent } from './components/soporte-configuracion/soporte-configuracion.component';
 import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
-
-
 
 
 const routes: Routes = [
@@ -92,6 +91,10 @@ const routes: Routes = [
     path:"liquidacion-historico", 
     component: LiquidacionHistoricoComponent ,
   },
+  // {
+  //   path:"soporte-configuracion", 
+  //   component: SoporteConfiguracionComponent ,
+  // },
     {path:"reportes-inscritos", 
     component: RepotesInscripcionesComponent ,
   },
