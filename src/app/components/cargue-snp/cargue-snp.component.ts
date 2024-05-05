@@ -95,7 +95,8 @@ export class CargueSnpComponent {
 
   inscripciones: any = [];
   inscritosData: any[] = [];
-  requisitoPrograma: any
+  requisitoPrograma: any;
+  detallesEvaluacion: any;
 
   totalInscritos: any = 0;
   inscritosPendientes: any = 0;
@@ -161,7 +162,7 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.facultades_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
             console.log(error);
             reject([]);
           });
@@ -177,7 +178,7 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.periodo_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.periodo_error'));
             console.log(error);
             reject([]);
           });
@@ -193,18 +194,25 @@ export class CargueSnpComponent {
     const proyecto = this.firstFormGroup.get('validatorProyecto')?.value;
     const periodo = this.firstFormGroup.get('validatorPeriodo')?.value;
 
+    this.inscripciones = [];
+    this.detallesEvaluacion = [];
+    this.inscritosData = [];
+    this.inscritosCargados = 0;
+    this.inscritosPendientes = 0;
+    this.totalInscritos = 0;
+
     this.inscripciones = await this.buscarInscripciones(proyecto, periodo);
     const requisitoPrograma: any = await this.buscarRequisitoProgramaAcademico(proyecto, periodo)
-    const detallesEvaluacion: any = await this.verificarEstadoCargaIcfes()
+    this.detallesEvaluacion = await this.verificarEstadoCargaIcfes()
     this.requisitoPrograma = requisitoPrograma[0]
     let count = 0
-    console.log("INSCRIPCIONES: ", this.inscripciones, requisitoPrograma[0], detallesEvaluacion)
+    console.log("INSCRIPCIONES: ", this.inscripciones, requisitoPrograma[0], this.detallesEvaluacion)
     for (const inscripcion of this.inscripciones) {
       const infoIcfes: any = await this.buscarInscripcionPregrado(inscripcion.Id)
       if (Object.keys(infoIcfes[0]).length > 0) {
         count += 1
         const persona: any = await this.consultarTercero(inscripcion.PersonaId);
-        const detalle = detallesEvaluacion.find((item: any) => item.InscripcionId === inscripcion.Id)
+        const detalle = this.detallesEvaluacion.find((item: any) => item.InscripcionId === inscripcion.Id)
         console.log("INFO ICFES: ", count, infoIcfes, infoIcfes[0], inscripcion.Id, persona, detalle);
 
         if (detalle) {
@@ -246,7 +254,7 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.inscripciones_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
             console.log(error);
             reject([]);
           });
@@ -260,7 +268,7 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.inscripciones_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
             console.log(error);
             reject([]);
           });
@@ -274,7 +282,7 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.inscripciones_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
             console.log(error);
             reject([]);
           });
@@ -288,7 +296,7 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.tercero_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.tercero_error'));
             console.log(error);
             reject([]);
           });
@@ -302,7 +310,7 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.inscripciones_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.requisito_programa_error'));
             console.log(error);
             reject([]);
           });
@@ -315,11 +323,10 @@ export class CargueSnpComponent {
       // this.evaluacionInscripcionService.get('detalle_evaluacion?query=Activo:true,InscripcionId:' + inscripcionId + ',RequisitoProgramaAcademicoId.Id:' + requisitoId + '&sortby=Id&order=asc&limit=0')
       this.evaluacionInscripcionService.get('detalle_evaluacion?query=Activo:true,RequisitoProgramaAcademicoId.RequisitoId.Id:1&sortby=Id&order=asc&limit=0')
         .subscribe((res: any) => {
-          console.log("DETALLE EVALUACION", res);
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.inscripciones_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.detalle_evaluacion_error'));
             console.log("ERROR:", error);
             reject([]);
           });
@@ -392,20 +399,45 @@ export class CargueSnpComponent {
         "EntrevistaId": null,
         "DetalleCalificacion": jsonicfesData
       }
-      console.log("INFO FILE CONTENT:",fileContent, inscripcion, datosIcfes, icfesData, jsonicfesData, detalleEvaluacionData);
+
+      const res: any = await this.crearDetalleEvaluacion(detalleEvaluacionData);
+      console.log(res.InscripcionId, inscripcion[0].InscripcionId.Id);
+      if (res.InscripcionId == inscripcion[0].InscripcionId.Id) {
+        // Caso correcto, se debe actualizar la información de la tabla
+        console.log("ENTRA")
+        this.actualizarTablas(res.InscripcionId)
+      }
+
+      console.log("INFO FILE CONTENT:",fileContent, inscripcion, datosIcfes, icfesData, jsonicfesData, detalleEvaluacionData, res);
     };
     reader.readAsText(file);
   }
 
-  editar = (orden: any) => {
-    console.log('Editando la fila con orden:', orden);
-    if (this.editingRowId === orden) {
-      this.editingRowId = null;
-      this.formulario = false; 
-    } else {
-      this.editingRowId = orden;
-      this.formulario = true;
-    }
+  crearDetalleEvaluacion(detalleEvaluacionBody: any) {
+    return new Promise((resolve, reject) => {
+      this.evaluacionInscripcionService.post('detalle_evaluacion', detalleEvaluacionBody)
+        .subscribe((res: any) => {
+          this.popUpManager.showSuccessAlert(this.translate.instant('admision.creacion_detalle_evaluacion_exito'));
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.creacion_detalle_evaluacion_error'));
+            console.log(error);
+            reject([]);
+          });
+    });
   }
 
+  actualizarTablas(inscripcionId: any) {
+    for (const inscripcion of this.inscritosData) {
+      console.log(inscripcion.inscripcion_id, inscripcionId)
+      if (inscripcion.inscripcion_id == inscripcionId) {
+        this.inscritosCargados += 1;
+        this.inscritosPendientes = this.inscritosPendientes == 0 ? 0 : this.inscritosPendientes - 1;
+        inscripcion.estado_carga = true;
+      }
+    }
+    console.log("Actualización tabla:", this.inscritosData)
+    this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+  }
 }

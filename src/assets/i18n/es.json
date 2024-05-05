@@ -1823,7 +1823,15 @@
         "listar_aspirantes_proyecto": "Listar aspirantes de proyectos activos",
         "proyecto_sin_aspirantes": "Este proyecto no cuenta con aspirantes",
         "info_lista_proyecto_activos": "Seleccione el período académico (el período actual activo está seleccionado por defecto), seguido por el nivel, para acceder a la lista de proyectos activos en el período seleccionado y a la lista de aspirantes de cada proyecto en el período especificado.",
-        "buscar_en_toda_la_tabla": "Buscar en toda la tabla"
+        "buscar_en_toda_la_tabla": "Buscar en toda la tabla",
+        "facultades_error": "Error cargando las facultades",
+        "periodo_error": "Error cargando los períodos",
+        "inscripciones_error": "Error buscando los aspirantes inscritos",
+        "tercero_error": "Error consultando al tercero",
+        "requisito_programa_error": "Error consultando el requisito para este programa académico",
+        "detalle_evaluacion_error": "Error consultando los detalles de evaluación",
+        "creacion_detalle_evaluacion_exito": "Se creo exitosamente el detalle de evaluación",
+        "creacion_detalle_evaluacion_error": "Ocurrio un error creando el detalle de evaluación"
     },
     "cupos": {
         "aviso_periodo": "Período en el cual se define los cupos de admisión",

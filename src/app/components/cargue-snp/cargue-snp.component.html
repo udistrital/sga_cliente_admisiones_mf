@@ -142,8 +142,8 @@
                 <ng-container matColumnDef="Acciones">
                   <th mat-header-cell *matHeaderCellDef class="border-right">{{ 'listado_pregrado.acciones' | translate }}</th>
                   <td mat-cell *matCellDef="let row" class="border-right ">
-                    <mat-icon class="icon-ok" *ngIf="row.estado">done</mat-icon>
-                    <mat-icon class="icon-bad"*ngIf="!row.estado">close</mat-icon>
+                    <mat-icon class="icon-ok" *ngIf="row.estado_carga">done</mat-icon>
+                    <mat-icon class="icon-bad"*ngIf="!row.estado_carga">close</mat-icon>
                   </td>
                 </ng-container>
 
