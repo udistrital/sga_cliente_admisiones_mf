@@ -165,16 +165,16 @@ export function createTranslateLoader(http: HttpClient) {
     LiquidacionRecibosComponent,
     LiquidacionHistoricoComponent,
     LiquidacionTableComponent,
-    SoporteConfiguracionComponent
-  ],
-  imports: [
-    CodificacionModule,
+    SoporteConfiguracionComponent,
     ListadoAspiranteComponent,
     AdministracionCuentaBancariaComponent,
     ComentariosCuposComponent,
     ListadoAspirantesPregradoComponent,
     CargueSnpComponent,
-    SoporteConfiguracionComponent,
+    SoporteConfiguracionComponent
+  ],
+  imports: [
+    CodificacionModule,
     NgxDocViewerModule,
     FormsModule,
     CommonModule,
