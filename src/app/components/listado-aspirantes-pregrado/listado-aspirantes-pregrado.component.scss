@@ -147,6 +147,26 @@ mat-table {
   border: black solid 1px !important;
 }
 
+.boton-accion {
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  background: #03678f;
+  transition: box-shadow 0.3s ease;
+}
+
+.boton-accion:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.icon-boton {
+  font-size: 1.75rem !important;
+  height: 1.75rem !important;
+  width: 1.75rem !important;
+  margin: 3px 0 0 0 !important;
+  color: white;
+}
+
 @media(width > 580px) {
   .form-container {
     grid-template-columns: repeat(2, 1fr);

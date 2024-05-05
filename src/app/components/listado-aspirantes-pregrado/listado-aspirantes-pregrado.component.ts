@@ -312,11 +312,13 @@ export class ListadoAspirantesPregradoComponent {
   }
 
   editar = (orden: any) => {
-    console.log('Editando la fila con orden:', orden);
+    console.log('Editando la fila con orden:', orden, this.editingRowId);
     if (this.editingRowId === orden) {
+      console.log('Editando verdadero');
       this.editingRowId = null;
       this.formulario = false;
     } else {
+      console.log('Editando falso');
       this.editingRowId = orden;
       this.formulario = true;
     }

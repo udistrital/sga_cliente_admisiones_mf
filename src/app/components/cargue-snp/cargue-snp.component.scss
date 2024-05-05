@@ -147,6 +147,14 @@ button-disabled {
   border: black solid 1px !important;
 }
 
+.icon-bad {
+  color: red;
+}
+
+.icon-ok {
+  color: green;
+}
+
 @media(width > 580px) {
   .form-container {
     grid-template-columns: repeat(2, 1fr);
