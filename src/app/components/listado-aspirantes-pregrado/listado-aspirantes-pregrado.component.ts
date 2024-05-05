@@ -107,6 +107,8 @@ export class ListadoAspirantesPregradoComponent {
   inscripciones: any = [];
   inscritosData: any[] = [];
 
+  valorOriginal: any = ""
+
   constructor(
     private _formBuilder: FormBuilder,
     private dialog: MatDialog, 
@@ -174,7 +176,7 @@ export class ListadoAspirantesPregradoComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.facultades_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
             console.log(error);
             reject([]);
           });
@@ -190,7 +192,7 @@ export class ListadoAspirantesPregradoComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.periodo_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.periodo_error'));
             console.log(error);
             reject([]);
           });
@@ -205,6 +207,9 @@ export class ListadoAspirantesPregradoComponent {
   async generarBusqueda(stepper: MatStepper) {
     const proyecto = this.firstFormGroup.get('validatorProyecto')?.value;
     const periodo = this.firstFormGroup.get('validatorPeriodo')?.value;
+
+    this.inscripciones = [];
+    this.inscritosData = [];
 
     this.inscripciones = await this.buscarInscripciones(proyecto, periodo);
     let count = 0
@@ -232,7 +237,8 @@ export class ListadoAspirantesPregradoComponent {
           "puntaje": inscripcion.NotaFinal,
           "estado_inscripcion": inscripcion.EstadoInscripcionId.Nombre,
           "estado_recibo": inscripcion.ReciboInscripcion,
-          "snp": infoIcfes[0].CodigoIcfes
+          "snp": infoIcfes[0].CodigoIcfes,
+          "estado_edicion": false
         }
         this.inscritosData.push(inscritoData);
       } else {
@@ -251,7 +257,7 @@ export class ListadoAspirantesPregradoComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.inscripciones_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
             console.log(error);
             reject([]);
           });
@@ -265,7 +271,7 @@ export class ListadoAspirantesPregradoComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.inscripciones_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
             console.log(error);
             reject([]);
           });
@@ -279,7 +285,7 @@ export class ListadoAspirantesPregradoComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.tercero_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.tercero_error'));
             console.log(error);
             reject([]);
           });
@@ -311,17 +317,67 @@ export class ListadoAspirantesPregradoComponent {
     document.body.removeChild(a);
   }
 
-  editar = (orden: any) => {
+  editar = async (orden: any) => {
+    //let valorOriginal = ""
     console.log('Editando la fila con orden:', orden, this.editingRowId);
     if (this.editingRowId === orden) {
-      console.log('Editando verdadero');
+      console.log('Saliendo edición guardando');
+      const row = this.inscritosData.find(item => item.numeral === orden);
+      console.log("DATOS ACTUALIZACION1:", row.snp)
+      console.log("DATOS ACTUALIZACION2:", this.valorOriginal)
+      if (row.snp != this.valorOriginal) {
+        console.log("Entro actualizacion", this.valorOriginal, row.snp);
+        let inscripcionP: any = await this.buscarInscripcionPregrado(row.inscripcion_id);
+        console.log(" inscripcion recuperada",inscripcionP)
+        inscripcionP[0].CodigoIcfes = row.snp;
+        const res = await this.actualizarInscripcionPregrado(inscripcionP[0]);
+        console.log(" result",res)
+        this.valorOriginal = "";
+
+      }
       this.editingRowId = null;
       this.formulario = false;
+      this.cambiarEstado(orden, false)
     } else {
-      console.log('Editando falso');
+      console.log('Entrando a edición');
+      const row = this.inscritosData.find(item => item.numeral === orden);
+      console.log("VALOR A:", row.snp);
+      this.valorOriginal = row.snp;
       this.editingRowId = orden;
       this.formulario = true;
+      this.cambiarEstado(orden, true)
     }
   }
+
+  cambiarEstado(orden: any, estado: any) {
+    for (const inscripcion of this.inscritosData) {
+      if (inscripcion.numeral == orden) {
+        inscripcion.estado_edicion = estado;
+      }
+    }
+    this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+  }
+
+  async actualizarInscripcionPregrado(inscripcioBody: any) {
+    return new Promise((resolve, reject) => {
+      this.inscripcionService.put('inscripcion_pregrado', inscripcioBody)
+        .subscribe((res: any) => {
+          this.popUpManager.showSuccessAlert(this.translate.instant('admision.actualizacion_detalle_evaluacion_exito'));
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.actualizacion_detalle_evaluacion_error'));
+            console.log(error);
+            reject([]);
+          });
+    });
+  }
+
+  // salirEdicion(orden: any) {
+  //   console.log('Saliendo edición click afuera');
+  //   this.editingRowId = null;
+  //   this.formulario = false;
+  //   this.cambiarEstado(orden, false);
+  // }
 
 }

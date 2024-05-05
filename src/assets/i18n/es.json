@@ -1831,7 +1831,9 @@
         "requisito_programa_error": "Error consultando el requisito para este programa académico",
         "detalle_evaluacion_error": "Error consultando los detalles de evaluación",
         "creacion_detalle_evaluacion_exito": "Se creo exitosamente el detalle de evaluación",
-        "creacion_detalle_evaluacion_error": "Ocurrio un error creando el detalle de evaluación"
+        "creacion_detalle_evaluacion_error": "Ocurrio un error creando el detalle de evaluación",
+        "actualizacion_detalle_evaluacion_exito": "Se actualizo exitosamente el detalle de evaluación",
+        "actualizacion_detalle_evaluacion_error": "Ocurrio un error actualizando el detalle de evaluación"
     },
     "cupos": {
         "aviso_periodo": "Período en el cual se define los cupos de admisión",

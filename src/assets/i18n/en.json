@@ -1792,7 +1792,9 @@
         "requisito_programa_error": "Error consulting the requirement for this academic program",
         "detalle_evaluacion_error": "Error querying evaluation details",
         "creacion_detalle_evaluacion_exito": "The evaluation detail was successfully created",
-        "creacion_detalle_evaluacion_error": "An error occurred creating the evaluation detail"
+        "creacion_detalle_evaluacion_error": "An error occurred creating the evaluation detail",
+        "actualizacion_detalle_evaluacion_exito": "The evaluation detail was successfully updated",
+        "actualizacion_detalle_evaluacion_error": "An error occurred updating the evaluation detail"
         
     },
     "cupos": {
