@@ -174,9 +174,7 @@ export function createTranslateLoader(http: HttpClient) {
     ComentariosCuposComponent,
     ListadoAspirantesPregradoComponent,
     CargueSnpComponent,
-    SoporteConfiguracionComponent
-  ],
-  imports: [
+    SoporteConfiguracionComponent,
     NgxDocViewerModule,
     FormsModule,
     CommonModule,
