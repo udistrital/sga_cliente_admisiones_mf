@@ -1,4 +1,7 @@
 <div>
+  <div [class.loader-div]="loading">
+    <mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+  </div>
   <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
     <mat-step [stepControl]="firstFormGroup">
       <ng-template matStepLabel>{{ 'listado_pregrado.listar' | translate }}</ng-template>

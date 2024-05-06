@@ -102,6 +102,8 @@ export class CargueSnpComponent {
   inscritosPendientes: any = 0;
   inscritosCargados: any = 0;
 
+  loading: boolean = false
+
   constructor(
     private _formBuilder: FormBuilder,
     private dialog: MatDialog,
@@ -145,7 +147,9 @@ export class CargueSnpComponent {
   }
 
   async ngOnInit() {
+    this.loading = true;
     await this.cargarSelects();
+    this.loading = false;
   }
 
   async cargarSelects() {
@@ -186,11 +190,14 @@ export class CargueSnpComponent {
   }
 
   onFacultadChange(event: any) {
+    this.loading = true;
     const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
     this.proyectosCurriculares = facultad.Opciones;
+    this.loading = false;
   }
 
   async generarBusqueda(stepper: MatStepper) {
+    this.loading = true;
     const proyecto = this.firstFormGroup.get('validatorProyecto')?.value;
     const periodo = this.firstFormGroup.get('validatorPeriodo')?.value;
 
@@ -245,6 +252,7 @@ export class CargueSnpComponent {
     console.log(this.inscritosData)
     this.dataSource = new MatTableDataSource<any>(this.inscritosData);
     stepper.next();
+    this.loading = false;
   }
 
   buscarInscripciones(proyecto: any, periodo: any) {
@@ -349,66 +357,72 @@ export class CargueSnpComponent {
   leerArchivos(file: File) {
     const reader = new FileReader();
     reader.onload = async (event: any) => {
+      this.loading = true;
       const fileContent = event.target.result;
-      
-      const datosIcfes = fileContent.split(",")
-      const inscripcion: any = await this.buscarInscripcionPregradoByCodigo(datosIcfes[0]) 
-      const icfesData = {
-        "CODREGSNP": datosIcfes[0],
-        "NOMBRE": datosIcfes[1],
-        "TIPODOCIDE": datosIcfes[2],
-        "NODOCIDENT": datosIcfes[3],
-        "CODCOLEGIO": datosIcfes[4],
-        "NOMCIUDADCOLEGIO": datosIcfes[5],
-        "ACTA": datosIcfes[6],
-        "FECHAACTA": datosIcfes[7],
-        "PERPGLOB": datosIcfes[8],
-        "PERPGLOBPE": datosIcfes[9],
-        "GLOBAL": datosIcfes[10],
-        "PLC": datosIcfes[11],
-        "PMA": datosIcfes[12],
-        "PSC": datosIcfes[13],
-        "PCN": datosIcfes[14],
-        "PIN": datosIcfes[15],
-        "PERLC": datosIcfes[16],
-        "PERMA": datosIcfes[17],
-        "PERSC": datosIcfes[18],
-        "PERCN": datosIcfes[19],
-        "PERIN": datosIcfes[20],
-        "NLC": datosIcfes[21],
-        "NMA": datosIcfes[22],
-        "NSC": datosIcfes[23],
-        "NCN": datosIcfes[24],
-        "NIN": datosIcfes[25],
-        "IPEM": datosIcfes[26],
-        "PERPELC": datosIcfes[27],
-        "PERPEMA": datosIcfes[28],
-        "PERPESC": datosIcfes[29],
-        "PERPECN": datosIcfes[30],
-        "PERPEIN": datosIcfes[31],
-        "OBSERVACIONES": datosIcfes[32],
-      }
-      const jsonicfesData = JSON.stringify(icfesData);
-      const detalleEvaluacionData = {
-        "InscripcionId": inscripcion[0].InscripcionId.Id,
-        "RequisitoProgramaAcademicoId": {
-          "Id": this.requisitoPrograma.Id
-        },
-        "NotaRequisito": 10.00,
-        "Activo": true,
-        "EntrevistaId": null,
-        "DetalleCalificacion": jsonicfesData
-      }
+      const resultados = fileContent.split(/\r?\n/)
+      console.log("RESULTADOS SPLIT",resultados)
 
-      const res: any = await this.crearDetalleEvaluacion(detalleEvaluacionData);
-      console.log(res.InscripcionId, inscripcion[0].InscripcionId.Id);
-      if (res.InscripcionId == inscripcion[0].InscripcionId.Id) {
-        // Caso correcto, se debe actualizar la información de la tabla
-        console.log("ENTRA")
-        this.actualizarTablas(res.InscripcionId)
-      }
+      for (const resultado of resultados) {
+        const datosIcfes = resultado.split(",")
+        const inscripcion: any = await this.buscarInscripcionPregradoByCodigo(datosIcfes[0])
+        const icfesData = {
+          "CODREGSNP": datosIcfes[0],
+          "NOMBRE": datosIcfes[1],
+          "TIPODOCIDE": datosIcfes[2],
+          "NODOCIDENT": datosIcfes[3],
+          "CODCOLEGIO": datosIcfes[4],
+          "NOMCIUDADCOLEGIO": datosIcfes[5],
+          "ACTA": datosIcfes[6],
+          "FECHAACTA": datosIcfes[7],
+          "PERPGLOB": datosIcfes[8],
+          "PERPGLOBPE": datosIcfes[9],
+          "GLOBAL": datosIcfes[10],
+          "PLC": datosIcfes[11],
+          "PMA": datosIcfes[12],
+          "PSC": datosIcfes[13],
+          "PCN": datosIcfes[14],
+          "PIN": datosIcfes[15],
+          "PERLC": datosIcfes[16],
+          "PERMA": datosIcfes[17],
+          "PERSC": datosIcfes[18],
+          "PERCN": datosIcfes[19],
+          "PERIN": datosIcfes[20],
+          "NLC": datosIcfes[21],
+          "NMA": datosIcfes[22],
+          "NSC": datosIcfes[23],
+          "NCN": datosIcfes[24],
+          "NIN": datosIcfes[25],
+          "IPEM": datosIcfes[26],
+          "PERPELC": datosIcfes[27],
+          "PERPEMA": datosIcfes[28],
+          "PERPESC": datosIcfes[29],
+          "PERPECN": datosIcfes[30],
+          "PERPEIN": datosIcfes[31],
+          "OBSERVACIONES": datosIcfes[32],
+        }
+        const jsonicfesData = JSON.stringify(icfesData);
+        const detalleEvaluacionData = {
+          "InscripcionId": inscripcion[0].InscripcionId.Id,
+          "RequisitoProgramaAcademicoId": {
+            "Id": this.requisitoPrograma.Id
+          },
+          "NotaRequisito": 10.00,
+          "Activo": true,
+          "EntrevistaId": null,
+          "DetalleCalificacion": jsonicfesData
+        }
 
-      console.log("INFO FILE CONTENT:",fileContent, inscripcion, datosIcfes, icfesData, jsonicfesData, detalleEvaluacionData, res);
+        const res: any = await this.crearDetalleEvaluacion(detalleEvaluacionData);
+        console.log(res.InscripcionId, inscripcion[0].InscripcionId.Id);
+        if (res.InscripcionId == inscripcion[0].InscripcionId.Id) {
+          // Caso correcto, se debe actualizar la información de la tabla
+          console.log("ENTRA")
+          this.actualizarTablas(res.InscripcionId)
+        }
+
+        console.log("INFO FILE CONTENT:", fileContent, inscripcion, datosIcfes, icfesData, jsonicfesData, detalleEvaluacionData, res);
+      }
+      this.loading = false;
     };
     reader.readAsText(file);
   }

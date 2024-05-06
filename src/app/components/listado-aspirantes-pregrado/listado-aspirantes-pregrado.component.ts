@@ -117,6 +117,8 @@ export class ListadoAspirantesPregradoComponent {
 
   valorOriginal: any = ""
 
+  loading: boolean = false
+
   constructor(
     private _formBuilder: FormBuilder,
     private dialog: MatDialog, 
@@ -167,7 +169,9 @@ export class ListadoAspirantesPregradoComponent {
   }
 
   async ngOnInit() {
+    this.loading = true;
     await this.cargarSelects();
+    this.loading = false;
   }
 
   async cargarSelects() {
@@ -208,11 +212,14 @@ export class ListadoAspirantesPregradoComponent {
   }
 
   onFacultadChange(event: any) {
+    this.loading = true;
     const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
     this.proyectosCurriculares = facultad.Opciones;
+    this.loading = false;
   }
 
   async generarBusqueda(stepper: MatStepper) {
+    this.loading = true;
     const proyecto = this.firstFormGroup.get('validatorProyecto')?.value;
     const periodo = this.firstFormGroup.get('validatorPeriodo')?.value;
     
@@ -255,6 +262,7 @@ export class ListadoAspirantesPregradoComponent {
     console.log(this.inscritosData)
     this.dataSource = new MatTableDataSource<any>(this.inscritosData);
     stepper.next();
+    this.loading = false;
   }
 
   buscarInscripciones(proyecto: any, periodo: any) {
@@ -333,6 +341,7 @@ export class ListadoAspirantesPregradoComponent {
       console.log("DATOS ACTUALIZACION1:", row.snp)
       console.log("DATOS ACTUALIZACION2:", this.valorOriginal)
       if (row.snp != this.valorOriginal) {
+        this.loading = true;
         console.log("Entro actualizacion", this.valorOriginal, row.snp);
         let inscripcionP: any = await this.buscarInscripcionPregrado(row.inscripcion_id);
         console.log(" inscripcion recuperada",inscripcionP)
@@ -340,7 +349,7 @@ export class ListadoAspirantesPregradoComponent {
         const res = await this.actualizarInscripcionPregrado(inscripcionP[0]);
         console.log(" result",res)
         this.valorOriginal = "";
-
+        this.loading = false;
       }
       this.editingRowId = null;
       this.formulario = false;
