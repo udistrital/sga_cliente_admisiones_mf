@@ -107,6 +107,14 @@ export class ListadoAspirantesPregradoComponent {
   inscripciones: any = [];
   inscritosData: any[] = [];
 
+  inscripcionesSolicitadas: any = 0;
+  inscripcionesAdmitidas: any = 0;
+  inscripcionesNoAdmitidas: any = 0;
+  inscripcionesOpcionadas: any = 0;
+  inscripcionesInscritas: any = 0;
+  inscripcionesInscritasObservacion: any = 0;
+  inscripcionesTotal: any = 0;
+
   valorOriginal: any = ""
 
   constructor(
@@ -207,10 +215,8 @@ export class ListadoAspirantesPregradoComponent {
   async generarBusqueda(stepper: MatStepper) {
     const proyecto = this.firstFormGroup.get('validatorProyecto')?.value;
     const periodo = this.firstFormGroup.get('validatorPeriodo')?.value;
-
-    this.inscripciones = [];
-    this.inscritosData = [];
-
+    
+    this.reiniciarDatosTablas();
     this.inscripciones = await this.buscarInscripciones(proyecto, periodo);
     let count = 0
     console.log("INSCRIPCIONES: ", this.inscripciones)
@@ -219,6 +225,7 @@ export class ListadoAspirantesPregradoComponent {
       if (Object.keys(infoIcfes[0]).length > 0) {
         count += 1
         const persona: any = await this.consultarTercero(inscripcion.PersonaId);
+        this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.Nombre)
         console.log("INFO ICFES: ", count, infoIcfes, infoIcfes[0], inscripcion.Id, persona);
 
         const inscritoData = {
@@ -356,6 +363,44 @@ export class ListadoAspirantesPregradoComponent {
       }
     }
     this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+  }
+
+  reiniciarDatosTablas() {
+    this.inscripciones = [];
+    this.inscritosData = [];
+    this.inscripcionesSolicitadas = 0;
+    this.inscripcionesAdmitidas = 0;
+    this.inscripcionesNoAdmitidas = 0;
+    this.inscripcionesOpcionadas = 0;
+    this.inscripcionesInscritas = 0;
+    this.inscripcionesInscritasObservacion = 0;
+    this.inscripcionesTotal = 0;
+  }
+
+  cargarResumenInscripciones(estado: any) {
+    this.inscripcionesTotal += 1;
+    switch (estado) {
+      case "Inscripción solicitada":
+        this.inscripcionesSolicitadas += 1;
+        break;
+      case "ADMITIDO":
+        this.inscripcionesAdmitidas += 1;
+        break;
+      case "OPCIONADO":
+        this.inscripcionesOpcionadas += 1;
+        break;
+      case "NO ADMITIDO":
+        this.inscripcionesNoAdmitidas += 1;
+        break;
+      case "INSCRITO":
+        this.inscripcionesInscritas += 1;
+        break;
+      case "INSCRITO con Observación":
+        this.inscripcionesInscritasObservacion += 1;
+        break;
+      default:
+        console.error("Estado inesperado:", estado);
+    }
   }
 
   async actualizarInscripcionPregrado(inscripcioBody: any) {
