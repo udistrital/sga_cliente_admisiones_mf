@@ -250,7 +250,7 @@ export class ListadoAspirantesPregradoComponent {
           "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
           "puntaje": inscripcion.NotaFinal,
           "estado_inscripcion": inscripcion.EstadoInscripcionId.Nombre,
-          "estado_recibo": inscripcion.ReciboInscripcion,
+          "estado_recibo": "Pagado",
           "snp": infoIcfes[0].CodigoIcfes,
           "estado_edicion": false
         }

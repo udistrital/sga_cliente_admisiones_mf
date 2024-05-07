@@ -360,11 +360,27 @@ export class CargueSnpComponent {
       this.loading = true;
       const fileContent = event.target.result;
       const resultados = fileContent.split(/\r?\n/)
-      console.log("RESULTADOS SPLIT",resultados)
+      const detallesEvaluacionActuales: any = await this.recuperarDetallesEvaluacion(this.requisitoPrograma.Id) 
+      console.log("RESULTADOS SPLIT", resultados, detallesEvaluacionActuales)
 
       for (const resultado of resultados) {
         const datosIcfes = resultado.split(",")
+        console.log("ANTES INSCRIPCION CODIGO")
         const inscripcion: any = await this.buscarInscripcionPregradoByCodigo(datosIcfes[0])
+        console.log("DESPUES INSCRIPCION CODIGO")
+        console.log(inscripcion)
+        if (Object.keys(inscripcion[0]).length <= 0) {
+          console.log("No existe la inscripcion pregrado")
+          this.popUpManager.showAlert(this.translate.instant('admision.titulo_inscripcion_no_encontrada'), this.translate.instant('admision.inscripcion_no_encontrada'));
+          continue;
+        }
+        const inscripcionDetalleEv = detallesEvaluacionActuales.find((item: any) => item.InscripcionId == inscripcion[0].InscripcionId.Id)
+        console.log("DESPUES INSCRIPCION DETALLE", inscripcionDetalleEv)
+        if (inscripcionDetalleEv) {
+          console.log("Ya existe un detalle ev")
+          this.popUpManager.showAlert(this.translate.instant('admision.titulo_detalle_evaluacion_existente'), this.translate.instant('admision.detalle_evaluacion_existente'));
+          continue;
+        }
         const icfesData = {
           "CODREGSNP": datosIcfes[0],
           "NOMBRE": datosIcfes[1],
@@ -415,12 +431,12 @@ export class CargueSnpComponent {
         const res: any = await this.crearDetalleEvaluacion(detalleEvaluacionData);
         console.log(res.InscripcionId, inscripcion[0].InscripcionId.Id);
         if (res.InscripcionId == inscripcion[0].InscripcionId.Id) {
-          // Caso correcto, se debe actualizar la información de la tabla
           console.log("ENTRA")
           this.actualizarTablas(res.InscripcionId)
         }
 
         console.log("INFO FILE CONTENT:", fileContent, inscripcion, datosIcfes, icfesData, jsonicfesData, detalleEvaluacionData, res);
+        // console.log("INFO FILE CONTENT:", fileContent, inscripcion, datosIcfes, icfesData, jsonicfesData, detalleEvaluacionData);
       }
       this.loading = false;
     };
@@ -436,6 +452,20 @@ export class CargueSnpComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.creacion_detalle_evaluacion_error'));
+            console.log(error);
+            reject([]);
+          });
+    });
+  }
+
+  recuperarDetallesEvaluacion(inscripcionId: any) {
+    return new Promise((resolve, reject) => {
+      this.evaluacionInscripcionService.get('detalle_evaluacion/?query=Activo:true,RequisitoProgramaAcademicoId.Id:' + inscripcionId + '&sortby=Id&order=desc&limit=0')
+        .subscribe((res: any) => {
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant("admision.detalle_evaluacion_error"));
             console.log(error);
             reject([]);
           });

@@ -1833,7 +1833,11 @@
         "creacion_detalle_evaluacion_exito": "Se creo exitosamente el detalle de evaluación",
         "creacion_detalle_evaluacion_error": "Ocurrio un error creando el detalle de evaluación",
         "actualizacion_detalle_evaluacion_exito": "Se actualizo exitosamente el detalle de evaluación",
-        "actualizacion_detalle_evaluacion_error": "Ocurrio un error actualizando el detalle de evaluación"
+        "actualizacion_detalle_evaluacion_error": "Ocurrio un error actualizando el detalle de evaluación",
+        "titulo_detalle_evaluacion_existente": "Detalle evaluación existente",
+        "detalle_evaluacion_existente": "Ya se encuentra registrada la información de detalle de evaluación",
+        "titulo_inscripcion_no_encontrada": "La inscripción no fue encontrada",
+        "inscripcion_no_encontrada": "No se encontro una inscripción asociada al codigo icfes"
     },
     "cupos": {
         "aviso_periodo": "Período en el cual se define los cupos de admisión",
