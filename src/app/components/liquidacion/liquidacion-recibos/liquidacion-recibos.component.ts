@@ -429,6 +429,7 @@ export class LiquidacionRecibosComponent {
     });
   }
 
+  
   guardarLiquidaciones() {
     this.admitidos.forEach(row => {
       const liqDetalle = [];
