@@ -46,7 +46,7 @@
           </div>
 
         <div class="button-stepper">
-          <button mat-stroked-button matStepperNext class="btn boton-primary" (click)="generarBusqueda(stepper)" [disabled]="!firstFormGroup.valid" [ngClass]="{'button-disabled': !firstFormGroup.valid}">{{ 'listado_pregrado.consultar' | translate }}</button>
+          <button mat-stroked-button matStepperNext class="boton-general btn boton-primary" (click)="generarBusqueda(stepper)" [disabled]="!firstFormGroup.valid" [ngClass]="{'button-disabled': !firstFormGroup.valid}">{{ 'listado_pregrado.consultar' | translate }}</button>
         </div>
 
         </mat-card-content>
@@ -163,7 +163,7 @@
 
             <div class="button-container" style="display: flex; justify-content: center;">
               <div class="button-stepper">
-                <button mat-stroked-button class="btn boton-primary" (click)="manejarEntradaArchivos()">{{ 'cargue_snp.cargar' | translate }}</button>
+                <button mat-stroked-button class="boton-general btn boton-primary" (click)="manejarEntradaArchivos()">{{ 'cargue_snp.cargar' | translate }}</button>
               </div>
             </div>
 

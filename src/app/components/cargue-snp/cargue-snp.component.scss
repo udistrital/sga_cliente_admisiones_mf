@@ -168,6 +168,14 @@ button-disabled {
   z-index: 1;
 }
 
+.boton-general {
+  justify-content: center;
+  width: 90px;
+  height: 30px;
+  align-items: center;
+  border-radius: 5px;
+}
+
 @media(width > 580px) {
   .form-container {
     grid-template-columns: repeat(2, 1fr);
