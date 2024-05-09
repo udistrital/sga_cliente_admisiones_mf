@@ -397,7 +397,8 @@ export class LiquidacionRecibosComponent {
 
   cargarAdmitidos(id_periodo: undefined, id_proyecto: undefined) {
     return new Promise((resolve, reject) => {
-      const url = `liquidacion/?id_periodo=${id_periodo}&id_proyecto=${id_proyecto}`;
+      //const url = `liquidacion/?id_periodo=${id_periodo}&id_proyecto=${id_proyecto}`;
+      const url = `liquidacion/?id_periodo=9&id_proyecto=32`;
   
       this.sgaAdmisiones.get(url).subscribe(
         (response: { data: any; }) => {

@@ -102,6 +102,7 @@ export class LiquidacionRecibosComponent {
   selectednivel: any = 2;
   esPosgrado: boolean = false;
   liquidaciones: any[] = [];
+  recibos: any[] = [];
 
   constructor(private _formBuilder: FormBuilder, private translate: TranslateService,
     private parametrosService: ParametrosService,
@@ -270,12 +271,12 @@ export class LiquidacionRecibosComponent {
 
   cargarAdmitidos(id_periodo: undefined, id_proyecto: undefined) {
     return new Promise((resolve, reject) => {
-      const url = `liquidacion/?id_periodo=${id_periodo}&id_proyecto=${id_proyecto}`;
-  
+      //const url = `liquidacion/?id_periodo=${id_periodo}&id_proyecto=${id_proyecto}`;
+      const url = `liquidacion/?id_periodo=9&id_proyecto=32`;
       this.sgaAdmisiones.get(url).subscribe(
-        (response: { data: any; }) => {
+        (response: { Data: any; }) => {
           console.log('Datos cargados:', response);
-          const data = response.data;
+          const data = response.Data;
           console.log('Data:', data);
           this.admitidos = data;
           console.log('Data:', this.admitidos);
@@ -304,6 +305,31 @@ export class LiquidacionRecibosComponent {
       if (index !== -1) {
         row.Descuentos.splice(index, 1);
       }
+    }
+  }
+  calcularValorMatricula(row: any): void {
+    const tarifaPorCredito = 100000;
+    row.valorMatricula = row.creditos * tarifaPorCredito;
+    this.actualizarValorRecibo(row);
+  }
+
+  actualizarValorRecibo(row: any): void {
+    row.valorRecibo = row.valorMatricula;
+  }
+
+  actualizarValoresCuotas(row: any): void {
+    if (row.cuotas == 1) {
+      row.valorCuota1 = row.valorMatricula;
+      row.valorCuota2 = 0;
+      row.valorCuota3 = 0;
+    } else if (row.cuotas == 2) {
+      row.valorCuota1 = row.valorMatricula * 0.6;
+      row.valorCuota2 = row.valorMatricula * 0.4;
+      row.valorCuota3 = 0;
+    } else if (row.cuotas == 3) {
+      row.valorCuota1 = row.valorMatricula * 0.4;
+      row.valorCuota2 = row.valorMatricula * 0.3;
+      row.valorCuota3 = row.valorMatricula * 0.3;
     }
   }
 
@@ -369,6 +395,68 @@ export class LiquidacionRecibosComponent {
           }
         );
     }
+  }
+
+  generarRecibos() {
+    this.admitidos.forEach(row => {
+      const reciboConceptos = [];
+      const reciboObs: { Ref: any; Descripcion: string; }[] = [];
+      if (row.Seguro) {
+        reciboConceptos.push({ Ref: 2, Descripcion:"SEGURO",Valor: 111 }); //No exixte parametro para seguro 
+      }
+      if (row.Carne) {
+        reciboConceptos.push({ Ref: 3, Descripcion:"CARNET",Valor: 111 }); //No exixte parametro para carné
+      }
+      if (row.Sistematizacion) {
+        reciboConceptos.push({ Ref: 4, Descripcion:"SISTEMATIZACIÓN",Valor: 111 }); //No exixte parametro para sistematización 
+      }
+      row.Descuentos.forEach((descuento: any) => {
+        switch (descuento) {
+          case 1:
+            reciboObs.push({ Ref: 1, Descripcion:"Certificado electoral" }); // Certificado electoral
+            break;
+          case 2:
+            reciboObs.push({ Ref: 2, Descripcion:"Certificado electoral" }); // Monitorias
+            break;
+          case 3:
+            reciboObs.push({ Ref: 3, Descripcion:"Representante de consejo superior y/o académico" }); // Representante de consejo superior y/o académico
+            break;
+          case 4:
+            reciboObs.push({ Ref: 4, Descripcion:"Mejor saber- pro (ECAES)" }); // Mejor saber- pro (ECAES)
+            break;
+          case 5:
+            reciboObs.push({ Ref: 5, Descripcion:"Pariente de personal de planta UD" }); // Pariente de personal de planta UD
+            break;
+          case 6:
+            reciboObs.push({ Ref: 6, Descripcion:"Egresado UD" }); // Egresado UD
+            break;
+          case 7:
+            reciboObs.push({ Ref: 7, Descripcion:"Beca de secretaría de educación" }); // Beca de secretaría de educación
+            break;
+          default:
+            break;
+        }
+      });
+      const recibo = {
+        Nombre: row.Nombre+row.PrimerApellido+row.SegundoApellido,
+        Tipo: "Estudiante",
+        CodigoEstudiante: row.Codigo,
+        Documento: row.Documento,
+        Periodo: this.selectedPeriodo,
+        Dependencia: {
+          Tipo: "Proyecto Curricular",
+          Nombre: this.selectedProyecto
+        },
+        Conceptos: reciboConceptos,
+        Observaciones: reciboObs,
+        Fecha1: "30/02/2023",
+        Fecha2: "30/02/2023",
+        Recargo: 1.5,
+        Comprobante: "0666"
+      };
+      this.recibos.push(recibo);
+    });
+    console.log(this.recibos)
   }
 
 
