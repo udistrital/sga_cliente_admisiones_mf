@@ -294,7 +294,7 @@
                                 <mat-select [value]="element.Sistematizacion ? 'true' : 'false'">
                                     <mat-option value="true">Sí</mat-option>
                                     <mat-option value="false">No</mat-option>
-                                  </mat-select>
+                                </mat-select>
                             </td>
                         </ng-container>
 
@@ -307,7 +307,7 @@
                                 <mat-select [value]="element.Carne ? 'true' : 'false'">
                                     <mat-option value="true">Sí</mat-option>
                                     <mat-option value="false">No</mat-option>
-                                  </mat-select>
+                                </mat-select>
                             </td>
                         </ng-container>
 
@@ -319,16 +319,15 @@
                                 <mat-select [value]="element.Seguro ? 'true' : 'false'">
                                     <mat-option value="true">Sí</mat-option>
                                     <mat-option value="false">No</mat-option>
-                                  </mat-select>
+                                </mat-select>
                             </td>
                         </ng-container>
 
                         <ng-container matColumnDef="total">
                             <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}">
-
                             </th>
                             <td mat-cell *matCellDef="let element">
-
+                                {{element.totalMatricula}}
                             </td>
                         </ng-container>
 
@@ -516,7 +515,7 @@
                             'liquidacion.descargar_listado' | translate }}</button>
                         <button class="boton-primary">{{
                             'liquidacion.conjunto_recibos' | translate }}</button>
-                        <button class="boton-primary" >{{
+                        <button class="boton-primary" (click)="generarRecibos()">{{
                             'liquidacion.asignar_recibo' | translate }}</button>
                     </div>
                 </div>

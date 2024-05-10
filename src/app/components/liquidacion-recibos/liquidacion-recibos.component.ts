@@ -14,6 +14,8 @@ import { UserService } from 'src/app/services/users.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSelectChange } from '@angular/material/select';
 import { LiquidacionService } from 'src/app/services/liquidacion.service';
+import * as JSZip from 'jszip';
+import * as saveAs from 'file-saver';
 
 
 
@@ -103,6 +105,7 @@ export class LiquidacionRecibosComponent {
   esPosgrado: boolean = false;
   liquidaciones: any[] = [];
   recibos: any[] = [];
+  pdfs: Blob[] = [];
 
   constructor(private _formBuilder: FormBuilder, private translate: TranslateService,
     private parametrosService: ParametrosService,
@@ -442,7 +445,7 @@ export class LiquidacionRecibosComponent {
         Tipo: "Estudiante",
         CodigoEstudiante: row.Codigo,
         Documento: row.Documento,
-        Periodo: this.selectedPeriodo,
+        Periodo: this.selectedPeriodo.Id,
         Dependencia: {
           Tipo: "Proyecto Curricular",
           Nombre: this.selectedProyecto
@@ -457,6 +460,33 @@ export class LiquidacionRecibosComponent {
       this.recibos.push(recibo);
     });
     console.log(this.recibos)
+    for (const recibo of this.recibos) {
+      this.liquidacionService.post('recibos/', recibo)
+        .subscribe(
+          (data: any) => {
+            const byteArray = atob(data.base64);
+        const byteNumbers = new Array(byteArray.length);
+        for (let i = 0; i < byteArray.length; i++) {
+          byteNumbers[i] = byteArray.charCodeAt(i);
+        }
+        const file = new Blob([new Uint8Array(byteNumbers)], { type: 'application/pdf' });
+        this.pdfs.push(file);
+          },
+          (error: HttpErrorResponse) => {
+          }
+        );
+    }
+  }
+
+  descargarPDFs(): void {
+    const zip = new JSZip();
+    this.pdfs.forEach((pdf, index) => {
+      zip.file(`pdf_${index + 1}.pdf`, pdf);
+    });
+
+    zip.generateAsync({ type: 'blob' }).then((content) => {
+      saveAs(content, 'recibos_pdf.zip');
+    });
   }
 
 
