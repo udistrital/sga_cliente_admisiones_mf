@@ -19,3 +19,27 @@
     cursor: pointer;
     margin-right: 10px;
 }
+
+.button-disabled {
+    background-color: #ccc;
+    color: black !important;
+    cursor: not-allowed;
+    border: black solid 1px !important;
+}
+
+.contenedor-tabla-liquidacion {
+    overflow: overlay;
+}
+
+.contenedor-formulario {
+    margin-top: 20px;
+    padding: 12px;
+}
+
+.boton-busqueda {
+    text-align: center;
+}
+
+mat-form-field {
+    width: 100%;
+}
