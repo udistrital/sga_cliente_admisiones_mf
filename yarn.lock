@@ -5660,7 +5660,6 @@
     "lodash.deburr" "^4.1.0"
     "tslib" "^2.3.0"
 
-<<<<<<< HEAD
 nice-napi@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/nice-napi/-/nice-napi-1.0.2.tgz"
@@ -5688,12 +5687,6 @@ node-gyp@^9.0.0:
   version "9.4.1"
   resolved "https://registry.npmjs.org/node-gyp/-/node-gyp-9.4.1.tgz"
   integrity sha512-OQkWKbjQKbGkMf/xqI1jjy3oCTgMKJac58G2+bjZb3fza6gW2YrCSdMQYaoTb70crvE//Gngr4f0AgVHmqHvBQ==
-=======
-"nice-napi@^1.0.2":
-  "integrity" "sha512-px/KnJAJZf5RuBGcfD+Sp2pAKq0ytz8j+1NehvgIGFkvtvFrDM3T8E4x/JJODXK9WZow8RRGrbA9QQ3hs+pDhA=="
-  "resolved" "https://registry.npmjs.org/nice-napi/-/nice-napi-1.0.2.tgz"
-  "version" "1.0.2"
->>>>>>> develop
   dependencies:
     "node-addon-api" "^3.0.0"
     "node-gyp-build" "^4.2.2"
