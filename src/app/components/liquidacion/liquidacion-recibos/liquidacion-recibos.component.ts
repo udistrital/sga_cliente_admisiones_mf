@@ -497,39 +497,39 @@ export class LiquidacionRecibosComponent {
       const reciboObs: { Ref: any; Descripcion: string; }[] = [];
       reciboConceptos.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.totalMatricula });
       if (row.Seguro) {
-        reciboConceptos.push({ Ref: 2, Descripcion:"SEGURO",Valor: 111 }); //No exixte parametro para seguro 
+        reciboConceptos.push({ Ref: "2", Descripcion:"SEGURO",Valor: 111 }); //No exixte parametro para seguro 
       }
       if (row.Carne) {
-        reciboConceptos.push({ Ref: 3, Descripcion:"CARNET",Valor: 111 }); //No exixte parametro para carné
+        reciboConceptos.push({ Ref: "3", Descripcion:"CARNET",Valor: 111 }); //No exixte parametro para carné
       }
       if (row.Sistematizacion) {
-        reciboConceptos.push({ Ref: 4, Descripcion:"SISTEMATIZACIÓN",Valor: 111 }); //No exixte parametro para sistematización 
+        reciboConceptos.push({ Ref: "4", Descripcion:"SISTEMATIZACIÓN",Valor: 111 }); //No exixte parametro para sistematización 
       }
       if (row.pbm) {
-        reciboConceptos.push({ Ref: 1, Descripcion:"MATRICULA",Valor: 111 }); //No exixte parametro para sistematización 
+        reciboConceptos.push({ Ref: "1", Descripcion:"MATRICULA",Valor: 111 }); //No exixte parametro para sistematización 
       }
       row.Descuentos.forEach((descuento: any) => {
         switch (descuento) {
           case 1:
-            reciboObs.push({ Ref: 1, Descripcion:"Certificado electoral" }); // Certificado electoral
+            reciboObs.push({ Ref: "1", Descripcion:"Certificado electoral" }); // Certificado electoral
             break;
           case 2:
-            reciboObs.push({ Ref: 2, Descripcion:"Certificado electoral" }); // Monitorias
+            reciboObs.push({ Ref: "2", Descripcion:"Certificado electoral" }); // Monitorias
             break;
           case 3:
-            reciboObs.push({ Ref: 3, Descripcion:"Representante de consejo superior y/o académico" }); // Representante de consejo superior y/o académico
+            reciboObs.push({ Ref: "3", Descripcion:"Representante de consejo superior y/o académico" }); // Representante de consejo superior y/o académico
             break;
           case 4:
-            reciboObs.push({ Ref: 4, Descripcion:"Mejor saber- pro (ECAES)" }); // Mejor saber- pro (ECAES)
+            reciboObs.push({ Ref: "4", Descripcion:"Mejor saber- pro (ECAES)" }); // Mejor saber- pro (ECAES)
             break;
           case 5:
-            reciboObs.push({ Ref: 5, Descripcion:"Pariente de personal de planta UD" }); // Pariente de personal de planta UD
+            reciboObs.push({ Ref: "5", Descripcion:"Pariente de personal de planta UD" }); // Pariente de personal de planta UD
             break;
           case 6:
-            reciboObs.push({ Ref: 6, Descripcion:"Egresado UD" }); // Egresado UD
+            reciboObs.push({ Ref: "6", Descripcion:"Egresado UD" }); // Egresado UD
             break;
           case 7:
-            reciboObs.push({ Ref: 7, Descripcion:"Beca de secretaría de educación" }); // Beca de secretaría de educación
+            reciboObs.push({ Ref: "7", Descripcion:"Beca de secretaría de educación" }); // Beca de secretaría de educación
             break;
           default:
             break;
@@ -540,10 +540,10 @@ export class LiquidacionRecibosComponent {
         Tipo: "Estudiante",
         CodigoEstudiante: row.Codigo,
         Documento: row.Documento,
-        Periodo: this.selectedPeriodo.Id,
+        Periodo: this.selectedPeriodo.Nombre,
         Dependencia: {
           Tipo: "Proyecto Curricular",
-          Nombre: this.selectedProyecto
+          Nombre: this.selectedProyecto.Nombre
         },
         Conceptos: reciboConceptos,
         Observaciones: reciboObs,

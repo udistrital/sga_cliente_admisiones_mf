@@ -464,7 +464,7 @@ export class LiquidacionRecibosComponent {
           Comprobante: "0666"
         };
         this.recibos.push(recibo);
-      }
+      } else
       if (row.cuotas == 2) {
         const reciboConceptos = [];
         const reciboConceptosC2 = [];
@@ -552,7 +552,7 @@ export class LiquidacionRecibosComponent {
           Comprobante: "0666"
         };
         this.recibos.push(reciboC2);
-      }
+      } else
       if (row.cuotas == 3) {
         const reciboConceptos = [];
         const reciboConceptosC2 = [];
