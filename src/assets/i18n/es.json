@@ -1096,7 +1096,8 @@
         "Periodo": "Periodo",
         "Facultad": "Facultad",
         "Proyecto": "Proyecto",
-        "Acciones": "Acciones"
+        "Acciones": "Acciones",
+        "SelectNivel": "Selecciona el nivel"
 
 
     },
@@ -2768,6 +2769,59 @@
         "nombres":"Nombres",
         "apellidos":"Apellidos"
 
+    },
+    "listado_pregrado": {
+        "listar": "Listar",
+        "periodo": "Periodo",
+        "seleccion_periodo": "Selecciona un Periodo",
+        "nivel": "Nivel",
+        "seleccion_nivel": "Selecciona un Nivel",
+        "proyecto_curricular": "Proyecto Curricular",
+        "seleccion_proyecto": "Selecciona un Proyecto",
+        "facultad": "Facultad",
+        "seleccion_facultad": "Selecciona una facultad",
+        "consultar": "Consultar",
+        "tabla_resumen": "Resumen estados aspirantes",
+        "resumen_estado": "Datos generales",
+        "aspirantes": "Aspirantes:",
+        "inscritos": "Inscritos:",
+        "orden": "#",
+        "documento": "Número de documento",
+        "nombre_completo": "Nombre completo",
+        "telefono": "Teléfono",
+        "correo": "Correo electrónico",
+        "puntaje": "Puntaje",
+        "tipo_inscripcion": "Tipo de inscripción",
+        "estado_inscripcion": "Estado de inscripción",
+        "estado_recibo": "Estado de recibo",
+        "credencial": "Credencial",
+        "identificacion_examen_estado": "Número de documento al presenrtar examen de estado",
+        "codigo_proyecto": "Código proyecto",
+        "snp": "SNP",
+        "descargar": "Descargar SNP",
+        "regresar": "Regresar",
+        "resumen_estado_grid": "Resumen estado de inscripción de aspirantes",
+        "inscripcion_solicitada": "Inscripcion solicitada: ",
+        "admitido": "Admitido: ",
+        "opcionado": "Opcionado: ",
+        "no_admitido": "No admitido: ",
+        "inscrito": "Inscrito: ",
+        "inscrito_ob": "Inscrito con observacion: ",
+        "total": "Total aspirantes: ",
+        "acciones": "Acciones"
+    },
+    "cargue_snp": {
+        "tabla_resumen": "Resumen SNP",
+        "total": "Total global:",
+        "pendientes": "Pendientes de cargue:",
+        "cargados": "Cargados:",
+        "cargar": "Cargar archivo"},
+    "soporte-configuracion":{
+        "orden":"Orden",
+        "convocatoria":"Convocatoria",
+        "generacion":"Generación",
+        "usuario":"Usuario",
+        "nodata":"No se encontraron historicos"
     }
 
 }

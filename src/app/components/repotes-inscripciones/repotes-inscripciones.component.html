@@ -17,24 +17,35 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-
-                    <mat-form-field class="grid-3">
-                        <mat-label>{{ 'reportes.SelectFacultad' | translate }}</mat-label>
-                        <mat-select formControlName="facultad" (selectionChange)="onFacultadChange($event)">
-                            <mat-option *ngFor="let facultad of facultades" [value]="facultad.Id">
-                                {{ facultad.Nombre }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field class="grid-3">
-                        <mat-label>{{ 'reportes.SelectProyecto' | translate }}</mat-label>
-                        <mat-select formControlName="proyectoCurricular">
-                            <mat-option *ngFor="let proyecto of proyectos" [value]="proyecto.Id">
-                                {{ proyecto.Nombre }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <div *ngIf="!generalReport; else selectNivel">
+                        <mat-form-field class="grid-3">
+                            <mat-label>{{ 'reportes.SelectFacultad' | translate }}</mat-label>
+                            <mat-select formControlName="facultad" (selectionChange)="onFacultadChange($event)">
+                                <mat-option *ngFor="let facultad of facultades" [value]="facultad.Id">
+                                    {{ facultad.Nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+    
+                        <mat-form-field class="grid-3">
+                            <mat-label>{{ 'reportes.SelectProyecto' | translate }}</mat-label>
+                            <mat-select formControlName="proyectoCurricular">
+                                <mat-option *ngFor="let proyecto of proyectos" [value]="proyecto.Id">
+                                    {{ proyecto.Nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <ng-template #selectNivel>
+                        <mat-form-field class="grid-3">
+                          <mat-label>{{ 'reportes.SelectNivel' | translate }}</mat-label>
+                          <mat-select formControlName="selectNiveles" (selectionChange)="onNivelAcademicoChange($event)">
+                              <mat-option *ngFor="let nivel of niveles" [value]="nivel.Id">
+                                  {{ nivel.Nombre }}
+                              </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </ng-template>
                     <mat-form-field class="grid-3">
                         <mat-label>{{ 'reportes.SelectReporte' | translate }}</mat-label>
                         <mat-select formControlName="tipoReporte" (selectionChange)="onReporteChange($event)">

@@ -4,6 +4,7 @@ import { CommonModule } from "@angular/common";
 import { CodificacionRoutingModule } from "./codificacion-routing.module";
 import { HttpClientModule } from "@angular/common/http";
 import { CodificacionComponent } from "./components/codificacion/codificacion.component";
+import { ReporteCodificacionComponent } from "./components/reporte-codificacion/reporte-codificacion.component";
 
 import { ReactiveFormsModule } from "@angular/forms";
 
@@ -14,7 +15,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from "@angular/material/icon";
-import { MatTooltipModule } from '@angular/material/tooltip'
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { TranslateModule } from "@ngx-translate/core";
 
@@ -24,7 +25,7 @@ import { ReporteVisualizerComponent } from "../reporte-visualizer/reporte-visual
 import { RepotesInscripcionesComponent } from "../repotes-inscripciones/repotes-inscripciones.component";
 
 @NgModule({
-  declarations: [CodificacionComponent, RepotesInscripcionesComponent, SafeUrlPipe, ReporteVisualizerComponent],
+  declarations: [ReporteCodificacionComponent, CodificacionComponent, RepotesInscripcionesComponent, SafeUrlPipe, ReporteVisualizerComponent],
   imports: [
     CommonModule,
     CodificacionRoutingModule,

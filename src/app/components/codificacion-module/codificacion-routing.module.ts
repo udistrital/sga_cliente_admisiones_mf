@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodificacionComponent } from './components/codificacion/codificacion.component';
-import { ReporteVisualizerComponent } from "../reporte-visualizer/reporte-visualizer.component";
-import { RepotesInscripcionesComponent } from "../repotes-inscripciones/repotes-inscripciones.component";
+import { ReporteCodificacionComponent } from './components/reporte-codificacion/reporte-codificacion.component';
 
 const routes: Routes = [
   {
     path: "codificacion",
-    component: RepotesInscripcionesComponent
+    component: CodificacionComponent
   },
   {
     path: "reporte-codificacion",
-    component: ReporteVisualizerComponent
+    component: ReporteCodificacionComponent
   }
 ];
 
