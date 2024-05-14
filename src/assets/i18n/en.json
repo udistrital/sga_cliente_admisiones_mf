@@ -1788,7 +1788,9 @@
         "facultades_error": "Error loading faculties",
         "periodo_error": "Error loading periods",
         "inscripciones_error": "Error searching for registered applicants",
-        "legalizacion_error": "Error obtaining the applicant's legalization data"
+        "legalizacion_error": "Error obtaining the applicant's legalization data",
+        "actualizacion_legalizacion_error": "Error updating the applicant's legalization data",
+        "actualizacion_legalizacion_ok": "Successful update of the applicant's legalization data"
     },
     "cupos": {
         "aviso_periodo": "Period in which the admission quotas are defined",

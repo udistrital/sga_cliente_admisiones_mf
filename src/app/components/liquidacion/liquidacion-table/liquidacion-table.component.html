@@ -1,6 +1,8 @@
 
 <mat-card *ngIf="visible" style="margin-top: 10px;">
-
+    <div [class.loader-div]="loading">
+        <mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+    </div>
     <mat-card-content style="width: 100%; ">
         <div class=col-12>
             <fieldset [ngClass]="{'fieldseter':true}">
@@ -89,14 +91,15 @@
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 <mat-form-field *ngIf="editando">
-                                    <mat-label>Select</mat-label>
+                                    <!-- <mat-label>Select</mat-label>
                                     <mat-select [(value)]="element.A.A2"
                                         (selectionChange)="actualizarpuntaje(element, 'A2')">
                                         <mat-option>--Select--</mat-option>
                                         <mat-option *ngFor="let option of llavesA2" [value]="option">
                                             {{ option }}
                                         </mat-option>
-                                    </mat-select>
+                                    </mat-select> -->
+                                    <input type="number" matInput [(ngModel)]="element.A.A2">
                                 </mat-form-field>
                                 <p *ngIf="!editando">{{element.A.A2}}</p>
                             </td>
@@ -118,14 +121,15 @@
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 <mat-form-field *ngIf="editando">
-                                    <mat-label>Select</mat-label>
+                                    <!-- <mat-label>Select</mat-label>
                                     <mat-select [(value)]="element.A.A3"
                                         (selectionChange)="actualizarpuntaje(element, 'A3')">
                                         <mat-option>--Select--</mat-option>
                                         <mat-option *ngFor="let option of llavesA3" [value]="option">
                                             {{ option }}
                                         </mat-option>
-                                    </mat-select>
+                                    </mat-select> -->
+                                    <input type="number" matInput [(ngModel)]="element.A.A3">
                                 </mat-form-field>
                                 <p *ngIf="!editando">{{element.A.A3}}</p>
                             </td>
@@ -311,27 +315,21 @@
 
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <div class="separacion-acciones">
-                                    <button aria-hidden="false" title="{{'calendario.tooltip_inactivar' | translate}}"
-                                        class=" boton-primary-table" *ngIf="editando">
-                                        <mat-icon fontIcon="delete">
+                                <div class="contenedor-botones-fila">
+                                    <button aria-hidden="false"
+                                        class=" boton-primary-table un-boton" (click)="editar(element)">
+                                        <mat-icon *ngIf="!editando" fontIcon="edit">
+                                        </mat-icon>
+                                        <mat-icon *ngIf="editando && element.estado_edicion" fontIcon="save">
                                         </mat-icon>
                                     </button>
 
-                                    <button aria-hidden="false" title="{{'calendario.tooltip_editar' | translate}}"
-                                        class=" boton-primary-table  " *ngIf="editando">
-                                        <mat-icon fontIcon="edit">
+                                    <!-- <button *ngIf="editando && element.estado_edicion" aria-hidden="false"
+                                        class=" boton-primary-table" (click)="actualizarDatosLegalizacion(element)">
+                                        <mat-icon fontIcon="save">
                                         </mat-icon>
-                                    </button>
-
-                                    <button aria-hidden="false" title="{{'calendario.tooltip_inactivar' | translate}}"
-                                        class=" boton-primary-table">
-                                        <mat-icon fontIcon="send">
-                                        </mat-icon>
-                                    </button>
-
+                                    </button> -->
                                 </div>
-
                             </td>
                         </ng-container>
 

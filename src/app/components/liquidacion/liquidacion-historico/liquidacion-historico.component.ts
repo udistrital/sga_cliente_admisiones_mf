@@ -50,7 +50,7 @@ export class LiquidacionHistoricoComponent {
   facultades!: any[]
   proyectosCurriculares!: any[]
   periodos!: any[]
-
+  loading: boolean = false;
   inscripciones: any = [];
 
   constructor(
@@ -70,8 +70,10 @@ export class LiquidacionHistoricoComponent {
   }
 
   async cargarSelects() {
+    this.loading = true;
     await this.cargarFacultades();
     await this.cargarPeriodos();
+    this.loading = false;
   }
 
   cargarFacultades() {
@@ -112,6 +114,7 @@ export class LiquidacionHistoricoComponent {
   }
 
   async realizarBusqueda() {
+    this.loading = true;
     const proyecto = this.proyectoControl.value;
     const periodo = this.periodoControl.value;
 
@@ -125,7 +128,7 @@ export class LiquidacionHistoricoComponent {
       "inscripciones": this.inscripciones,
       "visible": true
     }
-
+    this.loading = false;
     // for (const inscripcion of this.inscripciones) {
     //   const persona: any = await this.consultarTercero(inscripcion.PersonaId);
     //   if (Array.isArray(persona) && persona.length === 0) {

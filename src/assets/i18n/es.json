@@ -1827,7 +1827,9 @@
         "facultades_error": "Error cargando las facultades",
         "periodo_error": "Error cargando los periodos",
         "inscripciones_error": "Error buscando los aspirantes inscritos",
-        "legalizacion_error": "Error obteniendo los datos de legalización del aspirante"
+        "legalizacion_error": "Error obteniendo los datos de legalización del aspirante",
+        "actualizacion_legalizacion_error": "Error actualizando los datos de legalización del aspirante",
+        "actualizacion_legalizacion_ok": "Actualización exitosa de los datos de legalización del aspirante"
     },
     "cupos": {
         "aviso_periodo": "Período en el cual se define los cupos de admisión",
