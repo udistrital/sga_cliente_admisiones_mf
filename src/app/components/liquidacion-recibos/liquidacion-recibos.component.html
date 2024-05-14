@@ -127,7 +127,7 @@
                 <th mat-header-cell *matHeaderCellDef class="subHeaders">Créditos</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field>
-                    <input matInput placeholder="Numero de creditos">
+                    <input matInput placeholder="Créditos" [(ngModel)]="row.creditos" (change)="calcularValorMatricula(row)">
                   </mat-form-field>
                 </td>
               </ng-container>
@@ -136,7 +136,7 @@
                 <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">Cuotas</th>
                 <td mat-cell *matCellDef="let row" class="border-right">
                   <mat-form-field>
-                    <input matInput placeholder="Numero de cuotas">
+                    <input matInput placeholder="Cuotas" [(ngModel)]="row.cuotas" (change)="actualizarValoresCuotas(row)">
                   </mat-form-field>
                 </td>
               </ng-container>
@@ -339,17 +339,17 @@
 
               <ng-container matColumnDef="primeraCuota">
                 <th mat-header-cell *matHeaderCellDef class="cuotas">Primera Cuota</th>
-                <td mat-cell *matCellDef="let row">{{ row.Codigo}}%</td>
+                <td mat-cell *matCellDef="let row">{{ row.valorCuota1 }}</td>
               </ng-container>
 
               <ng-container matColumnDef="segundaCuota">
                 <th mat-header-cell *matHeaderCellDef class="cuotas">Segunda Cuota</th>
-                <td mat-cell *matCellDef="let row">{{ row.Codigo}}%</td>
+                <td mat-cell *matCellDef="let row">{{ row.valorCuota2 }}</td>
               </ng-container>
 
               <ng-container matColumnDef="terceraCuota">
                 <th mat-header-cell *matHeaderCellDef class="border-right cuotas">Tercera Cuota</th>
-                <td mat-cell *matCellDef="let row" class="border-right">{{ row.Codigo}}%</td>
+                <td mat-cell *matCellDef="let row" class="border-right">{{ row.valorCuota3 }}</td>
               </ng-container>
 
 
@@ -357,7 +357,7 @@
 
               <ng-container matColumnDef="valorRecibo">
                 <th mat-header-cell *matHeaderCellDef class="border-right">Valor recibo</th>
-                <td mat-cell *matCellDef="let row" class="border-right">0</td>
+                <td mat-cell *matCellDef="let row" class="border-right">{{ row.valorRecibo}}</td>
               </ng-container>
 
 
@@ -366,12 +366,6 @@
                 <th mat-header-cell *matHeaderCellDef class="border-right"> Acciones </th>
                 <td mat-cell *matCellDef="let row" class="border-right ">
                   <div class="action-container">
-                    <button mat-icon-button (click)="eliminar(row)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="editar(row)">
-                      <mat-icon>edit</mat-icon>
-                    </button>
                     <button mat-icon-button (click)="descargar(row)">
                       <mat-icon>cloud_download</mat-icon>
                     </button>
@@ -402,7 +396,7 @@
           </div>
 
           <div class="button-stepper">
-            <button mat-stroked-button class=" azulClaro">Generar recibos</button>
+            <button mat-stroked-button class=" azulClaro"(click)="generarRecibos()">Generar recibos</button>
           </div>
 
           <div class="button-stepper">
@@ -410,7 +404,7 @@
           </div>
 
           <div class="button-stepper">
-            <button mat-stroked-button class="azulClaro">Descargar conjunto de recibos</button>
+            <button mat-stroked-button class="azulClaro"(click)="descargarPDFs()"> Descargar conjunto de recibos</button>
           </div>
 
           <div class="button-stepper">

@@ -17,6 +17,7 @@ import { SolicitudTransferenciaComponent } from './components/transferencia/soli
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
 import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
+import { LiquidacionRecibosComponent as LiquidacionPregrado } from './components/liquidacion/liquidacion-recibos/liquidacion-recibos.component';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-aspirantes/lista-proyectos-aspirantes.component';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
@@ -84,8 +85,12 @@ const routes: Routes = [
     component: DefSuiteInscripProgramaComponent ,
   },
   {
-    path:"liquidacion-recibos", 
+    path:"liquidacion-recibos-posgrado", 
     component: LiquidacionRecibosComponent ,
+  },
+  {
+    path:"liquidacion-recibos-pregrado", 
+    component: LiquidacionPregrado,
   },
   {
     path:"liquidacion-historico", 
