@@ -2744,6 +2744,13 @@
         "total": "Total global:",
         "pendientes": "Pending uploads:",
         "cargados": "Loaded:",
-        "cargar": "Upload file"
+        "cargar": "Upload file"},
+    "soporte-configuracion":{
+        "orden":"Order",
+        "convocatoria":"Call",
+        "Generacion":"Generation",
+        "Usuario":"User",
+        "nodata":"No historical data found"
+ 
     }
 }

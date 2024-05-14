@@ -79,6 +79,7 @@ import { ReporteVisualizerComponent } from './components/reporte-visualizer/repo
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { LiquidacionTableComponent } from './components/liquidacion/liquidacion-table/liquidacion-table.component';
+import { SoporteConfiguracionComponent } from './components/soporte-configuracion/soporte-configuracion.component';
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
@@ -97,7 +98,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { MatGridListModule } from '@angular/material/grid-list';
-
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -162,17 +162,19 @@ export function createTranslateLoader(http: HttpClient) {
     EvaluacionDocumentosInscritosComponent,
     DialogoDocumentosTransferenciasComponent,
     ListaProyectosAspirantesComponent,
-
     LiquidacionRecibosComponent,
     LiquidacionHistoricoComponent,
     LiquidacionTableComponent,
+    SoporteConfiguracionComponent,
     ListadoAspiranteComponent,
     AdministracionCuentaBancariaComponent,
     ComentariosCuposComponent,
     ListadoAspirantesPregradoComponent,
     CargueSnpComponent,
+    SoporteConfiguracionComponent
   ],
   imports: [
+    CodificacionModule,
     NgxDocViewerModule,
     FormsModule,
     CommonModule,

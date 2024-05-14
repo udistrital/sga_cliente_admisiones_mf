@@ -368,8 +368,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                 (response: any) => {
                     console.log("response")
                     console.log(response)
-                    if (response.success == true  && response.status == 200) {
-                        this.Aspirantes = response.data;
+                    if (response.Success == true  && response.Status == 200) {
+                        this.Aspirantes = response.Data;
                         console.log(this.Aspirantes)
                         this.admitidos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));
                         this.inscritos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO'));
