@@ -19,6 +19,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { elementAt } from 'rxjs';
 import * as JSZip from 'jszip';
 import * as saveAs from 'file-saver';
+import { InscripcionService } from 'src/app/services/inscripcion.service';
 
 @Component({
   selector: 'app-liquidacion-recibos',
@@ -53,7 +54,8 @@ export class LiquidacionRecibosComponent {
     private userService: UserService,
     private sgaAdmisiones: SgaAdmisionesMid,
     private liquidacionService: LiquidacionService,
-    private autenticationService: ImplicitAutenticationService,) {
+    private autenticationService: ImplicitAutenticationService,
+    private inscripcionService: InscripcionService) {
 
     this.cargarProyectos();
     this.cargarPeriodo();
@@ -493,6 +495,7 @@ export class LiquidacionRecibosComponent {
     this.admitidos.forEach(row => {
       const reciboConceptos = [];
       const reciboObs: { Ref: any; Descripcion: string; }[] = [];
+      reciboConceptos.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.totalMatricula });
       if (row.Seguro) {
         reciboConceptos.push({ Ref: 2, Descripcion:"SEGURO",Valor: 111 }); //No exixte parametro para seguro 
       }
@@ -553,18 +556,21 @@ export class LiquidacionRecibosComponent {
     });
     console.log(this.recibos)
     for (const recibo of this.recibos) {
-      this.liquidacionService.post('recibos/', recibo)
+      this.inscripcionService.post('recibov2/', recibo)
         .subscribe(
-          (data: any) => {
-            const byteArray = atob(data.base64);
-        const byteNumbers = new Array(byteArray.length);
-        for (let i = 0; i < byteArray.length; i++) {
-          byteNumbers[i] = byteArray.charCodeAt(i);
-        }
-        const file = new Blob([new Uint8Array(byteNumbers)], { type: 'application/pdf' });
-        this.pdfs.push(file);
+          (response: any) => {
+            if (response.success && response.data) {
+              const byteArray = atob(response.data);
+              const byteNumbers = new Array(byteArray.length);
+              for (let i = 0; i < byteArray.length; i++) {
+                byteNumbers[i] = byteArray.charCodeAt(i);
+              }
+              const file = new Blob([new Uint8Array(byteNumbers)], { type: 'application/pdf' });
+              this.pdfs.push(file);
+            }
           },
           (error: HttpErrorResponse) => {
+            console.error(error);
           }
         );
     }
