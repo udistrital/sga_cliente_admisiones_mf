@@ -5,11 +5,11 @@ import { ReporteCodificacionComponent } from './components/reporte-codificacion/
 
 const routes: Routes = [
   {
-    path: "codificacion",
-    component: CodificacionComponent
+    path: "codificacion/crear",
+    component: CodificacionComponent,
   },
   {
-    path: "reporte-codificacion",
+    path: "codificacion/reporte",
     component: ReporteCodificacionComponent
   }
 ];
