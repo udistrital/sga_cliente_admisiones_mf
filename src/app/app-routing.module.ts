@@ -25,6 +25,7 @@ import { SoporteConfiguracionComponent } from './components/soporte-configuracio
 import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
+import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 
 
 const routes: Routes = [
@@ -60,6 +61,10 @@ const routes: Routes = [
    // path:"evaluacion-aspirantes", 
     //component: EvaluacionAspirantesComponent
   //},
+    {
+    path:"evaluacion-aspirantes-pregrado", 
+    component: EvalucionAspirantePregradoComponent
+  },
   {
     path:"listado-aspirantes", 
     component: ListadoAspiranteComponent
