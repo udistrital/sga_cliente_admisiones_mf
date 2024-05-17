@@ -1,0 +1,188 @@
+<div>
+  <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <ng-template matStepLabel>{{ 'listado_pregrado.listar' | translate }}</ng-template>
+
+      <mat-card>
+        
+        <br><br>
+
+        <mat-card-content>
+          <div class="form-container">
+
+            <div>
+              <mat-card-subtitle>{{ 'listado_pregrado.periodo' | translate }}</mat-card-subtitle>
+              <mat-form-field [formGroup]="firstFormGroup">
+                <mat-label>{{ 'listado_pregrado.seleccion_periodo' | translate }}</mat-label>
+                <mat-select formControlName="validatorPeriodo" required>
+                  <mat-option *ngFor="let food of foods" [value]="food.value">{{food.viewValue}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-card-subtitle>{{ 'listado_pregrado.nivel' | translate }}</mat-card-subtitle>
+              <mat-form-field [formGroup]="firstFormGroup">
+                <mat-label>{{ 'listado_pregrado.seleccion_nivel' | translate }}</mat-label>
+                <mat-select formControlName="validatorNivel" required>
+                  <mat-option *ngFor="let food of foods" [value]="food.value">{{food.viewValue}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-card-subtitle>{{ 'listado_pregrado.proyecto_curricular' | translate }}</mat-card-subtitle>
+              <mat-form-field [formGroup]="firstFormGroup">
+                <mat-label>{{ 'listado_pregrado.seleccion_proyecto' | translate }}</mat-label>
+                <mat-select formControlName="validatorProyecto" required>
+                  <mat-option *ngFor="let food of foods" [value]="food.value">{{food.viewValue}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-card-subtitle>{{ 'listado_pregrado.facultad' | translate }}</mat-card-subtitle>
+              <mat-form-field [formGroup]="firstFormGroup">
+                <mat-label>{{ 'listado_pregrado.seleccion_facultad' | translate }}</mat-label>
+                <mat-select formControlName="validatorFacultad" required>
+                  <mat-option *ngFor="let food of foods" [value]="food.value">{{food.viewValue}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+          </div>
+
+        <div class="button-stepper">
+          <button mat-stroked-button matStepperNext class="btn boton-primary">{{ 'listado_pregrado.consultar' | translate }}</button>
+        </div>
+
+        </mat-card-content>
+      </mat-card>
+
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+      <ng-template matStepLabel>{{ 'cargue_snp.tabla_resumen' | translate }}</ng-template>
+      <br><br>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ 'listado_pregrado.resumen_estado' | translate }}</mat-card-title>
+          </mat-card-header>
+          <br><br>
+          <mat-card-content>
+            <mat-grid-list cols="3" rowHeight="40px">
+              <!-- Elemento 1 -->
+              <mat-grid-tile colspan="3" rowspan="1" [style.background]="tiles[0].color" [style.color]="tiles[0].textColor">
+                <h6>{{ 'cargue_snp.tabla_resumen' | translate }}</h6>
+                
+              </mat-grid-tile>
+              
+              <!-- Elemento 2 -->
+              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[1].color" [style.color]="tiles[1].textColor">
+                <p>{{ 'cargue_snp.total' | translate }}</p>
+                <p>{{ tiles[1].text }}</p>
+              </mat-grid-tile>
+              
+              <!-- Elemento 3 -->
+              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[2].color" [style.color]="tiles[2].textColor">
+                <p>{{ 'cargue_snp.pendientes' | translate }}</p>
+                <p>{{ tiles[2].text }}</p>
+              </mat-grid-tile>
+              
+              <!-- Elemento 4 -->
+              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[3].color" [style.color]="tiles[3].textColor">
+                <p>{{ 'cargue_snp.cargados' | translate }}</p>
+                <p>{{ tiles[3].text }}</p>
+              </mat-grid-tile>
+              
+            </mat-grid-list>
+          </mat-card-content>
+        </mat-card>
+        <br><br>
+        <mat-card>
+          <mat-card-content>
+            <div class="table-container" style="overflow-x: auto;">
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 scrollable-table">
+
+                <ng-container matColumnDef="Orden">
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.orden' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.data.Orden}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="Credencial">
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.credencial' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.data.Credencial}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="IdentificacionEnExamenEstado">
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.identificacion_examen_estado' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.data.IdentificacionEnExamenEstado}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="NombreCompleto">
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.nombre_completo' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.data.NombreCompleto}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Correo">
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.correo' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.data.Correo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Telefono">
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.telefono' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.data.Telefono}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="CodigoProyecto">
+                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.codigo_proyecto' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.data.CodigoProyecto}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="SNP">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'listado_pregrado.snp' | translate }}</th>
+                  <td mat-cell *matCellDef="let row">
+                    <div *ngIf="editingRowId === row.data.Orden; else notEditing">
+                      <input [(ngModel)]="row.data.SNP" (blur)="editingRowId = null" />
+                    </div>
+                    <ng-template #notEditing>
+                      {{ row.data.SNP }}
+                    </ng-template>
+                  </td>
+                </ng-container>
+
+                <!-- Acciones Column -->
+                <ng-container matColumnDef="Acciones">
+                  <th mat-header-cell *matHeaderCellDef class="border-right">{{ 'listado_pregrado.acciones' | translate }}</th>
+                  <td mat-cell *matCellDef="let row" class="border-right ">
+                    <div class="action-container">
+                      <button mat-icon-button (click)="editar(row.data.Orden)" style="margin-right: 10px;">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="colums"></tr>
+                <tr mat-row *matRowDef="let row; columns: colums"></tr>
+
+
+              </table>
+            </div>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+
+
+            <div class="button-container" style="display: flex; justify-content: center;">
+              <div class="button-stepper">
+                <button mat-stroked-button class="btn boton-primary">{{ 'cargue_snp.cargar' | translate }}</button>
+              </div>
+            </div>
+
+
+          </mat-card-content>
+        </mat-card>
+
+    </mat-step>
+  </mat-stepper>
+</div>

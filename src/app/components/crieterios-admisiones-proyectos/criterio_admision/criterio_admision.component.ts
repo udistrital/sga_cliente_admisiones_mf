@@ -272,7 +272,7 @@ export class CriterioAdmisionComponent implements OnChanges {
     this.criterio_selected = [];
     this.limpiarDatos()
     console.log(this.periodo)
-    this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:' + this.proyectos_selected +
+    this.evaluacionService.get('requisito_programa_academico?query=Activo:true,ProgramaAcademicoId:' + this.proyectos_selected +
       ',PeriodoId:' + this.periodo.Id).subscribe(response => {
         const r = <any>response;
         if (r[0].Id !== undefined && r[0] !== '{}' && r.Type !== 'error') {
@@ -623,11 +623,10 @@ export class CriterioAdmisionComponent implements OnChanges {
         this.dataSubcriterios = [];
         this.dataSubcriterios.push({});
       }
-      // this.dataSourceSubcriterio = new LocalDataSource();
+       //this.dataSourceSubcriterio = new MatTableDataSource<any>([]);
       const subcriterios = event.data.Subcriterios;
       if (subcriterios != undefined && subcriterios.length > 0) {
-        // this.dataSourceSubcriterio.load(this.dataSubcriterios);
-        this.dataSourceSubcriterio = new MatTableDataSource(subcriterios)
+        this.dataSourceSubcriterio = new MatTableDataSource(this.dataSubcriterios)
 
         this.settingsSubcriterio = {
           columns: {
@@ -767,16 +766,25 @@ export class CriterioAdmisionComponent implements OnChanges {
       if (this.proyectos_selected){
 
         this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:' +
-        this.proyectos_selected + ',PeriodoId:' + this.periodo.Id + ',Activo:true&limit=0')
+        this.proyectos_selected + ',PeriodoId:' + this.periodo.Id + '&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Type !== 'error') {
             if (res.length > 1) {
+              for (let i = 0; i < r.length; i++) {
+                let contieneId = this.dataSource.data.some(objeto => objeto.Id === r[i].RequisitoId.Id);
+                if (!contieneId && r[i].Activo != false) {
+                  r[i].Activo = false
+                  var requisitoPut = r[i]
+                  this.requisitoPut(requisitoPut);
+                }
+              }
               for (let j = 0; j < this.dataSource.data.length; j++) {
                 let existe = false;
 
                 for (let i = 0; i < r.length; i++) {
                   if (this.dataSource.data[j].Id == r[i].RequisitoId.Id) {
+                    r[i].Activo = true
                     var requisitoPut = r[i];
                     requisitoPut.PorcentajeGeneral = +this.dataSource.data[j].Porcentaje;
                     existe = true;

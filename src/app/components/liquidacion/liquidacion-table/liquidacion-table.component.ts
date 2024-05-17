@@ -254,9 +254,3 @@ export class LiquidacionTableComponent implements OnInit{
 
 
 }
-
-
-
-
-
-

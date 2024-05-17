@@ -17,12 +17,14 @@ import { SolicitudTransferenciaComponent } from './components/transferencia/soli
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
 import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
+import { LiquidacionRecibosComponent as LiquidacionPregrado } from './components/liquidacion/liquidacion-recibos/liquidacion-recibos.component';
 import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-aspirantes/lista-proyectos-aspirantes.component';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
+import { SoporteConfiguracionComponent } from './components/soporte-configuracion/soporte-configuracion.component';
 import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
-
-
+import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
+import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 
 
 const routes: Routes = [
@@ -35,7 +37,7 @@ const routes: Routes = [
     component: AdministradorCriteriosComponent
   },
   {
-    path:"admision-criterios", 
+    path:"criterios", 
     component: CriterioAdmisionComponent
   },
   {
@@ -47,17 +49,17 @@ const routes: Routes = [
     component: ComentariosCuposComponent
   },
   {
-    path:"documentos-inscritos", 
+    path:"evaluacion-documentos-inscritos", 
     component: EvaluacionDocumentosInscritosComponent
   },
   {
     path:"administracion-cuenta", 
     component: AdministracionCuentaBancariaComponent
   },
-  //{
-   // path:"evaluacion-aspirantes", 
-    //component: EvaluacionAspirantesComponent
-  //},
+  {
+   path:"evaluacion-aspirantes", 
+    component: EvaluacionAspirantesComponent
+  },
   {
     path:"listado-aspirantes", 
     component: ListadoAspiranteComponent
@@ -71,7 +73,7 @@ const routes: Routes = [
     component: AsignarDocumentosDescuentosComponent
   },
   {
-    path:"transferencia/:process", 
+    path:"transferencias/:process", 
     component: TransferenciaComponent,
   },
   {
@@ -83,17 +85,32 @@ const routes: Routes = [
     component: DefSuiteInscripProgramaComponent ,
   },
   {
-    path:"liquidacion-recibos", 
+    path:"liquidacion-recibos-posgrado", 
     component: LiquidacionRecibosComponent ,
+  },
+  {
+    path:"liquidacion-recibos-pregrado", 
+    component: LiquidacionPregrado,
   },
   {
     path:"liquidacion-historico", 
     component: LiquidacionHistoricoComponent ,
   },
+  // {
+  //   path:"soporte-configuracion", 
+  //   component: SoporteConfiguracionComponent ,
+  // },
     {path:"reportes-inscritos", 
     component: RepotesInscripcionesComponent ,
   },
-
+  {
+    path:"listado-pregrado", 
+    component: ListadoAspirantesPregradoComponent ,
+  },
+  {
+    path:"snp", 
+    component: CargueSnpComponent ,
+  },
 ];
 
 @NgModule({
