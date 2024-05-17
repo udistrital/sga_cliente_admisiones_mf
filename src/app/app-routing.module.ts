@@ -37,7 +37,7 @@ const routes: Routes = [
     component: AdministradorCriteriosComponent
   },
   {
-    path:"admision-criterios", 
+    path:"criterios", 
     component: CriterioAdmisionComponent
   },
   {
@@ -49,17 +49,17 @@ const routes: Routes = [
     component: ComentariosCuposComponent
   },
   {
-    path:"documentos-inscritos", 
+    path:"evaluacion-documentos-inscritos", 
     component: EvaluacionDocumentosInscritosComponent
   },
   {
     path:"administracion-cuenta", 
     component: AdministracionCuentaBancariaComponent
   },
-  //{
-   // path:"evaluacion-aspirantes", 
-    //component: EvaluacionAspirantesComponent
-  //},
+  {
+   path:"evaluacion-aspirantes", 
+    component: EvaluacionAspirantesComponent
+  },
   {
     path:"listado-aspirantes", 
     component: ListadoAspiranteComponent
@@ -73,7 +73,7 @@ const routes: Routes = [
     component: AsignarDocumentosDescuentosComponent
   },
   {
-    path:"transferencia/:process", 
+    path:"transferencias/:process", 
     component: TransferenciaComponent,
   },
   {
