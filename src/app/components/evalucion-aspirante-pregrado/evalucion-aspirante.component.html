@@ -110,31 +110,38 @@
                 <fieldset [ngClass]="{'fieldseter': true}">
                     <legend>&nbsp; {{ 'evaluacionpregrado.variables' | translate }}</legend>
                     <div>
-                        <mat-form-field style="width: 40%;">
+                        <mat-form-field style="width: 100%;">
                             <mat-label>{{ 'evaluacionpregrado.periodo' | translate }}:</mat-label>
-                            <mat-select [(ngModel)]="periodo" [disabled]='false' (selectionChange)="selectPeriodo()">
+                            <mat-select [(ngModel)]="periodo" [disabled]='false' (selectionChange)="onPeriodoChange($event)" [formControl]="periodoControl">
                                 <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
-                                <mat-option *ngFor="let item of periodos" [value]="item">{{ item.Nombre }}</mat-option>
+                                <mat-option *ngFor="let item of periodos" [value]="item.Id">{{ item.Nombre }}</mat-option>
                             </mat-select>
                         </mat-form-field>
 
                         <mat-form-field style="width: 100%;">
                             <mat-label>{{ 'evaluacionpregrado.nivel_aviso' | translate }}:</mat-label>
-                            <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel" (selectionChange)="loadExamen()">
+                            <mat-select [formControl]="nivelControl" [(ngModel)]="selectednivel" (selectionChange)="loadExamen()">
                                 <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
-                                <mat-option *ngFor="let item of nivel_load" [value]="item.Nombre">{{ item.Nombre }}</mat-option>
+                                <mat-option *ngFor="let item of nivel_load" [value]="item.Id">{{ item.Nombre }}</mat-option>
                             </mat-select>
-                            <mat-error *ngIf="CampoControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate }}</mat-error>
+                            <mat-error *ngIf="nivelControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate }}</mat-error>
                         </mat-form-field>
 
                         <mat-form-field style="width: 100%;">
                             <mat-label>{{ 'evaluacionpregrado.criterio_consultar' | translate }}:</mat-label>
-                            <mat-select [formControl]="criterio" [(ngModel)]="selectCriterio" (selectionChange)="loadExamen()">
+                            <mat-select [formControl]="criterioControl" [(ngModel)]="selectCriterio">
                                 <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
-                                <mat-option *ngFor="let item of criterio_load" [value]="item.Nombre">{{ item.Nombre }}</mat-option>
+                                <mat-option *ngFor="let item of requisitosActuales" [value]="item.Id">{{ item.Nombre }}</mat-option>
                             </mat-select>
-                            <mat-error *ngIf="CampoControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate }}</mat-error>
+                            <mat-error *ngIf="criterioControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate }}</mat-error>
                         </mat-form-field>
+
+                        <div class="boton-busqueda">
+                            <div class="row justify-content-md-center">
+                                <button class="boton-primary"(click)="realizarBusqueda()">{{
+                                    'GLOBAL.continuar' | translate }}</button>
+                            </div>
+                        </div>
                         <br /><br />
                     </div>
                 </fieldset>
