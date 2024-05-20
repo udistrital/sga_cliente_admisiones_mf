@@ -1825,6 +1825,11 @@
         "info_lista_proyecto_activos": "Seleccione el período académico (el período actual activo está seleccionado por defecto), seguido por el nivel, para acceder a la lista de proyectos activos en el período seleccionado y a la lista de aspirantes de cada proyecto en el período especificado.",
         "buscar_en_toda_la_tabla": "Buscar en toda la tabla",
         "facultades_error": "Error cargando las facultades",
+        "periodo_error": "Error cargando los periodos",
+        "inscripciones_error": "Error buscando los aspirantes inscritos",
+        "legalizacion_error": "Error obteniendo los datos de legalización del aspirante",
+        "actualizacion_legalizacion_error": "Error actualizando los datos de legalización del aspirante",
+        "actualizacion_legalizacion_ok": "Actualización exitosa de los datos de legalización del aspirante"
         "periodo_error": "Error cargando los períodos",
         "inscripciones_error": "Error buscando los aspirantes inscritos",
         "tercero_error": "Error consultando al tercero",
