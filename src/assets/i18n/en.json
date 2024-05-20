@@ -1784,7 +1784,21 @@
         "listar_aspirantes_proyecto": "List applicants for active projects",
         "proyecto_sin_aspirantes": "This project does not have applicants",
         "info_lista_proyecto_activos": "Select the academic period (the current active period is selected by default), followed by the level, to access the list of active projects in the selected period and the list of applicants for each project in the specified period.",
-        "buscar_en_toda_la_tabla": "search entire table"
+        "buscar_en_toda_la_tabla": "search entire table",
+        "facultades_error": "Error loading faculties",
+        "periodo_error": "Error loading periods",
+        "inscripciones_error": "Error searching for registered applicants",
+        "tercero_error": "Error consulting the person",
+        "requisito_programa_error": "Error consulting the requirement for this academic program",
+        "detalle_evaluacion_error": "Error querying evaluation details",
+        "creacion_detalle_evaluacion_exito": "The evaluation detail was successfully created",
+        "creacion_detalle_evaluacion_error": "An error occurred creating the evaluation detail",
+        "actualizacion_detalle_evaluacion_exito": "The evaluation detail was successfully updated",
+        "actualizacion_detalle_evaluacion_error": "An error occurred updating the evaluation detail",
+        "titulo_detalle_evaluacion_existente": "Existing evaluation detail",
+        "detalle_evaluacion_existente": "The evaluation detail information is already registered",
+        "titulo_inscripcion_no_encontrada": "The inscription was not found",
+        "inscripcion_no_encontrada": "No registration associated with the icfes code was found"
     },
     "cupos": {
         "aviso_periodo": "Period in which the admission quotas are defined",
