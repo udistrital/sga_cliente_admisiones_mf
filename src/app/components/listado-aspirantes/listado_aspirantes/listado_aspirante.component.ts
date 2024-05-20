@@ -429,7 +429,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                 .subscribe((response: any) => {
                     if (response != null && response.Status != '404'
                         && Object.keys(response[0]).length > 0) {
-                        let dataTel = JSON.parse(response[0].Data)
+                        let dataTel = JSON.parse(response[0].Dato)
                         resolve(dataTel.principal)
                     } else {
                         reject("Bad answer")
