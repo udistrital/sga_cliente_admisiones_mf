@@ -1791,6 +1791,17 @@
         "legalizacion_error": "Error obtaining the applicant's legalization data",
         "actualizacion_legalizacion_error": "Error updating the applicant's legalization data",
         "actualizacion_legalizacion_ok": "Successful update of the applicant's legalization data"
+        "tercero_error": "Error consulting the person",
+        "requisito_programa_error": "Error consulting the requirement for this academic program",
+        "detalle_evaluacion_error": "Error querying evaluation details",
+        "creacion_detalle_evaluacion_exito": "The evaluation detail was successfully created",
+        "creacion_detalle_evaluacion_error": "An error occurred creating the evaluation detail",
+        "actualizacion_detalle_evaluacion_exito": "The evaluation detail was successfully updated",
+        "actualizacion_detalle_evaluacion_error": "An error occurred updating the evaluation detail",
+        "titulo_detalle_evaluacion_existente": "Existing evaluation detail",
+        "detalle_evaluacion_existente": "The evaluation detail information is already registered",
+        "titulo_inscripcion_no_encontrada": "The inscription was not found",
+        "inscripcion_no_encontrada": "No registration associated with the icfes code was found"
     },
     "cupos": {
         "aviso_periodo": "Period in which the admission quotas are defined",

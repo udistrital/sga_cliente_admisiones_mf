@@ -24,6 +24,7 @@ import { DialogoDocumentosTransferenciasComponent } from '../dialogo-documentos-
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { InscripcionService } from 'src/app/services/inscripcion.service';
 
 @Component({
   selector: 'transferencia',
@@ -52,6 +53,7 @@ export class TransferenciaComponent implements OnInit {
   parametros_pago: any;
   periodo!: Periodo;
   periodos: any = [];
+  pdfs: Blob[] = [];
 
   dataTransferencia: any = {
     Periodo: null,
@@ -72,7 +74,8 @@ export class TransferenciaComponent implements OnInit {
     private popUpManager: PopUpManager,
     private userService: UserService,
     private router: Router,
-    private _Activatedroute: ActivatedRoute
+    private _Activatedroute: ActivatedRoute,
+    private inscripcionService: InscripcionService
   ) {
     this.formTransferencia = FORM_TRANSFERENCIA_INTERNA;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -139,7 +142,7 @@ export class TransferenciaComponent implements OnInit {
     this.uid = this.userService.getPersonaId();
     if (this.uid !== undefined && this.uid !== 0 &&
       this.uid.toString() !== '' && this.uid.toString() !== '0') {
-        console.log(this.uid)
+      console.log(this.uid)
       this.sgaMidService.get('persona/consultar_persona/' + this.uid).subscribe((res: any) => {
         if (res !== null) {
 
@@ -232,7 +235,7 @@ export class TransferenciaComponent implements OnInit {
   }
 
   handleButtonClick = (data: any) => {
-    
+
     console.log('estoy ejecutando')
     if (data.Estado == 'Pendiente pago') {
       this.abrirPago(data);
@@ -246,7 +249,7 @@ export class TransferenciaComponent implements OnInit {
       sessionStorage.setItem('ProgramaAcademicoId', data.IdPrograma);
       sessionStorage.setItem('NivelId', data.Nivel);
 
-     this.router.navigate([`solicitud-transferencia/${idInscripcion}/${btoa(this.process)}`])
+      this.router.navigate([`solicitud-transferencia/${idInscripcion}/${btoa(this.process)}`])
     }
   };
 
@@ -298,7 +301,7 @@ export class TransferenciaComponent implements OnInit {
                 setTimeout(() => {
                   this.dataSource.paginator = this.paginator;
                   this.dataSource.sort = this.sort;
-                  }, 300);
+                }, 300);
 
                 //this.dataSource.setSort([{ field: 'Id', direction: 'desc' }]);
 
@@ -618,105 +621,146 @@ export class TransferenciaComponent implements OnInit {
     );
   }
 
-  generar_inscripcion() {
-    return new Promise((resolve, reject) => {
-      const inscripcion = {
-        Id: parseInt(this.info_info_persona.NumeroIdentificacion, 10),
-        Nombre: `${this.info_info_persona.PrimerNombre} ${this.info_info_persona.SegundoNombre}`,
-        Apellido: `${this.info_info_persona.PrimerApellido} ${this.info_info_persona.SegundoApellido}`,
-        Correo: JSON.parse(atob(localStorage.getItem('id_token')!.split('.')[1])).email,
-        PersonaId: Number(this.uid),
-        PeriodoId: this.dataTransferencia.Periodo.Id,
-        Nivel: this.dataTransferencia.TipoInscripcion.NivelId,
-        ProgramaAcademicoId: this.dataTransferencia.ProyectoCurricular.Id,
-        TipoInscripcionId: this.dataTransferencia.TipoInscripcion.Id,
-        Year: this.dataTransferencia.Periodo.Year,
-        Periodo: parseInt(this.dataTransferencia.Periodo.Ciclo, 10),
-        FechaPago: '',
-      };
+  generar_inscripcionv2() {
+    const reciboConceptos = [];
+    const reciboObs: { Ref: any; Descripcion: string; }[] = [];
+    reciboConceptos.push({ Ref: "1", Descripcion: "INSCTIPCIÓN", Valor: 1111 });
+    reciboObs.push({ Ref: "", Descripcion: "Transferencia" });
 
-      this.loading = true;
-      let periodo = localStorage.getItem('IdPeriodo');
-      this.sgaMidService.get('consulta_calendario_proyecto/nivel/' + this.dataTransferencia.TipoInscripcion.NivelId + '/periodo/' + periodo).subscribe(
-        (response: any[]) => {
-          if (response !== null && response.length !== 0) {
-            this.inscripcionProjects = response;
-            this.inscripcionProjects.forEach(proyecto => {
-              if (proyecto.ProyectoId === this.dataTransferencia.ProyectoCurricular.Id && proyecto.Evento != null) {
-                inscripcion.FechaPago = moment(proyecto.Evento[0].FechaFinEvento, 'YYYY-MM-DD').format('DD/MM/YYYY');
-
-                this.sgaMidService.post('inscripciones/generar_inscripcion', inscripcion).subscribe(
-                  (response: any) => {
-                    if (response.Code === '200') {
-                      this.listadoSolicitudes = true;
-
-                      this.clean();
-
-                      this.loadDataTercero(this.process);
-                      this.loading = false;
-
-                      resolve(response);
-                      this.popUpManager.showSuccessAlert(this.translate.instant('recibo_pago.generado'));
-                    } else if (response.Code === '204') {
-                      this.loading = false;
-                      reject([]);
-                      this.popUpManager.showErrorAlert(this.translate.instant('recibo_pago.recibo_duplicado'));
-                    } else if (response.Code === '400') {
-                      this.loading = false;
-                      reject([]);
-                      this.popUpManager.showErrorToast(this.translate.instant('recibo_pago.no_generado'));
-                    }
-                  },
-                  (error: HttpErrorResponse) => {
-                    this.loading = false;
-                    this.popUpManager.showErrorToast(this.translate.instant(`ERROR.${error.status}`));
-                    reject([]);
-                  },
-                );
-              }
-            });
-            this.loading = false;
+    const recibo = {
+      Documento: parseInt(this.info_info_persona.NumeroIdentificacion, 10),
+      Nombre: `${this.info_info_persona.PrimerNombre} ${this.info_info_persona.SegundoNombre} ${this.info_info_persona.PrimerApellido} ${this.info_info_persona.SegundoApellido}`,
+      Tipo: "Inscripcion",
+      Periodo: this.dataTransferencia.Periodo.Nombre,
+      Dependencia: {
+        Tipo: "Proyecto Curricular",
+        Nombre: this.dataTransferencia.ProyectoCurricular.Nombre
+      },
+      Conceptos: reciboConceptos,
+      Observaciones: reciboObs,
+      Fecha1: "30/02/2023",
+      Fecha2: "30/02/2023",
+      Recargo: 1,
+      Comprobante: "0666"
+    };
+    this.inscripcionService.post('recibov2/', recibo)
+      .subscribe(
+        (response: any) => {
+          if (response.Success && response.Data) {
+            const byteArray = atob(response.Data);
+            const byteNumbers = new Array(byteArray.length);
+            for (let i = 0; i < byteArray.length; i++) {
+              byteNumbers[i] = byteArray.charCodeAt(i);
+            }
+            const file = new Blob([new Uint8Array(byteNumbers)], { type: 'application/pdf' });
+            this.pdfs.push(file);
           }
         },
-        (error: any) => {
-          this.loading = false;
-          this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('calendario.sin_proyecto_curricular'));
-          reject([]);
-        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+        }
       );
-    });
   }
 
-  clean() {
-    this.dataTransferencia = {
-      Periodo: null,
-      CalendarioAcademico: null,
-      TipoInscripcion: null,
-      CodigoEstudiante: null,
-      ProyectoCurricular: null,
+generar_inscripcion() {
+  return new Promise((resolve, reject) => {
+    const inscripcion = {
+      Id: parseInt(this.info_info_persona.NumeroIdentificacion, 10),
+      Nombre: `${this.info_info_persona.PrimerNombre} ${this.info_info_persona.SegundoNombre}`,
+      Apellido: `${this.info_info_persona.PrimerApellido} ${this.info_info_persona.SegundoApellido}`,
+      Correo: JSON.parse(atob(localStorage.getItem('id_token')!.split('.')[1])).email,
+      PersonaId: Number(this.uid),
+      PeriodoId: this.dataTransferencia.Periodo.Id,
+      Nivel: this.dataTransferencia.TipoInscripcion.NivelId,
+      ProgramaAcademicoId: this.dataTransferencia.ProyectoCurricular.Id,
+      TipoInscripcionId: this.dataTransferencia.TipoInscripcion.Id,
+      Year: this.dataTransferencia.Periodo.Year,
+      Periodo: parseInt(this.dataTransferencia.Periodo.Ciclo, 10),
+      FechaPago: '',
     };
-    this.formTransferencia.campos.forEach((campo: any) => {
-      if (campo.nombre === 'ProyectoCurricular' || campo.nombre === 'TipoInscripcion') {
-        campo.ocultar = true;
-      }
-      if (campo.nombre === 'CalendarioAcademico') {
-        campo.valor = null;
-      }
-    });
-  }
 
-  abrirPago(data: any) {
-    this.parametros_pago.NUM_DOC_IDEN = this.info_info_persona.NumeroIdentificacion;
-    this.parametros_pago.REFERENCIA = data['Recibo'];
-    this.parametros_pago.TIPO_DOC_IDEN = this.info_info_persona.TipoIdentificacion.CodigoAbreviacion;
-    const url = new URLSearchParams(this.parametros_pago).toString();
-    const ventanaPSE = window.open(environment.PSE_SERVICE + url, 'PagosPSE', 'width=600,height=800,resizable,scrollbars,status')!;
-    ventanaPSE.focus();
-    const timer = window.setInterval(() => {
-      if (ventanaPSE.closed) {
-        window.clearInterval(timer);
-        this.loadDataTercero(this.process);
-      }
-    }, 5000);
-  }
+    this.loading = true;
+    let periodo = localStorage.getItem('IdPeriodo');
+    this.sgaMidService.get('consulta_calendario_proyecto/nivel/' + this.dataTransferencia.TipoInscripcion.NivelId + '/periodo/' + periodo).subscribe(
+      (response: any[]) => {
+        if (response !== null && response.length !== 0) {
+          this.inscripcionProjects = response;
+          this.inscripcionProjects.forEach(proyecto => {
+            if (proyecto.ProyectoId === this.dataTransferencia.ProyectoCurricular.Id && proyecto.Evento != null) {
+              inscripcion.FechaPago = moment(proyecto.Evento[0].FechaFinEvento, 'YYYY-MM-DD').format('DD/MM/YYYY');
+
+              this.sgaMidService.post('inscripciones/generar_inscripcion', inscripcion).subscribe(
+                (response: any) => {
+                  if (response.Code === '200') {
+                    this.listadoSolicitudes = true;
+
+                    this.clean();
+
+                    this.loadDataTercero(this.process);
+                    this.loading = false;
+
+                    resolve(response);
+                    this.popUpManager.showSuccessAlert(this.translate.instant('recibo_pago.generado'));
+                  } else if (response.Code === '204') {
+                    this.loading = false;
+                    reject([]);
+                    this.popUpManager.showErrorAlert(this.translate.instant('recibo_pago.recibo_duplicado'));
+                  } else if (response.Code === '400') {
+                    this.loading = false;
+                    reject([]);
+                    this.popUpManager.showErrorToast(this.translate.instant('recibo_pago.no_generado'));
+                  }
+                },
+                (error: HttpErrorResponse) => {
+                  this.loading = false;
+                  this.popUpManager.showErrorToast(this.translate.instant(`ERROR.${error.status}`));
+                  reject([]);
+                },
+              );
+            }
+          });
+          this.loading = false;
+        }
+      },
+      (error: any) => {
+        this.loading = false;
+        this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('calendario.sin_proyecto_curricular'));
+        reject([]);
+      },
+    );
+  });
+}
+
+clean() {
+  this.dataTransferencia = {
+    Periodo: null,
+    CalendarioAcademico: null,
+    TipoInscripcion: null,
+    CodigoEstudiante: null,
+    ProyectoCurricular: null,
+  };
+  this.formTransferencia.campos.forEach((campo: any) => {
+    if (campo.nombre === 'ProyectoCurricular' || campo.nombre === 'TipoInscripcion') {
+      campo.ocultar = true;
+    }
+    if (campo.nombre === 'CalendarioAcademico') {
+      campo.valor = null;
+    }
+  });
+}
+
+abrirPago(data: any) {
+  this.parametros_pago.NUM_DOC_IDEN = this.info_info_persona.NumeroIdentificacion;
+  this.parametros_pago.REFERENCIA = data['Recibo'];
+  this.parametros_pago.TIPO_DOC_IDEN = this.info_info_persona.TipoIdentificacion.CodigoAbreviacion;
+  const url = new URLSearchParams(this.parametros_pago).toString();
+  const ventanaPSE = window.open(environment.PSE_SERVICE + url, 'PagosPSE', 'width=600,height=800,resizable,scrollbars,status')!;
+  ventanaPSE.focus();
+  const timer = window.setInterval(() => {
+    if (ventanaPSE.closed) {
+      window.clearInterval(timer);
+      this.loadDataTercero(this.process);
+    }
+  }, 5000);
+}
 }
