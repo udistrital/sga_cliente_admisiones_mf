@@ -38,7 +38,7 @@ const routes: Routes = [
     component: AdministradorCriteriosComponent
   },
   {
-    path:"admision-criterios", 
+    path:"criterios", 
     component: CriterioAdmisionComponent
   },
   {
@@ -50,7 +50,7 @@ const routes: Routes = [
     component: ComentariosCuposComponent
   },
   {
-    path:"documentos-inscritos", 
+    path:"evaluacion-documentos-inscritos", 
     component: EvaluacionDocumentosInscritosComponent
   },
   {
@@ -78,7 +78,7 @@ const routes: Routes = [
     component: AsignarDocumentosDescuentosComponent
   },
   {
-    path:"transferencia/:process", 
+    path:"transferencias/:process", 
     component: TransferenciaComponent,
   },
   {

@@ -312,6 +312,9 @@ export class LiquidacionRecibosComponent {
         general: {
           pbm: 10,
         },
+        estado_edicion: false,
+        inscripcionId: 0,
+        personaId: 0
       };
       this.data.push(liquidaciondata);
       this.dataSource = new MatTableDataSource(this.data);
@@ -559,8 +562,8 @@ export class LiquidacionRecibosComponent {
       this.inscripcionService.post('recibov2/', recibo)
         .subscribe(
           (response: any) => {
-            if (response.success && response.data) {
-              const byteArray = atob(response.data);
+            if (response.Success && response.Data) {
+              const byteArray = atob(response.Data);
               const byteNumbers = new Array(byteArray.length);
               for (let i = 0; i < byteArray.length; i++) {
                 byteNumbers[i] = byteArray.charCodeAt(i);
