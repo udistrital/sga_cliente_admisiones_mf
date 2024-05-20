@@ -312,6 +312,9 @@ export class LiquidacionRecibosComponent {
         general: {
           pbm: 10,
         },
+        estado_edicion: false,
+        inscripcionId: 0,
+        personaId: 0
       };
       this.data.push(liquidaciondata);
       this.dataSource = new MatTableDataSource(this.data);
