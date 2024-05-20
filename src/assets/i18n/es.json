@@ -2842,6 +2842,25 @@
         "generacion":"Generación",
         "usuario":"Usuario",
         "nodata":"No se encontraron historicos"
-    }
-
+    },
+    "evaluacionpregrado": {
+        "aspirante": "Evaluación Aspirante Pregrado",
+        "facultades": "Facultades",
+        "facultad": "Facultad",
+        "estado": "Estado",
+        "completado": "% Completado",
+        "accion": "Acción",
+        "nodata": "No hay datos disponibles",
+        "proyectos_curriculares": "Proyectos Curriculares",
+        "proyecto_curricular": "Proyecto Curricular",
+        "variables": "Variables",
+        "periodo": "Período",
+        "nivel_aviso": "Nivel de Aviso",
+        "seleccionar": "Seleccionar",
+        "criterio_consultar": "Criterio a Consultar",
+        "erro_selec_nivel": "Por favor seleccione un nivel",
+        "tooltip_eliminar": "Eliminar",
+        "subcriterios": "Subcriterios",
+        "subcriterio": "Subcriterio"
+      }
 }

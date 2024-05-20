@@ -2756,5 +2756,25 @@
         "Usuario":"User",
         "nodata":"No historical data found"
  
-    }
+    },
+    "evaluacionpregrado": {
+        "aspirante": "Applicant Evaluation",
+        "facultades": "Faculties",
+        "facultad": "Faculty",
+        "estado": "Status",
+        "completado": "% Completed",
+        "accion": "Action",
+        "nodata": "No data available",
+        "proyectos_curriculares": "Curricular Projects",
+        "proyecto_curricular": "Curricular Project",
+        "variables": "Variables",
+        "periodo": "Period",
+        "nivel_aviso": "Alert Level",
+        "seleccionar": "Select",
+        "criterio_consultar": "Criterion to Consult",
+        "erro_selec_nivel": "Please select a level",
+        "tooltip_eliminar": "Delete",
+        "subcriterios": "Subcriteria",
+        "subcriterio": "Subcriterion"
+      }
 }
