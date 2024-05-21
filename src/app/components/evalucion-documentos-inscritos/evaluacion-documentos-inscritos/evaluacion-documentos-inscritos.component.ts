@@ -70,6 +70,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   folderTagtoReload: string = "";
   inscripcionInfo: any;
   observacionesDoc: any = [];
+  selectMultipleNivel: boolean = false;
 
 
   periodos: any = [];
@@ -197,6 +198,12 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     } else {
       return false
     }
+  }
+
+  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+    const idNivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado")!.Id;
+    this.selectMultipleNivel = (idNivelDoctorado === nivelSeleccionado);
+    this.loadProyectos();
   }
 
   loadProyectos() {
