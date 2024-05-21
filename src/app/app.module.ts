@@ -99,6 +99,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -173,7 +174,8 @@ export function createTranslateLoader(http: HttpClient) {
     ComentariosCuposComponent,
     ListadoAspirantesPregradoComponent,
     CargueSnpComponent,
-    SoporteConfiguracionComponent
+    SoporteConfiguracionComponent,
+    EvalucionAspirantePregradoComponent
   ],
   imports: [
     CodificacionModule,
