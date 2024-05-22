@@ -1791,7 +1791,7 @@
         "inscripciones_error": "Error searching for registered applicants",
         "legalizacion_error": "Error obtaining the applicant's legalization data",
         "actualizacion_legalizacion_error": "Error updating the applicant's legalization data",
-        "actualizacion_legalizacion_ok": "Successful update of the applicant's legalization data"
+        "actualizacion_legalizacion_ok": "Successful update of the applicant's legalization data",
         "tercero_error": "Error consulting the person",
         "requisito_programa_error": "Error consulting the requirement for this academic program",
         "detalle_evaluacion_error": "Error querying evaluation details",

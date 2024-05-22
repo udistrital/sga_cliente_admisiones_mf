@@ -1830,9 +1830,7 @@
         "inscripciones_error": "Error buscando los aspirantes inscritos",
         "legalizacion_error": "Error obteniendo los datos de legalización del aspirante",
         "actualizacion_legalizacion_error": "Error actualizando los datos de legalización del aspirante",
-        "actualizacion_legalizacion_ok": "Actualización exitosa de los datos de legalización del aspirante"
-        "periodo_error": "Error cargando los períodos",
-        "inscripciones_error": "Error buscando los aspirantes inscritos",
+        "actualizacion_legalizacion_ok": "Actualización exitosa de los datos de legalización del aspirante",
         "tercero_error": "Error consultando al tercero",
         "requisito_programa_error": "Error consultando el requisito para este programa académico",
         "detalle_evaluacion_error": "Error consultando los detalles de evaluación",
