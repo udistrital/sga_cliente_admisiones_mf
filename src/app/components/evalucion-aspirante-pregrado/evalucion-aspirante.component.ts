@@ -7,6 +7,7 @@ import { ParametrosService } from '../../services/parametros.service';
 import { ProyectoAcademicoService } from '../../services/proyecto_academico.service';
 import { SgaAdmisionesMid } from '../../services/sga_admisiones_mid.service';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
+import { OikosService } from 'src/app/services/oikos.service';
 
 
 @Component({
@@ -28,6 +29,8 @@ export class EvalucionAspirantePregradoComponent {
   requisitos!: any[];
   requisitosPrograma: any = [];
   requisitosActuales: any = [];
+  facultades!: any[]
+  proyectosCurriculares!: any[]
 
   selectednivel: undefined;
   selectCriterio: undefined;
@@ -44,21 +47,63 @@ export class EvalucionAspirantePregradoComponent {
 
 
   constructor(
-    private parametrosService :ParametrosService, 
-    private projectService:  ProyectoAcademicoService,
+    private parametrosService: ParametrosService,
+    private projectService: ProyectoAcademicoService,
     private translate: TranslateService,
     private sgaMidAdmisiones: SgaAdmisionesMid,
-    private evaluacionInscripcionService: EvaluacionInscripcionService
-  ) {}
+    private evaluacionInscripcionService: EvaluacionInscripcionService,
+    private oikosService: OikosService,
+  ) { }
 
   async ngOnInit() {
-    await this.cargarPeriodo()
-    this.loadLevel();
-    this.cargarRequisitos();
-    //this.loadCriterioSubCriterio();
-    this.datasourceFacultades = new MatTableDataSource<any>([]);
+    await this.cargarFacultades();
+    await this.cargarProyectosCurriculares();
+
     this.datasourceCurriculaes = new MatTableDataSource<any>([]);
+    // await this.cargarPeriodo()
+    // this.loadLevel();
+    // this.cargarRequisitos();
+    //this.loadCriterioSubCriterio();
+    //this.datasourceFacultades = new MatTableDataSource<any>([]);
   }
+
+  cargarFacultades() {
+    return new Promise((resolve, reject) => {
+      this.oikosService.get('dependencia_padre/FacultadesConProyectos?Activo:true&limit=0')
+        .subscribe((res: any) => {
+          this.facultades = res;
+          console.log(res)
+          this.datasourceFacultades = new MatTableDataSource<any>(res);
+
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
+            console.log(error);
+            reject([]);
+          });
+    });
+  }
+
+  cargarProyectosCurriculares() {
+    return new Promise((resolve, reject) => {
+       this.oikosService.get('dependencia_padre/FacultadesConProyectos?Activo:true&limit=0')
+        .subscribe((res: any) => {
+          this.facultades = res;
+          console.log(res)
+          this.datasourceFacultades = new MatTableDataSource<any>(res);
+
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
+            console.log(error);
+            reject([]);
+          });
+    });
+  }
+
+
 
   // selectPeriodo() {
   //   this.selectednivel = undefined;
@@ -173,5 +218,5 @@ export class EvalucionAspirantePregradoComponent {
   }
 
 
-  loadExamen() {}
+  loadExamen() { }
 }
