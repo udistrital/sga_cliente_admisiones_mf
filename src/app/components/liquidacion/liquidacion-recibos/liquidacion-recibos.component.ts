@@ -562,8 +562,8 @@ export class LiquidacionRecibosComponent {
       this.inscripcionService.post('recibov2/', recibo)
         .subscribe(
           (response: any) => {
-            if (response.Success && response.Data) {
-              const byteArray = atob(response.Data);
+            if (response.Success && response.data) {
+              const byteArray = atob(response.data);
               const byteNumbers = new Array(byteArray.length);
               for (let i = 0; i < byteArray.length; i++) {
                 byteNumbers[i] = byteArray.charCodeAt(i);
