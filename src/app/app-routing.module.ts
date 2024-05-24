@@ -56,10 +56,10 @@ const routes: Routes = [
     path:"administracion-cuenta", 
     component: AdministracionCuentaBancariaComponent
   },
-  //{
-   // path:"evaluacion-aspirantes", 
-    //component: EvaluacionAspirantesComponent
-  //},
+  {
+    path:"evaluacion-aspirantes", 
+    component: EvaluacionAspirantesComponent
+  },
   {
     path:"listado-aspirantes", 
     component: ListadoAspiranteComponent

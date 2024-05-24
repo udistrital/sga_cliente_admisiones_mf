@@ -71,6 +71,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   inscripcionInfo: any;
   observacionesDoc: any = [];
   selectMultipleNivel: boolean = false;
+  mostrarBoton = false;
+  mostrarMensajeInicial = false;
 
 
   periodos: any = [];
@@ -200,9 +202,16 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     }
   }
 
-  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
-    const idNivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado")!.Id;
-    this.selectMultipleNivel = (idNivelDoctorado === nivelSeleccionado);
+    cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+    const nivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado");
+    if (nivelDoctorado) {
+      this.selectMultipleNivel = (nivelDoctorado.Id === nivelSeleccionado);
+      this.mostrarBoton = (nivelDoctorado.Id === nivelSeleccionado);
+    } else {
+      this.selectMultipleNivel = false;
+      this.mostrarBoton = false;
+      this.mostrarMensajeInicial = false;
+    }
     this.loadProyectos();
   }
 
