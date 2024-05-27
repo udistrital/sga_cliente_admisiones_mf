@@ -404,11 +404,11 @@
           </div>
 
           <div class="button-stepper">
-            <button mat-stroked-button class="azulClaro"(click)="descargarPDFs()"> Descargar conjunto de recibos</button>
+            <button mat-stroked-button class="azulClaro"(click)="descargarPDFs()"[disabled]="!generados"> Descargar conjunto de recibos</button>
           </div>
 
           <div class="button-stepper">
-            <button mat-stroked-button class="azulClaro"(click)="notificarGeneracionRecibos()">Asignar recibos a estudiantes</button>
+            <button mat-stroked-button class="azulClaro"(click)="notificarGeneracionRecibos()"[disabled]="!generados">Asignar recibos a estudiantes</button>
           </div>
         </div>
 

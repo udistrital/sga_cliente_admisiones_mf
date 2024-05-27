@@ -510,13 +510,15 @@
                 <div class="container" style="padding: 2%;">
                     <div class="row justify-content-md-center">
                         <button class="boton-primary" (click)="guardarLiquidaciones()">{{
-                            'liquidacion.generar_recibo' | translate }}</button>
+                            'liquidacion.guardar' | translate }}</button>
                         <button class="boton-primary">{{
                             'liquidacion.descargar_listado' | translate }}</button>
-                        <button class="boton-primary"(click)="descargarPDFs()">{{
+                        <button class="boton-primary"(click)="descargarPDFs()"[disabled]="!generados">{{
                             'liquidacion.conjunto_recibos' | translate }}</button>
                         <button class="boton-primary" (click)="generarRecibos()">{{
-                            'liquidacion.asignar_recibo' | translate }}</button>
+                            'liquidacion.generar_recibo' | translate }}</button>
+                            <button class="boton-primary" (click)="notificarGeneracionRecibos()"[disabled]="!generados">{{
+                                'liquidacion.asignar_recibo' | translate }}</button>
                     </div>
                 </div>
             </fieldset>

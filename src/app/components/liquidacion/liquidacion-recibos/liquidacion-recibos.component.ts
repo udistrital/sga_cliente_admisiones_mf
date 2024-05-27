@@ -20,6 +20,7 @@ import { elementAt } from 'rxjs';
 import * as JSZip from 'jszip';
 import * as saveAs from 'file-saver';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
+import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.service';
 
 @Component({
   selector: 'app-liquidacion-recibos',
@@ -45,7 +46,9 @@ export class LiquidacionRecibosComponent {
   admitido: any;
   admitidos: any[] = [];
   recibos: any[] = [];
-  pdfs: Blob[] = [];
+  pdfs: File[] = [];
+  notificaciones: any[] = [];
+  generados: boolean = false;
 
   constructor(private _formBuilder: FormBuilder, private translate: TranslateService,
     private parametrosService: ParametrosService,
@@ -55,7 +58,8 @@ export class LiquidacionRecibosComponent {
     private sgaAdmisiones: SgaAdmisionesMid,
     private liquidacionService: LiquidacionService,
     private autenticationService: ImplicitAutenticationService,
-    private inscripcionService: InscripcionService) {
+    private inscripcionService: InscripcionService,
+    private notificacionService: NotificacionesMidService) {
 
     this.cargarProyectos();
     this.cargarPeriodo();
@@ -430,6 +434,7 @@ export class LiquidacionRecibosComponent {
             element.b3='1';
             element.b4='1';
             element.pbm=10;
+            element.Correo = "vvalmonta@udistrital.edu.co";
             this.calculoMatricula();
           });
           resolve(data); // Resuelve la promesa con los datos cargados
@@ -553,30 +558,125 @@ export class LiquidacionRecibosComponent {
         Fecha1: "30/02/2023",
         Fecha2: "30/02/2023",
         Recargo: 1.5,
-        Comprobante: "0666"
+        Comprobante: "0666",
+        Correo: row.Correo
       };
       this.recibos.push(recibo);
     });
     console.log(this.recibos)
-    for (const recibo of this.recibos) {
-      this.inscripcionService.post('recibov2/', recibo)
+    this.pdfs = [];
+
+    const promesas = [];
+
+    /*Este for es para generar los recibos haciendo la petición al mid de 
+    inscripciones, pero al generar los pdfs cosa que solo se puede hacer en 
+    el cliente se tarda mucho, se bloquearon los botones de descargar y asignar 
+    para que se sepa cuando esta listo 
+    */
+
+    for (let i = 0; i < this.recibos.length; i++) {
+      const recibo = this.recibos[i];
+      const promesa = this.inscripcionService.post('recibov2/', recibo)
+        .toPromise()
+        .then((response: any) => {
+          if (response.success && response.data) {
+            //console.log('Recibo generado', response.success);
+            const byteArray = atob(response.data);
+            const byteNumbers = new Array(byteArray.length);
+            for (let j = 0; j < byteArray.length; j++) {
+              byteNumbers[j] = byteArray.charCodeAt(j);
+            }
+            const file = new Blob([new Uint8Array(byteNumbers)], { type: 'application/pdf' });
+            const fileName = `recibo_${recibo.CodigoEstudiante}_${this.selectedPeriodo.Id}_${this.selectedProyecto.Id}_${i}.pdf`;
+            const fileWithFileName = new File([file], fileName, { type: file.type });
+            this.pdfs.push(fileWithFileName);
+
+            // Esto es específicamente para las notificaciones por correo; toda la info del estudiante debería estar contenida acá
+            const notificacion = {
+              data: response.data,
+              fileName: fileName,
+              correo: recibo.Correo,
+              nombre: recibo.Nombre,
+              codigo: recibo.CodigoEstudiante
+            };
+            this.notificaciones.push(notificacion);
+          }
+        })
+        .catch((error: HttpErrorResponse) => {
+          console.error(error);
+        });
+
+      promesas.push(promesa);
+    }
+
+    Promise.all(promesas)
+      .then(() => {
+        console.log('Recibos generados');
+        this.generados = true;
+      })
+      .catch((error) => {
+        console.error('Error generando recibos:', error);
+      });
+  }
+
+  notificarGeneracionRecibos() {
+    console.log('Notificando generación de recibos...');
+    console.log('Notificaciones:', this.notificaciones);
+
+    const today = new Date();
+    const dia = String(today.getDate()).padStart(2, '0');
+    const mes = String(today.getMonth() + 1).padStart(2, '0');
+    const anio = today.getFullYear();
+
+    this.notificaciones.forEach((notificacion) => {
+      const data = {
+        Source: "notificaciones_sga@udistrital.edu.co", //El correo que envia la notificación
+        Template: "TEST_SGA_generacion-recibo", //La plantilla que se va a usar esta es temporal y esta sin imagen 
+        Destinations: [
+          {
+            Destination: {
+              BccAddresses: [],
+              CcAddresses: [],
+              ToAddresses: [
+                notificacion.correo
+              ]
+            },
+            ReplacementTemplateData: {
+              dia: dia,
+              mes: mes,
+              anio: anio,
+              nombre: notificacion.nombre,
+              periodo: this.selectedPeriodo.Nombre
+            },
+            Attachments: [{
+              ContentType: "application/pdf",
+              FileName: notificacion.fileName,
+              Base64File: notificacion.data
+            }
+            ]
+          }
+        ],
+        DefaultTemplateData: {
+          dia: dia,
+          mes: mes,
+          anio: anio,
+          nombre: notificacion.nombre,
+          periodo: this.selectedPeriodo.Nombre
+        },
+      };
+
+      this.notificacionService.post('email/enviar_templated_email/', data)
         .subscribe(
           (response: any) => {
-            if (response.Success && response.data) {
-              const byteArray = atob(response.data);
-              const byteNumbers = new Array(byteArray.length);
-              for (let i = 0; i < byteArray.length; i++) {
-                byteNumbers[i] = byteArray.charCodeAt(i);
-              }
-              const file = new Blob([new Uint8Array(byteNumbers)], { type: 'application/pdf' });
-              this.pdfs.push(file);
+            if (response.success) {
+              console.log('Notificación enviada:', response.success);
             }
           },
           (error: HttpErrorResponse) => {
-            console.error(error);
+            console.error('Error al enviar la notificación:', error);
           }
         );
-    }
+    });
   }
 
   descargarPDFs(): void {
