@@ -202,11 +202,13 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     }
   }
 
-    cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
     const nivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado");
     if (nivelDoctorado) {
-      this.selectMultipleNivel = (nivelDoctorado.Id === nivelSeleccionado);
-      this.mostrarBoton = (nivelDoctorado.Id === nivelSeleccionado);
+      const esDoctorado = nivelDoctorado.Id === nivelSeleccionado;
+      this.selectMultipleNivel = esDoctorado;
+      this.mostrarBoton = esDoctorado;
+      this.mostrarMensajeInicial = esDoctorado;
     } else {
       this.selectMultipleNivel = false;
       this.mostrarBoton = false;

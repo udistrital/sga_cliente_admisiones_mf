@@ -43,19 +43,17 @@
                 <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
                   {{ periodo.Nombre }}
                 </mat-option>
-              </mat-select>                
-              <div
-                style=" display: flex; justify-content: flex-start; margin: 0px 0px; flex-direction: row; align-items: flex-end; margin-bottom: 10px; margin-left: 10px;">
-                <button class="boton-primary" type="button" *ngIf="mostrarBoton" (click)="loadInscritos()">
-                  <mat-icon style="vertical-align: middle;" fontIcon="add"> </mat-icon>
-                  <label>{{'GLOBAL.cargar' | translate}}</label>
-                </button>
-              </div>     
-              <!-- Contenido adicional que se muestra solo para Doctorado -->
-              <div *ngIf="mostrarMensajeInicial" class="info margin-y">
-                {{ "gestion_horarios.mensaje_inicial" | translate }}
-              </div>
-            </mat-form-field>                               
+              </mat-select>                    
+            </mat-form-field>    
+            <div>
+            <button class="boton-primary" type="button" *ngIf="mostrarBoton" (click)="loadInscritos()">
+              <mat-icon style="vertical-align: middle;" fontIcon="add"> </mat-icon>
+              <label>{{'GLOBAL.cargar' | translate}}</label>
+            </button>
+          </div>              
+            <div *ngIf="mostrarMensajeInicial" class="info margin-y">
+               {{ "gestion_horarios.mensaje_doctorado" | translate }}
+            </div>                                  
             <br /><br />
   
             <mat-card status="success" style="border: 1px solid var(--primary);" *ngIf="mostrarConteos">

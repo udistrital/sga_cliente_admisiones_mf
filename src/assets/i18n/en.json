@@ -2571,6 +2571,7 @@
         "encabezado": "Module for the Availability of quotas",
         "label":"Availability of places",
         "mensaje_inicial": "Please select the curricular project, the academic period and the semester that is to consult the availability of places by academic space",
+        "mensaje_doctorado": "The current calendar contains multiple assigned periods. Please review the details to avoid conflicts in the assignments.",
         "header_parametros": "Query definition",
         "periodo_academico": "Academic period",
         "semestre":"Academic semester",
