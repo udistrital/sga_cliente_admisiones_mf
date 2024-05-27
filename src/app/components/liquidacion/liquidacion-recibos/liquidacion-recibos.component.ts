@@ -434,7 +434,7 @@ export class LiquidacionRecibosComponent {
             element.b3='1';
             element.b4='1';
             element.pbm=10;
-            element.Correo = "vvalmonta@udistrital.edu.co";
+            element.Correo = "pruebas@udistrital.edu.co";
             this.calculoMatricula();
           });
           resolve(data); // Resuelve la promesa con los datos cargados
