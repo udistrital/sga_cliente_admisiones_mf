@@ -118,7 +118,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.source_emphasys = new MatTableDataSource();
         this.translate = translate;
         this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-           
+
         });
         this.listService.findInfoContacto();
         this.loadLists();
@@ -321,40 +321,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
             );
         }
     }
-
-    // mostrartabla() {
-    //   this.show_listado = true
-
-    //   this.info_consultar_aspirantes = {
-    //     Id_proyecto: Number(this.proyectos_selected['Id']),
-    //     Id_periodo: Number(this.periodo['Id']),
-    //   }
-    //         this.sgamidService.post('admision/consulta_aspirantes', this.info_consultar_aspirantes)
-    //           .subscribe(res => {
-    //             const r = <any>res
-    //             if (r !== null && r.Type !== 'error') {
-    //               this.loading = false;
-    //               r.sort((puntaje_mayor, puntaje_menor ) =>  puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal )
-    //                const data = <Array<any>>r;
-    //                this.source_emphasys.load(data);
-
-    //             } else {
-    //               this.showToast('error', this.translate.instant('GLOBAL.error'),
-    //                 this.translate.instant('GLOBAL.error'));
-    //             }
-    //           },
-    //             (error: HttpErrorResponse) => {
-    //               Swal.fire({
-    //                 icon:'error',
-    //                 title: error.status + '',
-    //                 text: this.translate.instant('ERROR.' + error.status),
-    //                 footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-    //                   this.translate.instant('GLOBAL.info_estado'),
-    //                 confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-    //               });
-    //             });
-    // }
-
+    
     mostrartabla() {
         this.show_listado = true
         // this.source_emphasys = new LocalDataSource();
@@ -368,7 +335,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                 (response: any) => {
                     console.log("response")
                     console.log(response)
-                    if (response.success == true  && response.status == 200) {
+                    if (response.success == true && response.status == 200) {
                         this.Aspirantes = response.data;
                         console.log(this.Aspirantes)
                         this.admitidos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));

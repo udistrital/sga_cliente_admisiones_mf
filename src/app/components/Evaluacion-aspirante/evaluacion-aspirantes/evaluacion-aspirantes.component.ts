@@ -131,8 +131,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private parametrosService: ParametrosService,
     private projectService: ProyectoAcademicoService,
     private evaluacionService: EvaluacionInscripcionService,
-    private tercerosService: TercerosService,
-    private sgaMidService: SgaMidService,
     private sgaMidAdmisiones: SgaAdmisionesMid,
     private popUpManager: PopUpManager,
 

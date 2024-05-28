@@ -30,6 +30,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 
 
 @Component({
@@ -94,7 +95,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     private dialog: MatDialog,
     private googleMidService: GoogleService,
     private pivotDocument: PivotDocument,
-    private sgaMidService: SgaMidService,
+    private inscripcionesMidService: InscripcionMidService,
     private sgaMiAdmisiones : SgaAdmisionesMid,
     private evaluacionInscripcionService: EvaluacionInscripcionService,
     private autenticationService: ImplicitAutenticationService,
@@ -521,11 +522,11 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
       };
       const fecha_format = hoy.toLocaleDateString('es-ES', options).split(',')[1].replace(' ', '').split('de')
 
-      this.sgaMidService.get('inscripciones/info_complementaria_tercero/' + this.info_persona_id)
+      this.inscripcionesMidService.get('inscripciones/informacion-complementaria/tercero/' + this.info_persona_id)
         .subscribe((resp: any) => {
-          if (resp.Response.Code == "200") {
+          if (resp.Status == "200") {
 
-            let info = resp.Response.Body[0];
+            let info = resp.Data[0];
             info.Correo != '' ? correos.push(info.Correo) : null;
             info.CorreoAlterno != '' ? correos.push(info.CorreoAlterno) : null;
 

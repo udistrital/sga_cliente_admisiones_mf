@@ -4,6 +4,60 @@
     </mat-card-header>
     <mat-card-content>
 
+        <mat-card class="card">
+            <mat-card-content>
+              <div class=col-12>
+                <fieldset [ngClass]="{'fieldseter':true}">
+                  <legend>
+                    &nbsp; {{ 'admision.listar_aspirantes' | translate }}
+                  </legend>
+                  <mat-card class="card">
+                    <mat-card-header class="d-block">
+                      <!-- select periodo -->
+                      <mat-form-field style="width: 100%;">
+                        <mat-label>{{ 'calendario.periodo' | translate }}:</mat-label>
+                        <mat-select [(ngModel)]="periodo" (selectionChange)="selectPeriodo()">
+                          <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                          <mat-option *ngFor="let item of periodos" [value]="item">
+                            {{item.Nombre}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+          
+                      <!-- select Nivel -->
+                      <mat-form-field style="width: 100%;">
+                        <mat-label>{{ 'GLOBAL.nivel' | translate }}:</mat-label>
+                        <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel" (selectionChange)="loadProyectos()">
+                          <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                          <mat-option *ngFor="let item of niveles" [value]="item.Id">
+                            {{item.Nombre}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="CampoControl.hasError('required')">{{ 'cupos.erro_selec_nivel' | translate
+                          }}</mat-error>
+                      </mat-form-field>
+                      <!-- select proyectos -->
+                      <mat-form-field style="width: 100%;">
+                        <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}:</mat-label>
+                        <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_selected"
+                          (selectionChange)="cargarSolicitudesSegunProyecto()" [disabled]='selectprograma'>
+                          <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                          <mat-option *ngFor="let item of proyectos" [value]="item" [disabled]="!item.Id">
+                            {{item.Nombre}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="Campo1Control.hasError('required')">{{ 'cupos.erro_selec_proyecto' | translate
+                          }}</mat-error>
+                      </mat-form-field>
+                    </mat-card-header>
+                  </mat-card>
+          
+                  <!-- <button mat-button (click)="mostrartabla()" type="submit" nbButton status="success" [disabled]="buttoncambio">{{ 'admision.enlistar' | translate }}</button> -->
+                </fieldset>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
         <fieldset [ngClass]="{'fieldseter':true} " *ngIf="listadoSolicitudes">
             <legend> {{ 'inscripcion.listado_solicitudes' | translate }} </legend>
             <!--<ng2-smart-table *ngIf="listadoSolicitudes" [settings]="settings" [source]="dataSource">
@@ -85,11 +139,6 @@
         <div class="container-button-column" *ngIf="!listadoSolicitudes">
             <button mat-button type="button" (click)="clean(); listadoSolicitudes = true">
                 {{ 'GLOBAL.cancelar' | translate }}
-            </button>
-            <br><br><br>
-            <button class="btn-barcode btn btn-light" (click)="generarRecibo()" *ngIf="recibo">
-                {{ 'derechos_pecuniarios.generar_recibo' | translate }}
-                <i class="fa fa-barcode fa-5x"></i>
             </button>
 
         </div>
