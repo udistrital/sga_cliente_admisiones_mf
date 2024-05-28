@@ -1,172 +1,217 @@
 <mat-card class="card" style="margin-top: 20px;">
-    <mat-card-content style="width: 100%;">
-        <div class="">
-            <div class="title">
-                <strong>&nbsp; {{ 'evaluacionpregrado.aspirante' | translate }}</strong>
-            </div>
-            <div class="title">
-                <legend>&nbsp; {{ 'evaluacionpregrado.facultades' | translate }}</legend>
-                <div>
-                    <table mat-table [dataSource]="datasourceFacultades" matSort class="tabla">
-                        <ng-container matColumnDef="#">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">#</th>
-                            <td mat-cell *matCellDef="let row">{{ row.orden }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="facultad">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
-                                {{ 'evaluacionpregrado.facultad' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="estado">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
-                                {{ 'evaluacionpregrado.estado' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.generacion }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="%">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
-                                {{ 'evaluacionpregrado.completado' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let row">{{ row.usuario }}</td>
-                        </ng-container>
-                        <ng-container matColumnDef="accion">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-mas">
-                                {{ 'evaluacionpregrado.accion' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let row">
-                                <button aria-hidden="false" title="{{ 'admision.tooltip_eliminar' | translate }}"
-                                    class="boton-table">
-                                    <mat-icon>search</mat-icon>
-                                </button>
-                            </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="columnsFacultades"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columnsFacultades;"></tr>
-                        <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell" colspan="4"> {{ 'evaluacionpregrado.nodata' | translate }}</td>
-                        </tr>
-                    </table>
-                    <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"
-                        class="paginator"></mat-paginator>
-                </div>
-            </div>
-        </div>
-    </mat-card-content>
-</mat-card>
-
-<mat-card *ngIf="false">
-    <mat-card-content style="width: 100%;">
-        <div class="title">
-            <legend>&nbsp;{{ 'evaluacionpregrado.proyectos_curriculares' | translate }} </legend>
-            <div>
-                <table mat-table [dataSource]="datasourceCurriculaes" matSort class="tabla">
-                    <ng-container matColumnDef="#">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">#</th>
-                        <td mat-cell *matCellDef="let row">{{ row.orden }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="curricular">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
-                            {{ 'evaluacionpregrado.proyecto_curricular' | translate }}
-                        </th>
-                        <td mat-cell *matCellDef="let row">{{ row.convocatoria }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="estado">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
-                            {{ 'evaluacionpregrado.estado' | translate }}
-                        </th>
-                        <td mat-cell *matCellDef="let row">{{ row.generacion }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="color">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
-                            {{ 'Color' | translate }}
-                        </th>
-                        <td mat-cell *matCellDef="let row">{{ row.usuario }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="accion">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-mas">
-                            {{ 'evaluacionpregrado.accion' | translate }}
-                        </th>
-                        <td mat-cell *matCellDef="let row">
-                            <button aria-hidden="false" title="{{ 'admision.tooltip_eliminar' | translate }}"
-                                class="boton-table">
-                                <mat-icon>get_app</mat-icon>
-                            </button>
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="columnsCurriculares"></tr>
-                    <tr mat-row *matRowDef="let row; columns: columnsCurriculares;"></tr>
-                    <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="4">{{ 'evaluacionpregrado.nodata' | translate }}</td>
-                    </tr>
-                </table>
-                <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"
-                    class="paginator"></mat-paginator>
-            </div>
-        </div>
-    </mat-card-content>
-</mat-card>
-
-<mat-card *ngIf="false">
-    <mat-card-content>
+  <mat-card-content>
+    <div>
+      <div class="title">
+        <strong>&nbsp; {{ 'evaluacionpregrado.aspirante' | translate }}</strong>
+      </div>
+      <div>
         <div>
-            <div class="title">
-                <legend>&nbsp; {{ 'evaluacionpregrado.variables' | translate }}</legend>
-                <div>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>{{ 'evaluacionpregrado.periodo' | translate }}:</mat-label>
-                        <mat-select [(ngModel)]="periodo" [disabled]='false' (selectionChange)="onPeriodoChange($event)"
-                            [formControl]="periodoControl">
-                            <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
-                            <mat-option *ngFor="let item of periodos" [value]="item.Id">{{ item.Nombre }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>{{ 'evaluacionpregrado.nivel_aviso' | translate }}:</mat-label>
-                        <mat-select [formControl]="nivelControl" [(ngModel)]="selectednivel"
-                            (selectionChange)="loadExamen()">
-                            <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
-                            <mat-option *ngFor="let item of nivel_load" [value]="item.Id">{{ item.Nombre }}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="nivelControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate
-                            }}</mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>{{ 'evaluacionpregrado.criterio_consultar' | translate }}:</mat-label>
-                        <mat-select [formControl]="criterioControl" [(ngModel)]="selectCriterio">
-                            <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
-                            <mat-option *ngFor="let item of requisitosActuales" [value]="item.Id">{{ item.Nombre
-                                }}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="criterioControl.hasError('required')">{{ 'admision.erro_selec_nivel' |
-                            translate }}</mat-error>
-                    </mat-form-field>
-
-                    <div class="boton-busqueda">
-                        <div >
-                            <button class="boton-primary" (click)="realizarBusqueda()">{{
-                                'GLOBAL.continuar' | translate }}</button>
-                        </div>
-                    </div>
-                    <br /><br />
-                </div>
-            </div>
+          <legend><strong>{{'evaluacionpregrado.facultades' | translate}}</strong> </legend>
+          <br><br>
         </div>
-    </mat-card-content>
+        <div>
+          <table mat-table [dataSource]="datasourceFacultades" matSort class="tabla">
+            <ng-container matColumnDef="#">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">#</th>
+              <td mat-cell *matCellDef="let row">{{ row.orden }}</td>
+            </ng-container>
+            <ng-container matColumnDef="facultad">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
+                {{ 'evaluacionpregrado.facultad' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
+            </ng-container>
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
+                {{ 'evaluacionpregrado.estado' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.generacion }}</td>
+            </ng-container>
+            <ng-container matColumnDef="%">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
+                {{ 'evaluacionpregrado.completado' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.usuario }}</td>
+            </ng-container>
+            <ng-container matColumnDef="accion">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-mas">
+                {{ 'evaluacionpregrado.accion' | translate }}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <button aria-hidden="false" title="{{ 'admision.tooltip_eliminar' | translate }}" class="boton-table"
+                  (click)="cargarProyectosCurriculares(row.Id)">
+                  <mat-icon>search</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="columnsFacultades"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsFacultades;"></tr>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4"> {{ 'evaluacionpregrado.nodata' | translate }}</td>
+            </tr>
+          </table>
+          <mat-paginator #paginator1 [pageSize]="6" [showFirstLastButtons]="true" class="paginator"></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
 </mat-card>
-<mat-card *ngIf="false">
 
-    <mat-card-content style="width: 100%;">
-        <div class="col-sm-6 col-md-4 col-lg-3 folder title" style="margin-bottom: 20px;" align="center" id="info_basica">
-            <legend>&nbsp; {{ 'Subcriterios' | translate }}</legend>
-            <mat-card class="exp-card">
-                <mat-card-header>{{ 'Subcriterio' | translate }} {{ "Nombre del criterio" }}</mat-card-header>
-                <mat-card-content class="icon-form">
-                    <mat-icon fontIcon="folder" class="folder-icon"></mat-icon>
-                </mat-card-content>
-            </mat-card>
+<mat-card *ngIf="viewCurriculares" style="margin-top: 20px;">
+  <mat-card-content style="width: 100%;">
+    <div>
+      <div>
+        <div>
+          <legend><strong>{{'evaluacionpregrado.proyectos_curriculares' | translate}}</strong> </legend>
+          <br><br>
         </div>
-    </mat-card-content>
+        <table mat-table [dataSource]="datasourceCurriculares" matSort class="tabla">
+          <ng-container matColumnDef="#">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">#</th>
+            <td mat-cell *matCellDef="let row">{{ row.orden }}</td>
+          </ng-container>
+          <ng-container matColumnDef="curricular">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
+              {{ 'evaluacionpregrado.proyecto_curricular' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
+          </ng-container>
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
+              {{ 'evaluacionpregrado.estado' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.generacion }}</td>
+          </ng-container>
+          <ng-container matColumnDef="color">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column">
+              {{ 'Color' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.usuario }}</td>
+          </ng-container>
+          <ng-container matColumnDef="accion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-mas">
+              {{ 'evaluacionpregrado.accion' | translate }}
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <button aria-hidden="false" title="{{ 'admision.tooltip_eliminar' | translate }}" class="boton-table"
+                (click)="consultarproyecto(row.Id)">
+                <mat-icon>search</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columnsCurriculares"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnsCurriculares;"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">{{ 'evaluacionpregrado.nodata' | translate }}</td>
+          </tr>
+        </table>
+        <mat-paginator #paginator2 [pageSize]="6" [showFirstLastButtons]="true" class="paginator"></mat-paginator>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="viewVariables" style="margin-top: 20px;">
+  <mat-card-content>
+    <div>
+      <div>
+        <div>
+          <legend><strong>{{'evaluacionpregrado.variables' | translate}}</strong> </legend>
+          <br><br>
+        </div>
+        <div>
+          <mat-form-field style="width: 100%;">
+            <mat-label>{{ 'evaluacionpregrado.periodo' | translate }}:</mat-label>
+            <mat-select [(ngModel)]="periodo" [disabled]='false' [formControl]="periodoControl">
+              <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
+              <mat-option *ngFor="let item of periodos" [value]="item.Id">{{ item.Nombre }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field style="width: 100%;">
+            <mat-label>{{ 'evaluacionpregrado.nivel_aviso' | translate }}:</mat-label>
+            <mat-select [formControl]="nivelControl" [(ngModel)]="selectednivel" (selectionChange)="loadCriterios()">
+              <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
+              <mat-option *ngFor="let item of nivel_load" [value]="item.Id">{{ item.Nombre }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="nivelControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate
+              }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field style="width: 100%;">
+            <mat-label>{{ 'evaluacionpregrado.criterio_consultar' | translate }}:</mat-label>
+            <mat-select [formControl]="criterioControl" [(ngModel)]="selectCriterio">
+              <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
+              <mat-option *ngFor="let item of requisitosActuales" [value]="item.RequisitoId.Id">{{
+                item.RequisitoId.Nombre}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="criterioControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate
+              }}</mat-error>
+          </mat-form-field>
+          <div class="boton-busqueda">
+            <div>
+              <button class="boton-primary" (click)="realizarBusqueda()">{{ 'GLOBAL.continuar' | translate }}</button>
+            </div>
+          </div>
+          <br />
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+<mat-card class="documentos" *ngIf="viewSubcriterios" style="margin-top: 20px;">
+  <div style="margin: 20px;">
+    <button (click)="navigateToRoute()">{{ 'evaluacionpregrado.revision' | translate }}</button>
+  </div>
+</mat-card>
+<mat-card *ngIf="viewSubcriterios" style="margin-top: 20px;">
+  <mat-card-content>
+    <div>
+      <legend><strong>{{'evaluacionpregrado.criterios' | translate}}</strong> </legend>
+      <br><br>
+    </div>
+    <div class="row-layout" style="margin-bottom: 20px;" id="info_basica">
+      <mat-card class="exp-card" *ngFor="let criterios of requisitosActuales">
+        <mat-card-header>{{ 'evaluacionpregrado.criterio' | translate }}
+          {{criterios.RequisitoId.Nombre}}</mat-card-header>
+        <mat-card-content class="folder-icon">
+          <mat-icon fontIcon="folder" class="folder-icon"></mat-icon>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="boton-busqueda">
+      <div>
+        <button class="boton-primary" (click)="puntajeAspirantes()">{{ 'evaluacionpregrado.puntaje' | translate
+          }}</button>
+      </div>
+    </div>
+    <br /><br />
+  </mat-card-content>
+</mat-card>
+
+
+<mat-card *ngIf="viewTablePuntaje" style="margin-top: 20px;">
+  <mat-card-content style="width: 100%;">
+    <div>
+      <div>
+        <div>
+          <legend><strong>{{'evaluacionpregrado.listado' | translate}}</strong> </legend>
+          <br><br>
+        </div>
+        <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="datasourcePuntajeAspirantes" matSort class="mat-table">
+          <!-- Dynamic Columns -->
+          <ng-container *ngFor="let column of columnspuntajeaspirantes" [matColumnDef]="column">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="columnspuntajeaspirantes"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnspuntajeaspirantes"></tr>
+        </table>
+      </div>
+      </div>
+    </div>
+    <br>
+  </mat-card-content>
 </mat-card>

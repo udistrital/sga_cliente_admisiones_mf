@@ -94,5 +94,6 @@ export const environment = {
     //PLAN_ESTUDIOS_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8537/v1/',
     //PLAN_ESTUDIOS_SERVICE: 'http://localhost:8925/v1/',
     LIQUIDACION_SERVICE: 'http://localhost:8080/v1/',
+    SGA_PROYECTO_CURRICULAR_MID: "http://pruebasapi2.intranetoas.udistrital.edu.co:8540/v1/",
   };
   

@@ -129,15 +129,40 @@ mat-icon{
     vertical-align: middle;
 }
 
-.icon-form {
+.row-layout {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    justify-items: center;
+}
+
+  .folder-icon{
+    font-size: 150px;
+  width: 100%;
+  height: 100%;
+  }
+
+  .boton-busqueda {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-  }
-  
-  .folder-icon {
-    font-size: 100%;
-    height: 100%;
-    width: 100%;
-  }
+}
+
+.documentos{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.documentos button {
+    background-color: #03678f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 2em; /* Ajusta este valor para cambiar el tamaño del texto del botón */
+    padding: 20px; /* Ajusta estos valores para cambiar el tamaño del botón */
+    width: 100%; /* Hace que el botón sea tan ancho como su contenedor */
+}
