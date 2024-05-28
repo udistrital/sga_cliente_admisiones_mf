@@ -1,14 +1,16 @@
 
-<mat-card *ngIf="recibosUrl" style="margin-top: 10px;">
-
+<mat-card *ngIf="visible" style="margin-top: 10px;">
     <mat-card-content style="width: 100%; ">
         <div class=col-12>
+            <div [class.loader-div]="loading">
+                <mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+            </div>
             <fieldset [ngClass]="{'fieldseter':true}">
                 <legend>
                     &nbsp; {{ 'liquidacion.plantilla' | translate }}
                 </legend>
 
-                <div style="display: flex; justify-content: center; margin-bottom: 15px;" *ngIf="!recibosUrl">
+                <div style="display: flex; justify-content: center; margin-bottom: 15px;" *ngIf="!editando">
                     <div class="custom-filter-container">
                         <input matInput placeholder="{{ 'GLOBAL.buscar' | translate }}"
                             (keyup)="applyFilterProces($event)" #input>
@@ -37,7 +39,7 @@
                             <th mat-header-cell *matHeaderCellDef class="estudiante">
                                 {{'liquidacion.documento' | translate}}
                             </th>
-                            <td mat-cell *matCellDef="let element"> {{element.documetno}} </td>
+                            <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
                         </ng-container>
 
                         <ng-container matColumnDef="nombres">
@@ -60,7 +62,7 @@
                                 {{'liquidacion.caso' | translate}}
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-form-field *ngIf="recibosUrl">
+                                <mat-form-field *ngIf="editando">
                                     <mat-label>Select</mat-label>
                                     <mat-select [(value)]="element.A.A1"
                                         (selectionChange)="actualizarpuntaje(element, 'A1')">
@@ -70,7 +72,7 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                <p *ngIf="!recibosUrl">{{element.A.A1}}</p>
+                                <p *ngIf="!editando">{{element.A.A1}}</p>
                             </td>
                         </ng-container>
 
@@ -88,17 +90,18 @@
                                 {{'liquidacion.caso' | translate}}
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-form-field *ngIf="recibosUrl">
-                                    <mat-label>Select</mat-label>
+                                <mat-form-field *ngIf="editando">
+                                    <!-- <mat-label>Select</mat-label>
                                     <mat-select [(value)]="element.A.A2"
                                         (selectionChange)="actualizarpuntaje(element, 'A2')">
                                         <mat-option>--Select--</mat-option>
                                         <mat-option *ngFor="let option of llavesA2" [value]="option">
                                             {{ option }}
                                         </mat-option>
-                                    </mat-select>
+                                    </mat-select> -->
+                                    <input type="number" matInput [(ngModel)]="element.A.A2">
                                 </mat-form-field>
-                                <p *ngIf="!recibosUrl">{{element.A.A2}}</p>
+                                <p *ngIf="!editando">{{element.A.A2}}</p>
                             </td>
                         </ng-container>
 
@@ -117,17 +120,18 @@
                                 {{'liquidacion.caso' | translate}}
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-form-field *ngIf="recibosUrl">
-                                    <mat-label>Select</mat-label>
+                                <mat-form-field *ngIf="editando">
+                                    <!-- <mat-label>Select</mat-label>
                                     <mat-select [(value)]="element.A.A3"
                                         (selectionChange)="actualizarpuntaje(element, 'A3')">
                                         <mat-option>--Select--</mat-option>
                                         <mat-option *ngFor="let option of llavesA3" [value]="option">
                                             {{ option }}
                                         </mat-option>
-                                    </mat-select>
+                                    </mat-select> -->
+                                    <input type="number" matInput [(ngModel)]="element.A.A3">
                                 </mat-form-field>
-                                <p *ngIf="!recibosUrl">{{element.A.A3}}</p>
+                                <p *ngIf="!editando">{{element.A.A3}}</p>
                             </td>
                         </ng-container>
 
@@ -147,7 +151,7 @@
                                 {{'liquidacion.caso' | translate}}
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-form-field *ngIf="recibosUrl">
+                                <mat-form-field *ngIf="editando">
                                     <mat-label>Select</mat-label>
                                     <mat-select [(value)]="element.B.B1"
                                         (selectionChange)="actualizarpuntaje(element, 'B1')">
@@ -157,7 +161,7 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                <p *ngIf="!recibosUrl">{{element.B.B1}}</p>
+                                <p *ngIf="!editando">{{element.B.B1}}</p>
                             </td>
                         </ng-container>
 
@@ -175,7 +179,7 @@
                                 {{'liquidacion.caso' | translate}}
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-form-field *ngIf="recibosUrl">
+                                <mat-form-field *ngIf="editando">
                                     <mat-label>Select</mat-label>
                                     <mat-select [(value)]="element.B.B2"
                                         (selectionChange)="actualizarpuntaje(element, 'B2')">
@@ -185,7 +189,7 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                <p *ngIf="!recibosUrl">{{element.B.B2}}</p>
+                                <p *ngIf="!editando">{{element.B.B2}}</p>
                             </td>
                         </ng-container>
 
@@ -206,7 +210,7 @@
                                 {{'liquidacion.caso' | translate}}
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-form-field *ngIf="recibosUrl">
+                                <mat-form-field *ngIf="editando">
                                     <mat-label>Select</mat-label>
                                     <mat-select [(value)]="element.B.B3"
                                         (selectionChange)="actualizarpuntaje(element, 'B3')">
@@ -217,7 +221,7 @@
                                     </mat-select>
                                 </mat-form-field>
 
-                                <p *ngIf="!recibosUrl">{{element.B.B3}}</p>
+                                <p *ngIf="!editando">{{element.B.B3}}</p>
                             </td>
                         </ng-container>
 
@@ -235,7 +239,7 @@
                                 {{'liquidacion.caso' | translate}}
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-form-field *ngIf="recibosUrl">
+                                <mat-form-field *ngIf="editando">
                                     <mat-label>Select</mat-label>
                                     <mat-select [(value)]="element.B.B4"
                                         (selectionChange)="actualizarpuntaje(element, 'B4')">
@@ -246,7 +250,7 @@
                                     </mat-select>
                                 </mat-form-field>
 
-                                <p *ngIf="!recibosUrl">{{element.B.B4}}</p>
+                                <p *ngIf="!editando">{{element.B.B4}}</p>
                             </td>
                         </ng-container>
 
@@ -261,7 +265,7 @@
 
                         <ng-container matColumnDef="G1">
                             <th mat-header-cell *matHeaderCellDef class="variableG">
-                                <input type="checkbox" [value]="true" *ngIf="recibosUrl">
+                                <input type="checkbox" [value]="true" *ngIf="editando">
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 {{element.general.pbm}}
@@ -271,7 +275,7 @@
 
                         <ng-container matColumnDef="G2">
                             <th mat-header-cell *matHeaderCellDef class="variableG">
-                                <input type="checkbox" [value]="true" *ngIf="recibosUrl">
+                                <input type="checkbox" [value]="true" *ngIf="editando">
                             </th>
                             <td mat-cell *matCellDef="let element">
 
@@ -281,7 +285,7 @@
 
                         <ng-container matColumnDef="G3">
                             <th mat-header-cell *matHeaderCellDef class="variableG">
-                                <input type="checkbox" [value]="true" *ngIf="recibosUrl">
+                                <input type="checkbox" [value]="true" *ngIf="editando">
                             </th>
                             <td mat-cell *matCellDef="let element">
 
@@ -290,7 +294,7 @@
 
                         <ng-container matColumnDef="G4">
                             <th mat-header-cell *matHeaderCellDef class="variableG">
-                                <input type="checkbox" [value]="true" *ngIf="recibosUrl">
+                                <input type="checkbox" [value]="true" *ngIf="editando">
                             </th>
                             <td mat-cell *matCellDef="let element">
 
@@ -311,27 +315,20 @@
 
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <div class="separacion-acciones">
-                                    <button aria-hidden="false" title="{{'calendario.tooltip_inactivar' | translate}}"
-                                        class=" boton-primary-table" *ngIf="recibosUrl">
-                                        <mat-icon fontIcon="delete">
+                                <div class="contenedor-botones-fila">
+                                    <!-- <button aria-hidden="false"
+                                        class=" boton-primary-table un-boton" (click)="editar(element)">
+                                        <mat-icon *ngIf="!editando" fontIcon="edit">
+                                        </mat-icon>
+                                        <mat-icon *ngIf="editando && element.estado_edicion" fontIcon="save">
+                                        </mat-icon>
+                                    </button> -->
+                                    <button aria-hidden="false"
+                                        class=" boton-primary-table un-boton">
+                                        <mat-icon fontIcon="download">
                                         </mat-icon>
                                     </button>
-
-                                    <button aria-hidden="false" title="{{'calendario.tooltip_editar' | translate}}"
-                                        class=" boton-primary-table  " *ngIf="recibosUrl">
-                                        <mat-icon fontIcon="edit">
-                                        </mat-icon>
-                                    </button>
-
-                                    <button aria-hidden="false" title="{{'calendario.tooltip_inactivar' | translate}}"
-                                        class=" boton-primary-table">
-                                        <mat-icon fontIcon="send">
-                                        </mat-icon>
-                                    </button>
-
                                 </div>
-
                             </td>
                         </ng-container>
 
@@ -484,13 +481,13 @@
 
                 <div class="container" style="padding: 2%;">
                     <div class="row justify-content-md-center">
-                        <button class="boton-primary" *ngIf="recibosUrl">{{
+                        <button class="boton-primary" *ngIf="editando">{{
                             'liquidacion.generar_recibo' | translate }}</button>
                         <button class="boton-primary">{{
                             'liquidacion.descargar_listado' | translate }}</button>
-                        <button class="boton-primary" *ngIf="recibosUrl">{{
+                        <button class="boton-primary" *ngIf="editando">{{
                             'liquidacion.conjunto_recibos' | translate }}</button>
-                        <button class="boton-primary" *ngIf="recibosUrl">{{
+                        <button class="boton-primary" *ngIf="editando">{{
                             'liquidacion.asignar_recibo' | translate }}</button>
                     </div>
                 </div>

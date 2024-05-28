@@ -1,10 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TranslateService } from '@ngx-translate/core';
+import { PopUpManager } from 'src/app/managers/popUpManager';
 import { liquidacion } from 'src/app/models/liquidacion/liquidacion';
 import { A, B } from 'src/app/models/liquidacion/Variables';
+import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
+import { SgaMidService } from 'src/app/services/sga_mid.service';
 
 @Component({
   selector: 'app-liquidacion-table',
@@ -24,9 +29,9 @@ export class LiquidacionTableComponent implements OnInit{
       "5": 95,
       "6": 100,
       "No Informa": 100,
-      "Area Rural": 20,
-      "Ciudad menor de 100mil habitantes": 45,
-      "Ciudad mayor de 100mil habitantes": 70
+      "Área rural": 20,
+      "Ciudad menor de cien mil habitantes": 45,
+      "Ciudad mayor de cien mil habitantes": 70
     },
     A2: {
       "Entre 0 y,004": 15,
@@ -39,6 +44,7 @@ export class LiquidacionTableComponent implements OnInit{
       "Entre 0.41 y 0.5": 80,
       "Entre 0.51 y 0.6": 90,
       "Entre 0.61 y 0.7": 100,
+      "Mayor de 0.71": 100,
       "No informa": 100,
     },
     A3: {
@@ -62,26 +68,31 @@ export class LiquidacionTableComponent implements OnInit{
     }
   }
 
-
   variableB: B = {
     B1: {
-      "Estrato 1 y 2 o rural": 0.6,
-      "Estrato 3 y 4 ciudad < 100 mil hab, no estratificada": 0.9,
-      "Estrato 5 y 6, > 100 mil habitantes no estratificada": 1,
-
+      "1": 0.6,
+      "2": 0.6,
+      "3": 0.9,
+      "4": 0.9,
+      "5": 1,
+      "6": 1,
+      "Área rural": 0.6,
+      "Ciudad menor de cien mil habitantes": 0.9,
+      "Ciudad mayor de cien mil habitantes": 1
     },
     B2: {
-      "Fuera del Perimetro Urbano": 0.9,
-      "Dentro del Perimetro Urbano": 1,
+      "Fuera del perimetro urbano": 0.9,
+      "Dentro del perimetro urbano": 1,
 
     },
     B3: {
-      "Vive solo o es casado": 0.85,
-      "Otros": 1,
+      "Vive solo": 0.85,
+      "Es casado": 0.85,
+      "Otro": 1,
     },
     B4: {
-      "Trabaja": 0.9,
-      "No trabaja": 1,
+      "Empleado": 0.9,
+      "Desempleado": 1,
     }
   }
 
@@ -102,66 +113,238 @@ export class LiquidacionTableComponent implements OnInit{
   valorB4: number[] = []
   PBM!: number
   mostrarElementosLiquidacion!: boolean;
+  editando: boolean = false;
+  visible!: boolean;
+  inscripciones: any = [];
+  public editingRowId: number | null = null;
+  valorOriginal: any;
+  loading: boolean = false;
  
   displayedColumns: string[] = ['seleccion', 'codigo', 'documento', 'nombres', 'apellidos', 'A1', 'puntaje1', 'A2', 'puntaje2', 'A3', 'puntaje3', 'B1', 'puntaje4', 'B2', 'puntaje5', 'B3', 'puntaje6', 'B4', 'puntaje7', 'G1', 'G2', 'G3', 'G4', 'total', 'acciones'];
-  @Input() recibosUrl: any;
+  @Input() datosRecibos: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<liquidacion>;
+
+  matriculaUltimoAnio = new FormControl('');
+  ingresosBrutosFam = new FormControl('');
 
 
   @ViewChild('tablaContainer')
   tablaContainer!: ElementRef;
 
-  constructor(private http: HttpClient) {
-    this.generarRegistros()
+  constructor(
+    private http: HttpClient,
+    private sgamidService: SgaMidService,
+    private popUpManager: PopUpManager,
+    private translate: TranslateService,
+    private inscripcionMidService: InscripcionMidService,
+  ) 
+  {
     this.obtenerClaves(this.variableA, this.variableB)
-
   }
   ngOnInit(): void {
     throw new Error('Method not implemented.');
   }
 
-  generarRegistros() {
-    for (let i = 0; i < 20; i++) {
-      const liquidaciondata: liquidacion = {
-        seleccion: true,
-        codigo: i + 1,
-        documetno: 100000000 + i,
-        nombres: "Nombre" + (i + 1),
-        apellidos: "Apellido" + (i + 1),
+  async generarRegistros() {
+    this.loading = true;
+    this.data = [];
+
+    for (const inscripcion of this.inscripciones) {
+      const persona: any = await this.consultarTercero(inscripcion.PersonaId);
+      if (Array.isArray(persona) && persona.length === 0) {
+        continue;
+      }
+      const infoLegalizacion: any = await this.getLegalizacionMatricula(persona.Id)
+      if (infoLegalizacion == "No existe legalizacion") {
+        continue;
+      }
+      const valorStringA2 = this.calcularValorPension(infoLegalizacion.pensionSM11)
+      const valorStringA3 = this.calcularValorIngresos(infoLegalizacion.ingresosSMCostea)
+
+      const valorLiquidacionData: any = {
+        "estado_edicion": false,
+        "inscripcionId": inscripcion.Id,
+        "personaId": persona.Id,
+        "seleccion": true,
+        "codigo": 1000,
+        "documento": persona.NumeroIdentificacion,
+        "nombres": persona.PrimerNombre + "" + persona.SegundoNombre,
+        "apellidos": persona.PrimerApellido + "" + persona.SegundoApellido,
         A: {
-          A1: "1",
-          puntajeA1: this.variableA.A1["1"],
-          A2: "Entre 0 y,004",
-          puntajeA2: this.variableA.A2["Entre 0 y,004"],
-          A3: "Entre 0 y 2",
-          puntajeA3: this.variableA.A3["Entre 0 y 2"],
+          A1: infoLegalizacion.estratoCostea,
+          puntajeA1: this.variableA.A1[infoLegalizacion.estratoCostea],
+          A2: infoLegalizacion.pensionSM11,
+          puntajeA2: this.variableA.A2[valorStringA2],
+          A3: infoLegalizacion.ingresosSMCostea,
+          puntajeA3: this.variableA.A3[valorStringA3],
         },
         B: {
-          B1: "Estrato 1 y 2 o rural",
-          puntajeB1: this.variableB.B1["Estrato 1 y 2 o rural"],
-          B2: "Fuera del Perimetro Urbano",
-          puntajeB2: this.variableB.B2["Fuera del Perimetro Urbano"],
-          B3: "Vive solo o es casado",
-          puntajeB3: this.variableB.B3["Vive solo o es casado"],
-          B4: "Trabaja",
-          puntajeB4: this.variableB.B4["Trabaja"],
+          B1: infoLegalizacion.estratoCostea,
+          puntajeB1: this.variableB.B1[infoLegalizacion.estratoCostea],
+          B2: infoLegalizacion.ubicacionResidenciaCostea,
+          puntajeB2: this.variableB.B2[infoLegalizacion.ubicacionResidenciaCostea],
+          B3: infoLegalizacion.nucleoFamiliar,
+          puntajeB3: this.variableB.B3[infoLegalizacion.nucleoFamiliar],
+          B4: infoLegalizacion.situacionLaboral,
+          puntajeB4: this.variableB.B4[infoLegalizacion.situacionLaboral],
         },
         general: {
           pbm: 10,
         },
-      };
-      this.data.push(liquidaciondata);
+      }
+      this.calculoPBM(valorLiquidacionData);
+      this.data.push(valorLiquidacionData);
       this.dataSource = new MatTableDataSource(this.data);
 
       setTimeout(() => {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       }, 300);
+    }
+    this.loading = false;
+  }
 
+  retornarLugarResidencia(ubicacion: any) {
+    let ubicacionString;
+    if (ubicacion == 1 || ubicacion == 2 || ubicacion == 'Área rural') {
+      ubicacionString = "Estrato 1 y 2 o rural"
+    } else if (ubicacion == 3 || ubicacion == 4 || ubicacion == 'Ciudad menor de cien mil habitantes') {
+      ubicacionString = "Estrato 3 y 4 ciudad < 100 mil hab, no estratificada"
+    } else {
+      ubicacionString = "Estrato 5 y 6, > 100 mil habitantes no estratificada"
     }
 
+    return ubicacionString;
+  }
+
+  calcularValorPension(valorSM: any) {
+    let valorString;
+
+    switch (true) {
+      case valorSM <= 0.004:
+        valorString = "Entre 0 y,004"
+        break;
+      case valorSM <= 0.08:
+        valorString = "Entre 0.0041 y 0.08"
+        break;
+      case valorSM <= 0.12:
+        valorString = "Entre 0.081 y 0.12"
+        break;
+      case valorSM <= 0.16:
+        valorString = "Entre 0.121 y 0.16"
+        break;
+      case valorSM <= 0.2:
+        valorString = "Entre 0.161 y 0.2"
+        break;
+      case valorSM <= 0.3:
+        valorString = "Entre 0.21 y 0,3"
+        break;
+      case valorSM <= 0.4:
+        valorString = "Entre 0.31 y 0.4"
+        break;
+      case valorSM <= 0.5:
+        valorString = "Entre 0.41 y 0.5"
+        break;
+      case valorSM <= 0.6:
+        valorString = "Entre 0.51 y 0.6"
+        break;
+      case valorSM <= 0.7:
+        valorString = "Entre 0.61 y 0.7"
+        break;
+      case valorSM > 0.7:
+        valorString = "Entre 0.61 y 0.7"
+        break;
+      default:
+        valorString = "No informa"
+    }
+
+    return valorString;
+  }
+
+  calcularValorIngresos(valorSM: any) {
+    let valorString;
+
+    switch (true) {
+      case valorSM <= 2:
+        valorString = "Entre 0 y 2"
+        break;
+      case valorSM <= 2.5:
+        valorString = "Entre 2,1 y 2,5"
+        break;
+      case valorSM <= 3:
+        valorString = "Entre 2,5 y 3"
+        break;
+      case valorSM <= 4:
+        valorString = "Entre 3 y 4"
+        break;
+      case valorSM <= 5:
+        valorString = "Entre 4 y 5"
+        break;
+      case valorSM <= 5.5:
+        valorString = "Entre 5 y 5,5"
+        break;
+      case valorSM <= 6:
+        valorString = "Entre 5,5 y 6"
+        break;
+      case valorSM <= 6.5:
+        valorString = "Entre 6 y 6,5"
+        break;
+      case valorSM <= 7:
+        valorString = "Entre 6,5 y 7"
+        break;
+      case valorSM <= 7.5:
+        valorString = "Entre 7 y 7,5"
+        break;
+      case valorSM <= 8:
+        valorString = "Entre 7,5 y 8"
+        break;
+      case valorSM <= 9.5:
+        valorString = "Entre 8 y 9,5"
+        break;
+      case valorSM <= 11:
+        valorString = "Entre 9,5 y 11"
+        break;
+      case valorSM <= 14:
+        valorString = "Entre 11 y 14"
+        break;
+      case valorSM <= 18:
+        valorString = "Entre 14 y 18"
+        break;
+      case valorSM > 18:
+        valorString = ">18"
+        break;
+      default:
+        valorString = "No informa"
+    }
+
+    return valorString;
+  }
+
+  async consultarTercero(personaId: any): Promise<any | []> {
+    try {
+      const response = await this.sgamidService.get('persona/consultar_persona/' + personaId).toPromise();
+      return response;
+    } catch (error) {
+      console.log(error)
+      return []; 
+    }
+  }
+
+  async getLegalizacionMatricula(personaId: any) {
+    return new Promise((resolve, reject) => {
+      //this.loading = true;
+      this.inscripcionMidService.get('legalizacion/informacion-legalizacion/' + personaId)
+        .subscribe((res: any) => {
+          resolve(res.data);
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(
+              this.translate.instant('admision.legalizacion_error')
+            );
+          });
+    });
   }
 
   obtenerClaves(variableA: A, variableB: B) {
@@ -191,30 +374,32 @@ export class LiquidacionTableComponent implements OnInit{
 
   }
 
-
-
   actualizarpuntaje(element: liquidacion, caso: string) {
     switch (caso) {
       case 'A1':
         element.A.puntajeA1 = this.variableA.A1[element.A.A1];
+        element.B.B1 = element.A.A1
+        element.B.puntajeB1 = this.variableB.B1[element.B.B1];
         break;
       case 'A2':
-        element.A.puntajeA2 = this.variableA.A2[element.A.A2];;
+        element.A.puntajeA2 = this.variableA.A2[element.A.A2];
         break;
       case 'A3':
-        element.A.puntajeA3 = this.variableA.A3[element.A.A3];;
+        element.A.puntajeA3 = this.variableA.A3[element.A.A3];
         break;
       case 'B1':
-        element.B.puntajeB1 = this.variableB.B1[element.B.B1];;
+        element.B.puntajeB1 = this.variableB.B1[element.B.B1];
+        element.A.A1 = element.B.B1
+        element.A.puntajeA1 = this.variableA.A1[element.A.A1];
         break;
       case 'B2':
-        element.B.puntajeB2 = this.variableB.B2[element.B.B2];;
+        element.B.puntajeB2 = this.variableB.B2[element.B.B2];
         break;
       case 'B3':
-        element.B.puntajeB3 = this.variableB.B3[element.B.B3];;
+        element.B.puntajeB3 = this.variableB.B3[element.B.B3];
         break;
       case 'B4':
-        element.B.puntajeB4 = this.variableB.B4[element.B.B4];;
+        element.B.puntajeB4 = this.variableB.B4[element.B.B4];
         break;
     }
     this.calculoPBM(element)
@@ -235,13 +420,14 @@ export class LiquidacionTableComponent implements OnInit{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('recibosUrl' in changes) {
-      const recibosUrlChange = changes['recibosUrl'];
-      console.log(this.recibosUrl)
-
+    if (this.datosRecibos.hasOwnProperty('visible')) {
+      this.visible = this.datosRecibos['visible']
     }
+    if (this.datosRecibos.hasOwnProperty('inscripciones')) {
+      this.inscripciones = this.datosRecibos['inscripciones']
+      this.generarRegistros()
+    } 
   }
-
 
   async guardar() {
     try {
@@ -251,6 +437,10 @@ export class LiquidacionTableComponent implements OnInit{
       console.error('Error al cargar la tabla:', error);
     }
   }
-
-
 }
+
+
+
+
+
+

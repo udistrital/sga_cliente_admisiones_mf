@@ -25,6 +25,7 @@ import { SoporteConfiguracionComponent } from './components/soporte-configuracio
 import { RepotesInscripcionesComponent } from './components/repotes-inscripciones/repotes-inscripciones.component';
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
+import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 
 
 const routes: Routes = [
@@ -37,7 +38,7 @@ const routes: Routes = [
     component: AdministradorCriteriosComponent
   },
   {
-    path:"admision-criterios", 
+    path:"criterios", 
     component: CriterioAdmisionComponent
   },
   {
@@ -49,7 +50,7 @@ const routes: Routes = [
     component: ComentariosCuposComponent
   },
   {
-    path:"documentos-inscritos", 
+    path:"evaluacion-documentos-inscritos", 
     component: EvaluacionDocumentosInscritosComponent
   },
   {
@@ -59,6 +60,10 @@ const routes: Routes = [
   {
     path:"evaluacion-aspirantes", 
     component: EvaluacionAspirantesComponent
+  },
+  {
+    path:"evaluacion-aspirantes-pregrado", 
+    component: EvalucionAspirantePregradoComponent
   },
   {
     path:"listado-aspirantes", 
@@ -73,7 +78,7 @@ const routes: Routes = [
     component: AsignarDocumentosDescuentosComponent
   },
   {
-    path:"transferencia/:process", 
+    path:"transferencias/:process", 
     component: TransferenciaComponent,
   },
   {
