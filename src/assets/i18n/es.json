@@ -2673,6 +2673,7 @@
         "encabezado": "Módulo para la Disponibilidad de cupos",
         "label":"Disponibilidad de cupos",
         "mensaje_inicial": "Por favor seleccione el proyecto curricular, el periodo académico y el semestre que sea consultar la disponibilidad de cupos por espacio académico",
+        "mensaje_doctorado": "El calendario actual contiene múltiples periodos asignados. Por favor, revise los detalles para evitar conflictos en las asignaciones.",
         "header_parametros": "Definición de consulta",
         "periodo_academico": "Periodo académico",
         "semestre":"Semestre académico",

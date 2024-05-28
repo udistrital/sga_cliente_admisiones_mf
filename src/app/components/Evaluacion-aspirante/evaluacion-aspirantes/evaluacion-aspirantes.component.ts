@@ -120,6 +120,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   widhtColumns: any
   criterio = [];
   cantidad_aspirantes: number = 0;
+  selectMultipleNivel: boolean = false;
 
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
@@ -234,6 +235,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
     } else {
       return false
     }
+  }
+
+  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+    const idNivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado")!.Id;
+    this.selectMultipleNivel = (idNivelDoctorado === nivelSeleccionado);
+    this.loadProyectos();
   }
 
   loadProyectos() {
