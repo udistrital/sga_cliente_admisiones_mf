@@ -30,6 +30,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+import { CalendarioMidService } from 'src/app/services/calendario_mid.service';
 
 
 @Component({
@@ -70,6 +71,9 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   folderTagtoReload: string = "";
   inscripcionInfo: any;
   observacionesDoc: any = [];
+  selectMultipleNivel: boolean = false;
+  mostrarBoton = false;
+  mostrarMensajeInicial = false;
 
 
   periodos: any = [];
@@ -79,6 +83,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   //info para notificaciones
   nombreRevisor = "";
   telefonoDep = "";
+
 
 
   constructor(
@@ -99,6 +104,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     private evaluacionInscripcionService: EvaluacionInscripcionService,
     private autenticationService: ImplicitAutenticationService,
     private oikosService: OikosService,
+    private calendarioMidService: CalendarioMidService,
   ) {
     this.invitacion = new Invitacion();
     this.invitacionTemplate = new InvitacionTemplate();
@@ -199,6 +205,33 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     }
   }
 
+
+  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+    const nivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado");
+    if (nivelDoctorado) {
+      const esDoctorado = nivelDoctorado.Id === nivelSeleccionado;
+      this.selectMultipleNivel = esDoctorado;
+      this.mostrarBoton = esDoctorado;
+      this.mostrarMensajeInicial = esDoctorado;
+    } else {
+      this.selectMultipleNivel = false;
+      this.mostrarBoton = false;
+      this.mostrarMensajeInicial = false;
+    }
+    this.loadProyectos();
+  }
+
+  consultarPeriodosDoctorado(idProyecto: number){    
+    this.calendarioMidService.get(`calendario-proyecto/${idProyecto}`).subscribe(
+      (reponse: any) => {
+        console.log(reponse)
+      },
+      (error: any) => {
+        console.log(error)
+      },            
+    )
+  }
+
   loadProyectos() {
     // this.dataSource.load([]);
     this.dataSource = new MatTableDataSource()
@@ -209,6 +242,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
           this.autenticationService.getRole().then(
             // (rol: Array<String>) => {
             (rol: any) => {
+              rol = ["ADMIN_SGA"];
               let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
               if (r) {
                 this.proyectos = <any[]>response.filter(
