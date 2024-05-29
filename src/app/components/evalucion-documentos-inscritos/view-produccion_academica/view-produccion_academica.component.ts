@@ -13,6 +13,7 @@ import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { ZipManagerService } from 'src/utils/zip-manager.service';
 import { PopUpManager } from '../../../managers/popUpManager';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 @Component({
   selector: 'ngx-view-produccion-academica',
   templateUrl: './view-produccion_academica.component.html',
@@ -58,8 +59,7 @@ export class ViewProduccionAcademicaComponent implements OnInit {
 
   constructor(private translate: TranslateService,
     private documentoService: DocumentoService,
-
-    private sgaMidService: SgaMidService,
+    private inscripcionesMidService: InscripcionMidService,
     private sanitization: DomSanitizer,
     private users: UserService,
     private newNuxeoService: NewNuxeoService,
@@ -86,7 +86,7 @@ export class ViewProduccionAcademicaComponent implements OnInit {
   }
 
   loadData(): void {
-    this.sgaMidService.get('produccion_academica/pr_academica/' + this.persona_id)
+    this.inscripcionesMidService.get('academico/produccion/' + this.persona_id)
       .subscribe((res: any) => {
         if (res !== null) {
           if (res.Response.Code === '200') {

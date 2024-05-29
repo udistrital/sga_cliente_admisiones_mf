@@ -30,6 +30,7 @@ import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
 
+
 @Component({
   selector: 'transferencia',
   templateUrl: './transferencia.component.html',
@@ -40,7 +41,7 @@ export class TransferenciaComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   formTransferencia: any = null;
-  listadoSolicitudes: boolean = true;
+  listadoSolicitudes: boolean = false;
   actions: boolean = true;
   recibo: boolean = false;
   settings: any = null;
@@ -132,8 +133,9 @@ export class TransferenciaComponent implements OnInit {
       const { process } = params.params;
       this.process = atob(process);
       this.actions = (this.process === 'my');
-      await this.loadDataAll(this.process);
     });
+    this.cargarPeriodo();
+    this.nivel_load()
   }
 
 
@@ -149,7 +151,6 @@ export class TransferenciaComponent implements OnInit {
 
   nivel_load() {
     this.projectService.get('nivel_formacion?limit=0').subscribe(
-      //   (response: NivelFormacion[]) => {
       (response: any) => {
         this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.Nombre === 'Posgrado')
       },
@@ -158,14 +159,13 @@ export class TransferenciaComponent implements OnInit {
       },
     );
   }
+
   public loadInfoPersona(): void {
     this.uid = this.userService.getPersonaId();
     if (this.uid !== undefined && this.uid !== 0 &&
       this.uid.toString() !== '' && this.uid.toString() !== '0') {
-      console.log(this.uid)
       this.terceroMidService.get('personas/' + this.uid).subscribe((res: any) => {
         if (res !== null) {
-
           const temp = <InfoPersona>res.Data;
           this.info_info_persona = temp;
           const files = [];
@@ -173,7 +173,6 @@ export class TransferenciaComponent implements OnInit {
       });
     } else {
       this.info_info_persona = undefined
-      this.loading = false;
       this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('GLOBAL.no_info_persona'));
     }
   }
@@ -221,19 +220,99 @@ export class TransferenciaComponent implements OnInit {
     }
   }
 
-  async loadDataAll(process: any) {
-    await this.cargarPeriodo();
-    this.loading = true;
+  descargarNormativa() {
+    window.open('https://www.udistrital.edu.co/admisiones-pregrado', '_blank');
+  }
 
-    this.inscripcionMidService.get('transferencia/solicitudes')
+  async nuevaSolicitud() {
+    this.listadoSolicitudes = false;
+    await this.loadPeriodo()
+    this.construirForm();
+  }
+
+  filtrarProyecto(proyecto: any) {
+    if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
+      return true
+    }
+    if (proyecto['NivelFormacionId']['NivelFormacionPadreId'] !== null) {
+      if (proyecto['NivelFormacionId']['NivelFormacionPadreId']['Id'] === this.selectednivel) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+  }
+
+  cargarPeriodo() {
+    return new Promise((resolve, reject) => {
+        this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+            .subscribe((res: any) => {
+                const r = <any>res;
+                if (res !== null && r.Status === '200') {
+                    this.periodo = res.Data.find((p: any) => p.Activo);
+                    window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
+                    resolve(this.periodo);
+                    const periodos = <any[]>res['Data'];
+                    periodos.forEach(element => {
+                        this.periodos.push(element);
+                    });
+                }
+            },
+                (error: HttpErrorResponse) => {
+                    reject(error);
+                });
+    });
+}
+
+  loadPeriodo() {
+    return new Promise((resolve, reject) => {
+      this.inscripcionMidService.get('transferencia/consultar-periodo').subscribe(
+        (response: any) => {
+          if (response.Success) {
+
+            this.formTransferencia.campos.forEach((campo: any) => {
+              if (campo.etiqueta === 'select') {
+                campo.opciones = response.Data[campo.nombre];
+                if (campo.nombre === 'Periodo') {
+                  campo.valor = campo.opciones[0];
+                }
+              }
+            });
+            resolve(response.Data)
+          } else {
+
+            Swal.fire({
+              icon: 'warning',
+              title: this.translate.instant('GLOBAL.info'),
+              text: this.translate.instant('admision.error_calendario') + '. ' + this.translate.instant('admision.error_nueva_transferencia'),
+              confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+            });
+
+            this.clean();
+            this.listadoSolicitudes = true;
+          }
+          reject();
+        },
+        (error: any) => {
+          this.popUpManager.showErrorToast(this.translate.instant('admision.error'));
+          reject(error);
+        },
+      );
+    });
+  }
+
+  cargarSolicitudesSegunProyecto(proyecto:any) {
+    this.listadoSolicitudes = false
+    this.inscripcionMidService.get('transferencia/solicitudes/programa/'+proyecto.Id)
       .subscribe((response: any) => {
         if (response !== null && response.Status == '400') {
           this.popUpManager.showErrorToast(this.translate.instant('inscripcion.error'));
         } else if (response != null && response.Status == '404') {
           this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('inscripcion.no_inscripcion'));
         } else {
-          let inscripciones = <Array<any>>response.Dta;
-          inscripciones = inscripciones.filter((inscripcion: any) => inscripcion.Estado != "Radicada");
+          let inscripciones = <Array<any>>response.Data;
           const dataInfo = <Array<any>>[];
           inscripciones.forEach((element: any) => {
             this.projectService.get('proyecto_academico_institucion/' + element.Programa).subscribe(
@@ -261,11 +340,9 @@ export class TransferenciaComponent implements OnInit {
                   class: "btn btn-primary"
                 }
 
-                this.loading = true;
-
                 dataInfo.push(element);
-                console.log(dataInfo)
                 this.dataSource = new MatTableDataSource(dataInfo);
+                this.listadoSolicitudes = true
                 setTimeout(() => {
                   this.dataSource.paginator = this.paginator;
                   this.dataSource.sort = this.sort;
@@ -273,113 +350,17 @@ export class TransferenciaComponent implements OnInit {
 
                 //this.dataSource.setSort([{ field: 'Id', direction: 'desc' }]);
 
-                this.loading = false;
               },
               error => {
-                this.loading = false;
                 this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
               },
             );
           });
         }
-        this.loading = false;
       },
         (error: HttpErrorResponse) => {
-          this.loading = false;
           this.popUpManager.showErrorToast(this.translate.instant(`ERROR.${error.status}`));
         });
-  }
-
-
-
-  descargarNormativa() {
-    window.open('https://www.udistrital.edu.co/admisiones-pregrado', '_blank');
-  }
-
-  async nuevaSolicitud() {
-    this.listadoSolicitudes = false;
-    await this.loadPeriodo().catch(e => this.loading = false);
-    this.construirForm();
-  }
-
-  filtrarProyecto(proyecto: any) {
-    if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
-      return true
-    }
-    if (proyecto['NivelFormacionId']['NivelFormacionPadreId'] !== null) {
-      if (proyecto['NivelFormacionId']['NivelFormacionPadreId']['Id'] === this.selectednivel) {
-        return true
-      } else {
-        return false
-      }
-    } else {
-      return false
-    }
-  }
-
-  cargarPeriodo() {
-    this.loading = true;
-    return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo?query=Activo:true,CodigoAbreviacion:PA&sortby=Id&order=desc&limit=1')
-        .subscribe((res: any) => {
-          const r = <any>res;
-          if (res !== null && r.Status === '200') {
-            this.periodo = <any>res['Data'][0];
-            window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
-            const periodos = <any[]>res['Data'];
-            periodos.forEach(element => {
-              this.periodos.push(element);
-            });
-            resolve(this.periodo);
-          }
-        },
-          (error: HttpErrorResponse) => {
-            this.loading = false;
-            reject([]);
-          });
-    });
-  }
-
-  loadPeriodo() {
-    return new Promise((resolve, reject) => {
-      this.loading = true;
-      this.inscripcionMidService.get('transferencia/consultar-periodo').subscribe(
-        (response: any) => {
-          if (response.Success) {
-
-            this.formTransferencia.campos.forEach((campo: any) => {
-              if (campo.etiqueta === 'select') {
-                campo.opciones = response.Data[campo.nombre];
-                if (campo.nombre === 'Periodo') {
-                  campo.valor = campo.opciones[0];
-                }
-              }
-            });
-            this.loading = false;
-            resolve(response.Data)
-          } else {
-
-            Swal.fire({
-              icon: 'warning',
-              title: this.translate.instant('GLOBAL.info'),
-              text: this.translate.instant('admision.error_calendario') + '. ' + this.translate.instant('admision.error_nueva_transferencia'),
-              confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-            });
-
-            this.clean();
-            this.listadoSolicitudes = true;
-          }
-          reject();
-        },
-        (error: any) => {
-          this.popUpManager.showErrorToast(this.translate.instant('admision.error'));
-          reject(error);
-        },
-      );
-    });
-  }
-
-  cargarSolicitudesSegunProyecto() {
 
   }
   async seleccion(event: any) {
@@ -392,7 +373,7 @@ export class TransferenciaComponent implements OnInit {
 
     if (event.nombre === 'CalendarioAcademico' && !this.recibo && event.valor != null) {
 
-      let parametros: any = await this.loadParams(this.dataTransferencia.CalendarioAcademico.Id).catch((e: any) => this.loading = false);
+      let parametros: any = await this.loadParams(this.dataTransferencia.CalendarioAcademico.Id)
 
       if (parametros == false) {
         this.formTransferencia.campos.forEach((campo: any) => {
@@ -448,16 +429,12 @@ export class TransferenciaComponent implements OnInit {
         }
       });
     }
-
-    this.loading = false
   }
 
   loadParams(calendarioId: any) {
     return new Promise((resolve, reject) => {
-      this.loading = true;
       this.inscripcionMidService.get('transferencia/consultar-parametros?id-calendario=' + calendarioId + '&persona-id=' + this.uid).subscribe(
         (response: any) => {
-          this.loading = false;
           if (response.Success) {
             resolve(response);
           } else {
@@ -471,7 +448,6 @@ export class TransferenciaComponent implements OnInit {
         },
         (error: any) => {
           this.popUpManager.showErrorToast(this.translate.instant('admision.error'));
-          this.loading = false;
           reject(error);
         },
       );

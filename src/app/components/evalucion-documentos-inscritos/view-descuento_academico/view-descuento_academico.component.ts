@@ -74,7 +74,6 @@ export class ViewDescuentoAcademicoComponent implements OnInit {
     private sanitization: DomSanitizer,
     private inscripcionService: InscripcionService,
     private newNuxeoService: NewNuxeoService,
-    private sgaMidService: SgaMidService,
     private inscripcionesMidService: InscripcionMidService,
     private utilidades: UtilidadesService,
     private zipManagerService: ZipManagerService,
@@ -98,11 +97,11 @@ export class ViewDescuentoAcademicoComponent implements OnInit {
 
   loadData(): void {
     const id = decrypt(window.localStorage.getItem('persona_id'));
-    this.sgaMidService.get('/academico/descuento/detalle?' + id + '&DependenciaId=' +
+    this.inscripcionesMidService.get('/academico/descuento/detalle?' + id + '&DependenciaId=' +
       sessionStorage.getItem('ProgramaAcademicoId') + '&PeriodoId=' + sessionStorage.getItem('IdPeriodo'))
       .subscribe((result: any) => {
-        const r = <any>result.Data.Body[1];
-        if (result !== null && result.Data.Code == '200') {
+        const r = <any>result.Data[1];
+        if (result !== null && result.Status == '200') {
           const data = <Array<SolicitudDescuento>>r;
           const soportes = [];
           let soportes1 = "";

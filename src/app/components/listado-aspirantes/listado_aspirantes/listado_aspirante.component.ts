@@ -18,7 +18,6 @@ import { map } from 'rxjs/operators';
 import { IAppState } from 'src/app/store/app.state';
 import { Store } from '@ngrx/store';
 import { ListService } from 'src/app/store/services/list.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { UserService } from 'src/app/services/users.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
