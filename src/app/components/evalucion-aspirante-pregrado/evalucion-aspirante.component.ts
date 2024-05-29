@@ -1,15 +1,16 @@
+import { Router } from '@angular/router';
 import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ParametrosService } from '../../services/parametros.service';
 import { ProyectoAcademicoService } from '../../services/proyecto_academico.service';
 import { SgaAdmisionesMid } from '../../services/sga_admisiones_mid.service';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
-import { OikosService } from 'src/app/services/oikos.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { Router } from '@angular/router';
+
+
 
 
 @Component({
@@ -17,6 +18,8 @@ import { Router } from '@angular/router';
   templateUrl: './evalucion-aspirante.component.html',
   styleUrls: ['./evalucion-aspirante.component.scss']
 })
+
+
 export class EvalucionAspirantePregradoComponent {
   @ViewChild('paginator1') paginator1!: MatPaginator;
   @ViewChild('paginator2') paginator2!: MatPaginator;
@@ -24,6 +27,9 @@ export class EvalucionAspirantePregradoComponent {
   viewVariables: boolean = false;
   viewSubcriterios: boolean = false;
   viewTablePuntaje: boolean = false;
+  selectcriterio: boolean = true;
+  notas:boolean = false;
+  btnCalculo: boolean = true;
   periodo!: any;
   popUpManager: any;
   loading!: boolean;
@@ -34,21 +40,22 @@ export class EvalucionAspirantePregradoComponent {
   proyectosCurriculares!: any[]
   selectedcurricular!: number
   selectednivel: undefined;
-  selectCriterio: undefined;
+  selectCriterio!: any[] ;
   datasourceFacultades !: MatTableDataSource<any>;
   datasourceCurriculares !: MatTableDataSource<any>;
   datasourcePuntajeAspirantes!: MatTableDataSource<any>;
   periodoControl = new FormControl('', [Validators.required]);
   nivelControl = new FormControl('', [Validators.required]);
   criterioControl = new FormControl('', [Validators.required]);
-  columnsFacultades = ['#', 'facultad', 'estado', '%', 'accion'];
-  columnsCurriculares = ['#', 'curricular', 'estado', 'color', 'accion'];
+  columnsFacultades = [ 'facultad', 'estado', '%', 'accion'];
+  columnsCurriculares = [ 'curricular', 'estado',  'accion'];
   columnspuntajeaspirantes: string[] = ['#', 'credencia', 'Nombres', 'Apellidos', 'puntajeExamendeestado'];
-
   data = [
     { '#': 1, 'credencia': 'C1', 'Nombres': 'Juan', 'Apellidos': 'Perez', 'puntajeExamendeestado': 80, 'criterio1': 'Criterio 1', 'criterio2': 'Criterio 2', 'total': 100 },
-    // Más filas aquí
   ];
+  criterio_selected: any;
+  criterios: any;
+
 
 
 
@@ -68,10 +75,7 @@ export class EvalucionAspirantePregradoComponent {
     await this.cargarFacultades();
   }
 
-  ngAfterViewInit() {
-    this.datasourceCurriculares.paginator = this.paginator1;
-    this.datasourceCurriculares.paginator = this.paginator2;
-  }
+
 
 
 
@@ -79,9 +83,14 @@ export class EvalucionAspirantePregradoComponent {
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones.get('admision/facultad/inscritos')
         .subscribe((res: any) => {
-          this.facultades = res.data;
-          this.datasourceFacultades = new MatTableDataSource<any>(this.facultades);
-          this.datasourceFacultades.paginator = this.paginator1;
+          console.log(res)
+          if (res.data) {
+            this.facultades = res.data;
+            this.datasourceFacultades = new MatTableDataSource<any>(this.facultades);
+            this.datasourceFacultades.paginator = this.paginator1;
+          } else {
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_no_data'));
+          }
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
@@ -90,20 +99,26 @@ export class EvalucionAspirantePregradoComponent {
           });
     });
   }
-
+  
   cargarProyectosCurriculares(id: number) {
     this.viewCurriculares = true;
     this.sgaMidAdmisiones.get(`admision/academicos/inscritos/${id}`).subscribe((res: any) => {
       if(res.status == 200){
-        this.proyectosCurriculares = res.data;
-        this.datasourceCurriculares = new MatTableDataSource<any>(this.proyectosCurriculares);
-        this.datasourceCurriculares.paginator = this.paginator2;
+        console.log(res)
+        if (res.data) {
+          this.proyectosCurriculares = res.data;
+          this.datasourceCurriculares = new MatTableDataSource<any>(this.proyectosCurriculares);
+          this.datasourceCurriculares.paginator = this.paginator2;
+        } else {
+          this.popUpManager.showErrorAlert(this.translate.instant('admision.proyectos_no_data'));
+        }
       }else{
         this.popUpManager.showErrorAlert(this.translate.instant('admision.proyectos_error'));
       }
-    
     })
   }
+
+
 
   consultarproyecto(Id: number) {
     this.viewVariables = true;
@@ -148,17 +163,22 @@ export class EvalucionAspirantePregradoComponent {
     );
   }
 
-  loadCriterios() {
+loadCriterios() {
     this.EvalaucionInscripcionServices.get('requisito_programa_academico?query=ProgramaAcademicoId:' + this.selectedcurricular +
       ',PeriodoId:' + this.periodo).subscribe((res: any) => {
         if (res !== null || res !== undefined && res.status == 200) {
-          this.requisitosActuales = res
-          console.log(this.requisitosActuales)
+          this.requisitosActuales = res;
+          this.requisitosActuales = this.requisitosActuales.filter((e: any) => e.PorcentajeGeneral !== 0);
+          this.selectcriterio = false;
+          this.criterio_selected = [];
+          this.selectCriterio = []; 
+          this.requisitosActuales.forEach(async (element: any) => {
+            console.log(element)
+            await this.selectCriterio.push(element.RequisitoId);
+          });
         }
       })
   }
-
-
   realizarBusqueda() {
     this.viewSubcriterios = true;
   }
@@ -184,8 +204,5 @@ export class EvalucionAspirantePregradoComponent {
     });
     this.datasourcePuntajeAspirantes = new MatTableDataSource(mapData);
   }
-
-  
-
-
 }
+
