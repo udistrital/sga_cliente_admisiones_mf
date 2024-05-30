@@ -43,9 +43,10 @@ export class ImplicitAutenticationService {
             this.user$.subscribe((data: any) => {
                 console.log("user data:",data)
                 const { user, userService } = data;
-                const roleUser = typeof user.role !== 'undefined' ? user.role : [];
-                const roleUserService = typeof userService.role !== 'undefined' ? userService.role : [];
+                const roleUser = typeof user.user.role !== 'undefined' ? user.user.role : [];
+                const roleUserService = typeof userService.userService.role !== 'undefined' ? userService.userService.role : [];
                 const roles = (roleUser.concat(roleUserService)).filter((data: any) => (data.indexOf('/') === -1));
+                console.log(roles)
                 resolve(roles);
             });
         });

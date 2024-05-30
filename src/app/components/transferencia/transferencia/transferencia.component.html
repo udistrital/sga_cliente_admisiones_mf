@@ -53,33 +53,33 @@
                 <table mat-table [dataSource]="dataSource" matSort>
                     
                     <ng-container matColumnDef="#recibo">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> {{'GLOBAL.nombre' |
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> {{'inscripcion.recibo' |
                             translate}} </th>
                         <td mat-cell *matCellDef="let row"> {{row.Recibo}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="concepto">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 50%;">
-                            {{'GLOBAL.descripcion' |
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 30%;">
+                            {{'inscripcion.concepto' |
                             translate}} </th>
                         <td mat-cell *matCellDef="let row"> {{row.Concepto}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="programa">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
-                            {{'admision.asistencia' | translate}} </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40%;">
+                            {{'inscripcion.programa' | translate}} </th>
 
                         <td mat-cell *matCellDef="let row"> {{row.Programa}} </td>
                     </ng-container>
                     <ng-container matColumnDef="fechageneracion">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
-                            {{'admision.asistencia' | translate}} </th>
+                            {{'inscripcion.fecha_generacion' | translate}} </th>
 
                         <td mat-cell *matCellDef="let row"> {{row.FechaGeneracion}} </td>
                     </ng-container>
                     <ng-container matColumnDef="estado">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
-                            {{'admision.asistencia' | translate}} </th>
+                            {{'inscripcion.estado' | translate}} </th>
 
                         <td mat-cell *matCellDef="let row"> {{row.Estado}} </td>
                     </ng-container>

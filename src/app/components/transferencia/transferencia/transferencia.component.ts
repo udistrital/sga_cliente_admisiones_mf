@@ -160,8 +160,8 @@ export class TransferenciaComponent implements OnInit {
     );
   }
 
-  public loadInfoPersona(): void {
-    this.uid = this.userService.getPersonaId();
+  async loadInfoPersona() {
+    this.uid = await this.userService.getPersonaId();
     if (this.uid !== undefined && this.uid !== 0 &&
       this.uid.toString() !== '' && this.uid.toString() !== '0') {
       this.terceroMidService.get('personas/' + this.uid).subscribe((res: any) => {
@@ -185,7 +185,6 @@ export class TransferenciaComponent implements OnInit {
       this.projectService.get('proyecto_academico_institucion?limit=0').subscribe(
         (response: any) => {
           this.autenticationService.getRole().then(
-            // (rol: Array<String>) => {
             (rol: any) => {
               let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
               if (r) {
@@ -196,13 +195,12 @@ export class TransferenciaComponent implements OnInit {
                 const id_tercero = this.userService.getPersonaId();
                 this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
-                    const dependencias = <Number[]>respDependencia.Data.DependenciaId;
+                    const dependencias = <Number[]>respDependencia.Data.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(
                       (proyecto: any) => dependencias.includes(proyecto.Id)
                     );
                     if (dependencias.length > 1) {
                       this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
-                      //this.proyectos.forEach(p => { p.Id = undefined })
                     }
                   },
                   (error: any) => {
