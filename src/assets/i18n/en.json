@@ -1064,7 +1064,9 @@
         "Facultad": "Faculty",
         "Proyecto": "Project",
         "Acciones": "Actions",
-        "SelectNivel": "Select level"
+        "SelectNivel": "Select level",
+        "SelectTipoInscripcion": "Select inscription type",
+        "SelectEstadoInscripcion": "Selet inscription status"
 
     },
     "evento": {

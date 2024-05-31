@@ -1097,7 +1097,9 @@
         "Facultad": "Facultad",
         "Proyecto": "Proyecto",
         "Acciones": "Acciones",
-        "SelectNivel": "Selecciona el nivel"
+        "SelectNivel": "Selecciona el nivel",
+        "SelectTipoInscripcion": "Selecciona el tipo de inscripcion",
+        "SelectEstadoInscripcion": "Selecciona el estado de la inscripción"
 
 
     },

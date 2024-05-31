@@ -145,4 +145,121 @@ export const tipoReporteInscritos = [{
         "Nombre": "Estado recibo",
         "Valor": "J"
       }]
+  },
+  {
+    "Nombre": "Listar transferencias internas",
+    "Codigo": 5,
+    "Columnas": [{
+        "Nombre": "#",
+        "Valor": "A"
+      },
+      {
+        "Nombre": "Documento",
+        "Valor": "B"
+      },
+      {
+        "Nombre": "Nombre",
+        "Valor": "C"
+      },
+      {
+        "Nombre": "Teléfono",
+        "Valor": "D"
+      }, {
+        "Nombre": "Correo",
+        "Valor": "E"
+      },
+      {
+        "Nombre": "Puntaje",
+        "Valor": "F"
+      },
+      {
+        "Nombre": "Tipo de inscripción",
+        "Valor": "G"
+      },
+      {
+        "Nombre": "Enfasis",
+        "Valor": "H"
+      },
+      {
+        "Nombre": "Estado inscripción",
+        "Valor": "I"
+      }]
+  },
+  {
+    "Nombre": "Listar transferencias externas",
+    "Codigo": 6,
+    "Columnas": [{
+        "Nombre": "#",
+        "Valor": "A"
+      },
+      {
+        "Nombre": "Documento",
+        "Valor": "B"
+      },
+      {
+        "Nombre": "Nombre",
+        "Valor": "C"
+      },
+      {
+        "Nombre": "Teléfono",
+        "Valor": "D"
+      }, {
+        "Nombre": "Correo",
+        "Valor": "E"
+      },
+      {
+        "Nombre": "Puntaje",
+        "Valor": "F"
+      },
+      {
+        "Nombre": "Tipo de inscripción",
+        "Valor": "G"
+      },
+      {
+        "Nombre": "Enfasis",
+        "Valor": "H"
+      },
+      {
+        "Nombre": "Estado inscripción",
+        "Valor": "I"
+      }]
+  },
+  {
+    "Nombre": "Listar reintegros",
+    "Codigo": 7,
+    "Columnas": [{
+        "Nombre": "#",
+        "Valor": "A"
+      },
+      {
+        "Nombre": "Documento",
+        "Valor": "B"
+      },
+      {
+        "Nombre": "Nombre",
+        "Valor": "C"
+      },
+      {
+        "Nombre": "Teléfono",
+        "Valor": "D"
+      }, {
+        "Nombre": "Correo",
+        "Valor": "E"
+      },
+      {
+        "Nombre": "Puntaje",
+        "Valor": "F"
+      },
+      {
+        "Nombre": "Tipo de inscripción",
+        "Valor": "G"
+      },
+      {
+        "Nombre": "Enfasis",
+        "Valor": "H"
+      },
+      {
+        "Nombre": "Estado inscripción",
+        "Valor": "I"
+      }]
   }]
