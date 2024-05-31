@@ -24,7 +24,7 @@
             <mat-select 
               [formControl]="Campo1Control" 
               [(ngModel)]="proyectos_selected"
-              (selectionChange)="loadInscritos(); consultarPeriodosDoctorado(proyectos_selected)">
+              (selectionChange)="consultarPeriodosDoctorado(proyectos_selected)">
               
               <mat-option value="">{{ 'GLOBAL.seleccionar' | translate }}</mat-option>
               <mat-option *ngFor="let item of proyectos" [value]="item.Id">
@@ -39,13 +39,13 @@
           <!--Periodo académico-->
           <mat-form-field>
             <mat-label>{{ 'admision.periodo_' | translate }}:</mat-label>
-            <mat-select *ngIf="!selectMultipleNivel" formControlName="PeriodoId" placeholder="2020-I, 2020-II, 2020-III" (selectionChange)="loadInscritos()" required>
+            <mat-select *ngIf="!selectMultipleNivel" formControlName="PeriodoId" [(ngModel)]="periodoMultiple" placeholder="2020-I, 2020-II, 2020-III" (selectionChange)="loadInscritos()" required>
               <mat-option value="" disabled>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
               <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
                 {{ periodo.Nombre }}
               </mat-option>                
             </mat-select>              
-            <mat-select *ngIf="selectMultipleNivel" formControlName="PeriodoId" placeholder="2020-I, 2020-II, 2020-III" required multiple>
+            <mat-select *ngIf="selectMultipleNivel" formControlName="PeriodoId" [(ngModel)]="periodoMultiple" placeholder="2020-I, 2020-II, 2020-III" required multiple>
               <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
                 {{ periodo.Nombre }}
               </mat-option>
@@ -54,11 +54,11 @@
           <div>
           <button class="boton-primary" type="button" *ngIf="mostrarBoton" (click)="loadInscritos()">
             <mat-icon style="vertical-align: middle;" fontIcon="add"> </mat-icon>
-            <label>{{'GLOBAL.cargar' | translate}}</label>
+            <label>{{'GLOBAL.buscar' | translate}}</label>
           </button>
         </div>              
           <div *ngIf="mostrarMensajeInicial" class="info margin-y">
-             {{ "gestion_horarios.mensaje_doctorado" | translate }}
+             {{ "gestion_horarios.mensaje_doctorado" | translate }} : {{ nombresPeriodos }}
           </div>                                  
           <br /><br />
 

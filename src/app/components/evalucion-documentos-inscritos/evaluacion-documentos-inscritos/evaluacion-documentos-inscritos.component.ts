@@ -31,6 +31,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { CalendarioMidService } from 'src/app/services/calendario_mid.service';
+import { EventosService } from 'src/app/services/eventos.service';
 
 
 @Component({
@@ -74,6 +75,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   selectMultipleNivel: boolean = false;
   mostrarBoton = false;
   mostrarMensajeInicial = false;
+  nombresPeriodos: string = "";         
+  
 
 
   periodos: any = [];
@@ -84,6 +87,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   nombreRevisor = "";
   telefonoDep = "";
 
+  periodoMultiple: any;
+  listaPeriodos: any[] = [];
 
 
   constructor(
@@ -105,6 +110,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     private autenticationService: ImplicitAutenticationService,
     private oikosService: OikosService,
     private calendarioMidService: CalendarioMidService,
+    private eventosService: EventosService,
+    
   ) {
     this.invitacion = new Invitacion();
     this.invitacionTemplate = new InvitacionTemplate();
@@ -221,16 +228,31 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     this.loadProyectos();
   }
 
-  consultarPeriodosDoctorado(idProyecto: number){    
+  consultarPeriodosDoctorado(idProyecto: number) {
     this.calendarioMidService.get(`calendario-proyecto/${idProyecto}`).subscribe(
-      (reponse: any) => {
-        console.log(reponse)
+      (response: any) => {        
+        const CalendarioId = response.Data.CalendarioId;
+        this.eventosService.get(`calendario/${CalendarioId}`).subscribe(
+          (response2: any) => {
+            const listaPeriodos: number[] = JSON.parse(response2.MultiplePeriodoId);            
+            listaPeriodos.forEach(periodoId => {              
+              this.parametrosService.get(`periodo/${periodoId}`).subscribe(
+                (response3: any) => {
+                  this.nombresPeriodos = this.nombresPeriodos + response3.Data.Nombre + ', ';
+                }
+              )
+            });
+          },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendario') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
+          }
+        );
       },
-      (error: any) => {
-        console.log(error)
-      },            
-    )
-  }
+      (error: any) => {        
+        this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendario') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
+      }
+    );
+  }  
 
   loadProyectos() {
     // this.dataSource.load([]);
@@ -277,29 +299,33 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   loadInscritos() {
-    this.loading = true;
-    // this.dataSource.load([]);
-    this.dataSource = new MatTableDataSource()
-    this.Aspirantes = [];
-    console.log('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
-    this.sgaMiAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
+    if(this.selectMultipleNivel) {
+      let selectPeriodo: any [] = [];
+      this.Aspirantes = [];
+      this.loading = true;
+      this.dataSource = new MatTableDataSource()
+      this.listaPeriodos = ['2024-1','2024-2'];  
+      this.Aspirantes = [];
+      selectPeriodo.forEach((periodo: any, i) => {
+        this.sgaMiAdmisiones.get('admision/aspirantespor?id_periodo=' + periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
       .subscribe(
         (response: any) => {
           if (response.Success == true && response.Status == 200) {
-            this.Aspirantes = response.Data;
-            this.cantidad_inscritos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO").length;
-            this.cantidad_inscritos_obs = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO con Observación").length;
-            this.cantidad_admitidos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "ADMITIDO").length;
-            this.cantidad_aspirantes = this.cantidad_inscritos + this.cantidad_inscritos_obs + this.cantidad_admitidos;
-            // this.dataSource.load(this.Aspirantes);
-            console.log(this.Aspirantes)
-            this.dataSource = new MatTableDataSource(this.Aspirantes)
-            setTimeout(() => {
-              this.dataSource.paginator = this.paginator;
-              this.dataSource.sort = this.sort;
-            }, 300);
-            this.loading = false;
-            this.mostrarConteos = true;
+            this.Aspirantes.push(...response.Data);
+            if (i == selectPeriodo.length - 1) {
+              
+              this.cantidad_inscritos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO").length;
+              this.cantidad_inscritos_obs = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO con Observación").length;
+              this.cantidad_admitidos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "ADMITIDO").length;
+              this.cantidad_aspirantes = this.cantidad_inscritos + this.cantidad_inscritos_obs + this.cantidad_admitidos;              
+              this.dataSource = new MatTableDataSource(this.Aspirantes)
+              setTimeout(() => {
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+              }, 300);
+              this.loading = false;
+              this.mostrarConteos = true;
+            }
           }
         },
         (error: HttpErrorResponse) => {
@@ -313,6 +339,37 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
           });
         }
       );
+        
+      }
+    )    
+    } else {
+      this.loading = true;
+      // this.dataSource.load([]);
+      this.dataSource = new MatTableDataSource()
+      this.Aspirantes = [];
+      console.log('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
+      this.sgaMiAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
+        .subscribe(
+          (response: any) => {
+            if (response.Success == true && response.Status == 200) {
+              this.Aspirantes = response.Data;              
+            }
+          },
+          (error: HttpErrorResponse) => {
+            this.loading = false;
+            this.mostrarConteos = false;
+            Swal.fire({
+              icon: 'warning',
+              title: this.translate.instant('admision.titulo_no_aspirantes'),
+              text: this.translate.instant('admision.error_no_aspirantes'),
+              confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+            });
+          }
+        );
+    }
+
+
+   
 
 
     /* this.inscripcionService.get('inscripcion?query=EstadoInscripcionId__Id:5,ProgramaAcademicoId:' +

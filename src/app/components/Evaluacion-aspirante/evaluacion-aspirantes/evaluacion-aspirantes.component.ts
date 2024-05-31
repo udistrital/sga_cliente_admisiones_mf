@@ -19,6 +19,7 @@ import { ImplicitAutenticationService } from 'src/app/services/implicit_autentic
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { CalendarioMidService } from 'src/app/services/calendario_mid.service';
 
 
 @Component({
@@ -120,6 +121,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
   widhtColumns: any
   criterio = [];
   cantidad_aspirantes: number = 0;
+  selectMultipleNivel: boolean = false;
+  mostrarBoton = false;
+  mostrarMensajeInicial = false;
 
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
@@ -135,6 +139,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private sgaMidService: SgaMidService,
     private sgaMidAdmisiones: SgaAdmisionesMid,
     private popUpManager: PopUpManager,
+    private calendarioMidService: CalendarioMidService,
 
     private autenticationService: ImplicitAutenticationService,) {
     this.translate = translate;
@@ -236,6 +241,21 @@ export class EvaluacionAspirantesComponent implements OnInit {
     }
   }
 
+  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+    const nivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado");
+    if (nivelDoctorado) {
+      const esDoctorado = nivelDoctorado.Id === nivelSeleccionado;
+      this.selectMultipleNivel = esDoctorado;
+      this.mostrarBoton = esDoctorado;
+      this.mostrarMensajeInicial = esDoctorado;
+    } else {
+      this.selectMultipleNivel = false;
+      this.mostrarBoton = false;
+      this.mostrarMensajeInicial = false;
+    }
+    this.loadProyectos();
+  }
+  
   loadProyectos() {
     this.notas = false;
     this.selectprograma = false;

@@ -100,6 +100,7 @@ import { ListadoAspirantesPregradoComponent } from './components/listado-aspiran
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
+import { EventosService } from './services/eventos.service';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -230,6 +231,7 @@ export function createTranslateLoader(http: HttpClient) {
     ParametrosService,
     NotificacionesMidService,
     EvaluacionInscripcionService,
+    EventosService,
   ],
   bootstrap: [AppComponent],
 })
