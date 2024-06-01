@@ -366,7 +366,7 @@ export class SolicitudTransferenciaComponent implements OnInit {
         if (estados.Success) {
           const respuesta = this.getIndexFormRes('Respuesta');
 
-          this.formRespuesta.campos[respuesta].opciones = estados['Data'].filter((estado:any) => estado.Nombre != 'Radicada' && estado.Nombre != 'Solicitado');
+          this.formRespuesta.campos[respuesta].opciones = estados['Data'].filter((estado:any) => estado.Nombre != 'Solicitud generada' && estado.Nombre != 'Solicitado');
 
           this.loading = false;
         }

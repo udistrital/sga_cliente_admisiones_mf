@@ -41,7 +41,6 @@ export class ImplicitAutenticationService {
     public getRole() {
         const rolePromise = new Promise((resolve, reject) => {
             this.user$.subscribe((data: any) => {
-                console.log("user data:",data)
                 const { user, userService } = data;
                 const roleUser = typeof user.user.role !== 'undefined' ? user.user.role : [];
                 const roleUserService = typeof userService.userService.role !== 'undefined' ? userService.userService.role : [];
