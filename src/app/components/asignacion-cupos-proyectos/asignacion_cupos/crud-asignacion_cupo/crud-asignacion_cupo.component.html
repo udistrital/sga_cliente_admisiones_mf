@@ -36,7 +36,7 @@
                         </ng-container>
 
                         <ng-container matColumnDef="Nombre">
-                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.nombre_cupo' | translate }}</th>
+                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.nombre' | translate }}</th>
                             <td mat-cell *matCellDef="let cupo"> {{ cupo.Nombre }} </td>
                         </ng-container>
 
@@ -53,12 +53,12 @@
                         </ng-container>
 
                         <ng-container matColumnDef="CuposHabilitados">
-                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.cupos_habilitados' | translate }} </th>
+                            <th mat-header-cell *matHeaderCellDef> {{ 'cupos.cupos_disponibles' | translate }} </th>
                             <td mat-cell *matCellDef="let cupo"> {{ cupo.CuposHabilitados }} </td>
                         </ng-container>
 
                         <ng-container matColumnDef="CuposOpcionados">
-                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.cupos_opcionados' | translate }} </th>
+                            <th mat-header-cell *matHeaderCellDef> {{ 'cupos.cupos_opcionados' | translate }} </th>
                             <td mat-cell *matCellDef="let cupo"> {{ cupo.CuposOpcionados }} </td>
                         </ng-container>
 
@@ -90,10 +90,10 @@
             </div>
         </div>
         <div>
-            <button class="boton-primary" mat-button type="button" (click)="listarComentarios()">'GLOBAL.comentarios' </button>
+            <button class="boton-primary" mat-button type="button" (click)="listarComentarios()">{{ 'GLOBAL.comentarios' | translate }}</button>
         </div>
 
-        <button class="boton-primary" mat-button type="button" (click)="createCupos()">'GLOBAL.guardar' </button>
+        <button class="boton-primary" mat-button type="button" (click)="createCupos()">{{ 'GLOBAL.guardar' | translate }}</button>
     </mat-card-content>
 </mat-card>
 <mat-card [hidden]="!show_editar">

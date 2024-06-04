@@ -41,8 +41,7 @@ export class LiquidacionRecibosComponent {
 
   firstFormGroup = this._formBuilder.group({
     validatorProyecto: ['', Validators.required],
-    validatorPeriodo: ['', Validators.required],
-    validatorSemestre: ['', Validators.required]
+    validatorPeriodo: ['', Validators.required]
   });
   secondFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
