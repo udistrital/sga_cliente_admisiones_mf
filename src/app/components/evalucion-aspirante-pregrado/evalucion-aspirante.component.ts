@@ -131,6 +131,7 @@ export class EvalucionAspirantePregradoComponent {
     return new Promise((resolve, reject) => {
       this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
+          console.log(res)
           const r = <any>res;
           if (res !== null && r.Status === '200') {
             this.periodo = res.Data.find((p: any) => p.Activo);
@@ -168,12 +169,11 @@ loadCriterios() {
       ',PeriodoId:' + this.periodo).subscribe((res: any) => {
         if (res !== null || res !== undefined && res.status == 200) {
           this.requisitosActuales = res;
-          this.requisitosActuales = this.requisitosActuales.filter((e: any) => e.PorcentajeGeneral !== 0);
+         
           this.selectcriterio = false;
           this.criterio_selected = [];
           this.selectCriterio = []; 
           this.requisitosActuales.forEach(async (element: any) => {
-            console.log(element)
             await this.selectCriterio.push(element.RequisitoId);
           });
         }
