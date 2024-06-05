@@ -179,7 +179,7 @@ export class RepotesInscripcionesComponent {
       const dataReporte = {
         "Proyecto": this.reporteForm.get('proyectoCurricular')?.value,
         "Periodo": this.reporteForm.get('periodoAcademico')?.value,
-        "TipoReporte": this.reporteForm.get('tipoReporte')?.value,
+        "Reporte": this.reporteForm.get('tipoReporte')?.value,
         "Columnas": this.reporteForm.get('selectColumnas')?.value,
         "TipoInscripcion": this.reporteForm.get('selectTipoInscripcion')?.value,
         "EstadoInscripcion": this.reporteForm.get('selectEstado')?.value
