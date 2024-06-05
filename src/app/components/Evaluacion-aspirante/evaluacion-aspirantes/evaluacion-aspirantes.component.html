@@ -36,17 +36,10 @@
 
               <!--Periodo académico-->
               <mat-form-field style="width: 100%;">
-                <mat-label>{{ 'admision.aviso_periodo' | translate }}:</mat-label>
-                <mat-select *ngIf="!selectMultipleNivel" formControlName="PeriodoId" [(ngModel)]="periodoMultiple"
-                  placeholder="2020-I, 2020-II, 2020-III" (selectionChange)="selectPeriodo()" required>
-                  <mat-option value="" disabled>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                  <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">{{ periodo.Nombre }}
-                  </mat-option>
-                </mat-select>
-                <mat-select *ngIf="selectMultipleNivel" formControlName="PeriodoId" [(ngModel)]="periodoMultiple"
-                  placeholder="2020-I, 2020-II, 2020-III" required multiple>
-                  <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">{{ periodo.Nombre }}
-                  </mat-option>
+                <mat-label>{{ 'admision.periodo_' | translate }}:</mat-label>
+                <mat-select [(ngModel)]="periodo" (selectionChange)="selectPeriodo()">
+                  <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                  <mat-option *ngFor="let item of periodos" [value]="item"> {{item.Nombre}} </mat-option>
                 </mat-select>
               </mat-form-field>
 
@@ -88,15 +81,17 @@
 
             </mat-card-header>
             <div class="ancho-boton">
-              <button class="boton-primary container-bottons centrar-texto" type="button" *ngIf="mostrarBoton" (click)="selectPeriodo()">
+              <button class="boton-primary container-bottons centrar-texto" type="button" *ngIf="mostrarBoton"
+                (click)="selectPeriodo()">
                 <mat-icon style="vertical-align: middle;" fontIcon="add"></mat-icon>
                 <label>{{ 'GLOBAL.buscar' | translate }}</label>
               </button>
             </div>
-                                    
-            <div *ngIf="mostrarMensajeInicial" class="alert type margin-y warning">
-              {{ "gestion_horarios.mensaje_doctorado" | translate }} : {{ nombresPeriodos }} {{
-              "gestion_horarios.mensaje_doctorado_mensaje" | translate }}
+
+            <div *ngIf="mostrarMensajeInicial" class="alert warning margin-y">
+              <mat-icon class="icon">info</mat-icon>
+              <span>{{ "gestion_horarios.mensaje_doctorado" | translate }} : {{ nombresPeriodos
+                }} {{ "gestion_horarios.mensaje_doctorado_mensaje" | translate }}</span>
             </div>
           </mat-card>
         </div>
