@@ -104,7 +104,7 @@ import { CorreoInstitucionalComponent } from './components/correo-institucional/
 
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
 }
 
 @NgModule({
