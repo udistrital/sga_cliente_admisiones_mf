@@ -237,7 +237,6 @@ export class LiquidacionTableComponent implements OnInit{
   ngOnChanges(changes: SimpleChanges): void {
     if ('recibosUrl' in changes) {
       const recibosUrlChange = changes['recibosUrl'];
-      console.log(this.recibosUrl)
 
     }
   }

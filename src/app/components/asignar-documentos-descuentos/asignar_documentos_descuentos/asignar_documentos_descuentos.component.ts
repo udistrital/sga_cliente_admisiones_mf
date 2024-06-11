@@ -221,7 +221,6 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
                 this.proyectos = response;
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
                 this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;

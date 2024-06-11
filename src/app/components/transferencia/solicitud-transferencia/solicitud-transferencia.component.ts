@@ -154,7 +154,6 @@ export class SolicitudTransferenciaComponent implements OnInit {
     this.loading = true;
     this.inscripcionMidService.get('transferencia/inscripcion/' + this.id).subscribe((inscripcion:any) => {
       if (inscripcion !== null) {
-        console.log(inscripcion)
         if (inscripcion.Success) {
           this.loading = true;
 
@@ -574,6 +573,5 @@ export class SolicitudTransferenciaComponent implements OnInit {
   }
 
   prueba(event:any) {
-    console.log(event)
   }
 }

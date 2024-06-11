@@ -326,13 +326,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
       this.columnas = titles
       this.widhtColumns = width
-      
-      console.log("columnas")
-      console.log(this.columnas)
-
-
-
-
       this.dataSourceColumn = (titles)
       this.dataSourceColumn.push('acciones')
       resolve(this.settings)
@@ -409,11 +402,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
       } else if (numero === true) {
         this.popUpManager.showToast(this.translate.instant('admision.numero'));
       } else {
-        console.log('body')
-        console.log(JSON.stringify(Evaluacion))
         this.sgaMidAdmisiones.post('admision/evaluacion', Evaluacion).subscribe(
           (response: any) => {
-            console.log(response)
             if (response.status === 200) {
               this.criterio_selected.forEach(criterio => {
                 if (criterio.Id === Evaluacion.CriterioId) {
@@ -536,10 +526,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   async loadInfo(IdCriterio: number) {
     return new Promise((resolve, reject) => {
-      console.log('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio)
       this.sgaMidAdmisiones.get('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio).subscribe(
         async (response: any) => {
-          console.log(response)
 
           if (response.status === 200) {
 
@@ -562,7 +550,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
                 const valor = Object.keys(this.Aspirantes[0]);
                 const arreglo = valor.filter(elemento => elemento !== "Id");
                 this.datavalor = arreglo
-                console.log(this.datavalor)
                 this.dataSource = new MatTableDataSource(this.Aspirantes)
               })
 
@@ -610,11 +597,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   loadColumn(IdCriterio: any) {
     return new Promise((resolve, reject) => {
-      console.log('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0')
       this.evaluacionService.get('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0').subscribe(
         (response: any) => {
-          console.log(response)
-        console.log('requisito/' + IdCriterio)
           this.evaluacionService.get('requisito/' + IdCriterio).subscribe(
             async (res: any) => {
               const data: any = {};

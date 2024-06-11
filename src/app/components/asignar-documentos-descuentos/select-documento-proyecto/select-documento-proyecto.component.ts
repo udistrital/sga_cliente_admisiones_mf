@@ -241,14 +241,12 @@ export class SelectDocumentoProyectoComponent implements OnInit {
 
   onUpdate(documento: any) {
     var msgpopUp
-    console.log(documento.Data.Obligatorio)
     if (documento.Data.Obligatorio !== true) {
       msgpopUp = this.translate.instant('documento_proyecto.poner_obligatorio')
     } else {
       msgpopUp = this.translate.instant('documento_proyecto.quitar_obligatorio')
     }
     this.popUpManager.showConfirmAlert(msgpopUp, this.translate.instant('documento_proyecto.documento')).then(accion => {
-      console.log(accion)
       if (accion.value) {
         const documentoModificado: DocumentoPrograma = new DocumentoPrograma();
         documentoModificado.TipoDocumentoProgramaId = documento.Data;
@@ -266,17 +264,13 @@ export class SelectDocumentoProyectoComponent implements OnInit {
           } else {
             this.popUpManager.showErrorAlert(this.translate.instant('documento_proyecto.ajuste_fail'))
             this.source= new MatTableDataSource(this.documento_proyecto);
-
-            console.log(this.source)
           }
         }, () => {
-          console.log(this.documento_proyecto)
           this.popUpManager.showErrorToast(this.translate.instant('documento_proyecto.ajuste_fail'))
           this.source= new MatTableDataSource(this.documento_proyecto);
 
         });
       } else {
-        console.log(this.documento_proyecto)
         this.source = new MatTableDataSource(this.documento_proyecto);
 
       }
@@ -322,7 +316,6 @@ export class SelectDocumentoProyectoComponent implements OnInit {
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
         }
         else if (response.length == 1 && !response[0].hasOwnProperty('TipoDocumentoProgramaId')) {
-          console.log(this.documento_proyecto)
           this.source = new MatTableDataSource(this.documento_proyecto);
           setTimeout(() => {
             this.source.paginator = this.paginator;
@@ -336,7 +329,6 @@ export class SelectDocumentoProyectoComponent implements OnInit {
             documento.TipoDocumentoProgramaId.Obligatorio = documento.Obligatorio;
             this.documento_proyecto.push(<TipoDocumentoPrograma>documento.TipoDocumentoProgramaId);
           });
-          console.log(this.documento_proyecto)
           this.source = new MatTableDataSource(this.documento_proyecto);
           setTimeout(() => {
             this.source.paginator = this.paginator;

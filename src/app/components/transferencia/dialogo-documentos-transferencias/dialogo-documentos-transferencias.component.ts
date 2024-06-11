@@ -28,7 +28,6 @@ export class DialogoDocumentosTransferenciasComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    console.log(this.data, this.data.documento.fecha != '')
     this.documento = this.data.documento.Documento['changingThisBreaksApplicationSecurity'];
     this.pruebaEspecifica = this.data.documento.fecha == '';
     // const fecha = this.data.documento.fecha.substring(0, this.data.documento.fecha.length - 1);

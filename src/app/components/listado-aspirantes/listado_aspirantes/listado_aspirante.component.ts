@@ -139,7 +139,6 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         title: e.Nombre
                     }
                 })
-                console.log(this.estados)
             })
     }
 
@@ -232,12 +231,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     }
 
     onSaveConfirm(event: any) {
-        console.log(event)
-        console.log(this.estados)
-        console.log(event.newData.EstadoInscripcionId)
         const newState = this.estados.filter((data: any) => (data.value === parseInt(event.newData.EstadoInscripcionId, 10)))[0];
-        console.log(newState)
-        console.log(this.estados)
         if (newState.value == this.IdIncripcionSolicitada) {
             this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.no_cambiar_inscripcion_solicitada'))
         } else {
@@ -332,11 +326,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.sgaMidAdmisioens.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
             .subscribe(
                 (response: any) => {
-                    console.log("response")
-                    console.log(response)
                     if (response.success == true && response.status == 200) {
                         this.Aspirantes = response.data;
-                        console.log(this.Aspirantes)
                         this.admitidos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));
                         this.inscritos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO'));
                         this.cuposAsignados = this.admitidos.length;
@@ -348,9 +339,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         this.cantidad_inscritos_obs = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO con Observación')).length;
                         this.cantidad_aspirantes = this.cantidad_inscrip_solicitada + this.cantidad_admitidos + this.cantidad_opcionados + this.cantidad_no_admitidos + this.cantidad_inscritos + this.cantidad_inscritos_obs;
 
-                        console.log(this.Aspirantes)
                         // this.source_emphasys.load(this.Aspirantes);
-                        console.log(this.Aspirantes)
                         this.source_emphasys = new MatTableDataSource(this.Aspirantes)
                         setTimeout(() => {
                             this.source_emphasys.paginator = this.paginator;

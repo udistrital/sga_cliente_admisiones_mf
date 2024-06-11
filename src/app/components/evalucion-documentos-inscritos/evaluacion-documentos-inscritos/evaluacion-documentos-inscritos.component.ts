@@ -248,7 +248,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     // this.dataSource.load([]);
     this.dataSource = new MatTableDataSource()
     this.Aspirantes = [];
-    console.log('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
     this.sgaMiAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
       .subscribe(
         (response: any) => {
@@ -259,7 +258,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
             this.cantidad_admitidos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "ADMITIDO").length;
             this.cantidad_aspirantes = this.cantidad_inscritos + this.cantidad_inscritos_obs + this.cantidad_admitidos;
             // this.dataSource.load(this.Aspirantes);
-            console.log(this.Aspirantes)
             this.dataSource = new MatTableDataSource(this.Aspirantes)
             setTimeout(() => {
               this.dataSource.paginator = this.paginator;

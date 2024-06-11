@@ -36,7 +36,6 @@ export class DialogoDocumentosComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log(this.data)
     this.isPDF = true;
     this.loading = true;
     this.tabName = this.data.documento.tabName || "";

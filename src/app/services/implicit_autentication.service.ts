@@ -28,7 +28,6 @@ export class ImplicitAutenticationService {
  
     constructor(){
         const user:any = localStorage.getItem('user');
-        console.log(user);
         this.userSubject.next(JSON.parse(atob(user)));
     }
  
@@ -45,7 +44,6 @@ export class ImplicitAutenticationService {
                 const roleUser = typeof user.user.role !== 'undefined' ? user.user.role : [];
                 const roleUserService = typeof userService.userService.role !== 'undefined' ? userService.userService.role : [];
                 const roles = (roleUser.concat(roleUserService)).filter((data: any) => (data.indexOf('/') === -1));
-                console.log(roles)
                 resolve(roles);
             });
         });

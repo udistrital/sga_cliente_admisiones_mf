@@ -105,7 +105,6 @@ export class ReporteCodificacionComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('The dialog was closed');
     });
   }
 
@@ -145,7 +144,6 @@ export class ReporteCodificacionComponent implements OnInit {
 
     } else {
       // Display an error message or handle invalid form state
-      console.log('Please fill in all required fields.');
     }
   }
 
