@@ -154,6 +154,7 @@ export class SolicitudTransferenciaComponent implements OnInit {
     this.loading = true;
     this.inscripcionMidService.get('transferencia/inscripcion/' + this.id).subscribe((inscripcion:any) => {
       if (inscripcion !== null) {
+        console.log(inscripcion)
         if (inscripcion.Success) {
           this.loading = true;
 
@@ -485,6 +486,7 @@ export class SolicitudTransferenciaComponent implements OnInit {
         'FechaRadicacion': moment().format('YYYY-MM-DD hh:mm:ss'),
       }
 
+      
       if (this.estado === 'Requiere modificación') {
         this.inscripcionMidService.put('transferencia/' + this.solicitudId, data).subscribe(
           (res:any) => {

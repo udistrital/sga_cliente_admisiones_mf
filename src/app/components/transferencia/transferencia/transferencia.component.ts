@@ -311,6 +311,7 @@ export class TransferenciaComponent implements OnInit {
           this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('inscripcion.no_inscripcion'));
         } else {
           let inscripciones = <Array<any>>response.Data;
+          // inscripciones = inscripciones.filter((inscripcion: any) => inscripcion.Estado != "Solicitud generada");
           const dataInfo = <Array<any>>[];
           inscripciones.forEach((element: any) => {
             this.projectService.get('proyecto_academico_institucion/' + element.Programa).subscribe(
