@@ -39,9 +39,6 @@
                     <button mat-mini-fab class="blue-header-icon" (click)="onCreate()">
                       <mat-icon>edit_outline</mat-icon>
                     </button>
-                    <button mat-mini-fab class="blue-header-icon" (click)="onDelete(row)">
-                      <mat-icon>delete_outline</mat-icon>
-                    </button>
                   </div>
                 </mat-cell>
               </ng-container>
@@ -54,7 +51,7 @@
         <mat-tab *ngIf="cambiotab">
           <udistrital-listados-oficializados (eventChange)="onChange($event)"></udistrital-listados-oficializados>
           <div class="container-bottons margin-y">
-            <button (click)="activetab()" mat-flat-button color="warn">
+            <button class="boton-primary" (click)="activetab()" mat-flat-button color="warn">
               {{ "GLOBAL.regresar" | translate }}
             </button>
           </div>

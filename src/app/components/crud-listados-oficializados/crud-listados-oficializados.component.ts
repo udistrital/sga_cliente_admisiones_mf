@@ -30,8 +30,8 @@ export class CrudListadosOficializadosComponent implements OnInit {
     { Facultad: 'Economía', Codigo: '13579', Documento: '9988776655', PrimerNombre: 'José', SegundoNombre: 'María', PrimerApellido: 'Hernández', SegundoApellido: 'Sánchez', CorreoPersonal: 'jose@example.com', Telefono: '998877665', Sugerido: 'Sí', Asignado: 'No' }
   ];
 
-  displayedColumns = ['Facultad', 'Codigo', 'Documento', 'Nombres', 'Apellidos', 'CorreoPersonal', 'Telefono', 'Sugerido', 'Asignado', 'Gestion'];
-  displayedColumnsReplicada = ['Facultad', 'Codigo', 'Documento', 'Nombres', 'Apellidos', 'CorreoPersonal', 'Telefono'];
+  displayedColumns = ['Facultad', 'Codigo', 'Documento', 'PrimerNombre', 'SegundoNombre', 'PrimerApellido', 'SegundoApellido', 'CorreoPersonal', 'Telefono', 'Sugerido', 'Asignado'];
+  displayedColumnsReplicada = ['Facultad', 'Codigo', 'Documento', 'PrimerNombre', 'SegundoNombre', 'PrimerApellido', 'SegundoApellido', 'CorreoPersonal', 'Telefono'];
 
   constructor(
     private translate: TranslateService

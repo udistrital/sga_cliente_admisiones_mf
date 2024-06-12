@@ -45,3 +45,16 @@ mat-header-cell {
   text-align: center;
   width: 45%;
 }
+
+.boton-primary {
+  height: 45px;
+  border: solid 1px #03678f;
+  border-radius: 5px;
+  font-weight: 300;
+  background-color: #03678f;
+  border-color: #03678f;    
+  margin-right: 10px;
+  cursor: pointer;
+  color: white !important;
+  padding: 10px;
+}
