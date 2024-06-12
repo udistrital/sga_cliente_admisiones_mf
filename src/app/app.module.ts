@@ -1,5 +1,3 @@
-
-
 import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
 import { DocProgramaObligatorioComponent } from './components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component';
 import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
@@ -101,6 +99,8 @@ import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component
 import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
+import { CrudListadosOficializadosComponent } from './components/crud-listados-oficializados/crud-listados-oficializados.component';
+
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -177,7 +177,8 @@ export function createTranslateLoader(http: HttpClient) {
     CargueSnpComponent,
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
-    ListadosOficializadosComponent
+    ListadosOficializadosComponent,
+    CrudListadosOficializadosComponent
   ],
   imports: [
     CodificacionModule,

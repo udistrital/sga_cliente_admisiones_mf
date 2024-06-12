@@ -1843,6 +1843,14 @@
         "titulo_inscripcion_no_encontrada": "La inscripción no fue encontrada",
         "inscripcion_no_encontrada": "No se encontro una inscripción asociada al codigo icfes"
     },
+    "oficializados": {
+        "titulo": "Oficialización",
+        "mensaje": "Este módulo le apoyará en el proceso de depurar el listado de admitidos que han oficializado; a su vez, liberará los cupos de las personas que no han terminado el proceso.",
+        "proceso": "Proceso admisión",
+        "fechas": "Fechas inicial y final",
+        "estado": "Estado",
+        "gestion": "Gestión"
+    },
     "cupos": {
         "aviso_periodo": "Período en el cual se define los cupos de admisión",
         "aviso_periodo_listar": "Período en el cual se va a listar aspirantes",

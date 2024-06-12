@@ -1,1 +1,65 @@
-<p>listados-oficializados works!</p>
+<div class="col-12">
+  <mat-card>
+    <mat-card-header class="center-content blue-header">
+      <mat-card-title>{{ "oficializados.titulo" | translate }}</mat-card-title>
+    </mat-card-header>   
+    <mat-card-content>
+      <div class="alert warning center-content">
+        <mat-icon class="icon">info</mat-icon>
+        <span>{{ "oficializados.mensaje" | translate }}</span>
+      </div>
+      <div class="info-boxes">
+        <div class="info-box">
+          <span>Primer plazo: Fecha 1 - Fecha 2</span>
+        </div>
+        <div class="info-box">
+          <span>Estado: Abierto, Culminado, Solicitud de correos realizada</span>
+        </div>
+      </div>
+      <mat-tab-group fullWidth (changeTab)="selectTab($event)">
+        <div class="table">
+          <mat-tab *ngIf="!cambiotab">
+            <mat-table [dataSource]="source">
+              <ng-container matColumnDef="Proceso">
+                <mat-header-cell *matHeaderCellDef>{{ "oficializados.proceso" | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Nombre }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Fechas">
+                <mat-header-cell *matHeaderCellDef>{{ "oficializados.fechas" | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Fechas }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Estado">
+                <mat-header-cell *matHeaderCellDef>{{ "oficializados.estado" | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Estado }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Gestion">
+                <mat-header-cell *matHeaderCellDef>{{ "oficializados.gestion" | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <div>
+                    <button mat-mini-fab class="blue-header-icon" (click)="onCreate()">
+                      <mat-icon>edit_outline</mat-icon>
+                    </button>
+                    <button mat-mini-fab class="blue-header-icon" (click)="onDelete(row)">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </div>
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+            <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+          </mat-tab>
+        </div>
+        <mat-tab *ngIf="cambiotab">
+          <udistrital-listados-oficializados (eventChange)="onChange($event)"></udistrital-listados-oficializados>
+          <div class="container-bottons margin-y">
+            <button (click)="activetab()" mat-flat-button color="warn">
+              {{ "GLOBAL.regresar" | translate }}
+            </button>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

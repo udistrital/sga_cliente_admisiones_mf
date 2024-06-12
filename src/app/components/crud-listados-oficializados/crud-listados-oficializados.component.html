@@ -1,0 +1,148 @@
+<div class="col-12">
+  <mat-card>
+    <mat-card-content>
+      <mat-tab-group fullWidth (selectedTabChange)="selectTab($event)">
+        <mat-tab *ngIf="!cambiotab" label="{{ 'GLOBAL.lista' | translate }}">
+          <div class="table">
+            <mat-table [dataSource]="source">
+              <!-- Columna Facultad -->
+              <ng-container matColumnDef="Facultad">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.facultad' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Facultad }}</mat-cell>
+              </ng-container>
+              <!-- Columna Codigo -->
+              <ng-container matColumnDef="Codigo">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.codigo' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Codigo }}</mat-cell>
+              </ng-container>
+              <!-- Columna Documento -->
+              <ng-container matColumnDef="Documento">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.documento' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Documento }}</mat-cell>
+              </ng-container>
+              <!-- Columna Nombres -->
+              <ng-container matColumnDef="Nombres">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.nombres' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <div>{{ row.PrimerNombre }}</div>
+                  <div>{{ row.SegundoNombre }}</div>
+                </mat-cell>
+              </ng-container>
+              <!-- Columna Apellidos -->
+              <ng-container matColumnDef="Apellidos">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.apellidos' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <div>{{ row.PrimerApellido }}</div>
+                  <div>{{ row.SegundoApellido }}</div>
+                </mat-cell>
+              </ng-container>
+              <!-- Columna Correo Personal -->
+              <ng-container matColumnDef="CorreoPersonal">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.correo_personal' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.CorreoPersonal }}</mat-cell>
+              </ng-container>
+              <!-- Columna Telefono -->
+              <ng-container matColumnDef="Telefono">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.telefono' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Telefono }}</mat-cell>
+              </ng-container>
+              <!-- Columna Sugerido -->
+              <ng-container matColumnDef="Sugerido">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.sugerido' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Sugerido }}</mat-cell>
+              </ng-container>
+              <!-- Columna Asignado -->
+              <ng-container matColumnDef="Asignado">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.asignado' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Asignado }}</mat-cell>
+              </ng-container>
+              <!-- Columna de acciones -->
+              <ng-container matColumnDef="Gestion">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.gestion' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <div>
+                    <button mat-mini-fab class="blue-header-icon">
+                      <mat-icon>edit_outline</mat-icon>
+                    </button>
+                    <button mat-mini-fab class="blue-header-icon">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </div>
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+            <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+          </div>
+          <div class="button-group">
+            <button mat-raised-button color="primary">{{ 'oficializados.descargar' | translate }}</button>
+            <button mat-raised-button color="primary">{{ 'oficializados.sugerir_usuarios' | translate }}</button>
+            <button mat-raised-button color="primary">{{ 'oficializados.enviar_correos' | translate }}</button>
+          </div>
+        </mat-tab>
+        <mat-tab *ngIf="cambiotab" label="{{ 'GLOBAL.datos' | translate }}">
+          <div class="container-buttons margin-y">
+            <button (click)="activetab()" mat-flat-button color="warn">
+              {{ 'GLOBAL.regresar' | translate }}
+            </button>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'oficializados.tabla_replicada' | translate }}">
+          <div class="table">
+            <mat-table [dataSource]="sourceReplicada">
+              <!-- Columna Facultad -->
+              <ng-container matColumnDef="Facultad">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.facultad' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Facultad }}</mat-cell>
+              </ng-container>
+              <!-- Columna Codigo -->
+              <ng-container matColumnDef="Codigo">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.codigo' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Codigo }}</mat-cell>
+              </ng-container>
+              <!-- Columna Documento -->
+              <ng-container matColumnDef="Documento">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.documento' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Documento }}</mat-cell>
+              </ng-container>
+              <!-- Columna Nombres -->
+              <ng-container matColumnDef="Nombres">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.nombres' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <div>{{ row.PrimerNombre }}</div>
+                  <div>{{ row.SegundoNombre }}</div>
+                </mat-cell>
+              </ng-container>
+              <!-- Columna Apellidos -->
+              <ng-container matColumnDef="Apellidos">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.apellidos' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <div>{{ row.PrimerApellido }}</div>
+                  <div>{{ row.SegundoApellido }}</div>               
+                </mat-cell>
+              </ng-container>
+              <!-- Columna Correo Personal -->
+              <ng-container matColumnDef="CorreoPersonal">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.correo_personal' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.CorreoPersonal }}</mat-cell>
+              </ng-container>
+              <!-- Columna Telefono -->
+              <ng-container matColumnDef="Telefono">
+                <mat-header-cell *matHeaderCellDef>{{ 'oficializados.telefono' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Telefono }}</mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsReplicada"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsReplicada"></mat-row>
+            </mat-table>
+            <mat-paginator #paginatorReplicada [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+          </div>
+          <div class="button-group">
+            <button mat-raised-button color="primary">{{ 'oficializados.descargar' | translate }}</button>
+            <button mat-raised-button color="primary">{{ 'oficializados.liberar_cupos' | translate }}</button>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>
