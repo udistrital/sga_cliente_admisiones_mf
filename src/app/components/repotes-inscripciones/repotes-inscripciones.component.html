@@ -62,6 +62,25 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <div  *ngIf="isTranferenciaOrReintegro">
+                        <mat-form-field class="grid-3">
+                            <mat-label>{{ 'reportes.SelectEstadoInscripcion' | translate }}</mat-label>
+                            <mat-select formControlName="selectEstado">
+                                <mat-option *ngFor="let estado of estados" [value]="estado.Estado">
+                                    {{ estado.Nombre }}
+                                </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </div>
+                    <mat-form-field class="grid-3">
+                        <mat-label>{{ 'reportes.SelectTipoInscripcion' | translate }}</mat-label>
+                        <mat-select formControlName="selectTipoInscripcion">
+                            <mat-option *ngFor="let tipo of tiposInscripcion" [value]="tipo.Id">
+                                {{ tipo.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    
                 </div>
                 <div class="centrar">
                     <button class="primary-button" mat-raised-button color="primary" type="submit">Generar</button>

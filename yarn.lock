@@ -1355,9 +1355,9 @@
     "@jridgewell/trace-mapping" "0.3.9"
 
 "@discoveryjs/json-ext@0.5.7":
-  version "0.5.7"
-  resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz"
-  integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
+  "integrity" "sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw=="
+  "resolved" "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz"
+  "version" "0.5.7"
 
 "@gar/promisify@^1.1.3":
   version "1.1.3"
@@ -5664,18 +5664,18 @@ ngx-extended-pdf-viewer@^19.3.0:
   resolved "https://registry.npmjs.org/ngx-extended-pdf-viewer/-/ngx-extended-pdf-viewer-19.3.0.tgz"
   integrity sha512-tX7n2oGYWjqnd8MrawrbUdfeq3fBE+FGrkXZV2Q/fk2mFdFplIwEhHGHbNOSkpNeZRCh0tYSWvnwW2kawdg1jQ==
   dependencies:
-    lodash.deburr "^4.1.0"
-    tslib "^2.3.0"
+    "lodash.deburr" "^4.1.0"
+    "tslib" "^2.3.0"
 
-node-forge@^1:
-  version "1.3.1"
-  resolved "https://registry.npmjs.org/node-forge/-/node-forge-1.3.1.tgz"
-  integrity sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA==
+"node-forge@^1":
+  "integrity" "sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA=="
+  "resolved" "https://registry.npmjs.org/node-forge/-/node-forge-1.3.1.tgz"
+  "version" "1.3.1"
 
-node-gyp@^9.0.0:
-  version "9.4.1"
-  resolved "https://registry.npmjs.org/node-gyp/-/node-gyp-9.4.1.tgz"
-  integrity sha512-OQkWKbjQKbGkMf/xqI1jjy3oCTgMKJac58G2+bjZb3fza6gW2YrCSdMQYaoTb70crvE//Gngr4f0AgVHmqHvBQ==
+"node-gyp@^9.0.0":
+  "integrity" "sha512-OQkWKbjQKbGkMf/xqI1jjy3oCTgMKJac58G2+bjZb3fza6gW2YrCSdMQYaoTb70crvE//Gngr4f0AgVHmqHvBQ=="
+  "resolved" "https://registry.npmjs.org/node-gyp/-/node-gyp-9.4.1.tgz"
+  "version" "9.4.1"
   dependencies:
     env-paths "^2.2.0"
     exponential-backoff "^3.1.1"
