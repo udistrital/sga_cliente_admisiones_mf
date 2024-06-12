@@ -88,11 +88,11 @@ const routes: Routes = [
   },
   {
     path:"suite-programa", 
-    component: DefSuiteInscripProgramaComponent ,
+    component: DefSuiteInscripProgramaComponent,
   },
   {
     path:"liquidacion-recibos-posgrado", 
-    component: LiquidacionRecibosComponent ,
+    component: LiquidacionRecibosComponent,
   },
   {
     path:"liquidacion-recibos-pregrado", 
@@ -100,22 +100,26 @@ const routes: Routes = [
   },
   {
     path:"liquidacion-historico", 
-    component: LiquidacionHistoricoComponent ,
+    component: LiquidacionHistoricoComponent,
   },
   // {
   //   path:"soporte-configuracion", 
   //   component: SoporteConfiguracionComponent ,
   // },
     {path:"reportes-inscritos", 
-    component: RepotesInscripcionesComponent ,
+    component: RepotesInscripcionesComponent,
   },
   {
     path:"listado-pregrado", 
-    component: ListadoAspirantesPregradoComponent ,
+    component: ListadoAspirantesPregradoComponent,
   },
   {
     path:"snp", 
-    component: CargueSnpComponent ,
+    component: CargueSnpComponent,
+  },
+  {
+    path:"listados-oficializados", 
+    component: ListadosOficializadosComponent
   },
   {
     path:"listados-oficializados", 

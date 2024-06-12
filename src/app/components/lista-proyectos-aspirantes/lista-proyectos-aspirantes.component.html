@@ -39,14 +39,14 @@
 
                 <div *ngIf="proyectosActivosConListaAspirantes != null">
                     <hr>
-                    <h5 class="ml-3">Lista de proyectos</h5>
+                    <h5 class="ml-3">{{ 'GLOBAL.lista' | translate }}</h5>
                     <hr class="mb-3">
                 </div>
                 <mat-accordion>
                     <mat-expansion-panel *ngFor="let proyecto of proyectosActivosConListaAspirantes; let i = index">
                         <mat-expansion-panel-header>
                             <mat-panel-title>{{ proyecto.NombreProyecto }}</mat-panel-title>
-                            <mat-panel-description>Aspirantes: <b class="ml-1"> {{
+                            <mat-panel-description>{{ 'GLOBAL.aspirantes_inscritos' | translate }}: <b class="ml-1"> {{
                                     proyecto.cantidad_aspirantes}}</b></mat-panel-description>
                         </mat-expansion-panel-header>
 
