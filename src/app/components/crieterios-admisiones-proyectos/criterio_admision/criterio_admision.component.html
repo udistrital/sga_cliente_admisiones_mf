@@ -73,7 +73,7 @@
                         </mat-form-field>
 
                          <!-- Ofertar como 2 opcion -->
-                        <form [formGroup]="ofertarOpcion2">
+                        <!-- <form [formGroup]="ofertarOpcion2">
                             <mat-card>
                                 <mat-card-title>
                                     <h5>{{ 'admision.ofertar' | translate }}</h5>
@@ -87,10 +87,10 @@
                                     </div>
                                 </mat-card-content>
                             </mat-card>
-                        </form>
+                        </form> -->
 
                         <!-- Ofertar como 3 opcion -->
-                        <form [formGroup]="ofertarOpcion3">
+                        <!-- <form [formGroup]="ofertarOpcion3">
                             <mat-card>
                                 <mat-card-content>
                                     <div class="row my-2">
@@ -100,7 +100,28 @@
                                     </div>
                                 </mat-card-content>
                             </mat-card>
-                        </form>
+                        </form> -->
+
+                        <mat-card>
+                            <mat-card-title>
+                                <h5>{{ 'admision.ofertar' | translate }}</h5>
+                            </mat-card-title>
+
+                            <mat-card-content>
+                                <div *ngFor="let checkbox of opciones; let i = index">
+                                    <form [formGroup]="checkbox">
+                                        <div class="row my-2">
+                                        <div class="col-12">
+                                            <mat-checkbox formControlName="opcion">
+                                            <mat-label>Ofertar como opcion: {{ i + 2 }} ?</mat-label>
+                                            </mat-checkbox>
+                                        </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                            </mat-card-content>
+                        </mat-card>
 
                         <br />
                         <br />
