@@ -670,7 +670,8 @@ export class ListService {
           this.parametrosService.get('periodo/?query=Activo:true&limit=0')
             .subscribe(
               (result: any) => {
-                this.addList(REDUCER_LIST.PeriodoAcademico, result);
+                const r = <any>result.Data;
+                this.addList(REDUCER_LIST.PeriodoAcademico, r);
               },
               error => {
                 this.addList(REDUCER_LIST.PeriodoAcademico, []);
