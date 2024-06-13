@@ -1,4 +1,7 @@
 export class liquidacion {
+  estado_edicion!: boolean;
+  inscripcionId!: number;
+  personaId!: number;
   seleccion!: boolean;
   codigo!: number;
   documetno!: number;

@@ -9,27 +9,14 @@
         <div *ngIf="showTab">
           <mat-card [hidden]="show_profile || show_icfes ">
             <mat-card-header class="d-block">
-              <!-- select periodo -->
-              <mat-form-field style="width: 100%;">
-                <mat-label>{{ 'admision.aviso_periodo' | translate }}:</mat-label>
-                <mat-select [(ngModel)]="periodo" [disabled]='false' (selectionChange)="selectPeriodo()">
-                  <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                  <mat-option *ngFor="let item of periodos" [value]="item">
-                    {{item.Nombre}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-
               <!-- select Nivel -->
               <mat-form-field style="width: 100%;">
                 <mat-label>{{ 'admision.aviso_nivel' | translate }}:</mat-label>
-                <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel"
-                  (selectionChange)="loadProyectos()">
+                <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel" (selectionChange)="cambiarSelectPeriodoSegunNivel($event.value)">
                   <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                   <mat-option *ngFor="let item of nivel_load" [value]="item.Id"> {{item.Nombre}} </mat-option>
                 </mat-select>
-                <mat-error *ngIf="CampoControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate
-                  }}</mat-error>
+                <mat-error *ngIf="CampoControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate }}</mat-error>
               </mat-form-field>
 
               <!-- select proyectos -->
@@ -44,7 +31,23 @@
                 <mat-error *ngIf="Campo1Control.hasError('required')">
                   {{ 'admision.erro_selec_proyecto' | translate }}
                 </mat-error>
-              </mat-form-field>
+              </mat-form-field>              
+
+              <!-- select periodo -->
+               <mat-form-field style="width: 100%;">
+                <mat-label>{{ 'admision.aviso_periodo' | translate }}:</mat-label>
+                <mat-select *ngIf="!selectMultipleNivel" [(ngModel)]="periodo" placeholder="2020-I, 2020-II, 2020-III" (selectionChange)="loadProyectos()" required>
+                  <mat-option value="" disabled>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                  <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
+                    {{ periodo.Nombre }}
+                  </mat-option>                
+                </mat-select>
+                <mat-select *ngIf="selectMultipleNivel" [(ngModel)]="periodo" placeholder="2020-I, 2020-II, 2020-III" required multiple>
+                  <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
+                    {{ periodo.Nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>             
 
               <!-- select criterios -->
               <mat-form-field style="width: 100%;">
@@ -63,7 +66,7 @@
               <!-- Tag de criterios -->
               <div class="row">
 
-                <div class="col-sm-6 col-md-4 col-lg-3 folder" align="center" id="info_basica"
+                <div class="col-sm-6 col-md-4 col-lg-3 folder" style="margin-bottom: 20px;" align="center" id="info_basica"
                   *ngFor=" let criterio of criterio_selected">
 
                   <mat-card class="exp-card" (click)="perfil_editar(criterio)">
@@ -120,12 +123,11 @@
                       {{ title }}
                     </th>
 
-
                     <ng-container *ngIf="title == 'Aspirants' ||  title == 'Aspirantes'">
                       <td mat-cell *matCellDef="let row"> {{row.Aspirantes}} </td>
                     </ng-container>
 
-                    <ng-container *ngIf="title == 'Attendance'||  title == 'Asistencia'">
+                    <ng-container *ngIf="title == 'Attendance'||  title == 'Asistencia' ">
                       <td mat-cell *matCellDef="let row">
                         <input *ngIf="!row.mostrarBotones" type="checkbox" class="input-table"
                           [(ngModel)]="row.Asistencia" [disabled]="!row.mostrarBotones">
@@ -134,12 +136,10 @@
                       </td>
 
                     </ng-container>
-                    <ng-container *ngIf="title !=='Aspirants' && title !=='Attendance' && title !=='acciones'">
-                      
+                    <ng-container *ngIf="title !=='Aspirants' && title !=='Attendance' && title !=='acciones' || title == 'Asistencia' || title == 'Aspirantes'">
                       <td mat-cell *matCellDef="let row"><input type="text" class="input-table"
                           [(ngModel)]="row[datavalor[i]]" [disabled]="!row.mostrarBotones">
                         </td>
-                          
                     </ng-container>
 
                     <ng-container *ngIf="title !== 'acciones'">

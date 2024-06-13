@@ -71,6 +71,9 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   folderTagtoReload: string = "";
   inscripcionInfo: any;
   observacionesDoc: any = [];
+  selectMultipleNivel: boolean = false;
+  mostrarBoton = false;
+  mostrarMensajeInicial = false;
 
 
   periodos: any = [];
@@ -200,6 +203,21 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     }
   }
 
+  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+    const nivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado");
+    if (nivelDoctorado) {
+      const esDoctorado = nivelDoctorado.Id === nivelSeleccionado;
+      this.selectMultipleNivel = esDoctorado;
+      this.mostrarBoton = esDoctorado;
+      this.mostrarMensajeInicial = esDoctorado;
+    } else {
+      this.selectMultipleNivel = false;
+      this.mostrarBoton = false;
+      this.mostrarMensajeInicial = false;
+    }
+    this.loadProyectos();
+  }
+
   loadProyectos() {
     // this.dataSource.load([]);
     this.dataSource = new MatTableDataSource()
@@ -251,8 +269,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     this.sgaMiAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
       .subscribe(
         (response: any) => {
-          if (response.success == true && response.status == 200) {
-            this.Aspirantes = response.data;
+          if (response.Success == true && response.Status == 200) {
+            this.Aspirantes = response.Data;
             this.cantidad_inscritos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO").length;
             this.cantidad_inscritos_obs = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO con Observación").length;
             this.cantidad_admitidos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "ADMITIDO").length;

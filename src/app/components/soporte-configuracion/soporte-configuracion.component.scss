@@ -1,0 +1,99 @@
+th {
+    text-align: center;
+    background-color: #1ba1e2;
+    border: 1px solid black;
+    color: #333;
+    font-weight: bold;
+}
+
+td {
+    text-align: center;
+    border: 1px solid black;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.title {
+    width: 100%;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.fondo_aviso {
+    background-color: #e3c800;
+    border-radius: 3px;
+    padding: 10px;
+    color: black;
+    font-size: 14px;
+    margin: 0em;
+}
+
+.paginator {
+    border: 1px solid black;
+
+}
+
+.tabla .column {
+    color: white;
+    background-color: #1ba1e2;
+    width: 21.25%;
+}
+
+.tabla .column-mas {
+    color: white;
+    background-color: #1ba1e2;
+    width: 15%;
+}
+
+
+.boton-primary {
+    background-color: #03678f;
+    color: white;
+    padding: 10px 20px;
+    border: 1px solid #03678f;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.acciones {
+    width: 100%;
+    height: 100%;
+    background-color: #1ba1e2;
+    color: white;
+    border: none;
+}
+.boton-column {
+    width: 100%;
+    height: 100%;
+    border: solid 1px #03678f;
+    border-radius: 5px;
+    font-weight: 300;
+    background-color: #03678f;
+    border-color: #03678f;
+    margin: 0;
+    cursor: pointer;
+    color: white !important;
+    padding: 8px;
+  }
+
+
+.boton-table {
+    width: 20%;
+    border: solid 1px #03678f;
+    border-radius: 5px;
+    font-weight: 300;
+    background-color: #03678f;
+    border-color: #03678f;
+    margin: 0;
+    cursor: pointer;
+    color: white !important;
+    padding: 8px;
+  }
+  

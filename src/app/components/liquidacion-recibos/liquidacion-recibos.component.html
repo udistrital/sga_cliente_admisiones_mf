@@ -4,7 +4,7 @@
 
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Información del proyecto curricular</mat-card-title>
+        <mat-card-title>{{ 'GLOBAL.programa_academico' | translate }}</mat-card-title>
       </mat-card-header>
 
       <br><br>
@@ -13,7 +13,7 @@
         <div class="form-container">
 
           <div>
-            <mat-card-subtitle>Proyecto curricular</mat-card-subtitle>
+            <mat-card-subtitle>{{ 'GLOBAL.proyecto_academico' | translate }}</mat-card-subtitle>
             <mat-form-field [formGroup]="firstFormGroup" style="width: 100%;">
               <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}:</mat-label>
               <mat-select formControlName="validatorProyecto" required>
@@ -26,7 +26,7 @@
           </div>
 
           <div>
-            <mat-card-subtitle>Periodo</mat-card-subtitle>
+            <mat-card-subtitle>{{ 'GLOBAL.periodo' | translate }}</mat-card-subtitle>
             <mat-form-field [formGroup]="firstFormGroup">
               <mat-label>{{ 'GLOBAL.periodo' | translate }}:</mat-label>
               <mat-select formControlName="validatorPeriodo" required>
@@ -35,20 +35,11 @@
               </mat-select>
             </mat-form-field>
           </div>
-
-          <div>
-            <mat-card-subtitle>Semestre</mat-card-subtitle>
-            <mat-form-field [formGroup]="firstFormGroup">
-              <mat-label>Selecciona un Semestre</mat-label>
-              <mat-select formControlName="validatorSemestre" required>
-                <mat-option *ngFor="let food of foods" [value]="food.value">{{food.viewValue}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
         </div>
 
         <div class="button-stepper">
-          <button mat-stroked-button matStepperNext class="azulOscuro" (click)="cargarDatos()">Consultar</button>
+          <button mat-stroked-button matStepperNext class="azulOscuro" (click)="cargarDatos()">{{ 'GLOBAL.continuar' | translate
+          }}</button>
         </div>
 
       </mat-card-content>
@@ -56,7 +47,7 @@
 
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">
-    <ng-template matStepLabel>Plantilla</ng-template>
+    <ng-template matStepLabel></ng-template>
 
     <mat-card>
       <mat-card-content>
@@ -71,35 +62,34 @@
 
               <!-- Detalles del Pago group -->
               <ng-container matColumnDef="detallesPagoHeader">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="5" class="border-right">Detalles del Pago</th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="5" class="border-right">{{ 'liquidacion.detalle' | translate }}</th>
               </ng-container>
 
               <!-- Conceptos Base group -->
               <ng-container matColumnDef="conceptosBaseHeader">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right">Conceptos Base</th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right">{{ 'liquidacion.concepto_base' | translate }}</th>
               </ng-container>
 
               <!-- Conceptos Descuentos group -->
               <ng-container matColumnDef="conceptosDescuentosHeader">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="11" class="border-right">Conceptos Descuentos</th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="11" class="border-right">{{ 'liquidacion.conceptos_descuentos' | translate }}</th>
               </ng-container>
 
               <!-- Fecha Cuotas group -->
               <ng-container matColumnDef="fechaPagoCoutasHeader">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right cuotas">Fechas Pago Cuotas
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right cuotas">{{ 'liquidacion.fechas_pago_cuotas' | translate }}
                 </th>
               </ng-container>
 
               <!-- Porcentaje Cuotas group -->
               <ng-container matColumnDef="porcentajeCoutasHeader">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right cuotas">Porcentaje de cada
-                  cuota</th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right cuotas">{{ 'liquidacion.porcentaje_cuotas' | translate }}</th>
               </ng-container>
 
 
               <!-- Seleccion Column -->
               <ng-container matColumnDef="seleccion">
-                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">Seleccion</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{ 'GLOBAL.seleccionar' | translate }}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">
                   <mat-checkbox [color]="'primary'">
                   </mat-checkbox>
@@ -109,34 +99,36 @@
               <!-- Detalles del Pago Column -->
 
               <ng-container matColumnDef="codigo">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders"> Código </th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders"> {{'liquidacion.codigo' | translate}}</th>
                 <td mat-cell *matCellDef="let row"> {{row.Codigo}} </td>
               </ng-container>
 
               <ng-container matColumnDef="cedula">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders"> Cédula </th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders"> {{'liquidacion.documento' | translate}}</th>
                 <td mat-cell *matCellDef="let row"> {{row.Documento}} </td>
               </ng-container>
 
               <ng-container matColumnDef="nombreApellido">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Nombre y Apellido</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.nombres_apellidos' | translate}}</th>
                 <td mat-cell *matCellDef="let row">{{row.Nombre}}{{row.PrimerApellido}}{{row.SegundoApellido}}</td>
               </ng-container>
 
               <ng-container matColumnDef="creditos">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Créditos</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.creditos' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field>
-                    <input matInput placeholder="Numero de creditos">
+                    <input matInput placeholder="Créditos" [(ngModel)]="row.creditos"
+                      (change)="calcularValorMatricula(row)">
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="cuotas">
-                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">Cuotas</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{'liquidacion.cuotas' | translate}}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">
                   <mat-form-field>
-                    <input matInput placeholder="Numero de cuotas">
+                    <input matInput placeholder="Cuotas" [(ngModel)]="row.cuotas"
+                      (change)="actualizarValoresCuotas(row)">
                   </mat-form-field>
                 </td>
               </ng-container>
@@ -145,36 +137,36 @@
               <!-- Conceptos Base Column -->
 
               <ng-container matColumnDef="seguroEstudiantil">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Seguro Estudiantil</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.seguro' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
                     <mat-select [value]="row.Seguro ? 'true' : 'false'">
-                      <mat-option value="true">Sí</mat-option>
-                      <mat-option value="false">No</mat-option>
+                      <mat-option value="true">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option value="false">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="carneEstudiantil">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Carné Estudiantil</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.carnet' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
                     <mat-select [value]="row.Carne ? 'true' : 'false'">
-                      <mat-option value="true">Sí</mat-option>
-                      <mat-option value="false">No</mat-option>
+                      <mat-option value="true">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option value="false">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="sistematizacion">
-                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">Sistematización</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{'liquidacion.sistematizacion' | translate}}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">
                   <mat-form-field class="small-form-field">
                     <mat-select [value]="row.Sistematizacion ? 'true' : 'false'">
-                      <mat-option value="true">Sí</mat-option>
-                      <mat-option value="false">No</mat-option>
+                      <mat-option value="true">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option value="false">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
@@ -185,48 +177,51 @@
 
 
               <ng-container matColumnDef="votacion">
-                <th mat-header-cel mat-header-cell *matHeaderCellDef class="subHeaders">10% Votación</th>
+                <th mat-header-cel mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.votacion' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
-                    <mat-select (selectionChange)="toggleDescuento($event, row, 1)" [value]="row.Descuentos.includes(1) ? 'true' : 'false'" placeholder="Seleccione">
-                      <mat-option [value]="'true'">Sí</mat-option>
-                      <mat-option [value]="'false'">No</mat-option>
+                    <mat-select (selectionChange)="toggleDescuento($event, row, 1)"
+                      [value]="row.Descuentos.includes(1) ? 'true' : 'false'" placeholder="Seleccione">
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="monitor">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Monitor</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.monitorias' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
-                    <mat-select (selectionChange)="toggleDescuento($event, row, 2)" [value]="row.Descuentos.includes(2) ? 'true' : 'false'" placeholder="Seleccione">
-                      <mat-option [value]="'true'">Sí</mat-option>
-                      <mat-option [value]="'false'">No</mat-option>
+                    <mat-select (selectionChange)="toggleDescuento($event, row, 2)"
+                      [value]="row.Descuentos.includes(2) ? 'true' : 'false'" placeholder="Seleccione">
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="egresado">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Egresado</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.egresado' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
-                    <mat-select (selectionChange)="toggleDescuento($event, row, 6)" [value]="row.Descuentos.includes(6) ? 'true' : 'false'" placeholder="Seleccione">
-                      <mat-option [value]="'true'">Sí</mat-option>
-                      <mat-option [value]="'false'">No</mat-option>
+                    <mat-select (selectionChange)="toggleDescuento($event, row, 6)"
+                      [value]="row.Descuentos.includes(6) ? 'true' : 'false'" placeholder="Seleccione">
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="docente">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Docente</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.docente' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
                     <mat-select [(value)]="row.Codigo" placeholder="Seleccione">
-                      <mat-option value="true">Sí</mat-option>
-                      <mat-option value="false">No</mat-option>
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
@@ -236,9 +231,10 @@
                 <th mat-header-cell *matHeaderCellDef class="subHeaders">RCSA</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
-                    <mat-select (selectionChange)="toggleDescuento($event, row, 3)" [value]="row.Descuentos.includes(3) ? 'true' : 'false'" placeholder="Seleccione">
-                      <mat-option [value]="'true'">Sí</mat-option>
-                      <mat-option [value]="'false'">No</mat-option>
+                    <mat-select (selectionChange)="toggleDescuento($event, row, 3)"
+                      [value]="row.Descuentos.includes(3) ? 'true' : 'false'" placeholder="Seleccione">
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
@@ -248,69 +244,72 @@
                 <th mat-header-cell *matHeaderCellDef class="subHeaders">PPUD</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
-                    <mat-select (selectionChange)="toggleDescuento($event, row, 5)" [value]="row.Descuentos.includes(5) ? 'true' : 'false'" placeholder="Seleccione">
-                      <mat-option [value]="'true'">Sí</mat-option>
-                      <mat-option [value]="'false'">No</mat-option>
+                    <mat-select (selectionChange)="toggleDescuento($event, row, 5)"
+                      [value]="row.Descuentos.includes(5) ? 'true' : 'false'" placeholder="Seleccione">
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="mejorECAES">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Mejor ECAES</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">ECAES</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
-                    <mat-select (selectionChange)="toggleDescuento($event, row, 4)" [value]="row.Descuentos.includes(4) ? 'true' : 'false'" placeholder="Seleccione">
-                      <mat-option [value]="'true'">Sí</mat-option>
-                      <mat-option [value]="'false'">No</mat-option>
+                    <mat-select (selectionChange)="toggleDescuento($event, row, 4)"
+                      [value]="row.Descuentos.includes(4) ? 'true' : 'false'" placeholder="Seleccione">
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="gradoHonor">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Beca</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.beca' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
-                    <mat-select (selectionChange)="toggleDescuento($event, row, 7)" [value]="row.Descuentos.includes(7) ? 'true' : 'false'" placeholder="Seleccione">
-                      <mat-option [value]="'true'">Sí</mat-option>
-                      <mat-option [value]="'false'">No</mat-option>
+                    <mat-select (selectionChange)="toggleDescuento($event, row, 7)"
+                      [value]="row.Descuentos.includes(7) ? 'true' : 'false'" placeholder="Seleccione">
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="segundoHermano">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">50% Segundo Hermano</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.segundo_hermano' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
                     <mat-select [(value)]="row.Codigo" placeholder="Seleccione">
-                      <mat-option value="true">Sí</mat-option>
-                      <mat-option value="false">No</mat-option>
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="secretariaEducacion">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">70% Secretaria Educacion</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.secretaria' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
                   <mat-form-field class="small-form-field">
                     <mat-select [(value)]="row.Codigo" placeholder="Seleccione">
-                      <mat-option value="true">Sí</mat-option>
-                      <mat-option value="false">No</mat-option>
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="doctoradoInterinstitucio">
-                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">90% Doctorado Interinstitucio</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{'liquidacion.doctorado_interinstitucional' | translate}}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">
                   <mat-form-field class="small-form-field">
                     <mat-select [(value)]="row.Codigo" placeholder="Seleccione">
-                      <mat-option value="true">Sí</mat-option>
-                      <mat-option value="false">No</mat-option>
+                      <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                      <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </td>
@@ -319,17 +318,17 @@
               <!-- Fecha Pago Cuotas Column -->
 
               <ng-container matColumnDef="fechaCuotaUno">
-                <th mat-header-cell *matHeaderCellDef class="cuotas">Fecha Primer Pago</th>
+                <th mat-header-cell *matHeaderCellDef class="cuotas">{{'liquidacion.primer_pago' | translate}}</th>
                 <td mat-cell *matCellDef="let row">{{ row.Codigo}}</td>
               </ng-container>
 
               <ng-container matColumnDef="fechaCuotaDos">
-                <th mat-header-cell *matHeaderCellDef class="cuotas">Fecha Segundo Pago</th>
+                <th mat-header-cell *matHeaderCellDef class="cuotas">{{'liquidacion.segundo_pago' | translate}}</th>
                 <td mat-cell *matCellDef="let row">{{ row.Codigo}}</td>
               </ng-container>
 
               <ng-container matColumnDef="fechaCuotaTres">
-                <th mat-header-cell *matHeaderCellDef class="border-right cuotas">Fecha Tercer Pago</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right cuotas">{{'liquidacion.tercer_pago' | translate}}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">{{row.Codigo}}</td>
               </ng-container>
 
@@ -338,40 +337,34 @@
               <!-- Porcentaje Cuotas Column -->
 
               <ng-container matColumnDef="primeraCuota">
-                <th mat-header-cell *matHeaderCellDef class="cuotas">Primera Cuota</th>
-                <td mat-cell *matCellDef="let row">{{ row.Codigo}}%</td>
+                <th mat-header-cell *matHeaderCellDef class="cuotas">{{'liquidacion.primera_cuota' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{ row.valorCuota1 }}</td>
               </ng-container>
 
               <ng-container matColumnDef="segundaCuota">
-                <th mat-header-cell *matHeaderCellDef class="cuotas">Segunda Cuota</th>
-                <td mat-cell *matCellDef="let row">{{ row.Codigo}}%</td>
+                <th mat-header-cell *matHeaderCellDef class="cuotas">{{'liquidacion.segunda_cuota' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{ row.valorCuota2 }}</td>
               </ng-container>
 
               <ng-container matColumnDef="terceraCuota">
-                <th mat-header-cell *matHeaderCellDef class="border-right cuotas">Tercera Cuota</th>
-                <td mat-cell *matCellDef="let row" class="border-right">{{ row.Codigo}}%</td>
+                <th mat-header-cell *matHeaderCellDef class="border-right cuotas">{{'liquidacion.tercera_cuota' | translate}}</th>
+                <td mat-cell *matCellDef="let row" class="border-right">{{ row.valorCuota3 }}</td>
               </ng-container>
 
 
               <!-- Valor Recibo Column -->
 
               <ng-container matColumnDef="valorRecibo">
-                <th mat-header-cell *matHeaderCellDef class="border-right">Valor recibo</th>
-                <td mat-cell *matCellDef="let row" class="border-right">0</td>
+                <th mat-header-cell *matHeaderCellDef class="border-right">{{'liquidacion.total' | translate}}</th>
+                <td mat-cell *matCellDef="let row" class="border-right">{{ row.valorRecibo}}</td>
               </ng-container>
 
 
               <!-- Acciones Column -->
               <ng-container matColumnDef="acciones">
-                <th mat-header-cell *matHeaderCellDef class="border-right"> Acciones </th>
+                <th mat-header-cell *matHeaderCellDef class="border-right">{{'liquidacion.acciones' | translate}}</th>
                 <td mat-cell *matCellDef="let row" class="border-right ">
                   <div class="action-container">
-                    <button mat-icon-button (click)="eliminar(row)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="editar(row)">
-                      <mat-icon>edit</mat-icon>
-                    </button>
                     <button mat-icon-button (click)="descargar(row)">
                       <mat-icon>cloud_download</mat-icon>
                     </button>
@@ -398,23 +391,29 @@
 
         <div class="button-container">
           <div class="button-stepper">
-            <button mat-stroked-button class="azulOscuro"(click)="guardarLiquidaciones()">Guardar</button>
+            <button mat-stroked-button class="azulOscuro" (click)="guardarLiquidaciones()">{{
+              'liquidacion.guardar' | translate }}</button>
           </div>
 
           <div class="button-stepper">
-            <button mat-stroked-button class=" azulClaro">Generar recibos</button>
+            <button mat-stroked-button class=" azulClaro" (click)="generarRecibos()">{{
+              'liquidacion.generar_recibo' | translate }}</button>
           </div>
 
           <div class="button-stepper">
-            <button mat-stroked-button class="azulClaro">Descargar listado</button>
+            <button mat-stroked-button class="azulClaro">{{
+              'liquidacion.descargar_listado' | translate }}</button>
           </div>
 
           <div class="button-stepper">
-            <button mat-stroked-button class="azulClaro">Descargar conjunto de recibos</button>
+            <button mat-stroked-button class="azulClaro" (click)="descargarPDFs()" [disabled]="!generados">{{
+              'liquidacion.conjunto_recibos' | translate }}</button>
           </div>
 
           <div class="button-stepper">
-            <button mat-stroked-button class="azulClaro">Asignar recibos a estudiantes</button>
+            <button mat-stroked-button class="azulClaro" (click)="notificarGeneracionRecibos()"
+              [disabled]="!generados">{{
+              'liquidacion.asignar_recibo' | translate }}</button>
           </div>
         </div>
 

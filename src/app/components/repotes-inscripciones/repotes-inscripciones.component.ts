@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReporteVisualizerComponent } from '../reporte-visualizer/reporte-visualizer.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { tipoReporteInscritos } from 'src/app/models/reportes/tipo-reportes-inscripciones';
+import { estadosReintegrosTransferencias } from 'src/app/models/reportes/estados-reintegros-transferencias';
+import { InscripcionService } from 'src/app/services/inscripcion.service';
 
 @Component({
   selector: 'app-repotes-inscripciones',
@@ -22,13 +24,16 @@ export class RepotesInscripcionesComponent {
   facultades: any[] = [];
   proyectos: any[] = [];
   niveles: any[] = [];
+  tiposInscripcion: any[] =[];
   reportePdf: string = "";
   reporteExcel: string = "";
   isDocuments: boolean = false
   blobPdf: Blob = new Blob;
   columnas: any[] = []
   tipoReporte = tipoReporteInscritos
+  estados = estadosReintegrosTransferencias
   generalReport: boolean = false
+  isTranferenciaOrReintegro = false
 
   displayedColumns: string[] = ['Periodo', 'Facultad', 'Proyecto', 'Acciones'];
   dataSource: { Periodo: string, Facultad: string, Proyecto: string }[] = [];
@@ -41,7 +46,8 @@ export class RepotesInscripcionesComponent {
     private sgaProyectoAcademicoService: ProyectoAcademicoService,
     private sgaAdmisionesMidService: SgaAdmisionesMid,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private sgaInscripcionService: InscripcionService,
 
   ) {
     this.reporteForm = this.fb.group({
@@ -50,13 +56,16 @@ export class RepotesInscripcionesComponent {
       proyectoCurricular: ["", Validators.required],
       tipoReporte: ["", Validators.required],
       selectColumnas: ["", Validators.required],
+      selectTipoInscripcion: ["", Validators.required],
       selectNiveles: [""],
+      selectEstado: [""],
     });
   }
 
   ngOnInit(): void {
     this.caragarPeriodos()
     this.caragarFacultades()
+    this.caragarTipoInscripcion()
   }
 
   caragarPeriodos() {
@@ -91,6 +100,15 @@ export class RepotesInscripcionesComponent {
     )
   }
 
+  caragarTipoInscripcion() {
+    console.log("Llama")
+    this.sgaInscripcionService.get(`tipo_inscripcion?query=Activo:true&limit=0&sortby=Nombre&order=asc`).subscribe(
+      (Response: any) => {
+        this.tiposInscripcion = Response
+      }
+    )
+  }
+
   onFacultadChange(event: any) {
     const facultadId = event.value;
     this.caragarProyectosAcademicos(facultadId)
@@ -105,7 +123,12 @@ export class RepotesInscripcionesComponent {
     if (event.value == 4) {
       this.caragarNivelesAcademicos()
       this.generalReport = true
-    } else {
+      this.isTranferenciaOrReintegro = false
+    } else if (event.value >= 5){
+      this.isTranferenciaOrReintegro = true
+      this.generalReport = false
+    }else {
+      this.isTranferenciaOrReintegro = false
       this.generalReport = false
     }
     this.reporteForm.get('selectColumnas')?.setValue([])
@@ -156,7 +179,9 @@ export class RepotesInscripcionesComponent {
         "Proyecto": this.reporteForm.get('proyectoCurricular')?.value,
         "Periodo": this.reporteForm.get('periodoAcademico')?.value,
         "Reporte": this.reporteForm.get('tipoReporte')?.value,
-        "Columnas": this.reporteForm.get('selectColumnas')?.value
+        "Columnas": this.reporteForm.get('selectColumnas')?.value,
+        "TipoInscripcion": this.reporteForm.get('selectTipoInscripcion')?.value,
+        "EstadoInscripcion": this.reporteForm.get('selectEstado')?.value
       }
 
       const idProyecto = this.reporteForm.get('proyectoCurricular')?.value
@@ -179,10 +204,10 @@ export class RepotesInscripcionesComponent {
 
       this.sgaAdmisionesMidService.post('reporte', dataReporte).subscribe(
         (Response: any) => {
-          if (Response.status == 200 && Response.success) {
+          if (Response.Status == 200 && Response.Success) {
 
-            this.reporteExcel = Response.data.Excel
-            this.reportePdf = Response.data.Pdf
+            this.reporteExcel = Response.Data.Excel
+            this.reportePdf = Response.Data.Pdf
             this.openSnackBar("Reporte Generado", "Aceptar")
             this.isDocuments = true
           } else {

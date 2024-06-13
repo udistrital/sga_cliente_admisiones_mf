@@ -98,7 +98,7 @@ export class ViewFormacionAcademicaComponent implements OnInit {
             if (Number(element.Documento) > 0) {
               this.documentoService.get('documento/'+element.Documento)
                 .subscribe((resp: any) => {
-                    if(resp.Status && (resp.Status == "400" || resp.status == "404")) {
+                    if(resp.Status && (resp.Status == "400" || resp.Status == "404")) {
                       this.infoFalla();
                     } else {
                       //element.Documento = response[0]["Documento"]; 

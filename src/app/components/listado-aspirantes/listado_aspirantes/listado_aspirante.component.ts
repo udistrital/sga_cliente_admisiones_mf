@@ -326,8 +326,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.sgaMidAdmisioens.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
             .subscribe(
                 (response: any) => {
-                    if (response.success == true && response.status == 200) {
-                        this.Aspirantes = response.data;
+                    if (response.Success == true  && response.Status == 200) {
+                        this.Aspirantes = response.Data;
                         this.admitidos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));
                         this.inscritos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO'));
                         this.cuposAsignados = this.admitidos.length;

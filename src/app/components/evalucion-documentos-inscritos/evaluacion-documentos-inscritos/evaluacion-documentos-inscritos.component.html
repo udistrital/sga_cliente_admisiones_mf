@@ -8,38 +8,52 @@
           </legend>
   
           <div *ngIf="showProfile" class="form-container">
-            <!--Periodo académico-->
-            <mat-form-field>
-              <mat-label>{{ 'admision.periodo_' | translate }}:</mat-label>
-              <mat-select [(ngModel)]="periodo" (selectionChange)="selectPeriodo()">
-                <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                <mat-option *ngFor="let item of periodos" [value]="item"> {{item.Nombre}} </mat-option>
-              </mat-select>
-            </mat-form-field>
-  
             <!-- Nivel -->
             <mat-form-field>
               <mat-label>{{ 'admision.nivel' | translate }}:</mat-label>
-              <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel" (selectionChange)="loadProyectos()">
+              <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel" (selectionChange)="cambiarSelectPeriodoSegunNivel($event.value)">
                 <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                 <mat-option *ngFor="let item of nivel_load" [value]="item.Id"> {{item.Nombre}} </mat-option>
               </mat-select>
-              <mat-error *ngIf="CampoControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate
-                }}</mat-error>
+              <mat-error *ngIf="CampoControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate }}</mat-error>
             </mat-form-field>
-  
+
             <!-- Proyecto académico -->
             <mat-form-field>
               <mat-label>{{ 'admision.proyecto' | translate }}:</mat-label>
-              <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_selected"
-                (selectionChange)="loadInscritos()">
+              <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_selected">
                 <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                 <mat-option *ngFor="let item of proyectos" [value]="item.Id"
                   [disabled]="!item.Id">{{item.Nombre}}</mat-option>
               </mat-select>
               <mat-error *ngIf="Campo1Control.hasError('required')">{{ 'admision.error_proyecto' | translate
                 }}</mat-error>
-            </mat-form-field>
+            </mat-form-field>            
+
+            <!--Periodo académico-->
+            <mat-form-field>
+              <mat-label>{{ 'admision.periodo_' | translate }}:</mat-label>
+              <mat-select *ngIf="!selectMultipleNivel" formControlName="PeriodoId" placeholder="2020-I, 2020-II, 2020-III" (selectionChange)="loadInscritos()" required>
+                <mat-option value="" disabled>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
+                  {{ periodo.Nombre }}
+                </mat-option>                
+              </mat-select>              
+              <mat-select *ngIf="selectMultipleNivel" formControlName="PeriodoId" placeholder="2020-I, 2020-II, 2020-III" required multiple>
+                <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
+                  {{ periodo.Nombre }}
+                </mat-option>
+              </mat-select>                    
+            </mat-form-field>    
+            <div>
+            <button class="boton-primary" type="button" *ngIf="mostrarBoton" (click)="loadInscritos()">
+              <mat-icon style="vertical-align: middle;" fontIcon="add"> </mat-icon>
+              <label>{{'GLOBAL.cargar' | translate}}</label>
+            </button>
+          </div>              
+            <div *ngIf="mostrarMensajeInicial" class="info margin-y">
+               {{ "gestion_horarios.mensaje_doctorado" | translate }}
+            </div>                                  
             <br /><br />
   
             <mat-card status="success" style="border: 1px solid var(--primary);" *ngIf="mostrarConteos">

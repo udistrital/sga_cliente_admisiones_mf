@@ -101,7 +101,7 @@ export class ViewProduccionAcademicaComponent implements OnInit {
                 let itemForm = JSON.parse(m.MetadatoSubtipoProduccionId.TipoMetadatoId.FormDefinition)
                 this.documentoService.get('documento/'+m.Valor)
                   .subscribe((resp: any) => {
-                    if(resp.Status && (resp.Status == "400" || resp.status == "404")) {
+                    if(resp.Status && (resp.Status == "400" || resp.Status == "404")) {
                       this.infoFalla();
                     } else {
                       let estadoDoc = this.utilidades.getEvaluacionDocumento(resp.Metadatos);

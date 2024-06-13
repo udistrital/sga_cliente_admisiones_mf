@@ -8,6 +8,7 @@ import { ListDocumentoProyectoComponent } from './components/asignar-documentos-
 import { CrudDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-documento-proyecto/crud-documento-proyecto.component';
 import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
 import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
+import { LiquidacionRecibosComponent as LiquidacionPregrado } from './components/liquidacion/liquidacion-recibos/liquidacion-recibos.component';
 import { SolicitudDescuento } from './models/descuento/solicitud_descuento';
 import { SolicitudTransferenciaComponent } from './components/transferencia/solicitud-transferencia/solicitud-transferencia.component';
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
@@ -78,6 +79,7 @@ import { ReporteVisualizerComponent } from './components/reporte-visualizer/repo
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { LiquidacionTableComponent } from './components/liquidacion/liquidacion-table/liquidacion-table.component';
+import { SoporteConfiguracionComponent } from './components/soporte-configuracion/soporte-configuracion.component';
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
@@ -95,16 +97,21 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InscripcionMidService } from './services/sga_inscripcion_mid.service';
 import { TerceroMidService } from './services/sga_tercero_mid.service';
-
+import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
+import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
+import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
 }
 
 @NgModule({
   declarations: [
     AppComponent,
+    LiquidacionPregrado,
     DialogoCriteriosComponent,
     AdministradorCriteriosComponent,
     AsignacionCuposComponent,
@@ -159,15 +166,21 @@ export function createTranslateLoader(http: HttpClient) {
     EvaluacionDocumentosInscritosComponent,
     DialogoDocumentosTransferenciasComponent,
     ListaProyectosAspirantesComponent,
-
     LiquidacionRecibosComponent,
     LiquidacionHistoricoComponent,
     LiquidacionTableComponent,
+    SoporteConfiguracionComponent,
     ListadoAspiranteComponent,
     AdministracionCuentaBancariaComponent,
     ComentariosCuposComponent,
+    ListadoAspirantesPregradoComponent,
+    CargueSnpComponent,
+    SoporteConfiguracionComponent,
+    EvalucionAspirantePregradoComponent,
+    CorreoInstitucionalComponent
   ],
   imports: [
+    CodificacionModule,
     NgxDocViewerModule,
     FormsModule,
     CommonModule,
@@ -191,6 +204,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatDatepickerModule,
     MatSortModule,
     MatAutocompleteModule,
+    MatGridListModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     NgxExtendedPdfViewerModule,
