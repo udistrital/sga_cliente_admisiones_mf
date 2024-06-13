@@ -2858,6 +2858,10 @@
         "criterio": "Criterio",
         "revision": "Revisión documental",
         "puntaje": "Calcular el puntaje de los aspirantes",
-        "listado":"Listado inscritos"
+        "listado": "Listado inscritos",
+        "evaluar_criterio": "Evaluar Criterio",
+        "revision_curricular": "Enviar para revisión al proyecto curricular",
+        "descargar_pdf": "Descargar listado (PDF/Excel)",
+        "definir_admitidos": "Definir listados de admitidos"
     }
 }

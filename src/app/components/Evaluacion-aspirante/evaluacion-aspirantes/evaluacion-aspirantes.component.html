@@ -66,7 +66,7 @@
                 <div class="col-sm-6 col-md-4 col-lg-3 folder" style="margin-bottom: 20px;" align="center" id="info_basica"
                   *ngFor=" let criterio of criterio_selected">
 
-                  <mat-card class="exp-card" (click)="perfil_editar(criterio)">
+                  <mat-card class="exp-card" *ngIf="criterio.Nombre != 'ICFES' " (click)="perfil_editar(criterio)">
                     <mat-card-header>{{ 'Criterio ' + ajustarTitulo(criterio.Nombre) }}</mat-card-header>
                     <mat-card-content class="icon-form">
                       <mat-icon fontIcon="folder" class="folder-icon"></mat-icon>

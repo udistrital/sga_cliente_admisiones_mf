@@ -48,7 +48,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   Campo1Control = new FormControl('', [Validators.required]);
   settings: any;
   // dataSource: LocalDataSource;
-  dataSourceColumn=["credencial","identificacion","nombre","estado","acciones"]
+  dataSourceColumn = ["credencial", "identificacion", "nombre", "estado", "acciones"]
   dataSource!: MatTableDataSource<any>
   info_persona_id: any;
   periodo: any;
@@ -95,7 +95,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     private googleMidService: GoogleService,
     private pivotDocument: PivotDocument,
     private sgaMidService: SgaMidService,
-    private sgaMiAdmisiones : SgaAdmisionesMid,
+    private sgaMiAdmisiones: SgaAdmisionesMid,
     private evaluacionInscripcionService: EvaluacionInscripcionService,
     private autenticationService: ImplicitAutenticationService,
     private oikosService: OikosService,
@@ -146,7 +146,11 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
-            this.periodo = res.Data.find((p: any) => p.Activo);
+            if (window.localStorage.getItem("IdPeriodoSelected")) {
+              this.periodo = res.Data.find((p: any) => p.Id == window.localStorage.getItem("IdPeriodoSelected"));
+            } else {
+              this.periodo = res.Data.find((p: any) => p.Activo);
+            }
             window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
             resolve(this.periodo);
             const periodos = <any[]>res['Data'];
@@ -154,6 +158,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
               this.periodos.push(element);
             });
           }
+          window.localStorage.removeItem("IdPeriodoSelected");
         },
           (error: HttpErrorResponse) => {
             reject(error);
@@ -176,6 +181,12 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
       (response: any) => {
         if (response !== null || response !== undefined) {
           this.nivel_load = <any>response;
+          console.log(this.nivel_load)
+          if (window.localStorage.getItem("Nivel")) {
+            this.selectednivel = this.nivel_load.find((p: any) => p.Id == window.localStorage.getItem("Nivel")).Id;
+            this.loadProyectos();
+            window.localStorage.removeItem("Nivel");
+          }
         }
       },
       error => {
@@ -214,6 +225,17 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                 this.proyectos = <any[]>response.filter(
                   (proyecto: any) => this.filtrarProyecto(proyecto),
                 );
+
+                if (window.localStorage.getItem("IdProyecto")) {
+                  const idProyecto = window.localStorage.getItem("IdProyecto");
+                  const proyecto = this.proyectos.find((p: any) => p.Id == idProyecto);
+                  if (proyecto) {
+                    this.proyectos_selected = proyecto.Id;
+                    this.loadInscritos();
+                  }
+                }
+                window.localStorage.removeItem("IdProyecto");
+
               } else {
                 const id_tercero = this.userService.getPersonaId();
                 this.sgaMiAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(

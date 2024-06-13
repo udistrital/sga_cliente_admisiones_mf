@@ -82,8 +82,8 @@
               {{ 'evaluacionpregrado.estado' | translate }}
             </th>
             <td mat-cell *matCellDef="let row">
-              <span *ngIf="row.Activo == true">Activo</span>
-              <span *ngIf="row.Activo != true">Inactivo</span>
+              <span *ngIf="row.Activo == true">{{ 'GLOBAL.activo' | translate }}</span>
+              <span *ngIf="row.Activo != true">{{ 'GLOBAL.inactivo' | translate }}</span>
             </td>
           </ng-container>
           <ng-container matColumnDef="accion">
@@ -130,16 +130,6 @@
               <mat-option *ngFor="let item of periodos" [value]="item.Id">{{ item.Nombre }}</mat-option>
             </mat-select>
           </mat-form-field>
-
-          <mat-form-field style="width: 100%;">
-            <mat-label>{{ 'evaluacionpregrado.nivel_aviso' | translate }}:</mat-label>
-            <mat-select [formControl]="nivelControl" [(ngModel)]="selectednivel" >
-              <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
-              <mat-option *ngFor="let item of nivel_load" [value]="item.Id">{{ item.Nombre }}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="nivelControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate
-              }}</mat-error>
-          </mat-form-field>
           
           <mat-form-field style="width: 100%;">
             <mat-label>{{ 'evaluacionpregrado.criterio_consultar' | translate }}:</mat-label>
@@ -167,7 +157,7 @@
 </mat-card>
 <mat-card class="documentos" *ngIf="viewSubcriterios" style="margin-top: 20px;">
   <div style="margin: 20px;">
-    <button (click)="navigateToRoute()">{{ 'evaluacionpregrado.revision' | translate }}</button>
+    <button (click)="ModuleEvaluarDoucimentos()">{{ 'evaluacionpregrado.revision' | translate }}</button>
   </div>
 </mat-card>
 <mat-card *ngIf="viewSubcriterios" style="margin-top: 20px;">
@@ -187,7 +177,7 @@
     </div>
     <div class="boton-busqueda">
       <div>
-        <button class="boton-primary" (click)="puntajeAspirantes()">{{ 'evaluacionpregrado.puntaje' | translate
+        <button class="boton-primary" (click)="puntajeAspirantes()">{{ 'admision.calcular' | translate
           }}</button>
       </div>
     </div>
@@ -209,14 +199,26 @@
           <!-- Dynamic Columns -->
           <ng-container *ngFor="let column of columnspuntajeaspirantes" [matColumnDef]="column">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column }}</th>
-            <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+            <td mat-cell *matCellDef="let element">
+              <span *ngIf='element[column] != ""'>{{ element[column] }}</span>
+              <span *ngIf='element[column] == ""'> <button class="boton-primary" (click)="ModuloevaluarAspirante()">{{ 'evaluacionpregrado.evaluar_criterio' | translate
+              }}</button>
+             </span>
+            </td>
           </ng-container>
   
           <tr mat-header-row *matHeaderRowDef="columnspuntajeaspirantes"></tr>
           <tr mat-row *matRowDef="let row; columns: columnspuntajeaspirantes"></tr>
         </table>
+        <mat-paginator #paginator3 [pageSize]="10" [showFirstLastButtons]="true"></mat-paginator>
       </div>
       </div>
+    </div>
+    <br><br>
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <button class="boton-primary" >{{ 'evaluacionpregrado.revision_curricular' | translate }}</button>
+      <button class="boton-primary" >{{ 'evaluacionpregrado.descargar_pdf' | translate }}</button>
+      <button class="boton-primary" >{{ 'evaluacionpregrado.definir_admitidos' | translate }}</button>
     </div>
     <br>
   </mat-card-content>
