@@ -72,36 +72,6 @@
                             </mat-error>
                         </mat-form-field>
 
-                         <!-- Ofertar como 2 opcion -->
-                        <!-- <form [formGroup]="ofertarOpcion2">
-                            <mat-card>
-                                <mat-card-title>
-                                    <h5>{{ 'admision.ofertar' | translate }}</h5>
-                                </mat-card-title>
-
-                                <mat-card-content>
-                                    <div class="row my-2">
-                                        <div class="col-12">
-                                            <mat-checkbox  formControlName="opcion"><mat-label>{{ 'admision.ofertar_opcion2' | translate }}</mat-label></mat-checkbox>
-                                        </div>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-                        </form> -->
-
-                        <!-- Ofertar como 3 opcion -->
-                        <!-- <form [formGroup]="ofertarOpcion3">
-                            <mat-card>
-                                <mat-card-content>
-                                    <div class="row my-2">
-                                        <div class="col-12">
-                                            <mat-checkbox  formControlName="opcion"><mat-label>{{ 'admision.ofertar_opcion3' | translate }}</mat-label></mat-checkbox>
-                                        </div>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-                        </form> -->
-
                         <mat-card>
                             <mat-card-title>
                                 <h5>{{ 'admision.ofertar' | translate }}</h5>
@@ -113,7 +83,7 @@
                                         <div class="row my-2">
                                         <div class="col-12">
                                             <mat-checkbox formControlName="opcion">
-                                            <mat-label>Ofertar como opcion: {{ i + 2 }} ?</mat-label>
+                                            <mat-label>{{ 'admision.ofertar_opcion' | translate }} {{ i + 2 }} ?</mat-label>
                                             </mat-checkbox>
                                         </div>
                                         </div>
