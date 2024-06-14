@@ -314,7 +314,6 @@ export class CriterioAdmisionComponent implements OnChanges {
     this.selectcriterio = false;
     this.criterio_selected = [];
     this.limpiarDatos()
-    console.log(this.periodo)
     this.evaluacionService.get('requisito_programa_academico?query=Activo:true,ProgramaAcademicoId:' + this.proyectos_selected +
       ',PeriodoId:' + this.periodo.Id).subscribe(response => {
         const r = <any>response;
@@ -407,7 +406,6 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   filtrarPorFacultades(selProyecto:any) {
-    console.log("1111111111111",this.proyectos);
     if (this.proyectos && this.proyectos.length > 0) {
       this.proyectosFilteredFacultad = this.proyectos.filter(
         (proyect: any) => {
@@ -420,7 +418,6 @@ export class CriterioAdmisionComponent implements OnChanges {
       );
     }
 
-    console.log("AAAAAAAAAA",this.proyectosFilteredFacultad);
     // this.proyecto = undefined;
     // this.tipoInscrip = undefined;
   }
@@ -544,7 +541,6 @@ export class CriterioAdmisionComponent implements OnChanges {
       this.criterioEsExamenEstado = false;
       this.valorMinimo = 0;
     } else {
-      console.log("22222222222222222222222222222222222",this.criterio_selected)
       // Porcentaje: element.PorcentajeGeneral,
       this.criterio_selected.forEach((criterio: any) => {
         if(criterio.ExamenEstado){
@@ -566,7 +562,6 @@ export class CriterioAdmisionComponent implements OnChanges {
       this.selectTipo = true
       this.data = [];
       // this.dataSource = new LocalDataSource();
-      console.log("22222222222222222222222222222222222",this.criterio_selected)
       for (let i = 0; i < this.criterio_selected.length; i++) {
         this.createTable(this.criterio_selected[i]);
         this.selectTipoIcfes = true;
@@ -596,7 +591,6 @@ export class CriterioAdmisionComponent implements OnChanges {
     });
 
     // this.dataSource.load(this.data);
-    console.log(this.data)
     this.dataSource = new MatTableDataSource(this.data)
     this.settings = {
       columns: {
@@ -737,7 +731,6 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   calcularPorcentajeSubcriterio() {
-    console.log(this.dataSourceSubcriterio)
     this.porcentajeSubcriterioTotal = 0;
     for (let i = 0; i < this.dataSourceSubcriterio.data.length; i++) {
       this.porcentajeSubcriterioTotal += +this.dataSourceSubcriterio.data[i].Porcentaje;
@@ -863,9 +856,6 @@ export class CriterioAdmisionComponent implements OnChanges {
           });
 
       }else if (this.facultades && this.facultades.length > 0){
-        console.log("No hay proyecto seleccionado", this.facultades)
-        console.log(this.proyectosFilteredFacultad)
-
         forEach(this.proyectosFilteredFacultad, (proyecto: any) => {
           this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:' +
           proyecto.Id + ',PeriodoId:' + this.periodo.Id + ',Activo:true&limit=0')

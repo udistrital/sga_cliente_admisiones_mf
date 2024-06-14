@@ -13,6 +13,8 @@ import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { ZipManagerService } from 'src/utils/zip-manager.service';
 import { PopUpManager } from '../../../managers/popUpManager';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
+import { decrypt } from 'src/utils/util-encrypt';
 
 @Component({
   selector: 'ngx-view-descuento-academico',
@@ -72,7 +74,7 @@ export class ViewDescuentoAcademicoComponent implements OnInit {
     private sanitization: DomSanitizer,
     private inscripcionService: InscripcionService,
     private newNuxeoService: NewNuxeoService,
-    private sgaMidService: SgaMidService,
+    private inscripcionesMidService: InscripcionMidService,
     private utilidades: UtilidadesService,
     private zipManagerService: ZipManagerService,
     private popUpManager: PopUpManager,) {
@@ -94,12 +96,12 @@ export class ViewDescuentoAcademicoComponent implements OnInit {
   }
 
   loadData(): void {
-    this.sgaMidService.get('descuento_academico/descuentopersonaperiododependencia?' +
-      'PersonaId=' + sessionStorage.getItem('TerceroId') + '&DependenciaId=' +
+    const id = decrypt(window.localStorage.getItem('persona_id'));
+    this.inscripcionesMidService.get('/academico/descuento/detalle?' + id + '&DependenciaId=' +
       sessionStorage.getItem('ProgramaAcademicoId') + '&PeriodoId=' + sessionStorage.getItem('IdPeriodo'))
       .subscribe((result: any) => {
-        const r = <any>result.Data.Body[1];
-        if (result !== null && result.Data.Code == '200') {
+        const r = <any>result.Data[1];
+        if (result !== null && result.Status == '200') {
           const data = <Array<SolicitudDescuento>>r;
           const soportes = [];
           let soportes1 = "";

@@ -217,12 +217,10 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     this.translate.use(language);
   }
   editarFila(data: any) {
-    console.log(data)
     this.show_editar=true;
 
   }
   eliminarFila(data: any) {
-    console.log(data)
 
   }
 
@@ -294,7 +292,6 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
           console.info(JSON.stringify(this.info_cupos));
           this.inscripcionMidService.post('cupos', this.info_cupos)
             .subscribe(res => {
-              console.log(res)
 
               const r = <any>res
               if (r !== null && r.status === 200) {
@@ -329,9 +326,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   obtenerCupos() {
     this.http.get<any>(`${environment.INSCRIPCION_SERVICE}/cupos/`).subscribe(
       (response) => {
-        console.log(response);
         this.dataSource = response.data
-        console.log("Cupos:", this.dataSource);
       },
       (error) => {
         console.error('Error al obtener los cupos:', error);
