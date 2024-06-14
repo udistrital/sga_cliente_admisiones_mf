@@ -933,9 +933,6 @@ export class CriterioAdmisionComponent implements OnChanges {
     console.log("guardar", objectConcat)
 
     requisitoPost.Opcion = JSON.stringify(objectConcat);
-    requisitoPost.Hola = 'Hola';
-
-    console.log("ACAAAAAAAAAAAAAAAAAAA",requisitoPost)
 
     this.evaluacionService.post('requisito_programa_academico', requisitoPost)
       .subscribe(res => {
