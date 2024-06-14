@@ -18,7 +18,6 @@ import { map } from 'rxjs/operators';
 import { IAppState } from 'src/app/store/app.state';
 import { Store } from '@ngrx/store';
 import { ListService } from 'src/app/store/services/list.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { UserService } from 'src/app/services/users.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
@@ -118,7 +117,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.source_emphasys = new MatTableDataSource();
         this.translate = translate;
         this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-           
+
         });
         this.listService.findInfoContacto();
         this.loadLists();
@@ -140,7 +139,6 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         title: e.Nombre
                     }
                 })
-                console.log(this.estados)
             })
     }
 
@@ -233,12 +231,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     }
 
     onSaveConfirm(event: any) {
-        console.log(event)
-        console.log(this.estados)
-        console.log(event.newData.EstadoInscripcionId)
         const newState = this.estados.filter((data: any) => (data.value === parseInt(event.newData.EstadoInscripcionId, 10)))[0];
-        console.log(newState)
-        console.log(this.estados)
         if (newState.value == this.IdIncripcionSolicitada) {
             this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.no_cambiar_inscripcion_solicitada'))
         } else {
@@ -321,40 +314,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
             );
         }
     }
-
-    // mostrartabla() {
-    //   this.show_listado = true
-
-    //   this.info_consultar_aspirantes = {
-    //     Id_proyecto: Number(this.proyectos_selected['Id']),
-    //     Id_periodo: Number(this.periodo['Id']),
-    //   }
-    //         this.sgamidService.post('admision/consulta_aspirantes', this.info_consultar_aspirantes)
-    //           .subscribe(res => {
-    //             const r = <any>res
-    //             if (r !== null && r.Type !== 'error') {
-    //               this.loading = false;
-    //               r.sort((puntaje_mayor, puntaje_menor ) =>  puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal )
-    //                const data = <Array<any>>r;
-    //                this.source_emphasys.load(data);
-
-    //             } else {
-    //               this.showToast('error', this.translate.instant('GLOBAL.error'),
-    //                 this.translate.instant('GLOBAL.error'));
-    //             }
-    //           },
-    //             (error: HttpErrorResponse) => {
-    //               Swal.fire({
-    //                 icon:'error',
-    //                 title: error.status + '',
-    //                 text: this.translate.instant('ERROR.' + error.status),
-    //                 footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-    //                   this.translate.instant('GLOBAL.info_estado'),
-    //                 confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-    //               });
-    //             });
-    // }
-
+    
     mostrartabla() {
         this.show_listado = true
         // this.source_emphasys = new LocalDataSource();
@@ -366,11 +326,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.sgaMidAdmisioens.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
             .subscribe(
                 (response: any) => {
-                    console.log("response")
-                    console.log(response)
                     if (response.Success == true  && response.Status == 200) {
                         this.Aspirantes = response.Data;
-                        console.log(this.Aspirantes)
                         this.admitidos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));
                         this.inscritos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO'));
                         this.cuposAsignados = this.admitidos.length;
@@ -382,9 +339,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         this.cantidad_inscritos_obs = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO con Observación')).length;
                         this.cantidad_aspirantes = this.cantidad_inscrip_solicitada + this.cantidad_admitidos + this.cantidad_opcionados + this.cantidad_no_admitidos + this.cantidad_inscritos + this.cantidad_inscritos_obs;
 
-                        console.log(this.Aspirantes)
                         // this.source_emphasys.load(this.Aspirantes);
-                        console.log(this.Aspirantes)
                         this.source_emphasys = new MatTableDataSource(this.Aspirantes)
                         setTimeout(() => {
                             this.source_emphasys.paginator = this.paginator;

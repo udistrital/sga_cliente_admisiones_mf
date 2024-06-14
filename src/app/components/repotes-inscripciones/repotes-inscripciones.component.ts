@@ -160,7 +160,6 @@ export class RepotesInscripcionesComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('The dialog was closed');
     });
   }
 
@@ -219,7 +218,6 @@ export class RepotesInscripcionesComponent {
 
     } else {
       // Display an error message or handle invalid form state
-      //console.log('Please fill in all required fields.');
     }
   }
 }

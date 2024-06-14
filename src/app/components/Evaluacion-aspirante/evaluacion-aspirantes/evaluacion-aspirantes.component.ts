@@ -132,8 +132,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private parametrosService: ParametrosService,
     private projectService: ProyectoAcademicoService,
     private evaluacionService: EvaluacionInscripcionService,
-    private tercerosService: TercerosService,
-    private sgaMidService: SgaMidService,
     private sgaMidAdmisiones: SgaAdmisionesMid,
     private popUpManager: PopUpManager,
 
@@ -336,12 +334,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
       this.columnas = titles
       this.widhtColumns = width
-
-
-
-
-
-
       this.dataSourceColumn = (titles)
       this.dataSourceColumn.push('acciones')
       console.log(this.dataSourceColumn)
@@ -420,7 +412,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
       } else if (numero === true) {
         this.popUpManager.showToast(this.translate.instant('admision.numero'));
       } else {
-
         this.sgaMidAdmisiones.post('admision/evaluacion', Evaluacion).subscribe(
           (response: any) => {
             if (response.Status === 200) {
@@ -547,7 +538,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
   async loadInfo(IdCriterio: number) {
     this.datavalor = []
     return new Promise((resolve, reject) => {
-      console.log('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio)
       this.sgaMidAdmisiones.get('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio).subscribe(
         async (response: any) => {
           console.log(response)
@@ -565,6 +555,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
                     }
                   }
                 })
+                //  [this, this.dataSource.load(this.Aspirantes)]
+                const valor = Object.keys(this.Aspirantes[0]);
+                const arreglo = valor.filter(elemento => elemento !== "Id");
+                this.datavalor = arreglo
+                this.dataSource = new MatTableDataSource(this.Aspirantes)
+
               })
 
               console.log("jola")
@@ -637,7 +633,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
   loadColumn(IdCriterio: any) {
     this.nameColumns = []
     return new Promise((resolve, reject) => {
-
       this.evaluacionService.get('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0').subscribe(
         (response: any) => {
           for (let i = 0; i < response.length; i++) {
