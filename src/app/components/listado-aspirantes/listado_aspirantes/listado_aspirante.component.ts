@@ -26,6 +26,7 @@ import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.se
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { State } from './estado-inscripcion';
 @Component({
     // tslint:disable-next-line: component-selector
     selector: 'ngx-listado-aspirante',
@@ -92,6 +93,14 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     cantidad_inscritos_obs: number = 0;
     mostrarConteos: boolean = false;
 
+    stateTransitions: Record<State, State[]> = {
+        'Inscripción solicitada': [],
+        'INSCRITO': ['INSCRITO con Observación', 'ADMITIDO', 'OPCIONADO', 'NO ADMITIDO'],
+        'INSCRITO con Observación': ['INSCRITO', 'ADMITIDO', 'OPCIONADO', 'NO ADMITIDO'],
+        'ADMITIDO': ['INSCRITO', 'INSCRITO con Observación', 'OPCIONADO', 'NO ADMITIDO'],
+        'OPCIONADO': ['INSCRITO', 'INSCRITO con Observación', 'ADMITIDO', 'NO ADMITIDO'],
+        'NO ADMITIDO': ['INSCRITO', 'INSCRITO con Observación', 'ADMITIDO', 'OPCIONADO']
+    };
 
     CampoControl = new FormControl('', [Validators.required]);
     Campo1Control = new FormControl('', [Validators.required]);
@@ -230,8 +239,37 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         }
     }
 
+    hasTransition(currentState: string) {
+        if (currentState == null) {
+            return true;
+        }
+        if (!(currentState as State in this.stateTransitions)) {
+            return false;
+        }
+
+        const allowedStates = this.stateTransitions[currentState as State] || [];
+
+        return allowedStates.length > 0;
+    }
+
+    canChangeState(currentState: State, newState: string): boolean {
+        if (!(newState in this.stateTransitions)) {
+            return false;
+        }
+        const allowedStates = this.stateTransitions[currentState] || [];
+        return allowedStates.includes(newState as State);
+    }
+
+    filtrarEstados(currentState: any) {
+        if (!(currentState in this.stateTransitions)) {
+            return [];
+        }
+
+        return this.estados.filter((e: any) => this.canChangeState(currentState as State, e.title));
+    }
+
     onSaveConfirm(event: any) {
-        const newState = this.estados.filter((data: any) => (data.value === parseInt(event.newData.EstadoInscripcionId, 10)))[0];
+        const newState = this.estados.filter((data: any) => (data.value === parseInt(event.newData.NuevoEstadoInscripcionId, 10)))[0];
         if (newState.value == this.IdIncripcionSolicitada) {
             this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.no_cambiar_inscripcion_solicitada'))
         } else {

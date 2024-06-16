@@ -1,0 +1,1 @@
+export type State = 'Inscripción solicitada' | 'INSCRITO' | 'INSCRITO con Observación' | 'ADMITIDO' | 'OPCIONADO' | 'NO ADMITIDO';

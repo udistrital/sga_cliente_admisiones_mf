@@ -52,7 +52,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   ofertarOpcion3!: FormGroup;
 
   inscripcion_id!: number;
-  info_persona_id!: number;
+  info_persona_id!: string | null;
   info_ente_id!: number;
   estado_inscripcion!: number;
   info_info_persona: any;
@@ -174,7 +174,7 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   async loadData() {
     try {
-      this.info_persona_id = this.userService.getPersonaId();
+      this.info_persona_id = this.userService.getId();
 
       await this.cargarPeriodo();
     } catch (error: any) {

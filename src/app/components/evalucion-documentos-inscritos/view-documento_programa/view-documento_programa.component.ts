@@ -17,7 +17,7 @@ import { ZipManagerService } from 'src/utils/zip-manager.service';
   styleUrls: ['./view-documento_programa.component.scss'],
 })
 export class ViewDocumentoProgramaComponent implements OnInit {
-  persona_id!: number;
+  persona_id!: string | null;
   inscripcion_id!: number;
   periodo_id!: number;
   programa_id!: number;
@@ -181,7 +181,7 @@ export class ViewDocumentoProgramaComponent implements OnInit {
     this.infoCarga.status = "start";
     this.estadoCarga.emit(this.infoCarga);
     this.programa_id = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!);
-    this.persona_id = this.persona_id ? this.persona_id : this.userService.getPersonaId();
+    this.persona_id = this.persona_id ? this.persona_id : this.userService.getId();
     this.inscripcion_id = this.inscripcion_id ? this.inscripcion_id : parseInt(sessionStorage.getItem('IdInscripcion')!);
     this.loadData();
     this.canUpdateDocument = <string>(sessionStorage.getItem('IdEstadoInscripcion') || "").toUpperCase() === "INSCRITO CON OBSERVACIÓN";
