@@ -14,7 +14,7 @@ import { PopUpManager } from '../../../managers/popUpManager';
 })
 export class ViewInscripcionComponent implements OnInit {
 
-  persona_id!: number;
+  persona_id!: string | null;
   periodo_id!: number;
   programa_id!: number;
   inscripcion_id!: number;
@@ -49,7 +49,7 @@ export class ViewInscripcionComponent implements OnInit {
     this.infoCarga.status = "start";
     this.estadoCarga.emit(this.infoCarga);
     this.programa_id = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!);
-    this.persona_id = this.userService.getPersonaId();
+    this.persona_id = this.userService.getId();
     this.inscripcion_id = parseInt(sessionStorage.getItem('IdInscripcion')!);
     this.periodo_id = this.userService.getPeriodo();
     this.loadInscripcion();
