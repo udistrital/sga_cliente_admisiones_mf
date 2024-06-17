@@ -285,6 +285,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         ...event.newData.Inscripcion,
                         ...{ EstadoInscripcionId: { Id: newState.value } }
                     }
+                    event.newData.EstadoInscripcionId.Id = newState.value;
+                    event.newData.EstadoInscripcionId.Nombre = newState.title;
                     this.inscripcionService.put('inscripcion', updateState)
                         .subscribe((response) => {
                             Swal.fire(
