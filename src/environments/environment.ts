@@ -97,5 +97,6 @@ export const environment = {
     //PLAN_ESTUDIOS_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8537/v1/',
     //PLAN_ESTUDIOS_SERVICE: 'http://localhost:8925/v1/',
     NOTIFICACION_MID: 'http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/',
+    SOLICITUDES_ADMISIONES:'http://pruebasapi2.intranetoas.udistrital.edu.co:8117/v1/',
   };
   

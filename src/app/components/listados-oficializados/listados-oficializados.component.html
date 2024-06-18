@@ -15,7 +15,11 @@
         <div class="info-box">
           <span>Estado: Abierto, Culminado, Solicitud de correos realizada</span>
         </div>
+        <div>
+          <button (click)="generarSolicitud()">Generar solicitud</button>
+        </div>
       </div>
+
       <mat-tab-group fullWidth (changeTab)="selectTab($event)">
         <div class="table">
           <mat-tab *ngIf="!cambiotab">

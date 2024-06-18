@@ -5,6 +5,7 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { PopUpManager } from '../../managers/popUpManager';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { SolicitudesAdmisiones } from 'src/app/services/solicitudes_admisiones.service';
 
 @Component({
   selector: 'app-listados-oficializados',
@@ -28,6 +29,8 @@ export class ListadosOficializadosComponent implements OnInit {
     private translate: TranslateService,
     private inscripcionService: InscripcionService,
     private popUpManager: PopUpManager,
+    private solicitudesAdmisiones: SolicitudesAdmisiones, // Service for solicitudes API
+
   ) {
     this.loadData();
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
@@ -151,4 +154,12 @@ export class ListadosOficializadosComponent implements OnInit {
     ];
     this.source.data = fakeRecords;
   }
+
+  generarSolicitud(): void {
+    const nuevoProceso = { Nombre: 'Proceso Nuevo', Fechas: 'Fecha1 Nueva - Fecha2 Nueva', Estado: 'Abierto' };
+    this.source.data = [nuevoProceso, ...this.source.data];
+    this.source.paginator = this.paginator; 
+    this.source.sort = this.sort; 
+  }
+
 }
