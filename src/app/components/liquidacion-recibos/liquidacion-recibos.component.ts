@@ -168,7 +168,6 @@ export class LiquidacionRecibosComponent {
     if (validatorProyectoControl) {
       validatorProyectoControl.valueChanges.subscribe(value => {
         this.selectedProyecto = value;
-        console.log('ID seleccionado:', this.selectedProyecto.Id);
       });
     } else {
       console.error('El control "validatorProyecto" es nulo.');
@@ -176,7 +175,6 @@ export class LiquidacionRecibosComponent {
     if (validatorPeridoControl) {
       validatorPeridoControl.valueChanges.subscribe(value => {
         this.selectedPeriodo = value;
-        console.log('ID seleccionado:', this.selectedPeriodo.Id);
       });
     } else {
       console.error('El control "validatorProyecto" es nulo.');
@@ -209,10 +207,8 @@ export class LiquidacionRecibosComponent {
               this.proyectos = <any[]>response.filter(
                 (proyecto: any) => this.filtrarProyecto(proyecto),
               );
-              console.log("proyectos", this.proyectos)
             } else {
               const id_tercero = this.userService.getPersonaId();
-              console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
               this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                 (respDependencia: any) => {
                   const dependencias = <Number[]>respDependencia.Data.DependenciaId;
@@ -238,8 +234,6 @@ export class LiquidacionRecibosComponent {
     );
   }
   filtrarProyecto(proyecto: any) {
-    console.log(proyecto)
-    console.log(this.selectednivel)
     if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
       return true
     }
@@ -269,7 +263,6 @@ export class LiquidacionRecibosComponent {
               this.periodos.push(element);
             });
           }
-          console.log("periodos", this.periodos);
         },
           (error: HttpErrorResponse) => {
             reject(error);
@@ -285,9 +278,7 @@ export class LiquidacionRecibosComponent {
         (response: { Data: any; }) => {
           console.log('Datos cargados:', response);
           const data = response.Data;
-          console.log('Data:', data);
           this.admitidos = data;
-          console.log('Data:', this.admitidos);
           this.admitidos.forEach(row => {
             row.Seguro = true;
             row.Carne = true;
@@ -394,14 +385,11 @@ export class LiquidacionRecibosComponent {
       };
       this.liquidaciones.push(liquidacion);
     });
-    console.log(this.liquidaciones)
     for (const liquidacion of this.liquidaciones) {
-      console.log(liquidacion)
       this.liquidacionService.post('liquidacion/', liquidacion)
         .subscribe(
           (res: any) => {
             const r = <any>res;
-            console.log(res);
           },
           (error: HttpErrorResponse) => {
           }
@@ -739,7 +727,9 @@ export class LiquidacionRecibosComponent {
         console.error('Error generando recibos:', error);
       });
 
-  }
+    }
+
+
 
   cuotasPorAdmitido() {
     this.cuotasAdmitidos = [];
@@ -885,11 +875,9 @@ export class LiquidacionRecibosComponent {
     link.click();
   }
   eliminar = (data: any) => {
-    console.log('Eliminando...');
   }
 
   editar = (data: any) => {
-    console.log('Editando...');
   }
 
 

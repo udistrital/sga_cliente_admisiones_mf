@@ -1347,7 +1347,8 @@
         "no_edit_doc_aprobado": "No puedes editar documento aprobado",
         "ya_existe_registro": "Ya cuenta con información cargada para este campo",
         "informar_estado_inscrito_obs": "Aspirante, su inscripción se encuentra condicionada por observaciones en documentación adjunta, por favor diríjase a Detalle de inscripción para revisar y corregir la información no aprobada. Si no lo hace no puede continuar con el proceso.",
-        "info_boton_cambio_inscrito": "No olvide presionar el botón \"Confirmar edición de documentos con observaciones\" para volver al estado INSCRITO, este se habilita cuando haya editado todos los documentos no aprobados."
+        "info_boton_cambio_inscrito": "No olvide presionar el botón \"Confirmar edición de documentos con observaciones\" para volver al estado INSCRITO, este se habilita cuando haya editado todos los documentos no aprobados.",
+        "no_permite_cambio": "El estado '{{estado}}' no admite cambios"
     },
     "reingreso": {
         "reingreso_no_registrado": "Solicitud de reingreso no registrada",
@@ -1634,8 +1635,7 @@
         "archivo": "¿Requiere archivo adjunto?",
         "seleccion_facultad": "Seleccionar facultad",
         "ofertar": "Ofertar proyecto",
-        "ofertar_opcion2": "¿Se oferta como opción 2?",
-        "ofertar_opcion3": "¿Se oferta como opción 3?",
+        "ofertar_opcion": "¿Se oferta como opción",
         "parametrizacion_puntaje": "Parametrización puntaje global mínimo",
         "valor_minimo": "Valor mínimo:",
         "listar_aspirantes_proyecto": "Listar aspirantes de proyectos activos",

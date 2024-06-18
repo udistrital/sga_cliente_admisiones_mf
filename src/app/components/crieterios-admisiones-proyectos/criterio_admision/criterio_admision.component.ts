@@ -9,7 +9,7 @@ import { ParametrosService } from 'src/app/services/parametros.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inscripcion } from '../../../models/inscripcion/inscripcion'
 import Swal from 'sweetalert2';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormBuilder, ReactiveFormsModule  } from '@angular/forms';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 // import { LocalDataSource } from 'ng2-smart-table';
@@ -50,9 +50,10 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   ofertarOpcion2!: FormGroup;
   ofertarOpcion3!: FormGroup;
+  opciones: FormGroup[] = [];
 
   inscripcion_id!: number;
-  info_persona_id!: number;
+  info_persona_id!: string | null;
   info_ente_id!: number;
   estado_inscripcion!: number;
   info_info_persona: any;
@@ -135,6 +136,8 @@ export class CriterioAdmisionComponent implements OnChanges {
   areas: any;
   criteriosAreas: any;
 
+  numeroOpciones: any;
+
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
@@ -172,9 +175,48 @@ export class CriterioAdmisionComponent implements OnChanges {
     this.loadProyectos();
   }
 
+  loadNumeroOpciones() {
+    console.log("loadNumeroOpciones", this.periodo.Id)
+    this.parametrosService.get('parametro?query=CodigoAbreviacion:OPREGRADO,Activo:true').subscribe(
+      (response: any) => {
+        console.log("loadNumeroOpciones1111111", response.Data[0].Id)
+        this.parametrosService.get('parametro_periodo?query=Activo:true,PeriodoId:' + this.periodo.Id + ',ParametroId:' + response.Data[0].Id).subscribe(
+          (response: any) => {
+            console.log("loadNumeroOpciones222222", response)
+            if (response.Data[0].Valor !== undefined && response.Data[0].Valor !== null) {
+              console.log("loadNumeroOpciones333333", response.Data[0].Valor)
+              const valorObj = JSON.parse(response.Data[0].Valor);
+              const valor = valorObj.Valor;
+              console.log('Valor extraído:', valor);
+              console.log('tipo', typeof valor);
+              this.numeroOpciones = parseInt(valor);
+              console.log('Valor extraído:', this.numeroOpciones);
+              this.generateCheckboxes(this.numeroOpciones - 1);
+            }
+          },
+          error => {
+            this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+          },
+        );
+      });
+  }
+
+  generateCheckboxes(count: number): void {
+    for (let i = 0; i < count; i++) {
+      this.opciones.push(this.createCheckbox());
+    }
+  }
+
+  createCheckbox(): FormGroup {
+    return this.builder.group({
+      opcion:[false, Validators.required],
+    });
+  }
+
+
   async loadData() {
     try {
-      this.info_persona_id = this.userService.getPersonaId();
+      this.info_persona_id = this.userService.getId();
 
       await this.cargarPeriodo();
     } catch (error: any) {
@@ -208,7 +250,6 @@ export class CriterioAdmisionComponent implements OnChanges {
     return new Promise((resolve, reject) => {
       this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
-          console.log(this.periodos)
           const r = <any>res;
           if (res !== null && r.Status === '200') {
             this.periodo = res.Data.find((p: any) => p.Activo);
@@ -216,9 +257,9 @@ export class CriterioAdmisionComponent implements OnChanges {
             resolve(this.periodo);
             const periodos = <any[]>res['Data'];
             periodos.forEach((element: any) => {
-              console.log(element)
               this.periodos.push(element);
             });
+            this.loadNumeroOpciones();
           }
         },
           (error: HttpErrorResponse) => {
@@ -230,6 +271,8 @@ export class CriterioAdmisionComponent implements OnChanges {
   selectPeriodo() {
     this.selectednivel = undefined;
     this.proyectos_selected = undefined;
+    this.loadNumeroOpciones();
+
   }
 
   setPercentage_info(number: any, tab: string | number) {
@@ -271,7 +314,6 @@ export class CriterioAdmisionComponent implements OnChanges {
     this.selectcriterio = false;
     this.criterio_selected = [];
     this.limpiarDatos()
-    console.log(this.periodo)
     this.evaluacionService.get('requisito_programa_academico?query=Activo:true,ProgramaAcademicoId:' + this.proyectos_selected +
       ',PeriodoId:' + this.periodo.Id).subscribe(response => {
         const r = <any>response;
@@ -364,7 +406,6 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   filtrarPorFacultades(selProyecto:any) {
-    console.log("1111111111111",this.proyectos);
     if (this.proyectos && this.proyectos.length > 0) {
       this.proyectosFilteredFacultad = this.proyectos.filter(
         (proyect: any) => {
@@ -377,7 +418,6 @@ export class CriterioAdmisionComponent implements OnChanges {
       );
     }
 
-    console.log("AAAAAAAAAA",this.proyectosFilteredFacultad);
     // this.proyecto = undefined;
     // this.tipoInscrip = undefined;
   }
@@ -447,7 +487,6 @@ export class CriterioAdmisionComponent implements OnChanges {
                 } else {
                   criterio.Subcriterios = [];
                 }
-                console.log("AAAAAAAAAAAAAAAAAAAAAAAA",this.criterios)
               },
               error => {
                 criterio.Subcriterios = [];
@@ -502,7 +541,6 @@ export class CriterioAdmisionComponent implements OnChanges {
       this.criterioEsExamenEstado = false;
       this.valorMinimo = 0;
     } else {
-      console.log("22222222222222222222222222222222222",this.criterio_selected)
       // Porcentaje: element.PorcentajeGeneral,
       this.criterio_selected.forEach((criterio: any) => {
         if(criterio.ExamenEstado){
@@ -524,7 +562,6 @@ export class CriterioAdmisionComponent implements OnChanges {
       this.selectTipo = true
       this.data = [];
       // this.dataSource = new LocalDataSource();
-      console.log("22222222222222222222222222222222222",this.criterio_selected)
       for (let i = 0; i < this.criterio_selected.length; i++) {
         this.createTable(this.criterio_selected[i]);
         this.selectTipoIcfes = true;
@@ -554,7 +591,6 @@ export class CriterioAdmisionComponent implements OnChanges {
     });
 
     // this.dataSource.load(this.data);
-    console.log(this.data)
     this.dataSource = new MatTableDataSource(this.data)
     this.settings = {
       columns: {
@@ -695,7 +731,6 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   calcularPorcentajeSubcriterio() {
-    console.log(this.dataSourceSubcriterio)
     this.porcentajeSubcriterioTotal = 0;
     for (let i = 0; i < this.dataSourceSubcriterio.data.length; i++) {
       this.porcentajeSubcriterioTotal += +this.dataSourceSubcriterio.data[i].Porcentaje;
@@ -821,9 +856,6 @@ export class CriterioAdmisionComponent implements OnChanges {
           });
 
       }else if (this.facultades && this.facultades.length > 0){
-        console.log("No hay proyecto seleccionado", this.facultades)
-        console.log(this.proyectosFilteredFacultad)
-
         forEach(this.proyectosFilteredFacultad, (proyecto: any) => {
           this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:' +
           proyecto.Id + ',PeriodoId:' + this.periodo.Id + ',Activo:true&limit=0')
@@ -889,7 +921,18 @@ export class CriterioAdmisionComponent implements OnChanges {
     requisitoPost.OfertarOpcion3 = this.ofertarOpcion3.value.opcion;
     requisitoPost.PuntajeMinimoExamenEstado = Number(this.valorMinimo);
 
-    console.log("ACAAAAAAAAAAAAAAAAAAA",requisitoPost)
+    console.log("guardar")
+    console.log(this.opciones)
+    const objectConcat = [{}];
+    for (let i = 0; i < this.opciones.length; i++) {
+      const object: any = {};
+      object['Id'] = i + 1;
+      object['Opcion'] = this.opciones[i].value.opcion;
+      objectConcat[i] = object;
+    }
+    console.log("guardar", objectConcat)
+
+    requisitoPost.Opcion = JSON.stringify(objectConcat);
 
     this.evaluacionService.post('requisito_programa_academico', requisitoPost)
       .subscribe(res => {

@@ -1316,7 +1316,8 @@
         "no_edit_doc_aprobado": "You cannot edit approved document",
         "ya_existe_registro": "You already have information loaded for this field",
         "informar_estado_inscrito_obs": "Applicant, your enrollment is conditioned by observations in the attached documentation, please go to Registration Details to review and correct the information not approved. If you do not, you cannot continue with the process.",
-        "info_boton_cambio_inscrito": "Do not forget to press the button \"Confirm edition of documents with observations\" to return to the ENROLLED status, this is enabled when you have edited all the not approved documents."
+        "info_boton_cambio_inscrito": "Do not forget to press the button \"Confirm edition of documents with observations\" to return to the ENROLLED status, this is enabled when you have edited all the not approved documents.",
+        "no_permite_cambio": "The status '{{estado}}' does not allow changes."
     },
     "reingreso": {
         "reingreso_no_registrado": "Re-entry request not created",
@@ -1601,8 +1602,7 @@
         "archivo": "Does it require an attached file?",
         "seleccion_facultad": "Select the faculty",
         "ofertar": "Offer project",
-        "ofertar_opcion2": "Is it offered as option 2?",
-        "ofertar_opcion3": "Is it offered as option 3?",
+        "ofertar_opcion": "Is it offered as option",
         "parametrizacion_puntaje": "Global score parameterization",
         "valor_minimo": "Minimum value:",
         "listar_aspirantes_proyecto": "List applicants for active projects",

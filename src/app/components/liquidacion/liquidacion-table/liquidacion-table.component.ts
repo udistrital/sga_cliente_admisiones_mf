@@ -419,7 +419,7 @@ export class LiquidacionTableComponent implements OnInit{
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     if (this.datosRecibos.hasOwnProperty('visible')) {
       this.visible = this.datosRecibos['visible']
     }

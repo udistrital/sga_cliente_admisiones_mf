@@ -18,7 +18,6 @@ import { map } from 'rxjs/operators';
 import { IAppState } from 'src/app/store/app.state';
 import { Store } from '@ngrx/store';
 import { ListService } from 'src/app/store/services/list.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { UserService } from 'src/app/services/users.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
@@ -27,6 +26,7 @@ import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.se
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { State } from './estado-inscripcion';
 @Component({
     // tslint:disable-next-line: component-selector
     selector: 'ngx-listado-aspirante',
@@ -93,6 +93,14 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     cantidad_inscritos_obs: number = 0;
     mostrarConteos: boolean = false;
 
+    stateTransitions: Record<State, State[]> = {
+        'Inscripción solicitada': [],
+        'INSCRITO': ['INSCRITO con Observación', 'ADMITIDO', 'OPCIONADO', 'NO ADMITIDO'],
+        'INSCRITO con Observación': ['INSCRITO', 'ADMITIDO', 'OPCIONADO', 'NO ADMITIDO'],
+        'ADMITIDO': ['INSCRITO', 'INSCRITO con Observación', 'OPCIONADO', 'NO ADMITIDO'],
+        'OPCIONADO': ['INSCRITO', 'INSCRITO con Observación', 'ADMITIDO', 'NO ADMITIDO'],
+        'NO ADMITIDO': ['INSCRITO', 'INSCRITO con Observación', 'ADMITIDO', 'OPCIONADO']
+    };
 
     CampoControl = new FormControl('', [Validators.required]);
     Campo1Control = new FormControl('', [Validators.required]);
@@ -118,7 +126,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.source_emphasys = new MatTableDataSource();
         this.translate = translate;
         this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-           
+
         });
         this.listService.findInfoContacto();
         this.loadLists();
@@ -140,7 +148,6 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         title: e.Nombre
                     }
                 })
-                console.log(this.estados)
             })
     }
 
@@ -232,13 +239,37 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         }
     }
 
+    hasTransition(currentState: string) {
+        if (currentState == null) {
+            return true;
+        }
+        if (!(currentState as State in this.stateTransitions)) {
+            return false;
+        }
+
+        const allowedStates = this.stateTransitions[currentState as State] || [];
+
+        return allowedStates.length > 0;
+    }
+
+    canChangeState(currentState: State, newState: string): boolean {
+        if (!(newState in this.stateTransitions)) {
+            return false;
+        }
+        const allowedStates = this.stateTransitions[currentState] || [];
+        return allowedStates.includes(newState as State);
+    }
+
+    filtrarEstados(currentState: any) {
+        if (!(currentState in this.stateTransitions)) {
+            return [];
+        }
+
+        return this.estados.filter((e: any) => this.canChangeState(currentState as State, e.title));
+    }
+
     onSaveConfirm(event: any) {
-        console.log(event)
-        console.log(this.estados)
-        console.log(event.newData.EstadoInscripcionId)
-        const newState = this.estados.filter((data: any) => (data.value === parseInt(event.newData.EstadoInscripcionId, 10)))[0];
-        console.log(newState)
-        console.log(this.estados)
+        const newState = this.estados.filter((data: any) => (data.value === parseInt(event.newData.NuevoEstadoInscripcionId, 10)))[0];
         if (newState.value == this.IdIncripcionSolicitada) {
             this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.no_cambiar_inscripcion_solicitada'))
         } else {
@@ -254,6 +285,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         ...event.newData.Inscripcion,
                         ...{ EstadoInscripcionId: { Id: newState.value } }
                     }
+                    event.newData.EstadoInscripcionId.Id = newState.value;
+                    event.newData.EstadoInscripcionId.Nombre = newState.title;
                     this.inscripcionService.put('inscripcion', updateState)
                         .subscribe((response) => {
                             Swal.fire(
@@ -321,40 +354,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
             );
         }
     }
-
-    // mostrartabla() {
-    //   this.show_listado = true
-
-    //   this.info_consultar_aspirantes = {
-    //     Id_proyecto: Number(this.proyectos_selected['Id']),
-    //     Id_periodo: Number(this.periodo['Id']),
-    //   }
-    //         this.sgamidService.post('admision/consulta_aspirantes', this.info_consultar_aspirantes)
-    //           .subscribe(res => {
-    //             const r = <any>res
-    //             if (r !== null && r.Type !== 'error') {
-    //               this.loading = false;
-    //               r.sort((puntaje_mayor, puntaje_menor ) =>  puntaje_menor.NotaFinal - puntaje_mayor.NotaFinal )
-    //                const data = <Array<any>>r;
-    //                this.source_emphasys.load(data);
-
-    //             } else {
-    //               this.showToast('error', this.translate.instant('GLOBAL.error'),
-    //                 this.translate.instant('GLOBAL.error'));
-    //             }
-    //           },
-    //             (error: HttpErrorResponse) => {
-    //               Swal.fire({
-    //                 icon:'error',
-    //                 title: error.status + '',
-    //                 text: this.translate.instant('ERROR.' + error.status),
-    //                 footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-    //                   this.translate.instant('GLOBAL.info_estado'),
-    //                 confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-    //               });
-    //             });
-    // }
-
+    
     mostrartabla() {
         this.show_listado = true
         // this.source_emphasys = new LocalDataSource();
@@ -366,11 +366,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.sgaMidAdmisioens.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
             .subscribe(
                 (response: any) => {
-                    console.log("response")
-                    console.log(response)
                     if (response.Success == true  && response.Status == 200) {
                         this.Aspirantes = response.Data;
-                        console.log(this.Aspirantes)
                         this.admitidos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));
                         this.inscritos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO'));
                         this.cuposAsignados = this.admitidos.length;
@@ -382,9 +379,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         this.cantidad_inscritos_obs = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO con Observación')).length;
                         this.cantidad_aspirantes = this.cantidad_inscrip_solicitada + this.cantidad_admitidos + this.cantidad_opcionados + this.cantidad_no_admitidos + this.cantidad_inscritos + this.cantidad_inscritos_obs;
 
-                        console.log(this.Aspirantes)
                         // this.source_emphasys.load(this.Aspirantes);
-                        console.log(this.Aspirantes)
                         this.source_emphasys = new MatTableDataSource(this.Aspirantes)
                         setTimeout(() => {
                             this.source_emphasys.paginator = this.paginator;
