@@ -18,6 +18,21 @@
   margin-right: 10px;
 }
 
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-alert {
+  padding: 15px;
+  background-color: var(--md-warning-300);
+  border-radius: 4px;
+  width: 90%; 
+  display: flex; 
+  justify-content: space-around; 
+}
+
 
 
 .responsive-form {

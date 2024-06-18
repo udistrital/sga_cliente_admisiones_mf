@@ -124,7 +124,7 @@ const routes: Routes = [
   },
 
   {
-    path:"preinscripcion-proyectos-curriculares", 
+    path:"inscripcion-proyectos-curriculares", 
     component: PreinscripcionProyectosCurricularesComponent,
   },
 

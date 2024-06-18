@@ -2218,7 +2218,7 @@
         "sexo":"Sexo",
         "correo_eletronico": "Correo electrónico",
         "telefono": "Teléfono",
-        "listado_preinscripciones": "Listado de preinscripciones",
+        "listado_preinscripciones": "Listado de inscripciones",
         "recibo": "Recibo",
         "inscripcion": "Inscripción",
         "nivel": "Nivel",
@@ -2229,13 +2229,13 @@
         "descargar": "Descargar",
         "opcion": "Opción",
         "resultado": "Resultado",
-        "informacion_detalle_preinscripcion": "Información detallada de la preinscripción",
+        "informacion_detalle_preinscripcion": "Información detallada de la inscripción",
         "credencial": "Credencial",
         "proyecto": "Proyecto",
         "puntaje": "Puntaje",
         "estado": "Estado",
         "pin": "Recibos denerados (PIN)",
-        "alerta": "Aspirante, recuerde que solo podra generar hasta 3 recibos en estado pendiente de pago, si desea generar otra preinscripcion a otro proyecto debera pagar al menos uno de los recibos generados",
+        "alerta": "Aspirante, recuerde que solo podra generar hasta 3 recibos en estado pendiente de pago, si desea generar otra inscripcion a otro proyecto debera pagar al menos uno de los recibos generados",
         "periodo_inscrito": "Periodo inscrito"
 
         
