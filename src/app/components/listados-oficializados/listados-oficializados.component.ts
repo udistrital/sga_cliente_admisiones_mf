@@ -6,6 +6,8 @@ import { PopUpManager } from '../../managers/popUpManager';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SolicitudesAdmisiones } from 'src/app/services/solicitudes_admisiones.service';
+import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-listados-oficializados',
@@ -30,25 +32,29 @@ export class ListadosOficializadosComponent implements OnInit {
     private inscripcionService: InscripcionService,
     private popUpManager: PopUpManager,
     private solicitudesAdmisiones: SolicitudesAdmisiones, // Service for solicitudes API
-
   ) {
+    this.source = new MatTableDataSource<any>([]); // Inicialización vacía al principio
     this.loadData();
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
   }
-
+  
   useLanguage(language: string) {
     this.translate.use(language);
   }
 
-  loadData(): void {
-    this.inscripcionService.get('tipo_inscripcion/?limit=0').subscribe(res => {
-      if (res !== null) {
-        const data = <Array<any>><unknown>res;
-        this.datos = data;
-        this.cargarDatosTabla(data);
-      }
-    });
-  }
+  loadData(): void { 
+    this.solicitudesAdmisiones.get('solicitud?query=EstadoTipoSolicitudId.TipoSolicitud.Id:40').subscribe(res => { 
+      if (res !== null) { 
+        const data = <Array<any>><unknown>res; 
+        this.datos = data.map(item => ({ 
+          Proceso: item.EstadoTipoSolicitudId.TipoSolicitud.Nombre, 
+          Fechas: item.FechaRadicacion, 
+          Estado: item.EstadoTipoSolicitudId.EstadoId.Nombre 
+        })); 
+        this.cargarDatosTabla(this.datos); 
+      } 
+    }); 
+  } 
 
   cargarDatosTabla(datosCargados: any[]): void {
     let datos = this.showInactives ? datosCargados : datosCargados.filter(d => d.Activo == true);
@@ -62,9 +68,10 @@ export class ListadosOficializadosComponent implements OnInit {
     this.cargarDatosTabla(this.datos);
   }
 
-  ngOnInit() {
-    this.addFakeRecords();
-  }
+  ngOnInit() { 
+    this.source = new MatTableDataSource<any>([]); 
+    this.addFakeRecords(); // También puedes llamar a addFakeRecords aquí si deseas datos falsos al inicio. 
+  } 
 
   onEdit(event: any) {
     if (event && event.Id) {
@@ -146,20 +153,44 @@ export class ListadosOficializadosComponent implements OnInit {
 
   addFakeRecords() {
     const fakeRecords = [
-      { Nombre: 'Proceso 1', Fechas: 'Fecha 1 - Fecha 2', Estado: 'Abierto' },
-      { Nombre: 'Proceso 2', Fechas: 'Fecha 3 - Fecha 4', Estado: 'Culminado' },
-      { Nombre: 'Proceso 3', Fechas: 'Fecha 5 - Fecha 6', Estado: 'Solicitud de correos realizada' },
-      { Nombre: 'Proceso 4', Fechas: 'Fecha 7 - Fecha 8', Estado: 'Abierto' },
-      { Nombre: 'Proceso 5', Fechas: 'Fecha 9 - Fecha 10', Estado: 'Culminado' },
+      { Proceso: 'Proceso 1', Fechas: 'Fecha 1 - Fecha 2', Estado: 'Abierto' },
+      { Proceso: 'Proceso 2', Fechas: 'Fecha 3 - Fecha 4', Estado: 'Culminado' },
+      { Proceso: 'Proceso 3', Fechas: 'Fecha 5 - Fecha 6', Estado: 'Solicitud de correos realizada' },
+      { Proceso: 'Proceso 4', Fechas: 'Fecha 7 - Fecha 8', Estado: 'Abierto' },
+      { Proceso: 'Proceso 5', Fechas: 'Fecha 9 - Fecha 10', Estado: 'Culminado' },
     ];
     this.source.data = fakeRecords;
+    this.source.paginator = this.paginator;
+    this.source.sort = this.sort;
   }
 
-  generarSolicitud(): void {
-    const nuevoProceso = { Nombre: 'Proceso Nuevo', Fechas: 'Fecha1 Nueva - Fecha2 Nueva', Estado: 'Abierto' };
-    this.source.data = [nuevoProceso, ...this.source.data];
-    this.source.paginator = this.paginator; 
-    this.source.sort = this.sort; 
+  formatCurrentDate(): string {
+    const now = new Date();
+    const pad = (n: number) => n < 10 ? '0' + n : n;
+    const year = now.getUTCFullYear();
+    const month = pad(now.getUTCMonth() + 1);
+    const day = pad(now.getUTCDate());
+    const hours = pad(now.getUTCHours());
+    const minutes = pad(now.getUTCMinutes());
+    const seconds = pad(now.getUTCSeconds());
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} +0000 +0000`;
   }
 
+  generarSolicitud(): void { 
+    const solicitudData = { 
+      EstadoTipoSolicitudId: { Id: 92 }, 
+      Referencia: "{}",
+      Resultado: "", 
+      FechaRadicacion: this.formatCurrentDate(), // Formatear la fecha actual
+      FechaCreacion: null, 
+      FechaModificacion: null, 
+      SolicitudFinalizada: false, 
+      Activo: true, 
+      SolicitudPadreId: null 
+    }; 
+    this.solicitudesAdmisiones.post('solicitud', solicitudData).subscribe(() => { 
+      this.loadData(); 
+    }); 
+  } 
 }

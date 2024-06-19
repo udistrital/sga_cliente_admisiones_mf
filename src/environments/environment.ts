@@ -103,4 +103,5 @@ export const environment = {
   SGA_TERCERO_MID_SERVICE: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8123/v1/',
   NOTIFICACION_MID: 'http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/',
   SGA_CRUD_PARAMETRO: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8094/v1/',
+  SOLICITUDES_ADMISIONES:'http://pruebasapi2.intranetoas.udistrital.edu.co:8117/v1/',
 };
