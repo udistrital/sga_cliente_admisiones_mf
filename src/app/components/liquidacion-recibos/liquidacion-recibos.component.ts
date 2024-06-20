@@ -17,7 +17,7 @@ import { LiquidacionService } from 'src/app/services/liquidacion.service';
 import * as JSZip from 'jszip';
 import * as saveAs from 'file-saver';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
-
+import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.service';
 
 
 interface Food {
@@ -41,8 +41,7 @@ export class LiquidacionRecibosComponent {
 
   firstFormGroup = this._formBuilder.group({
     validatorProyecto: ['', Validators.required],
-    validatorPeriodo: ['', Validators.required],
-    validatorSemestre: ['', Validators.required]
+    validatorPeriodo: ['', Validators.required]
   });
   secondFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
@@ -106,8 +105,10 @@ export class LiquidacionRecibosComponent {
   esPosgrado: boolean = false;
   liquidaciones: any[] = [];
   recibos: any[] = [];
-  pdfs: Blob[] = [];
+  pdfs: File[] = [];
   cuotasAdmitidos: any[] = [];
+  notificaciones: any[] = [];
+  generados: boolean = false;
 
   constructor(private _formBuilder: FormBuilder, private translate: TranslateService,
     private parametrosService: ParametrosService,
@@ -117,7 +118,8 @@ export class LiquidacionRecibosComponent {
     private sgaAdmisiones: SgaAdmisionesMid,
     private liquidacionService: LiquidacionService,
     private autenticationService: ImplicitAutenticationService,
-    private inscripcionService: InscripcionService) {
+    private inscripcionService: InscripcionService,
+    private notificacionService: NotificacionesMidService) {
     const detallesPago: DetallesPago[] = [
       { codigo: '123', cedula: '1234567890', nombreApellido: 'Juan Perez', creditos: 10, cuotas: 3 },
       { codigo: '456', cedula: '0987654321', nombreApellido: 'Maria Rodriguez', creditos: 15, cuotas: 3 },
@@ -166,7 +168,6 @@ export class LiquidacionRecibosComponent {
     if (validatorProyectoControl) {
       validatorProyectoControl.valueChanges.subscribe(value => {
         this.selectedProyecto = value;
-        console.log('ID seleccionado:', this.selectedProyecto.Id);
       });
     } else {
       console.error('El control "validatorProyecto" es nulo.');
@@ -174,7 +175,6 @@ export class LiquidacionRecibosComponent {
     if (validatorPeridoControl) {
       validatorPeridoControl.valueChanges.subscribe(value => {
         this.selectedPeriodo = value;
-        console.log('ID seleccionado:', this.selectedPeriodo.Id);
       });
     } else {
       console.error('El control "validatorProyecto" es nulo.');
@@ -207,10 +207,8 @@ export class LiquidacionRecibosComponent {
               this.proyectos = <any[]>response.filter(
                 (proyecto: any) => this.filtrarProyecto(proyecto),
               );
-              console.log("proyectos", this.proyectos)
             } else {
               const id_tercero = this.userService.getPersonaId();
-              console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
               this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                 (respDependencia: any) => {
                   const dependencias = <Number[]>respDependencia.Data.DependenciaId;
@@ -236,8 +234,6 @@ export class LiquidacionRecibosComponent {
     );
   }
   filtrarProyecto(proyecto: any) {
-    console.log(proyecto)
-    console.log(this.selectednivel)
     if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
       return true
     }
@@ -267,7 +263,6 @@ export class LiquidacionRecibosComponent {
               this.periodos.push(element);
             });
           }
-          console.log("periodos", this.periodos);
         },
           (error: HttpErrorResponse) => {
             reject(error);
@@ -283,20 +278,19 @@ export class LiquidacionRecibosComponent {
         (response: { Data: any; }) => {
           console.log('Datos cargados:', response);
           const data = response.Data;
-          console.log('Data:', data);
           this.admitidos = data;
-          console.log('Data:', this.admitidos);
           this.admitidos.forEach(row => {
             row.Seguro = true;
             row.Carne = true;
             row.Sistematizacion = true;
             row.numeroFila = this.admitidos.indexOf(row);
+            row.Correo = "pruebas@udistrital.edu.co";
           });
-          resolve(data); // Resuelve la promesa con los datos cargados
+          resolve(data);
         },
         (error: any) => {
           console.error('Error al cargar datos:', error);
-          reject(error); // Rechaza la promesa con el error
+          reject(error);
         }
       );
     });
@@ -318,6 +312,7 @@ export class LiquidacionRecibosComponent {
     const tarifaPorCredito = 100000;
     row.valorMatricula = row.creditos * tarifaPorCredito;
     this.actualizarValorRecibo(row);
+    this.generados = false;
   }
 
   actualizarValorRecibo(row: any): void {
@@ -338,6 +333,7 @@ export class LiquidacionRecibosComponent {
       row.valorCuota2 = row.valorMatricula * 0.3;
       row.valorCuota3 = row.valorMatricula * 0.3;
     }
+    this.generados = false;
   }
 
   guardarLiquidaciones() {
@@ -389,14 +385,11 @@ export class LiquidacionRecibosComponent {
       };
       this.liquidaciones.push(liquidacion);
     });
-    console.log(this.liquidaciones)
     for (const liquidacion of this.liquidaciones) {
-      console.log(liquidacion)
       this.liquidacionService.post('liquidacion/', liquidacion)
         .subscribe(
           (res: any) => {
             const r = <any>res;
-            console.log(res);
           },
           (error: HttpErrorResponse) => {
           }
@@ -461,287 +454,399 @@ export class LiquidacionRecibosComponent {
           Fecha1: "30/02/2023",
           Fecha2: "30/02/2023",
           Recargo: 1.5,
-          Comprobante: "0666"
+          Comprobante: "0666",
+          Correo: row.Correo
         };
         this.recibos.push(recibo);
       } else
-      if (row.cuotas == 2) {
-        const reciboConceptos = [];
-        const reciboConceptosC2 = [];
-        const reciboObs: { Ref: any; Descripcion: string; }[] = [];
-        reciboConceptos.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota1 });
-        if (row.Seguro) {
-          reciboConceptos.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
-        }
-        if (row.Carne) {
-          reciboConceptos.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
-        }
-        if (row.Sistematizacion) {
-          reciboConceptos.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
-        }
-        row.Descuentos.forEach((descuento: any) => {
-          switch (descuento) {
-            case 1:
-              reciboObs.push({ Ref: "DESC:1", Descripcion: "Certificado electoral" }); // Certificado electoral
-              break;
-            case 2:
-              reciboObs.push({ Ref: "DESC:2", Descripcion: "Certificado electoral" }); // Monitorias
-              break;
-            case 3:
-              reciboObs.push({ Ref: "DESC:3", Descripcion: "Representante de consejo superior y/o académico" }); // Representante de consejo superior y/o académico
-              break;
-            case 4:
-              reciboObs.push({ Ref: "DESC:4", Descripcion: "Mejor saber- pro (ECAES)" }); // Mejor saber- pro (ECAES)
-              break;
-            case 5:
-              reciboObs.push({ Ref: "DESC:5", Descripcion: "Pariente de personal de planta UD" }); // Pariente de personal de planta UD
-              break;
-            case 6:
-              reciboObs.push({ Ref: "DESC:6", Descripcion: "Egresado UD" }); // Egresado UD
-              break;
-            case 7:
-              reciboObs.push({ Ref: "DESC:7", Descripcion: "Beca de secretaría de educación" }); // Beca de secretaría de educación
-              break;
-            default:
-              break;
+        if (row.cuotas == 2) {
+          const reciboConceptos = [];
+          const reciboConceptosC2 = [];
+          const reciboObs: { Ref: any; Descripcion: string; }[] = [];
+          reciboConceptos.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota1 });
+          if (row.Seguro) {
+            reciboConceptos.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
           }
-        });
-        const recibo = {
-          Nombre: row.Nombre + row.PrimerApellido + row.SegundoApellido,
-          Tipo: "Estudiante",
-          CodigoEstudiante: row.Codigo,
-          Documento: row.Documento,
-          Periodo: this.selectedPeriodo.Nombre,
-          Dependencia: {
-            Tipo: "Proyecto Curricular",
-            Nombre: this.selectedProyecto.Nombre
-          },
-          Conceptos: reciboConceptos,
-          Observaciones: reciboObs,
-          Fecha1: "30/02/2023",
-          Fecha2: "30/02/2023",
-          Recargo: 1.5,
-          Comprobante: "0666"
-        };
-        this.recibos.push(recibo);
-        reciboConceptosC2.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota2 });
-        if (row.Seguro) {
-          reciboConceptosC2.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
-        }
-        if (row.Carne) {
-          reciboConceptosC2.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
-        }
-        if (row.Sistematizacion) {
-          reciboConceptosC2.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
-        }
-        const reciboC2 = {
-          Nombre: row.Nombre + row.PrimerApellido + row.SegundoApellido,
-          Tipo: "Estudiante",
-          CodigoEstudiante: row.Codigo,
-          Documento: row.Documento,
-          Periodo: this.selectedPeriodo.Nombre,
-          Dependencia: {
-            Tipo: "Proyecto Curricular",
-            Nombre: this.selectedProyecto.Nombre
-          },
-          Conceptos: reciboConceptosC2,
-          Observaciones: reciboObs,
-          Fecha1: "30/02/2023",
-          Fecha2: "30/02/2023",
-          Recargo: 1.5,
-          Comprobante: "0666"
-        };
-        this.recibos.push(reciboC2);
-      } else
-      if (row.cuotas == 3) {
-        const reciboConceptos = [];
-        const reciboConceptosC2 = [];
-        const reciboConceptosC3 = [];
-        const reciboObs: { Ref: any; Descripcion: string; }[] = [];
-        reciboConceptos.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota1 });
-        if (row.Seguro) {
-          reciboConceptos.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
-        }
-        if (row.Carne) {
-          reciboConceptos.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
-        }
-        if (row.Sistematizacion) {
-          reciboConceptos.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
-        }
-        row.Descuentos.forEach((descuento: any) => {
-          switch (descuento) {
-            case 1:
-              reciboObs.push({ Ref: "DESC:1", Descripcion: "Certificado electoral" }); // Certificado electoral
-              break;
-            case 2:
-              reciboObs.push({ Ref: "DESC:2", Descripcion: "Certificado electoral" }); // Monitorias
-              break;
-            case 3:
-              reciboObs.push({ Ref: "DESC:3", Descripcion: "Representante de consejo superior y/o académico" }); // Representante de consejo superior y/o académico
-              break;
-            case 4:
-              reciboObs.push({ Ref: "DESC:4", Descripcion: "Mejor saber- pro (ECAES)" }); // Mejor saber- pro (ECAES)
-              break;
-            case 5:
-              reciboObs.push({ Ref: "DESC:5", Descripcion: "Pariente de personal de planta UD" }); // Pariente de personal de planta UD
-              break;
-            case 6:
-              reciboObs.push({ Ref: "DESC:6", Descripcion: "Egresado UD" }); // Egresado UD
-              break;
-            case 7:
-              reciboObs.push({ Ref: "DESC:7", Descripcion: "Beca de secretaría de educación" }); // Beca de secretaría de educación
-              break;
-            default:
-              break;
+          if (row.Carne) {
+            reciboConceptos.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
           }
-        });
-        const recibo = {
-          Nombre: row.Nombre + row.PrimerApellido + row.SegundoApellido,
-          Tipo: "Estudiante",
-          CodigoEstudiante: row.Codigo,
-          Documento: row.Documento,
-          Periodo: this.selectedPeriodo.Nombre,
-          Dependencia: {
-            Tipo: "Proyecto Curricular",
-            Nombre: this.selectedProyecto.Nombre
-          },
-          Conceptos: reciboConceptos,
-          Observaciones: reciboObs,
-          Fecha1: "30/02/2023",
-          Fecha2: "30/02/2023",
-          Recargo: 1.5,
-          Comprobante: "0666"
-        };
-        this.recibos.push(recibo);
-        reciboConceptosC2.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota2 });
-        if (row.Seguro) {
-          reciboConceptosC2.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
-        }
-        if (row.Carne) {
-          reciboConceptosC2.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
-        }
-        if (row.Sistematizacion) {
-          reciboConceptosC2.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
-        }
-        const reciboC2 = {
-          Nombre: row.Nombre + row.PrimerApellido + row.SegundoApellido,
-          Tipo: "Estudiante",
-          CodigoEstudiante: row.Codigo,
-          Documento: row.Documento,
-          Periodo: this.selectedPeriodo.Nombre,
-          Dependencia: {
-            Tipo: "Proyecto Curricular",
-            Nombre: this.selectedProyecto.Nombre
-          },
-          Conceptos: reciboConceptosC2,
-          Observaciones: reciboObs,
-          Fecha1: "30/02/2023",
-          Fecha2: "30/02/2023",
-          Recargo: 1.5,
-          Comprobante: "0666"
-        };
-        this.recibos.push(reciboC2);
-        reciboConceptosC3.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota2 });
-        if (row.Seguro) {
-          reciboConceptosC3.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
-        }
-        if (row.Carne) {
-          reciboConceptosC3.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
-        }
-        if (row.Sistematizacion) {
-          reciboConceptosC3.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
-        }
-        const reciboC3 = {
-          Nombre: row.Nombre + row.PrimerApellido + row.SegundoApellido,
-          Tipo: "Estudiante",
-          CodigoEstudiante: row.Codigo,
-          Documento: row.Documento,
-          Periodo: this.selectedPeriodo.Nombre,
-          Dependencia: {
-            Tipo: "Proyecto Curricular",
-            Nombre: this.selectedProyecto.Nombre
-          },
-          Conceptos: reciboConceptosC3,
-          Observaciones: reciboObs,
-          Fecha1: "30/02/2023",
-          Fecha2: "30/02/2023",
-          Recargo: 1.5,
-          Comprobante: "0666"
-        };
-        this.recibos.push(reciboC3);
-      }
+          if (row.Sistematizacion) {
+            reciboConceptos.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
+          }
+          row.Descuentos.forEach((descuento: any) => {
+            switch (descuento) {
+              case 1:
+                reciboObs.push({ Ref: "DESC:1", Descripcion: "Certificado electoral" }); // Certificado electoral
+                break;
+              case 2:
+                reciboObs.push({ Ref: "DESC:2", Descripcion: "Certificado electoral" }); // Monitorias
+                break;
+              case 3:
+                reciboObs.push({ Ref: "DESC:3", Descripcion: "Representante de consejo superior y/o académico" }); // Representante de consejo superior y/o académico
+                break;
+              case 4:
+                reciboObs.push({ Ref: "DESC:4", Descripcion: "Mejor saber- pro (ECAES)" }); // Mejor saber- pro (ECAES)
+                break;
+              case 5:
+                reciboObs.push({ Ref: "DESC:5", Descripcion: "Pariente de personal de planta UD" }); // Pariente de personal de planta UD
+                break;
+              case 6:
+                reciboObs.push({ Ref: "DESC:6", Descripcion: "Egresado UD" }); // Egresado UD
+                break;
+              case 7:
+                reciboObs.push({ Ref: "DESC:7", Descripcion: "Beca de secretaría de educación" }); // Beca de secretaría de educación
+                break;
+              default:
+                break;
+            }
+          });
+          const recibo = {
+            Nombre: row.Nombre + " " + row.PrimerApellido + " " + row.SegundoApellido,
+            Tipo: "Estudiante",
+            CodigoEstudiante: row.Codigo,
+            Documento: row.Documento,
+            Periodo: this.selectedPeriodo.Nombre,
+            Dependencia: {
+              Tipo: "Proyecto Curricular",
+              Nombre: this.selectedProyecto.Nombre
+            },
+            Conceptos: reciboConceptos,
+            Observaciones: reciboObs,
+            Fecha1: "30/02/2023",
+            Fecha2: "30/02/2023",
+            Recargo: 1.5,
+            Comprobante: "0666",
+            Correo: row.Correo
+          };
+          this.recibos.push(recibo);
+          reciboConceptosC2.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota2 });
+          if (row.Seguro) {
+            reciboConceptosC2.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
+          }
+          if (row.Carne) {
+            reciboConceptosC2.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
+          }
+          if (row.Sistematizacion) {
+            reciboConceptosC2.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
+          }
+          const reciboC2 = {
+            Nombre: row.Nombre + " " + row.PrimerApellido + " " + row.SegundoApellido,
+            Tipo: "Estudiante",
+            CodigoEstudiante: row.Codigo,
+            Documento: row.Documento,
+            Periodo: this.selectedPeriodo.Nombre,
+            Dependencia: {
+              Tipo: "Proyecto Curricular",
+              Nombre: this.selectedProyecto.Nombre
+            },
+            Conceptos: reciboConceptosC2,
+            Observaciones: reciboObs,
+            Fecha1: "30/02/2023",
+            Fecha2: "30/02/2023",
+            Recargo: 1.5,
+            Comprobante: "0666",
+            Correo: row.Correo
+          };
+          this.recibos.push(reciboC2);
+        } else
+          if (row.cuotas == 3) {
+            const reciboConceptos = [];
+            const reciboConceptosC2 = [];
+            const reciboConceptosC3 = [];
+            const reciboObs: { Ref: any; Descripcion: string; }[] = [];
+            reciboConceptos.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota1 });
+            if (row.Seguro) {
+              reciboConceptos.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
+            }
+            if (row.Carne) {
+              reciboConceptos.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
+            }
+            if (row.Sistematizacion) {
+              reciboConceptos.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
+            }
+            row.Descuentos.forEach((descuento: any) => {
+              switch (descuento) {
+                case 1:
+                  reciboObs.push({ Ref: "DESC:1", Descripcion: "Certificado electoral" }); // Certificado electoral
+                  break;
+                case 2:
+                  reciboObs.push({ Ref: "DESC:2", Descripcion: "Certificado electoral" }); // Monitorias
+                  break;
+                case 3:
+                  reciboObs.push({ Ref: "DESC:3", Descripcion: "Representante de consejo superior y/o académico" }); // Representante de consejo superior y/o académico
+                  break;
+                case 4:
+                  reciboObs.push({ Ref: "DESC:4", Descripcion: "Mejor saber- pro (ECAES)" }); // Mejor saber- pro (ECAES)
+                  break;
+                case 5:
+                  reciboObs.push({ Ref: "DESC:5", Descripcion: "Pariente de personal de planta UD" }); // Pariente de personal de planta UD
+                  break;
+                case 6:
+                  reciboObs.push({ Ref: "DESC:6", Descripcion: "Egresado UD" }); // Egresado UD
+                  break;
+                case 7:
+                  reciboObs.push({ Ref: "DESC:7", Descripcion: "Beca de secretaría de educación" }); // Beca de secretaría de educación
+                  break;
+                default:
+                  break;
+              }
+            });
+            const recibo = {
+              Nombre: row.Nombre + " " + row.PrimerApellido + " " + row.SegundoApellido,
+              Tipo: "Estudiante",
+              CodigoEstudiante: row.Codigo,
+              Documento: row.Documento,
+              Periodo: this.selectedPeriodo.Nombre,
+              Dependencia: {
+                Tipo: "Proyecto Curricular",
+                Nombre: this.selectedProyecto.Nombre
+              },
+              Conceptos: reciboConceptos,
+              Observaciones: reciboObs,
+              Fecha1: "30/02/2023",
+              Fecha2: "30/02/2023",
+              Recargo: 1.5,
+              Comprobante: "0666",
+              Correo: row.Correo
+            };
+            this.recibos.push(recibo);
+            reciboConceptosC2.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota2 });
+            if (row.Seguro) {
+              reciboConceptosC2.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
+            }
+            if (row.Carne) {
+              reciboConceptosC2.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
+            }
+            if (row.Sistematizacion) {
+              reciboConceptosC2.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
+            }
+            const reciboC2 = {
+              Nombre: row.Nombre + " " + row.PrimerApellido + " " + row.SegundoApellido,
+              Tipo: "Estudiante",
+              CodigoEstudiante: row.Codigo,
+              Documento: row.Documento,
+              Periodo: this.selectedPeriodo.Nombre,
+              Dependencia: {
+                Tipo: "Proyecto Curricular",
+                Nombre: this.selectedProyecto.Nombre
+              },
+              Conceptos: reciboConceptosC2,
+              Observaciones: reciboObs,
+              Fecha1: "30/02/2023",
+              Fecha2: "30/02/2023",
+              Recargo: 1.5,
+              Comprobante: "0666",
+              Correo: row.Correo
+            };
+            this.recibos.push(reciboC2);
+            reciboConceptosC3.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota2 });
+            if (row.Seguro) {
+              reciboConceptosC3.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
+            }
+            if (row.Carne) {
+              reciboConceptosC3.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
+            }
+            if (row.Sistematizacion) {
+              reciboConceptosC3.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
+            }
+            const reciboC3 = {
+              Nombre: row.Nombre + " " + row.PrimerApellido + " " + row.SegundoApellido,
+              Tipo: "Estudiante",
+              CodigoEstudiante: row.Codigo,
+              Documento: row.Documento,
+              Periodo: this.selectedPeriodo.Nombre,
+              Dependencia: {
+                Tipo: "Proyecto Curricular",
+                Nombre: this.selectedProyecto.Nombre
+              },
+              Conceptos: reciboConceptosC3,
+              Observaciones: reciboObs,
+              Fecha1: "30/02/2023",
+              Fecha2: "30/02/2023",
+              Recargo: 1.5,
+              Comprobante: "0666",
+              Correo: row.Correo
+            };
+            this.recibos.push(reciboC3);
+          }
 
     });
     console.log(this.recibos)
+
     this.pdfs = [];
-    for (const recibo of this.recibos) {
-      this.inscripcionService.post('recibov2/', recibo)
-        .subscribe(
-          (response: any) => {
-            if (response.Success && response.Data) {
-              const byteArray = atob(response.Data);
-              const byteNumbers = new Array(byteArray.length);
-              for (let i = 0; i < byteArray.length; i++) {
-                byteNumbers[i] = byteArray.charCodeAt(i);
-              }
-              const file = new Blob([new Uint8Array(byteNumbers)], { type: 'application/pdf' });
-              this.pdfs.push(file);
+
+    const promesas = [];
+
+    /*Este for es para generar los recibos haciendo la petición al mid de 
+    inscripciones, pero al generar los pdfs cosa que solo se puede hacer en 
+    el cliente se tarda mucho, se bloquearon los botones de descargar y asignar 
+    para que se sepa cuando esta listo 
+    */
+
+    for (let i = 0; i < this.recibos.length; i++) {
+      const recibo = this.recibos[i];
+      const promesa = this.inscripcionService.post('recibov2/', recibo)
+        .toPromise()
+        .then((response: any) => {
+          if (response.success && response.data) {
+            //console.log('Recibo generado', response.success);
+            const byteArray = atob(response.data);
+            const byteNumbers = new Array(byteArray.length);
+            for (let j = 0; j < byteArray.length; j++) {
+              byteNumbers[j] = byteArray.charCodeAt(j);
             }
-          },
-          (error: HttpErrorResponse) => {
-            console.error(error);
+            const file = new Blob([new Uint8Array(byteNumbers)], { type: 'application/pdf' });
+            const fileName = `recibo_${recibo.CodigoEstudiante}_${this.selectedPeriodo.Id}_${this.selectedProyecto.Id}_${i}.pdf`;
+            const fileWithFileName = new File([file], fileName, { type: file.type });
+            this.pdfs.push(fileWithFileName);
+
+            // Esto es específicamente para las notificaciones por correo; toda la info del estudiante debería estar contenida acá
+            const notificacion = {
+              data: response.data,
+              fileName: fileName,
+              correo: recibo.Correo,
+              nombre: recibo.Nombre,
+              codigo: recibo.CodigoEstudiante
+            };
+            this.notificaciones.push(notificacion);
           }
-        );
+        })
+        .catch((error: HttpErrorResponse) => {
+          console.error(error);
+        });
+
+      promesas.push(promesa);
     }
-    
-  }
+
+    Promise.all(promesas)
+      .then(() => {
+        console.log('Recibos generados');
+        this.generados = true;
+      })
+      .catch((error) => {
+        console.error('Error generando recibos:', error);
+      });
+
+    }
+
+
 
   cuotasPorAdmitido() {
-    this.cuotasAdmitidos = []; 
+    this.cuotasAdmitidos = [];
     this.admitidos.forEach((row: any) => {
       const cuotas = Number(row.cuotas);
       this.cuotasAdmitidos.push(cuotas);
     });
   }
 
-  async agruparRecibosPorAdmitido(): Promise<Blob[]> {
-    const zipArray: Blob[] = [];
-    let currentIndex = 0;
+  agruparRecibosPorAdmitido() {
+    const recibosPorAdmitido: { [codigoEstudiante: string]: File[] } = {};
 
-    this.cuotasPorAdmitido();
-    console.log(this.cuotasAdmitidos);
-  
-    await Promise.all(this.cuotasAdmitidos.map(async (cuotas: number) => {
-      const pdfs = this.pdfs.slice(currentIndex, currentIndex + cuotas);
-      currentIndex += cuotas;
-  
-      const zip = new JSZip();
-      pdfs.forEach((pdf, index) => {
-        zip.file(`pdf_${index + 1}.pdf`, pdf);
-      });
-  
-      const content = await zip.generateAsync({ type: 'blob' });
-      zipArray.push(content);
-    }));
-  
-    return zipArray;
-  }
+    this.pdfs.forEach((pdf) => {
+      const nombreArchivo = pdf.name;
+      const codigoEstudiante = this.extraerCodigoEstudiante(nombreArchivo);
 
-  async descargarRecibos(): Promise<void> {
-    const zipArray = await this.agruparRecibosPorAdmitido();
-    const zip = new JSZip();
-    for (const [index, zipFile] of zipArray.entries()) {
-      zip.file(`recibos_${index + 1}.zip`, zipFile);
-    }
-    zip.generateAsync({ type: 'blob' }).then((content) => {
-      saveAs(content, 'recibos.zip');
+      if (codigoEstudiante) {
+        if (!recibosPorAdmitido[codigoEstudiante]) {
+          recibosPorAdmitido[codigoEstudiante] = [];
+        }
+        recibosPorAdmitido[codigoEstudiante].push(pdf);
+      }
     });
+
+    console.log('Recibos por admitido:', recibosPorAdmitido);
+    return recibosPorAdmitido;
   }
+
+  extraerCodigoEstudiante(nombreArchivo: string): string | null {
+    const partesNombre = nombreArchivo.split('_');
+    if (partesNombre.length >= 2) {
+      return partesNombre[1];
+    }
+    return null;
+  }
+
+  notificarGeneracionRecibos() {
+    console.log('Notificando generación de recibos...');
+    console.log('Notificaciones:', this.notificaciones);
+
+    const today = new Date();
+    const dia = String(today.getDate()).padStart(2, '0');
+    const mes = String(today.getMonth() + 1).padStart(2, '0');
+    const anio = today.getFullYear();
+
+    const notificacionesAgrupadas: { [codigo: string]: any[] } = {};
+
+    this.notificaciones.forEach((notificacion) => {
+        const codigo = notificacion.codigo; 
+        if (!notificacionesAgrupadas[codigo]) {
+            notificacionesAgrupadas[codigo] = [];
+        }
+        notificacionesAgrupadas[codigo].push(notificacion);
+    });
+
+    const correos = Object.keys(notificacionesAgrupadas).map(codigo => {
+        const notificaciones = notificacionesAgrupadas[codigo];
+        const primeraNotificacion = notificaciones[0];
+
+        return {
+            Source: "notificaciones_sga@udistrital.edu.co",
+            Template: "TEST_SGA_generacion-recibo",
+            Destinations: [
+                {
+                    Destination: {
+                        BccAddresses: [],
+                        CcAddresses: [],
+                        ToAddresses: [
+                            primeraNotificacion.correo
+                        ]
+                    },
+                    ReplacementTemplateData: {
+                        dia: dia,
+                        mes: mes,
+                        anio: anio,
+                        nombre: primeraNotificacion.nombre,
+                        periodo: this.selectedPeriodo.Nombre
+                    },
+                    Attachments: notificaciones.map(notif => ({
+                        ContentType: "application/pdf",
+                        FileName: notif.fileName,
+                        Base64File: notif.data
+                    }))
+                }
+            ],
+            DefaultTemplateData: {
+                dia: dia,
+                mes: mes,
+                anio: anio,
+                nombre: primeraNotificacion.nombre,
+                periodo: this.selectedPeriodo.Nombre
+            }
+        };
+    });
+
+    correos.forEach((correo) => {
+        this.notificacionService.post('email/enviar_templated_email/', correo)
+            .subscribe(
+                (response: any) => {
+                    if (response.Success) {
+                        console.log('Notificación enviada:', response.Success); 
+                    }
+                },
+                (error: HttpErrorResponse) => {
+                    console.error('Error al enviar la notificación:', error);
+                }
+            );
+    });
+}
+
 
   descargarPDFs(): void {
+
+    console.log('Descargando PDFs...' + this.pdfs.length)
     const zip = new JSZip();
-    this.pdfs.forEach((pdf, index) => {
-      zip.file(`pdf_${index + 1}.pdf`, pdf);
+    this.pdfs.forEach((pdf: File) => {
+      zip.file(pdf.name, pdf);
     });
 
     zip.generateAsync({ type: 'blob' }).then((content) => {
@@ -755,9 +860,9 @@ export class LiquidacionRecibosComponent {
     console.log(row.cuotas);
     if (row.cuotas == 1) {
       if (pdf) {
-      this.downloadPDF(pdf, `recibo_${row.numeroFila + 1}.pdf`);
+        this.downloadPDF(pdf, `recibo_${row.numeroFila + 1}.pdf`);
       } else {
-      console.log('No se encontró el PDF correspondiente a la fila');
+        console.log('No se encontró el PDF correspondiente a la fila');
       }
     }
   }
@@ -770,11 +875,9 @@ export class LiquidacionRecibosComponent {
     link.click();
   }
   eliminar = (data: any) => {
-    console.log('Eliminando...');
   }
 
   editar = (data: any) => {
-    console.log('Editando...');
   }
 
 

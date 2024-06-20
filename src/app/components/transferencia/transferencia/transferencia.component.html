@@ -4,42 +4,82 @@
     </mat-card-header>
     <mat-card-content>
 
-        <fieldset [ngClass]="{'fieldseter':true} " *ngIf="listadoSolicitudes">
+        <fieldset [ngClass]="{'fieldseter':true} ">
             <legend> {{ 'inscripcion.listado_solicitudes' | translate }} </legend>
             <!--<ng2-smart-table *ngIf="listadoSolicitudes" [settings]="settings" [source]="dataSource">
             </ng2-smart-table>-->
 
+            <mat-card class="card">
+              <mat-card-header class="d-block">
+                <!-- select periodo -->
+                <mat-form-field style="width: 100%;">
+                  <mat-label>{{ 'calendario.periodo' | translate }}:</mat-label>
+                  <mat-select [(ngModel)]="periodo" (selectionChange)="selectPeriodo()">
+                    <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                    <mat-option *ngFor="let item of periodos" [value]="item">
+                      {{item.Nombre}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+    
+                <!-- select Nivel -->
+                <mat-form-field style="width: 100%;">
+                  <mat-label>{{ 'GLOBAL.nivel' | translate }}:</mat-label>
+                  <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel" (selectionChange)="loadProyectos()">
+                    <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                    <mat-option *ngFor="let item of niveles" [value]="item.Id">
+                      {{item.Nombre}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="CampoControl.hasError('required')">{{ 'admision.erro_selec_nivel' | translate
+                    }}</mat-error>
+                </mat-form-field>
+                <!-- select proyectos -->
+                <mat-form-field style="width: 100%;">
+                  <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}:</mat-label>
+                  <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_selected"
+                    (selectionChange)="cargarSolicitudesSegunProyecto($event.value)" [disabled]='selectprograma'>
+                    <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                    <mat-option *ngFor="let item of proyectos" [value]="item" [disabled]="!item.Id">
+                      {{item.Nombre}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="Campo1Control.hasError('required')">{{ 'cupos.erro_selec_proyecto' | translate
+                    }}</mat-error>
+                </mat-form-field>
+              </mat-card-header>
+            </mat-card>
             <div class="mat-elevation-z8" *ngIf="listadoSolicitudes">
                 <table mat-table [dataSource]="dataSource" matSort>
                     
                     <ng-container matColumnDef="#recibo">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> {{'GLOBAL.nombre' |
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> {{'inscripcion.recibo' |
                             translate}} </th>
                         <td mat-cell *matCellDef="let row"> {{row.Recibo}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="concepto">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 50%;">
-                            {{'GLOBAL.descripcion' |
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 30%;">
+                            {{'inscripcion.concepto' |
                             translate}} </th>
                         <td mat-cell *matCellDef="let row"> {{row.Concepto}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="programa">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
-                            {{'admision.asistencia' | translate}} </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40%;">
+                            {{'inscripcion.programa' | translate}} </th>
 
                         <td mat-cell *matCellDef="let row"> {{row.Programa}} </td>
                     </ng-container>
                     <ng-container matColumnDef="fechageneracion">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
-                            {{'admision.asistencia' | translate}} </th>
+                            {{'inscripcion.fecha_generacion' | translate}} </th>
 
                         <td mat-cell *matCellDef="let row"> {{row.FechaGeneracion}} </td>
                     </ng-container>
                     <ng-container matColumnDef="estado">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
-                            {{'admision.asistencia' | translate}} </th>
+                            {{'inscripcion.estado' | translate}} </th>
 
                         <td mat-cell *matCellDef="let row"> {{row.Estado}} </td>
                     </ng-container>
@@ -75,23 +115,5 @@
                 </button>
             </div>
         </fieldset>
-
-        <ngx-crud-info-persona *ngIf="!listadoSolicitudes" [info_persona_id]="uid" (success)="loadInfoPersona()">
-        </ngx-crud-info-persona>
-        <ngx-dinamicform *ngIf="!listadoSolicitudes" [modeloData]="dataTransferencia" [normalform]="formTransferencia"
-            (interlaced)="seleccion($event)" (result)="validarForm($event)">
-        </ngx-dinamicform>
-
-        <div class="container-button-column" *ngIf="!listadoSolicitudes">
-            <button mat-button type="button" (click)="clean(); listadoSolicitudes = true">
-                {{ 'GLOBAL.cancelar' | translate }}
-            </button>
-            <br><br><br>
-            <button class="btn-barcode btn btn-light" (click)="generarRecibo()" *ngIf="recibo">
-                {{ 'derechos_pecuniarios.generar_recibo' | translate }}
-                <i class="fa fa-barcode fa-5x"></i>
-            </button>
-
-        </div>
     </mat-card-content>
 </mat-card>

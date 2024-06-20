@@ -50,7 +50,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   inscripcion_id!: number;
-  info_persona_id!: number;
+  info_persona_id!: string | null;
   info_ente_id!: number;
   estado_inscripcion!: number;
   info_info_persona: any;
@@ -120,6 +120,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   widhtColumns: any
   criterio = [];
   cantidad_aspirantes: number = 0;
+  selectMultipleNivel: boolean = false;
 
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
@@ -131,8 +132,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private parametrosService: ParametrosService,
     private projectService: ProyectoAcademicoService,
     private evaluacionService: EvaluacionInscripcionService,
-    private tercerosService: TercerosService,
-    private sgaMidService: SgaMidService,
     private sgaMidAdmisiones: SgaAdmisionesMid,
     private popUpManager: PopUpManager,
 
@@ -157,7 +156,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   async loadData() {
     try {
-      this.info_persona_id = this.userService.getPersonaId();
+      this.info_persona_id = this.userService.getId();
       await this.cargarPeriodo();
       await this.loadLevel();
     } catch (error: any) {
@@ -249,6 +248,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
     }
   }
 
+  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+    const idNivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado")!.Id;
+    this.selectMultipleNivel = (idNivelDoctorado === nivelSeleccionado);
+    this.loadProyectos();
+  }
 
   loadProyectos() {
     this.notas = false;
@@ -356,8 +360,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
       this.columnas = titles
       this.widhtColumns = width
-
-
       this.dataSourceColumn = (titles)
       this.dataSourceColumn.push('acciones')
       resolve(this.settings)
@@ -435,7 +437,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
       } else if (numero === true) {
         this.popUpManager.showToast(this.translate.instant('admision.numero'));
       } else {
-
         this.sgaMidAdmisiones.post('admision/evaluacion', Evaluacion).subscribe(
           (response: any) => {
             if (response.status === 200) {
@@ -605,6 +606,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
                     }
                   }
                 })
+                //  [this, this.dataSource.load(this.Aspirantes)]
+                const valor = Object.keys(this.Aspirantes[0]);
+                const arreglo = valor.filter(elemento => elemento !== "Id");
+                this.datavalor = arreglo
+                this.dataSource = new MatTableDataSource(this.Aspirantes)
+
               })
 
               
@@ -673,7 +680,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
   loadColumn(IdCriterio: any) {
     this.nameColumns = []
     return new Promise((resolve, reject) => {
-
       this.evaluacionService.get('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0').subscribe(
         (response: any) => {
 

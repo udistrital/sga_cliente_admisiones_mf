@@ -1,3 +1,4 @@
 node_modules
 .angular
 npm-debug.log
+dist

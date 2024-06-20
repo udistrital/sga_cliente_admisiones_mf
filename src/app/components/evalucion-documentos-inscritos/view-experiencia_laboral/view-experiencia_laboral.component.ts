@@ -10,6 +10,7 @@ import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { ZipManagerService } from 'src/utils/zip-manager.service';
 import { DocumentoService } from 'src/app/services/documento.service';
 import { PopUpManager } from '../../../managers/popUpManager';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 
 @Component({
   selector: 'ngx-view-experiencia-laboral',
@@ -58,7 +59,7 @@ export class ViewExperienciaLaboralComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     private sgaMidService: SgaMidService,
-  
+    private inscripcionesMidService: InscripcionMidService,
     private newNuxeoService: NewNuxeoService,
     private documentoService: DocumentoService,
     private sanitization: DomSanitizer,
@@ -84,7 +85,7 @@ export class ViewExperienciaLaboralComponent implements OnInit {
 
   loadData(): void {
     this.info_experiencia_laboral = <any>[];
-    this.sgaMidService.get('experiencia_laboral/by_tercero?Id=' + this.persona_id).subscribe(
+    this.inscripcionesMidService.get('experiencia-laboral/tercero?Id=' + this.persona_id).subscribe(
       (response: any) => {
         const soportes = [];
         let soportes1 = "";
