@@ -104,4 +104,3 @@ export const environment = {
   NOTIFICACION_MID: 'http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/',
 
 };
-
