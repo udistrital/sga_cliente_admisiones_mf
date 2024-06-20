@@ -60,10 +60,10 @@ const routes: Routes = [
     component: AdministracionCuentaBancariaComponent
   },
   {
-    path:"evaluacion-aspirantes", 
+   path:"evaluacion-aspirantes", 
     component: EvaluacionAspirantesComponent
   },
-  {
+    {
     path:"evaluacion-aspirantes-pregrado", 
     component: EvalucionAspirantePregradoComponent
   },
@@ -103,10 +103,10 @@ const routes: Routes = [
     path:"liquidacion-historico", 
     component: LiquidacionHistoricoComponent,
   },
-  // {
-  //   path:"soporte-configuracion", 
-  //   component: SoporteConfiguracionComponent ,
-  // },
+   {
+     path:"soporte-configuracion", 
+     component: SoporteConfiguracionComponent ,
+   },
     {path:"reportes-inscritos", 
     component: RepotesInscripcionesComponent,
   },

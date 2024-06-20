@@ -83,7 +83,7 @@ export const environment = {
   // CIDC_SERVICE: 'http://200.69.103.88:3114/api/v1/',
   CIDC_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/siciud_crud/v1/',
   // EVALUACION_INSCRIPCION_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/evaluacion_inscripcion_crud/v2/',
-  EVALUACION_INSCRIPCION_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/evaluacion_inscripcion_crud/v2/',
+  EVALUACION_INSCRIPCION_SERVICE: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8118/v2/',
   // EVALUACION_INSCRIPCION_SERVICE: 'http://localhost:8080/v1/',
   //PARAMETROS_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8510/v1/',
   PARAMETROS_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/parametros/v1/',
@@ -97,11 +97,10 @@ export const environment = {
   //PLAN_ESTUDIOS_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8537/v1/',
   //PLAN_ESTUDIOS_SERVICE: 'http://localhost:8925/v1/',
 
-  SGA_INSCRIPCION_MID_SERVICE: 'http://localhost:8095/v1/',
-  // SGA_INSCRIPCION_MID_SERVICE: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8543/v1/',
+  //SGA_INSCRIPCION_MID_SERVICE: 'http://localhost:8095/v1/',
+  SGA_INSCRIPCION_MID_SERVICE: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8543/v1/',
   // SGA_TERCERO_MID_SERVICE: 'http://localhost:8096/v1/',
   SGA_TERCERO_MID_SERVICE: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8123/v1/',
   NOTIFICACION_MID: 'http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/',
 
 };
-
