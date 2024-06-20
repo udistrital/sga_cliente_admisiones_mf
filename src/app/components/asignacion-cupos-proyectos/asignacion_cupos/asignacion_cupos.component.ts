@@ -156,8 +156,6 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   }
 
   filtrarProyecto(proyecto: any) {
-    console.log(proyecto)
-    console.log(this.selectednivel)
     if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
       return true
     }
@@ -189,7 +187,6 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
                 this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;
@@ -234,11 +231,9 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
   validarNvel() {
     this.esPosgrado = false;
-    console.log(this.selectednivel)
     this.projectService.get('nivel_formacion?query=Id:' + Number(this.selectednivel)).subscribe(
       // (response: NivelFormacion[]) => {
       (response: any) => {
-        console.log(response)
         this.nivelSelect = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null)
         if (this.nivelSelect[0].Nombre === 'Posgrado') {
           this.esPosgrado = true;

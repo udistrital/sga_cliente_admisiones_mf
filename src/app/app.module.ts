@@ -14,7 +14,6 @@ import { SolicitudTransferenciaComponent } from './components/transferencia/soli
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { DialogoDocumentosTransferenciasComponent } from './components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
-import { CrudInfoPersonaComponent } from './components/transferencia/crud-info_persona/crud-info_persona.component';
 import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -96,11 +95,14 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InscripcionMidService } from './services/sga_inscripcion_mid.service';
+import { TerceroMidService } from './services/sga_tercero_mid.service';
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
+import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -130,7 +132,6 @@ export function createTranslateLoader(http: HttpClient) {
     DinamicformComponent,
     ViewIdiomasComponent,
     TransferenciaComponent,
-    CrudInfoPersonaComponent,
     CustomizeButtonComponent,
     AsignacionCuposComponent,
     ListadoHistoricoComponent,
@@ -177,7 +178,8 @@ export function createTranslateLoader(http: HttpClient) {
     CargueSnpComponent,
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
-    CorreoInstitucionalComponent
+    CorreoInstitucionalComponent,
+    PreinscripcionProyectosCurricularesComponent
   ],
   imports: [
     CodificacionModule,
@@ -225,6 +227,8 @@ export function createTranslateLoader(http: HttpClient) {
     MatSnackBar,
     ListService,
     SgaMidService,
+    TerceroMidService,
+    InscripcionMidService,
     RequestManager,
     SgaAdmisionesMid,
     DocumentoService,

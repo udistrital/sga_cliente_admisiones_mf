@@ -12,6 +12,7 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { OikosService } from 'src/app/services/oikos.service';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 @Component({
   selector: 'def-suite-inscrip-programa',
@@ -48,8 +49,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
     private inscripcionService: InscripcionService,
     private evaluacionInscripcionService: EvaluacionInscripcionService,
     private userService: UserService,
-    private sgaMidService: SgaMidService,
-    private sgaMidAdmisiones: SgaMidService,
+    private sgaMidAdmisiones: SgaAdmisionesMid,
     private autenticationService: ImplicitAutenticationService,
     private oikosService: OikosService,
   ) {

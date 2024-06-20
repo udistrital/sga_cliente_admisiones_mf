@@ -62,7 +62,6 @@ export class AdministradorCriteriosComponent implements OnInit {
             },
           );
         });
-        console.log(this.criterios)
         this.criterioSource = new MatTableDataSource(this.criterios)
 
         setTimeout(() => {
@@ -93,7 +92,6 @@ export class AdministradorCriteriosComponent implements OnInit {
     this.dialogConfig.data = {};
     const criterioDialog = this.dialog.open(DialogoCriteriosComponent, this.dialogConfig);
     criterioDialog.afterClosed().subscribe((criterio: Criterio) => {
-      console.log("Criterioooooooooooooooooo",criterio)
       if (criterio !== undefined) {
         this.admisiones.post('requisito', criterio).subscribe(
           (response: any) => {
@@ -102,7 +100,6 @@ export class AdministradorCriteriosComponent implements OnInit {
                 subcriterio.RequisitoPadreId = { Id: response.Id };
                 this.admisiones.post('requisito', subcriterio).subscribe(
                   (response: any) => {
-                    console.log("AAAAAAAAAAAAAAAAAAAAAA",response)
                   },
                   (error:any) => {
                     this.popUpManager.showErrorToast(this.translate.instant('admision.error_registro_criterio'));
@@ -110,12 +107,10 @@ export class AdministradorCriteriosComponent implements OnInit {
                 );
               });
             }
-            console.log("AAAAAAAAAAAAAAAAAAAAAA",response)
             const newCriterio: Criterio = <Criterio>response;
             newCriterio.Subcriterios = [];
             this.criterios.push(newCriterio);
             // this.criterioSource.load(this.criterios);
-            console.log(this.criterios)
             this.criterioSource = new MatTableDataSource(this.criterios)
             this.popUpManager.showSuccessAlert(this.translate.instant('admision.criterio_exito'));
           },

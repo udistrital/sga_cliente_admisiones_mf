@@ -81,7 +81,6 @@ export class ListadoHistoricoComponent {
   ];
 
   descargar = (data: any) => {
-    console.log('Descargando...');
   }
 
 }

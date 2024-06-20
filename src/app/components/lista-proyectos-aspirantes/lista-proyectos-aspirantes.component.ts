@@ -1,9 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, QueryList, ViewChildren } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { ParametrosService } from 'src/app/services/parametros.service';
@@ -15,9 +16,11 @@ import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
   templateUrl: './lista-proyectos-aspirantes.component.html',
   styleUrls: ['./lista-proyectos-aspirantes.component.scss']
 })
-export class ListaProyectosAspirantesComponent {
+export class ListaProyectosAspirantesComponent implements OnDestroy{
 
   @ViewChildren(MatPaginator) paginators!: QueryList<MatPaginator>;
+
+  subscripcion: Subscription = new Subscription()
 
   cuposProyecto: any;
   dataSource: any
@@ -47,7 +50,7 @@ export class ListaProyectosAspirantesComponent {
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.subscripcion.add(this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
@@ -62,26 +65,26 @@ export class ListaProyectosAspirantesComponent {
         },
           (error: HttpErrorResponse) => {
             reject(error);
-          });
+          }))
     });
   }
 
   cargarNiveles() {
-    this.projectService.get('nivel_formacion?limit=0').subscribe(
+    this.subscripcion.add(this.projectService.get('nivel_formacion?limit=0').subscribe(
       (response: any) => {
         this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.Nombre === 'Posgrado')
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
       },
-    );
+    ))
   }
 
   cargarProyectos() {
     const periodo = this.periodo.Id
     const nivel = this.nivel
 
-    this.admisionesMid.get(
+    this.subscripcion.add(this.admisionesMid.get(
       "admision/aspirantes-de-proyectos-activos?id-nivel=" + nivel + "&id-periodo=" + periodo + "&tipo-lista=3")
       .subscribe((res: any) => {
         if (res.Success) {
@@ -91,7 +94,7 @@ export class ListaProyectosAspirantesComponent {
           this.proyectosActivosConListaAspirantes = null
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
         }
-      })
+      }))
   }
 
   cargarInformacionEnPanelesExpansivos() {
@@ -159,7 +162,7 @@ export class ListaProyectosAspirantesComponent {
     const proyectoId = proyecto.ProyectoId
     const periodoId = this.periodo.Id
 
-    this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
+    this.subscripcion.add(this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
       (response: any) => {
         if (response !== null && response !== undefined && response[0].Id !== undefined) {
           proyecto.cuposProyecto = response[0].CuposHabilitados;
@@ -170,7 +173,7 @@ export class ListaProyectosAspirantesComponent {
       error => {
         this.popUpManager.showErrorAlert(this.translate.instant('cupos.sin_cupos_periodo'));
       },
-    );
+    ))
   }
 
   cambiarPeriodo() {
@@ -181,5 +184,9 @@ export class ListaProyectosAspirantesComponent {
   buscarTermino(event: Event, datos: any) {
     const filterValue = (event.target as HTMLInputElement).value;
     datos.filter = filterValue.trim().toLowerCase();
+  }
+
+  ngOnDestroy(): void {
+    this.subscripcion.unsubscribe()
   }
 } 

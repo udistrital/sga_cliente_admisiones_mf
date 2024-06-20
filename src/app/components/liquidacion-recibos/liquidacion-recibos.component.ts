@@ -168,7 +168,6 @@ export class LiquidacionRecibosComponent {
     if (validatorProyectoControl) {
       validatorProyectoControl.valueChanges.subscribe(value => {
         this.selectedProyecto = value;
-        console.log('ID seleccionado:', this.selectedProyecto.Id);
       });
     } else {
       console.error('El control "validatorProyecto" es nulo.');
@@ -176,7 +175,6 @@ export class LiquidacionRecibosComponent {
     if (validatorPeridoControl) {
       validatorPeridoControl.valueChanges.subscribe(value => {
         this.selectedPeriodo = value;
-        console.log('ID seleccionado:', this.selectedPeriodo.Id);
       });
     } else {
       console.error('El control "validatorProyecto" es nulo.');
@@ -209,10 +207,8 @@ export class LiquidacionRecibosComponent {
               this.proyectos = <any[]>response.filter(
                 (proyecto: any) => this.filtrarProyecto(proyecto),
               );
-              console.log("proyectos", this.proyectos)
             } else {
               const id_tercero = this.userService.getPersonaId();
-              console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
               this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                 (respDependencia: any) => {
                   const dependencias = <Number[]>respDependencia.Data.DependenciaId;
@@ -238,8 +234,6 @@ export class LiquidacionRecibosComponent {
     );
   }
   filtrarProyecto(proyecto: any) {
-    console.log(proyecto)
-    console.log(this.selectednivel)
     if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
       return true
     }
@@ -269,7 +263,6 @@ export class LiquidacionRecibosComponent {
               this.periodos.push(element);
             });
           }
-          console.log("periodos", this.periodos);
         },
           (error: HttpErrorResponse) => {
             reject(error);
@@ -285,15 +278,13 @@ export class LiquidacionRecibosComponent {
         (response: { Data: any; }) => {
           console.log('Datos cargados:', response);
           const data = response.Data;
-          console.log('Data:', data);
           this.admitidos = data;
-          console.log('Data:', this.admitidos);
           this.admitidos.forEach(row => {
             row.Seguro = true;
             row.Carne = true;
             row.Sistematizacion = true;
             row.numeroFila = this.admitidos.indexOf(row);
-            row.Correo = "pruebas@udistrital.edu.co";
+            row.Correo = this.asignarCorreo(row.User);
           });
           resolve(data);
         },
@@ -303,6 +294,19 @@ export class LiquidacionRecibosComponent {
         }
       );
     });
+  }
+
+  validarCorreo(correo: string) {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(correo);
+  }
+
+  asignarCorreo(correo: string) {
+    if (this.validarCorreo(correo)) {
+      return correo;
+    } else {
+      return "correo@correo.com";
+    }
   }
 
   toggleDescuento(event: MatSelectChange, row: any, descuento: number) {
@@ -394,14 +398,11 @@ export class LiquidacionRecibosComponent {
       };
       this.liquidaciones.push(liquidacion);
     });
-    console.log(this.liquidaciones)
     for (const liquidacion of this.liquidaciones) {
-      console.log(liquidacion)
       this.liquidacionService.post('liquidacion/', liquidacion)
         .subscribe(
           (res: any) => {
             const r = <any>res;
-            console.log(res);
           },
           (error: HttpErrorResponse) => {
           }
@@ -467,7 +468,8 @@ export class LiquidacionRecibosComponent {
           Fecha2: "30/02/2023",
           Recargo: 1.5,
           Comprobante: "0666",
-          Correo: row.Correo
+          Correo: row.Correo,
+          CorreosAlt: row.Correos
         };
         this.recibos.push(recibo);
       } else
@@ -528,7 +530,8 @@ export class LiquidacionRecibosComponent {
             Fecha2: "30/02/2023",
             Recargo: 1.5,
             Comprobante: "0666",
-            Correo: row.Correo
+            Correo: row.Correo,
+            CorreosAlt: row.Correos
           };
           this.recibos.push(recibo);
           reciboConceptosC2.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota2 });
@@ -557,7 +560,8 @@ export class LiquidacionRecibosComponent {
             Fecha2: "30/02/2023",
             Recargo: 1.5,
             Comprobante: "0666",
-            Correo: row.Correo
+            Correo: row.Correo,
+            CorreosAlt: row.Correos
           };
           this.recibos.push(reciboC2);
         } else
@@ -619,7 +623,8 @@ export class LiquidacionRecibosComponent {
               Fecha2: "30/02/2023",
               Recargo: 1.5,
               Comprobante: "0666",
-              Correo: row.Correo
+              Correo: row.Correo,
+              CorreosAlt: row.Correos
             };
             this.recibos.push(recibo);
             reciboConceptosC2.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota2 });
@@ -648,7 +653,8 @@ export class LiquidacionRecibosComponent {
               Fecha2: "30/02/2023",
               Recargo: 1.5,
               Comprobante: "0666",
-              Correo: row.Correo
+              Correo: row.Correo,
+              CorreosAlt: row.Correos
             };
             this.recibos.push(reciboC2);
             reciboConceptosC3.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.valorCuota2 });
@@ -677,7 +683,8 @@ export class LiquidacionRecibosComponent {
               Fecha2: "30/02/2023",
               Recargo: 1.5,
               Comprobante: "0666",
-              Correo: row.Correo
+              Correo: row.Correo,
+              CorreosAlt: row.Correos
             };
             this.recibos.push(reciboC3);
           }
@@ -717,6 +724,7 @@ export class LiquidacionRecibosComponent {
               data: response.data,
               fileName: fileName,
               correo: recibo.Correo,
+              correosAlt: recibo.CorreosAlt,
               nombre: recibo.Nombre,
               codigo: recibo.CodigoEstudiante
             };
@@ -740,6 +748,8 @@ export class LiquidacionRecibosComponent {
       });
 
   }
+
+
 
   cuotasPorAdmitido() {
     this.cuotasAdmitidos = [];
@@ -788,67 +798,67 @@ export class LiquidacionRecibosComponent {
     const notificacionesAgrupadas: { [codigo: string]: any[] } = {};
 
     this.notificaciones.forEach((notificacion) => {
-        const codigo = notificacion.codigo; 
-        if (!notificacionesAgrupadas[codigo]) {
-            notificacionesAgrupadas[codigo] = [];
-        }
-        notificacionesAgrupadas[codigo].push(notificacion);
+      const codigo = notificacion.codigo;
+      if (!notificacionesAgrupadas[codigo]) {
+        notificacionesAgrupadas[codigo] = [];
+      }
+      notificacionesAgrupadas[codigo].push(notificacion);
     });
 
     const correos = Object.keys(notificacionesAgrupadas).map(codigo => {
-        const notificaciones = notificacionesAgrupadas[codigo];
-        const primeraNotificacion = notificaciones[0];
+      const notificaciones = notificacionesAgrupadas[codigo];
+      const primeraNotificacion = notificaciones[0];
 
-        return {
-            Source: "notificaciones_sga@udistrital.edu.co",
-            Template: "TEST_SGA_generacion-recibo",
-            Destinations: [
-                {
-                    Destination: {
-                        BccAddresses: [],
-                        CcAddresses: [],
-                        ToAddresses: [
-                            primeraNotificacion.correo
-                        ]
-                    },
-                    ReplacementTemplateData: {
-                        dia: dia,
-                        mes: mes,
-                        anio: anio,
-                        nombre: primeraNotificacion.nombre,
-                        periodo: this.selectedPeriodo.Nombre
-                    },
-                    Attachments: notificaciones.map(notif => ({
-                        ContentType: "application/pdf",
-                        FileName: notif.fileName,
-                        Base64File: notif.data
-                    }))
-                }
-            ],
-            DefaultTemplateData: {
-                dia: dia,
-                mes: mes,
-                anio: anio,
-                nombre: primeraNotificacion.nombre,
-                periodo: this.selectedPeriodo.Nombre
-            }
-        };
+      return {
+        Source: "notificaciones_sga@udistrital.edu.co",
+        Template: "TEST_SGA_generacion-recibo",
+        Destinations: [
+          {
+            Destination: {
+              BccAddresses: [],//notificacion.correosAlt,
+              CcAddresses: [],
+              ToAddresses: [
+                primeraNotificacion.correo
+              ]
+            },
+            ReplacementTemplateData: {
+              dia: dia,
+              mes: mes,
+              anio: anio,
+              nombre: primeraNotificacion.nombre,
+              periodo: this.selectedPeriodo.Nombre
+            },
+            Attachments: notificaciones.map(notif => ({
+              ContentType: "application/pdf",
+              FileName: notif.fileName,
+              Base64File: notif.data
+            }))
+          }
+        ],
+        DefaultTemplateData: {
+          dia: dia,
+          mes: mes,
+          anio: anio,
+          nombre: primeraNotificacion.nombre,
+          periodo: this.selectedPeriodo.Nombre
+        }
+      };
     });
 
     correos.forEach((correo) => {
-        this.notificacionService.post('email/enviar_templated_email/', correo)
-            .subscribe(
-                (response: any) => {
-                    if (response.Success) {
-                        console.log('Notificación enviada:', response.Success); 
-                    }
-                },
-                (error: HttpErrorResponse) => {
-                    console.error('Error al enviar la notificación:', error);
-                }
-            );
+      this.notificacionService.post('email/enviar_templated_email/', correo)
+        .subscribe(
+          (response: any) => {
+            if (response.Success) {
+              console.log('Notificación enviada:', response.Success);
+            }
+          },
+          (error: HttpErrorResponse) => {
+            console.error('Error al enviar la notificación:', error);
+          }
+        );
     });
-}
+  }
 
 
   descargarPDFs(): void {
@@ -885,11 +895,9 @@ export class LiquidacionRecibosComponent {
     link.click();
   }
   eliminar = (data: any) => {
-    console.log('Eliminando...');
   }
 
   editar = (data: any) => {
-    console.log('Editando...');
   }
 
 

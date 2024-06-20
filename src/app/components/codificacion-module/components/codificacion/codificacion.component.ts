@@ -293,7 +293,6 @@ export class CodificacionComponent {
   }
 
   filtrarPeriodosPorAno(ano: number) {
-    console.log(ano)
     this.periodosFiltrados = this.periodosAcademicos.filter(periodo => periodo.Year === ano);
   }
 
