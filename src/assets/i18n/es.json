@@ -2699,14 +2699,43 @@
         "criterio_consultar": "Criterio a Consultar",
         "erro_selec_nivel": "Por favor seleccione un nivel",
         "tooltip_eliminar": "Eliminar",
-        "criterios": "Criterios",
-        "criterio": "Criterio",
-        "revision": "Revisión documental",
-        "puntaje": "Calcular el puntaje de los aspirantes",
-        "listado": "Listado inscritos",
-        "evaluar_criterio": "Evaluar Criterio",
-        "revision_curricular": "Enviar para revisión al proyecto curricular",
-        "descargar_pdf": "Descargar listado (PDF/Excel)",
-        "definir_admitidos": "Definir listados de admitidos"
-    }
+        "subcriterios": "Subcriterios",
+        "subcriterio": "Subcriterio"
+      },
+
+      "preinscripcion-proyectos-curriculares": {
+        "titulo": "Informacion Personal",
+        "primer_nombre": "Primer nombre",
+        "segundo_nombre": "Segundo nombre",
+        "primer_apellido": "Primer apellido",
+        "segundo_apellido": "Primer apellido",
+        "tipo_documento": "Tipo de documento",
+        "numero_documento": "Número de documento",
+        "fecha_expedicion": "Fecha de expedición",
+        "fecha_nacimiento": "Fecha de nacimiento",
+        "sexo":"Sexo",
+        "correo_eletronico": "Correo electrónico",
+        "telefono": "Teléfono",
+        "listado_preinscripciones": "Listado de inscripciones",
+        "recibo": "Recibo",
+        "inscripcion": "Inscripción",
+        "nivel": "Nivel",
+        "tipo_inscripcion": "Tipo de inscripción",
+        "estado_inscripcion": "Estado de inscripción",
+        "fecha_generacion": "Fecha de generación",
+        "estado_recibo": "Estado de recibo",
+        "descargar": "Descargar",
+        "opcion": "Opción",
+        "resultado": "Resultado",
+        "informacion_detalle_preinscripcion": "Información detallada de la inscripción",
+        "credencial": "Credencial",
+        "proyecto": "Proyecto",
+        "puntaje": "Puntaje",
+        "estado": "Estado",
+        "pin": "Recibos denerados (PIN)",
+        "alerta": "Aspirante, recuerde que solo podra generar hasta 3 recibos en estado pendiente de pago, si desea generar otra inscripcion a otro proyecto debera pagar al menos uno de los recibos generados",
+        "periodo_inscrito": "Periodo inscrito"
+
+        
+      }
 }
