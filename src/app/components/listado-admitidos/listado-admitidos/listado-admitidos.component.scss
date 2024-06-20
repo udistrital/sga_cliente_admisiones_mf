@@ -1,0 +1,98 @@
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mt-20{
+    margin-top: 20px;
+
+}
+
+.title {
+    width: 100%;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.center-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.boton-primary {
+    background-color:  var(--primary);
+    color: white;
+    padding: 10px 20px;
+    border: 1px solid var(--primary);
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+  
+  .exp-card {
+    margin: 10px;
+    align-content: center;
+    cursor: pointer;
+    width: 13.5rem;
+    height: 14.5rem;
+    transition: background-color 350ms;
+}
+
+
+
+
+
+
+.icon{
+    font-size: 100px;
+}
+
+.icon-form {
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.row-layout {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    justify-items: center;
+}
+
+  .folder-icon{
+    font-size: 150px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .boton-busqueda {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.documentos{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.documentos button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 2em; 
+    padding: 20px;
+    width: 100%; 
+}
