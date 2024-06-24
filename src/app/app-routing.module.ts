@@ -27,6 +27,8 @@ import { ListadoAspirantesPregradoComponent } from './components/listado-aspiran
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
+import { ListadoOficializadosComponent } from './components/listado-oficializados/listado-oficializados.component';
+import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 
 
@@ -122,12 +124,18 @@ const routes: Routes = [
     path:"correo-institucional", 
     component: CorreoInstitucionalComponent,
   },
-
+  {
+    path:"listado-oficializados", 
+    component: ListadoOficializadosComponent,
+  },
+  {
+    path:"listado-admitidos", 
+    component: ListadoAdmitidosComponent,
+  },
   {
     path:"inscripcion-proyectos-curriculares", 
     component: PreinscripcionProyectosCurricularesComponent,
   },
-
 ];
 
 @NgModule({
