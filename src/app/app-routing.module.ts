@@ -29,6 +29,7 @@ import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspi
 import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
 import { ListadoOficializadosComponent } from './components/listado-oficializados/listado-oficializados.component';
 import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
+import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 
 
 const routes: Routes = [
@@ -61,10 +62,10 @@ const routes: Routes = [
     component: AdministracionCuentaBancariaComponent
   },
   {
-    path:"evaluacion-aspirantes", 
+   path:"evaluacion-aspirantes", 
     component: EvaluacionAspirantesComponent
   },
-  {
+    {
     path:"evaluacion-aspirantes-pregrado", 
     component: EvalucionAspirantePregradoComponent
   },
@@ -104,10 +105,10 @@ const routes: Routes = [
     path:"liquidacion-historico", 
     component: LiquidacionHistoricoComponent,
   },
-  // {
-  //   path:"soporte-configuracion", 
-  //   component: SoporteConfiguracionComponent ,
-  // },
+   {
+     path:"soporte-configuracion", 
+     component: SoporteConfiguracionComponent ,
+   },
     {path:"reportes-inscritos", 
     component: RepotesInscripcionesComponent,
   },
@@ -130,6 +131,10 @@ const routes: Routes = [
   {
     path:"listado-admitidos", 
     component: ListadoAdmitidosComponent,
+  },
+  {
+    path:"inscripcion-proyectos-curriculares", 
+    component: PreinscripcionProyectosCurricularesComponent,
   },
 ];
 

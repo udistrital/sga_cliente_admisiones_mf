@@ -106,6 +106,7 @@ import { ListadoOficializadosComponent } from './components/listado-oficializado
 import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 import { TablaListadoAspirantesComponent } from './components/listado-admitidos/tabla-listado-aspirantes/tabla-listado-aspirantes.component';
+import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -186,6 +187,7 @@ export function createTranslateLoader(http: HttpClient) {
     ListadoAdmitidosComponent,
     ListadoAspiranteComponent,
     TablaListadoAspirantesComponent
+    PreinscripcionProyectosCurricularesComponent
   ],
   imports: [
     CodificacionModule,
