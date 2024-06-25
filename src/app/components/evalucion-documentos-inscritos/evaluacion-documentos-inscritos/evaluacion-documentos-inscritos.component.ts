@@ -486,7 +486,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                 if (!data.metadata.aprobado && data.metadata.observacion !== '') {
 
                   this.inscripcionInfo.EstadoInscripcionId.Id = 6; // 6 id de INSCRITO con Observacion
-                  this.inscripcionService.put('inscripcion', this.inscripcionInfo)
+                  this.inscripcionInfo.TerceroId = this.info_persona_id;
+                  this.inscripcionesMidService.post('inscripciones/actualizar-inscripcion', this.inscripcionInfo)
                     .subscribe(resp => {
                       this.popUpManager.showSuccessAlert(this.translate.instant('admision.registro_exito'))
                     }, err => {
