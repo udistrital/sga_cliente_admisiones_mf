@@ -121,10 +121,6 @@ const routes: Routes = [
     path:"listados-oficializados", 
     component: ListadosOficializadosComponent
   },
-  {
-    path:"listados-oficializados", 
-    component: ListadosOficializadosComponent
-  },
 ];
 
 @NgModule({

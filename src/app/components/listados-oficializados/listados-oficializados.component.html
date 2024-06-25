@@ -36,10 +36,10 @@
                 <mat-header-cell *matHeaderCellDef>{{ "oficializados.gestion" | translate }}</mat-header-cell>
                 <mat-cell *matCellDef="let row">
                   <div>
-                    <button mat-mini-fab class="blue-header-icon" (click)="onCreate()">
-                      <mat-icon>edit_outline</mat-icon>
+                    <button mat-mini-fab class="blue-header-icon" (click)="onView()">
+                      <mat-icon class="large-icon">pageview</mat-icon>
                     </button>
-                  </div>
+                  </div>                  
                 </mat-cell>
               </ng-container>
               <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
