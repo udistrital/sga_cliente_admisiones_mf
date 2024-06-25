@@ -106,6 +106,7 @@ import { ListadoOficializadosComponent } from './components/listado-oficializado
 import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 import { TablaListadoAspirantesComponent } from './components/listado-admitidos/tabla-listado-aspirantes/tabla-listado-aspirantes.component';
+import { SgaCalendarioMidService } from './services/sga_calendario_mid.service';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -242,6 +243,7 @@ export function createTranslateLoader(http: HttpClient) {
     ParametrosService,
     NotificacionesMidService,
     EvaluacionInscripcionService,
+    SgaCalendarioMidService,
   ],
   bootstrap: [AppComponent],
 })
