@@ -62,7 +62,7 @@ import { CampusMidService } from './services/campus_mid.service';
 import { ViewPropuestaGradoComponent } from './components/evalucion-documentos-inscritos/view-propuesta_grado/view-propuesta_grado.component';
 import { StoreModule } from '@ngrx/store';
 import { rootReducer } from './store/rootReducer';
-import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+
 import { ListService } from './store/services/list.service';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
@@ -101,7 +101,11 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
 import { CrudListadosOficializadosComponent } from './components/crud-listados-oficializados/crud-listados-oficializados.component';
-
+import { ListadoOficializadosComponent } from './components/listado-oficializados/listado-oficializados.component';
+import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
+import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+import { TablaListadoAspirantesComponent } from './components/listado-admitidos/tabla-listado-aspirantes/tabla-listado-aspirantes.component';
+import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -178,7 +182,12 @@ export function createTranslateLoader(http: HttpClient) {
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
     ListadosOficializadosComponent,
-    CrudListadosOficializadosComponent
+    CrudListadosOficializadosComponent,
+    ListadoOficializadosComponent,
+    ListadoAdmitidosComponent,
+    ListadoAspiranteComponent,
+    TablaListadoAspirantesComponent,
+    PreinscripcionProyectosCurricularesComponent
   ],
   imports: [
     CodificacionModule,
