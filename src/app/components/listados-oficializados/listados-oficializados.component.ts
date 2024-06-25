@@ -31,9 +31,9 @@ export class ListadosOficializadosComponent implements OnInit {
     private translate: TranslateService,
     private inscripcionService: InscripcionService,
     private popUpManager: PopUpManager,
-    private solicitudesAdmisiones: SolicitudesAdmisiones, // Service for solicitudes API
+    private solicitudesAdmisiones: SolicitudesAdmisiones,
   ) {
-    this.source = new MatTableDataSource<any>([]); // Inicialización vacía al principio
+    this.source = new MatTableDataSource<any>([]); 
     this.loadData();
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
   }
@@ -42,19 +42,31 @@ export class ListadosOficializadosComponent implements OnInit {
     this.translate.use(language);
   }
 
-  loadData(): void { 
-    this.solicitudesAdmisiones.get('solicitud?query=EstadoTipoSolicitudId.TipoSolicitud.Id:40').subscribe(res => { 
-      if (res !== null) { 
-        const data = <Array<any>><unknown>res; 
-        this.datos = data.map(item => ({ 
-          Proceso: item.EstadoTipoSolicitudId.TipoSolicitud.Nombre, 
-          Fechas: item.FechaRadicacion, 
-          Estado: item.EstadoTipoSolicitudId.EstadoId.Nombre 
-        })); 
-        this.cargarDatosTabla(this.datos); 
-      } 
-    }); 
-  } 
+  loadData(): void {
+    this.solicitudesAdmisiones.get('solicitud?query=EstadoTipoSolicitudId.TipoSolicitud.Id:40').subscribe(res => {
+      if (res !== null) {
+        const data = <Array<any>><unknown>res;
+        this.datos = data.map(item => ({
+          Proceso: item.EstadoTipoSolicitudId.TipoSolicitud.Nombre,
+          Fechas: this.formatDate(item.FechaRadicacion), 
+          Estado: item.EstadoTipoSolicitudId.EstadoId.Nombre,
+          Gestion: item 
+        }));
+        this.datos.sort((a, b) => new Date(b.Fechas).getTime() - new Date(a.Fechas).getTime()); // Ordenar por fecha descendente
+        this.source = new MatTableDataSource(this.datos);
+        this.source.paginator = this.paginator;
+        this.source.sort = this.sort;
+      }
+    });
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1;
+    const year = date.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+  }
 
   cargarDatosTabla(datosCargados: any[]): void {
     let datos = this.showInactives ? datosCargados : datosCargados.filter(d => d.Activo == true);
@@ -70,7 +82,7 @@ export class ListadosOficializadosComponent implements OnInit {
 
   ngOnInit() { 
     this.source = new MatTableDataSource<any>([]); 
-    this.addFakeRecords(); // También puedes llamar a addFakeRecords aquí si deseas datos falsos al inicio. 
+    this.addFakeRecords();
   } 
 
   onEdit(event: any) {
@@ -157,40 +169,37 @@ export class ListadosOficializadosComponent implements OnInit {
       { Proceso: 'Proceso 2', Fechas: 'Fecha 3 - Fecha 4', Estado: 'Culminado' },
       { Proceso: 'Proceso 3', Fechas: 'Fecha 5 - Fecha 6', Estado: 'Solicitud de correos realizada' },
       { Proceso: 'Proceso 4', Fechas: 'Fecha 7 - Fecha 8', Estado: 'Abierto' },
-      { Proceso: 'Proceso 5', Fechas: 'Fecha 9 - Fecha 10', Estado: 'Culminado' },
+      { Proceso: 'Proceso 5', Fechas: 'Fecha 9 - Fecha 10', Estado: 'Abierto' }
     ];
     this.source.data = fakeRecords;
-    this.source.paginator = this.paginator;
-    this.source.sort = this.sort;
   }
 
   formatCurrentDate(): string {
-    const now = new Date();
-    const pad = (n: number) => n < 10 ? '0' + n : n;
-    const year = now.getUTCFullYear();
-    const month = pad(now.getUTCMonth() + 1);
-    const day = pad(now.getUTCDate());
-    const hours = pad(now.getUTCHours());
-    const minutes = pad(now.getUTCMinutes());
-    const seconds = pad(now.getUTCSeconds());
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} +0000 +0000`;
+    const date = new Date();
+    return `${date.getFullYear()}-${this.padToTwoDigits(date.getMonth() + 1)}-${this.padToTwoDigits(date.getDate())}`;
   }
 
-  generarSolicitud(): void { 
-    const solicitudData = { 
-      EstadoTipoSolicitudId: { Id: 92 }, 
+  padToTwoDigits(num: number): string {
+    return num.toString().padStart(2, '0');
+  }
+
+  generarSolicitud(): void {
+    const solicitudData = {
+      EstadoTipoSolicitudId: { Id: 92 },
       Referencia: "{}",
-      Resultado: "", 
-      FechaRadicacion: this.formatCurrentDate(), // Formatear la fecha actual
-      FechaCreacion: null, 
-      FechaModificacion: null, 
-      SolicitudFinalizada: false, 
-      Activo: true, 
-      SolicitudPadreId: null 
-    }; 
-    this.solicitudesAdmisiones.post('solicitud', solicitudData).subscribe(() => { 
-      this.loadData(); 
-    }); 
-  } 
+      Resultado: "",
+      FechaRadicacion: this.formatCurrentDate(),
+      FechaCreacion: null,
+      FechaModificacion: null,
+      SolicitudFinalizada: false,
+      Activo: true,
+      SolicitudPadreId: null
+    };
+
+    this.solicitudesAdmisiones.post('solicitud', solicitudData).subscribe(() => {
+      this.loadData();
+    }, error => {
+      console.error('Error al generar la solicitud:', error);
+    });
+  }
 }

@@ -1,3 +1,4 @@
+
 <div class="col-12">
   <mat-card>
     <mat-card-header class="center-content blue-header">
@@ -15,8 +16,11 @@
         <div class="info-box">
           <span>Estado: Abierto, Culminado, Solicitud de correos realizada</span>
         </div>
-        <div>
-          <button (click)="generarSolicitud()">Generar solicitud</button>
+        <div class="center-content">
+          <button class="custom-icon-button boton-primary" (click)="generarSolicitud()">
+            <mat-icon>add_circle_outline</mat-icon>
+            <span class="button-text">Añadir solicitud</span>
+          </button>
         </div>
       </div>
       <mat-tab-group fullWidth (changeTab)="selectTab($event)"> 
