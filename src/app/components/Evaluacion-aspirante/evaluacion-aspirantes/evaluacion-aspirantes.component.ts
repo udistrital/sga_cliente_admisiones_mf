@@ -176,7 +176,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
           const r = <any>res;
           if (res !== null && r.Status === '200') {
-            this.periodo = res.Data.find((p: any) => p.Activo);
+            if (window.localStorage.getItem("IdPeriodoSelected")){
+              this.periodo = res.Data.find((p: any) => p.Id == window.localStorage.getItem("IdPeriodoSelected"));
+            }else{
+              this.periodo = res.Data.find((p: any) => p.Activo);
+            }
+            
             window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
             resolve(this.periodo);
             const periodos = <any[]>res['Data'];
@@ -185,11 +190,13 @@ export class EvaluacionAspirantesComponent implements OnInit {
               this.periodos.push(element);
             });
           }
+          window.localStorage.removeItem("IdPeriodoSelected");
         },
           (error: HttpErrorResponse) => {
             reject(error);
           });
     });
+
   }
 
   buttonedit(row: any): void {
@@ -211,7 +218,13 @@ export class EvaluacionAspirantesComponent implements OnInit {
       (response: any) => {
         if (response !== null || response !== undefined) {
           this.nivel_load = <any>response;
+          if (window.localStorage.getItem("Nivel")){
+            this.selectednivel = this.nivel_load.find((p: any) => p.Id == window.localStorage.getItem("Nivel")).Id;
+            this.loadProyectos();
+            window.localStorage.removeItem("Nivel");
+          }
         }
+
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
@@ -248,14 +261,25 @@ export class EvaluacionAspirantesComponent implements OnInit {
     if (!Number.isNaN(this.selectednivel)) {
       this.projectService.get('proyecto_academico_institucion?limit=0').subscribe(
         (response: any) => {
+
+
           this.autenticationService.getRole().then(
-            // (rol: Array <String>) => {
             (rol: any) => {
               let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
               if (r) {
                 this.proyectos = <any[]>response.filter(
                   (proyecto: any) => this.filtrarProyecto(proyecto),
                 );
+                if(window.localStorage.getItem("IdProyecto")){
+                  const idProyecto = window.localStorage.getItem("IdProyecto");
+                  const proyecto = this.proyectos.find((p: any) => p.Id == idProyecto);
+                  if (proyecto) {
+                    this.proyectos_selected = proyecto.Id;
+                    this.loadCriterios();
+                  }
+                }
+                window.localStorage.removeItem("IdProyecto");
+
               } else {
                 const id_tercero = this.userService.getPersonaId();
                 this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
@@ -265,15 +289,17 @@ export class EvaluacionAspirantesComponent implements OnInit {
                       (proyecto: any) => dependencias.includes(proyecto.Id)
                     );
                     if (dependencias.length > 1) {
-                      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
-
+                      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));
                     }
+  
+
                   },
                   (error: any) => {
                     this.popUpManager.showErrorAlert(this.translate.instant('admision.no_vinculacion_no_rol') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
                   }
                 );
               }
+
             }
           );
         },
@@ -322,7 +348,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     );
   }
 
-  createTable() {
+  async createTable() {
     return new Promise(async (resolve, reject) => {
 
       const IdCriterio = sessionStorage.getItem('tipo_criterio');
@@ -336,7 +362,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.widhtColumns = width
       this.dataSourceColumn = (titles)
       this.dataSourceColumn.push('acciones')
-      console.log(this.dataSourceColumn)
       resolve(this.settings)
     })
   }
@@ -346,7 +371,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   onEditConfirm(event: any) {
-    console.log(event)
+
 
     this.guardarEvaluacion(event.newData)
   }
@@ -414,7 +439,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       } else {
         this.sgaMidAdmisiones.post('admision/evaluacion', Evaluacion).subscribe(
           (response: any) => {
-            if (response.Status === 200) {
+            if (response.status === 200) {
               this.criterio_selected.forEach(criterio => {
                 if (criterio.Id === Evaluacion.CriterioId) {
                   criterio['evaluado'] = true;
@@ -452,7 +477,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
     this.sgaMidAdmisiones.put('admision/calcular_nota', Evaluacion).subscribe(
       (response: any) => {
-        if (response.Status === 200) {
+        if (response.status === 200) {
           this.popUpManager.showSuccessAlert(this.translate.instant('admision.calculo_exito'));
         } else {
           this.popUpManager.showErrorToast(this.translate.instant('admision.calculo_error'));
@@ -501,24 +526,32 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   async loadAspirantes() {
     return new Promise((resolve, reject) => {
-      console.log(this.sgaMidAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2'))
       this.sgaMidAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2')
         .subscribe(
+          
           (response: any) => {
             console.log(response)
-
-            if (response.Success == true && response.Status == 200) {
-              this.Aspirantes = response.Data;
+            if (response.success == true && response.status == 200) {
+              this.Aspirantes = response.data;
               this.cantidad_aspirantes = this.Aspirantes.length;
-
-
+  
+              // Agrega claves con el nombre de las columnas a cada aspirante
+              console.log(this.datavalor)
+              this.Aspirantes.forEach((aspirante: any) => {
+                this.datavalor.forEach((columna: any) => {
+                  if (!aspirante.hasOwnProperty(columna)) {
+                    aspirante[columna] = 0;
+                  }
+                });
+              });
+  
               setTimeout(() => {
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
               }, 300);
-
+  
               this.dataSource = new MatTableDataSource(this.Aspirantes);
-
+  
               resolve(this.Aspirantes)
             }
           },
@@ -533,16 +566,34 @@ export class EvaluacionAspirantesComponent implements OnInit {
           }
         );
     });
-
   }
+
+  //Para terminar de revisar ma;ana
+  // (response: any) => {
+  //   console.log(response)
+  //   if (response.success == true && response.status == 200) {
+  //     this.Aspirantes = response.data;
+  //     this.cantidad_aspirantes = this.Aspirantes.length;
+
+  //     // Agrega claves con el nombre de las columnas a cada aspirante
+  //     console.log(this.datavalor)
+  //     this.Aspirantes.forEach((aspirante: any) => {
+  //       this.nameColumns.forEach((columna: any) => {
+  //         if (!aspirante.hasOwnProperty(columna)) {
+  //           aspirante[columna] = "" ;
+  //         }
+  //       });
+  //     });
+
+
   async loadInfo(IdCriterio: number) {
     this.datavalor = []
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones.get('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio).subscribe(
         async (response: any) => {
           console.log(response)
-          if (response.Status === 200) {
-            const data = <Array<any>>response.Data.areas;
+          if (response.status === 200) {
+            const data = <Array<any>>response.data.areas;
             if (data !== undefined) {
               await data.forEach(async asistente => {
                 if (asistente['Asistencia'] === '') {
@@ -563,12 +614,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
               })
 
-              console.log("jola")
+              
 
               this.Aspirantes.forEach((item: any) => {
-                this.nameColumns.forEach((column) => {
+                this.datavalor.forEach((column:any) => {
                   if (!item.hasOwnProperty(column)) {
-                    item[column] = ""
+                    item[column] = "";
                   }
                 })
               })
@@ -584,8 +635,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
               const valor = Object.keys(this.Aspirantes[0]);
               const arreglo = valor.filter(elemento => elemento !== "Id");
               this.datavalor = arreglo
-              console.log(this.datavalor)
-              console.log(this.Aspirantes)
               this.dataSource = new MatTableDataSource(this.Aspirantes)
 
             } else {
@@ -594,7 +643,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
             this.save = false;
             this.verificarEvaluacion();
             resolve(data);
-          } else if (response.Status === 404) {
+          } else if (response.status === 404) {
             this.Aspirantes.forEach((aspirante: any) => {
               this.columnas.forEach((columna: any) => {
                 aspirante[columna] = '';
@@ -603,13 +652,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
                 }
               });
             })
-            // this.dataSource.load(this.Aspirantes);
             this.dataSource = new MatTableDataSource(this.Aspirantes)
             this.btnCalculo = true;
             resolve(response);
           } else {
             this.popUpManager.showErrorToast(this.translate.instant('admision.error'));
-            // this.dataSource.load([]);
             this.dataSource = new MatTableDataSource<any>([])
             resolve('error');
           }
@@ -635,11 +682,13 @@ export class EvaluacionAspirantesComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.evaluacionService.get('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0').subscribe(
         (response: any) => {
+
           for (let i = 0; i < response.length; i++) {
             this.nameColumns.push(response[i].Nombre)
           }
           this.evaluacionService.get('requisito/' + IdCriterio).subscribe(
             async (res: any) => {
+
               const data: any = {};
               let porcentaje: any;
 
@@ -703,6 +752,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                 }
 
               } else {
+                this.popUpManager.showInfoToast(this.translate.instant('admision.no_data'));
 
               }
               resolve(data);

@@ -1,7 +1,10 @@
-
-
 .mt-5 {
     margin-top: 5px;
+}
+
+.mt-20{
+    margin-top: 20px;
+
 }
 
 .title {
@@ -14,6 +17,11 @@
     margin-top: 20px;
 }
 
+.center-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 
 .boton-primary {

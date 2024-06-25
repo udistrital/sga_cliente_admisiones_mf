@@ -236,7 +236,7 @@ export class CriterioAdmisionComponent implements OnChanges {
     this.projectService.get('nivel_formacion?limit=0').subscribe(
       // (response: NivelFormacion[]) => {
       (response: any) => {
-        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.Nombre == 'Posgrado')
+        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.Nombre == 'Pregrado' || nivel.Nombre == 'Posgrado')
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
