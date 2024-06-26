@@ -102,6 +102,9 @@ import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspi
 import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
 import { CrudListadosOficializadosComponent } from './components/crud-listados-oficializados/crud-listados-oficializados.component';
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
+import { TablaListadoAspirantesComponent } from './components/listado-admitidos/tabla-listado-aspirantes/tabla-listado-aspirantes.component';
+import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 
 
 
@@ -178,7 +181,10 @@ export function createTranslateLoader(http: HttpClient) {
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
     ListadosOficializadosComponent,
-    CrudListadosOficializadosComponent
+    CrudListadosOficializadosComponent,
+    ListadoAdmitidosComponent,
+    TablaListadoAspirantesComponent,
+    PreinscripcionProyectosCurricularesComponent
   ],
   imports: [
     CodificacionModule,
