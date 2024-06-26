@@ -103,6 +103,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
+import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lista-tipo-inscripcion/lista-tipo-inscripcion.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -179,7 +180,8 @@ export function createTranslateLoader(http: HttpClient) {
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
     CorreoInstitucionalComponent,
-    PreinscripcionProyectosCurricularesComponent
+    PreinscripcionProyectosCurricularesComponent,
+    ListaTipoInscripcionComponent
   ],
   imports: [
     CodificacionModule,

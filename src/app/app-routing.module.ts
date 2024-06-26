@@ -28,6 +28,7 @@ import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
+import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lista-tipo-inscripcion/lista-tipo-inscripcion.component';
 
 
 const routes: Routes = [
@@ -122,12 +123,14 @@ const routes: Routes = [
     path:"correo-institucional", 
     component: CorreoInstitucionalComponent,
   },
-
   {
     path:"inscripcion-proyectos-curriculares", 
     component: PreinscripcionProyectosCurricularesComponent,
   },
-
+  {
+    path:"lista-tipo-inscripcion", 
+    component: ListaTipoInscripcionComponent,
+  },
 ];
 
 @NgModule({

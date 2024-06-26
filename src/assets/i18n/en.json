@@ -589,7 +589,8 @@
         "direccion_entidad": "Entity Address",
         "placeholder_direccion_entidad": "E.g.: Cra 8 # 40-78 Piso 1",
         "item": "Item",
-        "evaluar": "Evaluate"
+        "evaluar": "Evaluate",
+        "filtro": "Filter"
     },
     "ERROR": {
         "general": "The request could not be satisfied",
@@ -1622,7 +1623,11 @@
         "titulo_detalle_evaluacion_existente": "Existing evaluation detail",
         "detalle_evaluacion_existente": "The evaluation detail information is already registered",
         "titulo_inscripcion_no_encontrada": "The inscription was not found",
-        "inscripcion_no_encontrada": "No registration associated with the icfes code was found"
+        "inscripcion_no_encontrada": "No registration associated with the icfes code was found",
+        "error_obtener_cupos": "Error when obtaining quotas",
+        "tipo_cupo": "Quota type",
+        "error_nieveles": "An error occurred while retrieving levels",
+        "error_tipo_inscripcion": "An error occurred while retrieving registration types"
     },
     "cupos": {
         "aviso_periodo": "Period in which the admission quotas are defined",
