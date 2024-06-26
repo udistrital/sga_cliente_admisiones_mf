@@ -186,7 +186,7 @@ export function createTranslateLoader(http: HttpClient) {
     ListadoOficializadosComponent,
     ListadoAdmitidosComponent,
     ListadoAspiranteComponent,
-    TablaListadoAspirantesComponent
+    TablaListadoAspirantesComponent,
     PreinscripcionProyectosCurricularesComponent
   ],
   imports: [
