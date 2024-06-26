@@ -12,7 +12,7 @@
                     <div class="form-group">
                         <label for="{{c.nombre}}" class="form-control-label">
                             <small>{{c.label}}</small>
-                            <small id="{{c.nombre}}" class="text-muted" [hidden]="!normalform.alertas">
+                            <small id="{{c.nombre}}" class="text-muted {{ c.ocultar ? 'no-mostrar' : '' }}" [hidden]="!normalform.alertas">
                                 {{c.alerta}}
                             </small>
                         </label>
@@ -91,9 +91,9 @@
         <br>
         <!-- Botones de form con acción de botones -->
         <div align="center">
-            <button class="btn btn-success btn-tiny" (click)="validForm()"
+            <button class="btn btn-success btn-tiny {{ !normalform.btn ? 'no-mostrar' : '' }}" (click)="validForm()"
                 [hidden]="!normalform.btn">{{normalform.btn | translate}}</button>
-            <button class="btn btn-primary btn-tiny" (click)="clearForm()"
+            <button class="btn btn-success btn-tiny {{ !normalform.btnLimpiar ? 'no-mostrar' : '' }}" (click)="clearForm()"
                 [hidden]="!normalform.btnLimpiar">{{normalform.btnLimpiar | translate}}</button>
 
         </div>
@@ -111,7 +111,7 @@
                 <label for="{{c.nombre}}" class="col-sm-3 form-control-label">
                     <small>{{c.label}}</small>
                     <br>
-                    <small id="{{c.nombre}}" class="text-muted" [hidden]="!normalform.alertas">
+                    <small id="{{c.nombre}}" class="text-muted {{ !normalform.alertas ? 'no-mostrar' : '' }}" [hidden]="!normalform.alertas">
                         {{c.alerta}}
                     </small>
                 </label>
@@ -186,9 +186,9 @@
         </fieldset>
         <br>
         <div align="center">
-            <button class="btn btn-success btn-tiny" (click)="validForm()"
+            <button class="btn btn-success btn-tiny {{ !normalform.btn ? 'no-mostrar' : '' }}" (click)="validForm()"
                 [hidden]="!normalform.btn">{{normalform.btn | translate}}</button>
-            <button class="btn btn-primary btn-tiny" (click)="clearForm()"
+            <button class="btn btn-success btn-tiny {{ !normalform.btnLimpiar ? 'no-mostrar' : '' }}" (click)="clearForm()"
                 [hidden]="!normalform.btnLimpiar">{{normalform.btnLimpiar | translate}}</button>
         </div>
         <br>
@@ -286,9 +286,9 @@
         <br>
         <!-- Botones de form con accaión de botones -->
         <div align="center">
-            <button class="btn btn-success btn-tiny" (click)="validForm()"
+            <button class="btn btn-success btn-tiny {{ !normalform.btn ? 'no-mostrar' : '' }}" (click)="validForm()"
                 [hidden]="!normalform.btn">{{normalform.btn | translate}}</button>
-            <button class="btn btn-primary btn-tiny" (click)="clearForm()"
+            <button class="btn btn-success btn-tiny {{ !normalform.btnLimpiar ? 'no-mostrar' : '' }}" (click)="clearForm()"
                 [hidden]="!normalform.btnLimpiar">{{normalform.btnLimpiar | translate}}</button>
         </div>
         <br>
@@ -304,7 +304,7 @@
                 <div *ngFor="let c of normalform.campos" class="{{c.claseGrid}}" [ngSwitch]="c.etiqueta">
                     <div class=" form-group">
                         <!-- input -->
-                        <mat-form-field *ngSwitchCase="'input'" style="width: 100%;" class="form-group"
+                        <mat-form-field *ngSwitchCase="'input'" style="width: 100%;" class="form-group {{ c.ocultar ? 'no-mostrar' : '' }}"
                             floatLabel="always" [hidden]="c.ocultar">
                             <mat-label>{{c.label | translate}}:</mat-label>
                             <input matInput [(ngModel)]="c.valor" (ngModelChange)="validCampo(c)"
@@ -315,7 +315,7 @@
                         </mat-form-field>
 
                         <!-- input confirmacion -->
-                        <mat-form-field *ngSwitchCase="'inputConfirmacion'" style="width: 100%;" class="form-group"
+                        <mat-form-field *ngSwitchCase="'inputConfirmacion'" style="width: 100%;" class="form-group {{ c.ocultar ? 'no-mostrar' : '' }}"
                             floatLabel="always" [hidden]="c.ocultar">
                             <mat-label>{{c.label | translate}}:</mat-label>
                             <input matInput [(ngModel)]="c.valor" (ngModelChange)="confirmacion(c)"
@@ -337,7 +337,7 @@
                         </mat-form-field>
 
                         <!-- checkbox -->
-                        <div *ngSwitchCase="'checkbox'" class="form-group validation-checkboxes" [hidden]="c.ocultar">
+                        <div *ngSwitchCase="'checkbox'" class="form-group validation-checkboxes {{ c.ocultar ? 'no-mostrar' : '' }}" [hidden]="c.ocultar">
                             <!-- <mat-checkbox type="checkbox" class="customised-control-input" [disabled]="c.deshabilitar"
                                 color="primary" [(checked)]="c.valor" (change)="c.valor = !c.valor; c.alerta = '';">
                                 {{c.requerido?'* '+c.label:c.label}}</mat-checkbox> -->
@@ -385,7 +385,7 @@
                         </mat-form-field>
 
                         <!-- select -->
-                        <mat-form-field *ngSwitchCase="'select'" style="width: 100%;" class="form-group" floatLabel="always"
+                        <mat-form-field *ngSwitchCase="'select'" style="width: 100%;" class="form-group {{ c.ocultar ? 'no-mostrar' : '' }}" floatLabel="always"
                             [hidden]="c.ocultar">
                             <mat-label>{{c.label | translate}}:</mat-label>
                             <mat-select
@@ -482,7 +482,7 @@
                         </div>
 
                         <!-- input-file with revision -->
-                        <mat-form-field *ngSwitchCase="'fileRev'" style="width: 100%;" class="form-group" floatLabel="always" [hidden]="c.ocultar">
+                        <mat-form-field *ngSwitchCase="'fileRev'" style="width: 100%;" class="form-group {{ c.ocultar ? 'no-mostrar' : '' }}" floatLabel="always" [hidden]="c.ocultar">
                             <input #documento type="file" (change)="onChange2($event,c)" style="display: none;"/>
                             <mat-label>{{c.label | translate}}</mat-label>
                             <div class="row">
@@ -528,9 +528,9 @@
             </div>
             <ng-content></ng-content>
             <div class="buttons-container" *ngIf="normalform.btnLimpiar || normalform.btn">
-                <button class="btn btn-primary btn-sm" (click)="clearForm()"
+                <button class="btn btn-primary btn-sm {{ !normalform.btnLimpiar ? 'no-mostrar' : '' }}" (click)="clearForm()"
                     [hidden]="!normalform.btnLimpiar">{{normalform.btnLimpiar | translate}}</button>
-                <button class="btn btn-success btn-sm ml-2" (click)="validForm()"
+                <button class="btn btn-success btn-sm ml-2 {{ !normalform.btn ? 'no-mostrar' : '' }}" (click)="validForm()"
                     [hidden]="!normalform.btn">{{normalform.btn | translate}}</button>
             </div>
 

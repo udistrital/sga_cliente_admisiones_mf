@@ -1,163 +1,109 @@
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { ImplicitAutenticationService } from './implicit_autentication.service';
-import { AnyService } from './any.service';
+import { RequestManager } from '../managers/requestManager';
 import { decrypt } from 'src/utils/util-encrypt';
-
-const path = environment.TERCEROS_SERVICE;
-
+ 
+ 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-
-  private user$ = new Subject<[object]>();
-  private userSubject = new BehaviorSubject(null);
-  public tercero$ = this.userSubject.asObservable();
-  public user: any;
-
-  constructor(private anyService: AnyService, private autenticationService: ImplicitAutenticationService) {
-    if (window.localStorage.getItem('id_token') !== null && window.localStorage.getItem('id_token') !== undefined) {
-       const id_token = window.localStorage.getItem('id_token')!.split('.');
-      const payload = JSON.parse(atob(id_token[1])); 
-    }
+  private user$ = new BehaviorSubject(null);
+ 
+  constructor(private requestManager: RequestManager) {
+    this.getUserInfo();
   }
-      /*
-      let DocIdentificacion = null;
-      let CorreoUsuario = null;
-      let UsuarioWSO2 = null;
-
-      this.autenticationService.getDocument().then(async (document: string) => {
-        if (document) {
-          DocIdentificacion = document;
-        }
-        let payload = this.autenticationService.getPayload();
-        UsuarioWSO2 = payload.sub? payload.sub : null;
-        CorreoUsuario = payload.email ? payload.email : null;
-
-        let foundId: boolean = false;
-
-        if (DocIdentificacion) {
-          await this.findByDocument(DocIdentificacion, UsuarioWSO2, CorreoUsuario).then(found => foundId = true).catch(e => foundId = false);
-        }
-
-        if (UsuarioWSO2 && !foundId) {
-          await this.findByUserEmail(UsuarioWSO2).then(found => foundId = true).catch(e => foundId = false);
-        }
-
-        if (CorreoUsuario && !foundId) {
-          await this.findByUserEmail(CorreoUsuario).then(found => foundId = true).catch(e => foundId = false);
-        }
-
-        if (!foundId) {
-          window.localStorage.setItem('persona_id', '0');
-        }
-
-      });
-    }
+ 
+  private getUserInfo() {
+    const userLocalStorageEncode = window.localStorage.getItem('user');
+    const userLocalStorage = userLocalStorageEncode
+      ? JSON.parse(atob(userLocalStorageEncode))
+      : null;
+    this.user$.next(userLocalStorage);
   }
-
-  private findByDocument(DocIdentificacion, Usuario, Correo){
-    return new Promise<boolean>((resolve, reject) => {
-     this.anyService.get(path, 'datos_identificacion?query=Activo:true,Numero:' + DocIdentificacion + '&sortby=FechaCreacion&order=desc')
-      .subscribe((res: any[]) => {
-        if (res !== null) {
-          if (res.length > 1) {
-            let tercero = null;
-            for (let i = 0; i < res.length; i++) {
-              if (res[i].TerceroId.UsuarioWSO2 == Usuario){
-                tercero = res[i].TerceroId;
-                break;
-              }
-            }
-            if(tercero == null){
-              for (let i = 0; i < res.length; i++) {
-                if (res[i].TerceroId.UsuarioWSO2 == Correo){
-                  tercero = res[i].TerceroId;
-                  break;
-                }
-              } 
-            }
-            if(tercero != null) {
-              this.user = tercero;
-            } else {
-              this.user = res[0].TerceroId;
-            }
-          } else {
-            this.user = res[0].TerceroId;
-          }
-          
-          this.user['Documento'] = DocIdentificacion;
-          if (Object.keys(this.user).length !== 0) {
-            this.user$.next(this.user);
-            this.userSubject.next(this.user);              // window.localStorage.setItem('ente', res[0].Ente);
-            window.localStorage.setItem('persona_id', this.user.Id);
-            resolve(true);
-          } else {
-            //this.user$.next(this.user);
-            window.localStorage.setItem('persona_id', '0');
-            reject(false);
-          }
-        } else {
-          reject(false);
+ 
+  public getId() {
+    return localStorage.getItem(decrypt('persona_id'));
+  }
+ 
+  public async getPersonaId(): Promise<number | null> {
+    return new Promise((resolve, reject) => {
+      const personaId = window.localStorage.getItem('persona_id');
+      if (personaId === null) {
+        resolve(null);
+      } else {
+        try {
+          resolve(decrypt(personaId));
+        } catch (error) {
+          reject(error);
         }
-      });
+      }
     });
   }
-
-  private findByUserEmail(UserEmail){
-    return new Promise<boolean>((resolve, reject) => {
-    this.anyService.get(path, 'tercero?query=UsuarioWSO2:' + UserEmail)
-      .subscribe(res => {
-        if (res !== null) {
-          this.user = res[0];
-          if (Object.keys(this.user).length !== 0) {
-            this.user$.next(this.user);
-            this.userSubject.next(this.user);
-            window.localStorage.setItem('persona_id', this.user.Id);
-            resolve(true);
-          } else {
-            //this.user$.next(this.user);
-            window.localStorage.setItem('persona_id', '0');
-            reject(false);
-          }
-        }
-        else {
-          //this.user$.next(this.user);
-          window.localStorage.setItem('persona_id', '0');
-          reject(false);
-        }
-      });
-    });
-  }
-
-  // public getEnte(): number {
-  //   return parseInt(window.localStorage.getItem('ente'), 10);
-  // }
-
-  public getPrograma(): number {
-    return parseInt(window.localStorage.getItem('programa'), 10);
-  }
-
-  public getUsuario(): string {
-    return window.localStorage.getItem('usuario').toString();
-  }*/
-
-  public getPersonaId(): number {
-    const id = decrypt(window.localStorage.getItem('persona_id'));
-    return parseInt(id!, 10);
-  }
-
-
-  public getPeriodo(): number {
-    return parseInt(window.localStorage.getItem('IdPeriodo')!, 10)
-  }
-
+ 
   public getUser() {
+    if (!this.user$.value) {
+      this.getUserInfo();
+    }
     return this.user$.asObservable();
   }
+ 
+  public getPayload(): any {
+    var payload: any = {};
+    const idToken = window.localStorage.getItem('id_token')?.split('.');
+    if (idToken != undefined) {
+      payload = JSON.parse(atob(idToken[1]));
+    }
+    return payload;
+  }
+ 
+  public esAutorizado(requiredRoles: string[]): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.getUser().subscribe(
+        (user: any) => {
+          if (user && user.user && user['user'].role) {
+            const roles = [
+              ...new Set([...user['user'].role]),
+              ...user['userService'].role,
+            ];
+            const isAuthorized = requiredRoles.some((role) =>
+              roles.includes(role)
+            );
+            resolve(isAuthorized);
+          } else {
+            resolve(false);
+          }
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
+ 
+  public getEmail(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.getUser().subscribe(
+        ({ user }: any) => {
+          if (user && user.email) {
+            resolve(user['email']);
+          } else {
+            resolve('');
+          }
+        },
+        (error) => {
+          console.error('Error al obtener el usuario', error);
+          reject(error);
+        }
+      );
+    });
+  }
+ 
+  public getPrograma(): number {
+    return parseInt(window.localStorage.getItem('programa')!, 10);
+  }
+ 
+  public getPeriodo(): number {
+    return parseInt(window.localStorage.getItem('IdPeriodo')!, 10);
+  }
 }
-
-

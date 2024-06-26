@@ -12,7 +12,6 @@ import { SolicitudTransferenciaComponent } from './components/transferencia/soli
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { DialogoDocumentosTransferenciasComponent } from './components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
-import { CrudInfoPersonaComponent } from './components/transferencia/crud-info_persona/crud-info_persona.component';
 import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -63,7 +62,7 @@ import { CampusMidService } from './services/campus_mid.service';
 import { ViewPropuestaGradoComponent } from './components/evalucion-documentos-inscritos/view-propuesta_grado/view-propuesta_grado.component';
 import { StoreModule } from '@ngrx/store';
 import { rootReducer } from './store/rootReducer';
-import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+
 import { ListService } from './store/services/list.service';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
@@ -94,12 +93,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InscripcionMidService } from './services/sga_inscripcion_mid.service';
+import { TerceroMidService } from './services/sga_tercero_mid.service';
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
 import { CrudListadosOficializadosComponent } from './components/crud-listados-oficializados/crud-listados-oficializados.component';
+import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 
 
 
@@ -130,7 +132,6 @@ export function createTranslateLoader(http: HttpClient) {
     DinamicformComponent,
     ViewIdiomasComponent,
     TransferenciaComponent,
-    CrudInfoPersonaComponent,
     CustomizeButtonComponent,
     AsignacionCuposComponent,
     ListadoHistoricoComponent,
@@ -142,8 +143,7 @@ export function createTranslateLoader(http: HttpClient) {
     ViewInfoPersonaComponent,
     DialogoCriteriosComponent,
     DialogoCriteriosComponent,
-    CriterioAdmisionComponent,
-    ListadoAspiranteComponent,
+    CriterioAdmisionComponent,    
     DialogoDocumentosComponent,
     DialogPreviewFileComponent,
     CrudAsignacionCupoComponent,
@@ -226,6 +226,8 @@ export function createTranslateLoader(http: HttpClient) {
     MatSnackBar,
     ListService,
     SgaMidService,
+    TerceroMidService,
+    InscripcionMidService,
     RequestManager,
     SgaAdmisionesMid,
     DocumentoService,
