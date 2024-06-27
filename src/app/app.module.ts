@@ -102,6 +102,7 @@ import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component
 import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
+import { LiquidacionPosgradoTableComponent } from './components/liquidacion-recibos/liquidacion-posgrado-table/liquidacion-posgrado-table.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -177,7 +178,8 @@ export function createTranslateLoader(http: HttpClient) {
     CargueSnpComponent,
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
-    CorreoInstitucionalComponent
+    CorreoInstitucionalComponent,
+    LiquidacionPosgradoTableComponent
   ],
   imports: [
     CodificacionModule,
