@@ -13,12 +13,11 @@
               <mat-form-field style="width: 100%;">
                 <mat-label>{{ 'admision.aviso_nivel' | translate }}:</mat-label>
                 <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel"
-                  (selectionChange)="loadProyectos()">
+                  (selectionChange)="cambiarSelectPeriodoSegunNivel($event.value)">
                   <mat-option value="">{{ 'GLOBAL.seleccionar' | translate }}</mat-option>
                   <mat-option *ngFor="let item of nivel_load" [value]="item.Id"> {{ item.Nombre }} </mat-option>
                 </mat-select>
-                <mat-error *ngIf="CampoControl.hasError('required')">
-                  {{ 'admision.erro_selec_nivel' | translate }}
+                <mat-error *ngIf="CampoControl.hasError('required')"> {{ 'admision.erro_selec_nivel' | translate }}
                 </mat-error>
               </mat-form-field>
 
@@ -26,7 +25,7 @@
               <mat-form-field style="width: 100%;">
                 <mat-label>{{ 'admision.aviso_proyecto' | translate }}:</mat-label>
                 <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_selected"
-                  (selectionChange)="loadCriterios()" [disabled]='selectprograma'>
+                  (selectionChange)="consultarPeriodosDoctorado(proyectos_selected)">
                   <mat-option value="">{{ 'GLOBAL.seleccionar' | translate }}</mat-option>
                   <mat-option *ngFor="let item of proyectos" [value]="item.Id">{{ item.Nombre }}</mat-option>
                 </mat-select>
@@ -35,27 +34,14 @@
                 </mat-error>
               </mat-form-field>
 
-              <!-- select Periodo -->
+              <!--Periodo académico-->
               <mat-form-field style="width: 100%;">
-                <mat-label>{{ 'admision.aviso_periodo' | translate }}:</mat-label>
+                <mat-label>{{ 'admision.periodo_' | translate }}:</mat-label>
                 <mat-select [(ngModel)]="periodo" (selectionChange)="selectPeriodo()">
-                  <mat-option value="">{{ 'GLOBAL.seleccionar' | translate }}</mat-option>
-                  <mat-option *ngFor="let item of periodos" [value]="item.Id">{{ item.Nombre }}</mat-option>
+                  <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                  <mat-option *ngFor="let item of periodos" [value]="item"> {{item.Nombre}} </mat-option>
                 </mat-select>
               </mat-form-field>
-
-              <!-- Botón de carga -->
-              <div>
-                <button class="boton-primary" type="button" *ngIf="mostrarBoton" (click)="loadProyectos()">
-                  <mat-icon style="vertical-align: middle;" fontIcon="add"></mat-icon>
-                  <label>{{'GLOBAL.cargar' | translate}}</label>
-                </button>
-              </div>
-
-              <!-- Mensaje inicial -->
-              <div *ngIf="mostrarMensajeInicial" class="info margin-y">
-                {{ "gestion_horarios.mensaje_doctorado" | translate }}
-              </div>
 
               <!-- select criterios -->
               <mat-form-field style="width: 100%;">
@@ -73,10 +59,8 @@
 
               <!-- Tag de criterios -->
               <div class="row">
-
                 <div class="col-sm-6 col-md-4 col-lg-3 folder" style="margin-bottom: 20px;" align="center"
                   id="info_basica" *ngFor=" let criterio of criterio_selected">
-
                   <mat-card class="exp-card" (click)="perfil_editar(criterio)">
                     <mat-card-header>{{ 'Criterio ' + ajustarTitulo(criterio.Nombre) }}</mat-card-header>
                     <mat-card-content class="icon-form">
@@ -93,8 +77,22 @@
                   [disabled]='btnCalculo'>{{
                   'admision.calcular' | translate }}</button>
               </div>
-            </mat-card-header>
 
+
+            </mat-card-header>
+            <div class="ancho-boton">
+              <button class="boton-primary container-bottons centrar-texto" type="button" *ngIf="mostrarBoton"
+                (click)="selectPeriodo()">
+                <mat-icon style="vertical-align: middle;" fontIcon="add"></mat-icon>
+                <label>{{ 'GLOBAL.buscar' | translate }}</label>
+              </button>
+            </div>
+
+            <div *ngIf="mostrarMensajeInicial" class="alert warning margin-y">
+              <mat-icon class="icon">info</mat-icon>
+              <span>{{ "gestion_horarios.mensaje_doctorado" | translate }} : {{ nombresPeriodos
+                }} {{ "gestion_horarios.mensaje_doctorado_mensaje" | translate }}</span>
+            </div>
           </mat-card>
         </div>
 
