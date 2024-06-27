@@ -19,6 +19,8 @@ export class ListaTipoInscripcionComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  loading!: boolean;
+
   niveles!: any;
   tiposInscripcion!: any;
 
@@ -30,12 +32,14 @@ export class ListaTipoInscripcionComponent {
   ) { }
 
   async ngOnInit() {
+    this.loading = true;
     await this.cargarNiveles();
     await this.cargarTiposInscripcion();
     this.tiposInscripcion = this.organizarDataTabla(this.tiposInscripcion);
     this.dataSource = new MatTableDataSource(this.tiposInscripcion);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.loading = false;
   }
 
   applyFilter(event: Event) {
@@ -58,6 +62,7 @@ export class ListaTipoInscripcionComponent {
             resolve(res);
           },
           (error: any) => {
+            this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.error_nieveles'));
             reject([]);
           }
@@ -72,10 +77,10 @@ export class ListaTipoInscripcionComponent {
         .subscribe(
           (res: any) => {
             this.tiposInscripcion = res;
-            console.log(res);
             resolve(res);
           },
           (error: any) => {
+            this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.error_tipo_inscripcion'));
             reject([]);
           }
@@ -86,7 +91,6 @@ export class ListaTipoInscripcionComponent {
   organizarDataTabla(tiposInscripcion: any) {
     for (const tipo of tiposInscripcion) {
       const nivel: any = this.niveles.find((nivel: any) => nivel.Id == tipo.NivelId)
-      console.log(tipo, nivel);
       tipo["Nivel"] = nivel ? nivel.Nombre : 'Indefinido';
     }
     console.log(tiposInscripcion);

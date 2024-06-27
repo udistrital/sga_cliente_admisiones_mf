@@ -94,6 +94,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatMenuModule } from '@angular/material/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InscripcionMidService } from './services/sga_inscripcion_mid.service';
 import { TerceroMidService } from './services/sga_tercero_mid.service';
@@ -201,6 +202,7 @@ export function createTranslateLoader(http: HttpClient) {
     AppRoutingModule,
     MatCheckboxModule,
     MatExpansionModule,
+    MatMenuModule,
     MatFormFieldModule,
     MatPaginatorModule,
     MatNativeDateModule,
