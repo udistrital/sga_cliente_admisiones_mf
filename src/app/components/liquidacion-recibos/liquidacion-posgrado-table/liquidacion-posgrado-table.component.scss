@@ -1,0 +1,75 @@
+.form-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.border-right {
+  border-right: 1px solid black;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  th {
+      text-align: center;
+      color: white;
+      background-color: var(--primary);
+  }
+  td {
+      text-align: center !important;
+      border-right: whitesmoke;
+      border-left: whitesmoke;
+  }
+}
+
+::ng-deep .subHeaders {
+  background-color: var(--color4) !important;
+}
+
+::ng-deep .cuotas {
+  background-color: var(--color600) !important;
+}
+
+::ng-deep .blanco {
+  background-color: #ffffff !important;
+}
+
+
+::ng-deep .azulOscuro {
+  background-color: var(--primary) !important;
+  color: #ffffff !important; 
+}
+
+::ng-deep .azulClaro {
+  background-color: var(--color0) !important;
+}
+
+.button-stepper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mat-cell, .mat-header-cell {
+  width: auto;
+}
+
+.scrollable-table {
+  overflow-x: auto;
+}
+
+.small-form-field {
+  width: 100px;  /* Ajusta este valor según tus necesidades */
+}
+
+.action-container {
+  display: flex;
+  height: 100%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
