@@ -105,6 +105,7 @@ import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspi
 import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lista-tipo-inscripcion/lista-tipo-inscripcion.component';
+import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/creacion-tipo-inscipcion/creacion-tipo-inscipcion.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -182,7 +183,8 @@ export function createTranslateLoader(http: HttpClient) {
     EvalucionAspirantePregradoComponent,
     CorreoInstitucionalComponent,
     PreinscripcionProyectosCurricularesComponent,
-    ListaTipoInscripcionComponent
+    ListaTipoInscripcionComponent,
+    CreacionTipoInscipcionComponent
   ],
   imports: [
     CodificacionModule,

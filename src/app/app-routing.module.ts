@@ -29,6 +29,7 @@ import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspi
 import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lista-tipo-inscripcion/lista-tipo-inscripcion.component';
+import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/creacion-tipo-inscipcion/creacion-tipo-inscipcion.component';
 
 
 const routes: Routes = [
@@ -130,6 +131,10 @@ const routes: Routes = [
   {
     path:"lista-tipo-inscripcion", 
     component: ListaTipoInscripcionComponent,
+  },
+  {
+    path:"crear-tipo-inscripcion", 
+    component: CreacionTipoInscipcionComponent,
   },
 ];
 
