@@ -353,7 +353,8 @@ export class CargueSnpComponent {
             {"PSC": datosIcfes[13]},
             {"PCN": datosIcfes[14]},
             {"PIN": datosIcfes[15]}
-          ]
+          ],
+          "global" : datosIcfes[10]
         }
         const jsonicfesData = JSON.stringify(icfesData);
         const detalleEvaluacionData = {
