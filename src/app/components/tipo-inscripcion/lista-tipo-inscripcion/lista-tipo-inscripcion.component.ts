@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
@@ -13,7 +14,7 @@ import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.se
   styleUrls: ['./lista-tipo-inscripcion.component.scss']
 })
 export class ListaTipoInscripcionComponent {
-  displayedColumns: string[] = ['id', 'nombre', 'descripcion', 'nivel', 'tipo_cupo', 'estado', 'acciones'];
+  displayedColumns: string[] = ['id', 'nombre', 'descripcion', 'nivel', 'estado', 'acciones'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -25,6 +26,7 @@ export class ListaTipoInscripcionComponent {
   tiposInscripcion!: any;
 
   constructor(
+    private router: Router,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private projectService: ProyectoAcademicoService,
@@ -73,7 +75,7 @@ export class ListaTipoInscripcionComponent {
   cargarTiposInscripcion() {
     return new Promise((resolve, reject) => {
       this.inscripcionService
-        .get('tipo_inscripcion?sortby=Id&order=asc&limit=0')
+        .get('tipo_inscripcion?sortby=Id&order=desc&limit=0')
         .subscribe(
           (res: any) => {
             this.tiposInscripcion = res;
@@ -95,5 +97,9 @@ export class ListaTipoInscripcionComponent {
     }
     console.log(tiposInscripcion);
     return tiposInscripcion
+  }
+
+  navigateToCrearTipoInscripcion() {
+    this.router.navigate(['/crear-tipo-inscripcion']);
   }
 }

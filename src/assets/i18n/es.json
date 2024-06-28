@@ -619,7 +619,8 @@
         "item": "Ítem",
         "evaluar": "Evaluar",
         "tipo_inscripcion": "Seleccione el tipo de inscripción",
-        "filtro": "Filtro"
+        "filtro": "Filtro",
+        "especial": "Especial"
     },
     "ERROR": {
         "general": "La solicitud no pudo ser cumplida",
@@ -642,7 +643,8 @@
         "fallo_informacion_en": "Ha habido un error al consultar la información sobre",
         "sin_informacion_en": "No se ha encontrado información sobre",
         "persiste_error_comunique_OAS": "Regrese e intente de nuevo más tarde. Si el error persiste, comuníquese con Oficina Asesora de Tecnologías e Información (OATI)",
-        "error_previsualizar_doc": "No se pudo visualizar el documento, no es un formato válido o no se ha encontrado."
+        "error_previsualizar_doc": "No se pudo visualizar el documento, no es un formato válido o no se ha encontrado.",
+        "error_formulario_incompleto": "El formulario esta incompleto"
     },
     "recibo_pago": {
         "generado": "El recibo de pago ha sido generado correctamente",
@@ -1921,6 +1923,7 @@
         "tipo_inscripcion_actualizado": "Tipo inscripción actualizado",
         "seguro_continuar_registrar_tipo_inscripcion": "¿Está seguro de registrar este tipo de inscripción?",
         "tipo_inscripcion_creado": "Tipo de inscripción creado",
+        "error_tipo_inscripcion_creado": "Error al crear el tipo de inscripción",
         "tooltip_eliminar": "Eliminar tipo de inscripción",
         "tooltip_crear": "Crear tipo de inscripción",
         "tooltip_editar": "Editar tipo de inscripción",

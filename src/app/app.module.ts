@@ -1,5 +1,3 @@
-
-
 import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
 import { DocProgramaObligatorioComponent } from './components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component';
 import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
@@ -95,6 +93,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatRadioModule } from '@angular/material/radio';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InscripcionMidService } from './services/sga_inscripcion_mid.service';
 import { TerceroMidService } from './services/sga_tercero_mid.service';
@@ -213,6 +212,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatSortModule,
     MatAutocompleteModule,
     MatGridListModule,
+    MatRadioModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     NgxExtendedPdfViewerModule,

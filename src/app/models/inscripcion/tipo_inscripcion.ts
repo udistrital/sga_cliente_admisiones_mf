@@ -1,5 +1,5 @@
 export class TipoInscripcion {
-    Id!: number;
+    Id!: number | null;
     Nombre!: string;
     Descripcion!: string;
     CodigoAbreviacion!: string;

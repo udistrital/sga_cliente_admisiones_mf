@@ -590,7 +590,8 @@
         "placeholder_direccion_entidad": "E.g.: Cra 8 # 40-78 Piso 1",
         "item": "Item",
         "evaluar": "Evaluate",
-        "filtro": "Filter"
+        "filtro": "Filter",
+        "especial": "Special"
     },
     "ERROR": {
         "general": "The request could not be satisfied",
@@ -613,7 +614,8 @@
         "fallo_informacion_en": "There was an error querying the information about",
         "sin_informacion_en": "No information has been found about",
         "persiste_error_comunique_OAS": "Please return and try again later. If the error persists, contact the Technology and Information Advisory Office (Oficina Asesora de Tecnologías e Información)",
-        "error_previsualizar_doc": "The document could not be viewed, it is not a valid format, or it was not found."
+        "error_previsualizar_doc": "The document could not be viewed, it is not a valid format, or it was not found.",
+        "error_formulario_incompleto": "The form is incomplete"
     },
     "recibo_pago": {
         "generado": "The payment receipt has been generated correctly",
@@ -1857,6 +1859,7 @@
         "tipo_inscripcion_actualizado": "Updated registration type",
         "seguro_continuar_registrar_tipo_inscripcion": "Are you sure you register this registration type?",
         "tipo_inscripcion_creado": "Type register created",
+        "error_tipo_inscripcion_creado": "Error creating enrollment type",
         "tooltip_eliminar": "Remove registration type",
         "tooltip_crear": "Create new registration type",
         "tooltip_editar": "Edit registration type",
