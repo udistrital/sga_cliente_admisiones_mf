@@ -1684,7 +1684,10 @@
         "ver_listado_aspirantes": "Ver listado de aspirantes",
         "cupos_proyecto": "Cantidad de cupos asignados",
         "cupos_disponibles": "Cantidad de cupos disponibles:",
-        "sin_cupos_periodo": "No se ha definido cupos para este periodo o proyecto curricular"
+        "sin_cupos_periodo": "No se ha definido cupos para este periodo o proyecto curricular",
+        "tipos_cupo": "Tipos de cupos",
+        "crear_tipos_cupo": "Crear tipos de cupos",
+        "error_recuperar_tipos_cupo": "Error al recuperar los tipos de cupos"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Está seguro de inhabilitar este calendario?",

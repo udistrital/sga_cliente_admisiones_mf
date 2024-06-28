@@ -1652,7 +1652,10 @@
         "cupos_proyecto": "Number of assigned places",
         "cupos_disponibles": "Number of places available:",
         "cupos_opcionados": "Number of optioned places:",
-        "sin_cupos_periodo": "No quotas have been defined for this period or curricular project"
+        "sin_cupos_periodo": "No quotas have been defined for this period or curricular project",
+        "tipos_cupo": "Types of quotas",
+        "crear_tipos_cupo": "Create quota types",
+        "error_recuperar_tipos_cupo": "Error recovering quota types"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Are you sure to disable this calendar?",
