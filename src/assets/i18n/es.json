@@ -1687,7 +1687,10 @@
         "sin_cupos_periodo": "No se ha definido cupos para este periodo o proyecto curricular",
         "tipos_cupo": "Tipos de cupos",
         "crear_tipos_cupo": "Crear tipos de cupos",
-        "error_recuperar_tipos_cupo": "Error al recuperar los tipos de cupos"
+        "error_recuperar_tipos_cupo": "Error al recuperar los tipos de cupos",
+        "descripcion_crear_tipos_cupo": "¿Esta seguro/a de continuar con el registro del tipo de cupo?",
+        "creacion_tipos_cupo_exito": "Creación exitosa del tipo de cupo",
+        "creacion_tipos_cupo_fallo": "Ocurrio un error tratando de crear el tipo de cupo"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Está seguro de inhabilitar este calendario?",

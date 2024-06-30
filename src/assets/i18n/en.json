@@ -1655,7 +1655,10 @@
         "sin_cupos_periodo": "No quotas have been defined for this period or curricular project",
         "tipos_cupo": "Types of quotas",
         "crear_tipos_cupo": "Create quota types",
-        "error_recuperar_tipos_cupo": "Error recovering quota types"
+        "error_recuperar_tipos_cupo": "Error recovering quota types",
+        "descripcion_crear_tipos_cupo": "Are you sure to continue with the registration of the quota type?",
+        "creacion_tipos_cupo_exito": "Successful quota type creation",
+        "creacion_tipos_cupo_fallo": "An error occurred trying to create the quota type"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Are you sure to disable this calendar?",

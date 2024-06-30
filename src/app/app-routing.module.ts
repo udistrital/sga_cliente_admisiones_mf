@@ -30,6 +30,8 @@ import { CorreoInstitucionalComponent } from './components/correo-institucional/
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lista-tipo-inscripcion/lista-tipo-inscripcion.component';
 import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/creacion-tipo-inscipcion/creacion-tipo-inscipcion.component';
+import { ListaTipoCuposComponent } from './components/tipo-cupos/lista-tipo-cupos/lista-tipo-cupos.component';
+import { CreacionTipoCuposComponent } from './components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component';
 
 
 const routes: Routes = [
@@ -135,6 +137,14 @@ const routes: Routes = [
   {
     path:"crear-tipo-inscripcion", 
     component: CreacionTipoInscipcionComponent,
+  },
+  {
+    path:"lista-tipo-cupos", 
+    component: ListaTipoCuposComponent,
+  },
+  {
+    path:"crear-tipo-cupos", 
+    component: CreacionTipoCuposComponent,
   },
 ];
 

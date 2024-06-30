@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { ParametrosService } from 'src/app/services/parametros.service';
@@ -25,6 +26,7 @@ export class ListaTipoCuposComponent {
     private parametrosService: ParametrosService,
     private translate: TranslateService,
     private popUpManager: PopUpManager,
+    private router: Router,
   ) {}
 
   async ngOnInit() {
@@ -62,5 +64,9 @@ export class ListaTipoCuposComponent {
           }
         );
     });
+  }
+
+  navigateToCrearTipoCupo() {
+    this.router.navigate(['/crear-tipo-cupos']);
   }
 }
