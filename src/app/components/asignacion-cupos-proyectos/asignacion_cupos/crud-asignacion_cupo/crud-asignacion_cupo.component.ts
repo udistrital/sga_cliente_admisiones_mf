@@ -20,6 +20,7 @@ import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service';
+import { UserService } from 'src/app/services/users.service';
 
 
 @Component({
@@ -40,6 +41,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
 
   info_actualizar_estados: any;
   info_info_persona: any;
+  info_persona_id: any;
   info_cupos: any;
   info_criterio_icfes_post: any;
   showFormPregrado: boolean = false;
@@ -84,7 +86,8 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     private router: Router,
     private http: HttpClient,
     private inscripcionService: InscripcionService,
-    private inscripcionMidService: InscripcionMidService,) {
+    private inscripcionMidService: InscripcionMidService,
+    private usuarioService: UserService) {
     this.settings_emphasys = {
       delete: {
         deleteButtonContent: '<i class="nb-trash"></i>',
@@ -321,6 +324,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.show_posgrado = this.info_nivel;
     this.obtenerCupos();
+    this.info_persona_id = this.usuarioService.getPersonaId();
   }
 
   obtenerCupos() {
@@ -430,7 +434,8 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
               if (element.PersonaId != undefined) {
                 if ((index + 1) <= this.info_cupos.CuposAsignados) {
                   element.EstadoInscripcionId.Id = 2;
-                  this.inscripcionService.put('inscripcion/', element)
+                  element.TerceroId = this.info_persona_id;
+                  this.inscripcionMidService.post('inscripciones/actualizar-inscripcion', element)
                     .subscribe(res => {
                       this.loading = false;
                     },
@@ -447,7 +452,8 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
                       });
                 } else {
                   element.EstadoInscripcionId.Id = 4;
-                  this.inscripcionService.put('inscripcion/', element)
+                  element.TerceroId = this.info_persona_id;
+                  this.inscripcionMidService.post('inscripciones/actualizar-inscripcion', element)
                     .subscribe(res => {
                       this.loading = false;
                     },
