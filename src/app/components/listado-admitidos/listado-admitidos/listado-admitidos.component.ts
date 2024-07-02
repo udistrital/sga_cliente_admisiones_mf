@@ -19,10 +19,11 @@ import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 export class ListadoAdmitidosComponent {
 
   //NgIf
-  viewVariables: boolean = true;
+  viewFacultades: boolean = false;
+  viewCurriculares: boolean = false;
   viewSubcriterios: boolean = true;
   viewTablePuntaje: boolean = true;
-  viewCurriculares: boolean = true;
+
   viewAspirantesTables: boolean = false;
 
 
@@ -126,6 +127,7 @@ export class ListadoAdmitidosComponent {
             const facultades = res.data;
             this.datasourceFacultades = new MatTableDataSource<any>(facultades);
             this.datasourceFacultades.paginator = this.paginator1;
+            this.viewFacultades = true;
           } else {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_no_data'));
           }
@@ -146,6 +148,7 @@ export class ListadoAdmitidosComponent {
           this.proyectosCurriculares = res.data;
           this.datasourceCurriculares = new MatTableDataSource<any>(this.proyectosCurriculares);
           this.datasourceCurriculares.paginator = this.paginator2;
+          this.viewCurriculares = true;
         } else {
           this.popUpManager.showErrorAlert(this.translate.instant('admision.proyectos_no_data'));
         }
@@ -157,7 +160,6 @@ export class ListadoAdmitidosComponent {
 
   consultarproyecto(Id: number) {
     window.localStorage.setItem('IdProyecto', String(Id));
-    this.viewVariables = true;
     this.selectedcurricular = Id
     this.loadCriterios();
   }

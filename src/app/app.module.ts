@@ -17,7 +17,7 @@ import { DialogoDocumentosTransferenciasComponent } from './components/transfere
 import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { NgModule } from '@angular/core';
+import { EventEmitter, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -107,6 +107,8 @@ import { ListadoAdmitidosComponent } from './components/listado-admitidos/listad
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 import { TablaListadoAspirantesComponent } from './components/listado-admitidos/tabla-listado-aspirantes/tabla-listado-aspirantes.component';
 import { SgaCalendarioMidService } from './services/sga_calendario_mid.service';
+import { EventoService } from './services/evento.service';
+import { SgaProyectoAcademicoService } from './services/sga_proyecto_academico.service';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -244,6 +246,8 @@ export function createTranslateLoader(http: HttpClient) {
     NotificacionesMidService,
     EvaluacionInscripcionService,
     SgaCalendarioMidService,
+    EventoService,
+    SgaProyectoAcademicoService,
   ],
   bootstrap: [AppComponent],
 })

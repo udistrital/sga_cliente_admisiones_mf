@@ -59,7 +59,7 @@
 
         <ng-container matColumnDef="inscripcion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-               
+
                 {{ 'evaluacion-admitidos.tipo_inscripcion' | translate }}
             </th>
             <td mat-cell *matCellDef="let row">{{row.inscripcion}}</td>
@@ -79,5 +79,5 @@
         </tr>
     </table>
 
-    <mat-paginator #paginator2 [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+    <mat-paginator #paginator1 [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
 </div>
