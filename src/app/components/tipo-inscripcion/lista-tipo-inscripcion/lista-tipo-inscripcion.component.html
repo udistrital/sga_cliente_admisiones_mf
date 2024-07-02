@@ -54,11 +54,11 @@
                                 <mat-icon>more_vert</mat-icon>
                             </button>
                             <mat-menu #menu="matMenu">
-                                <button mat-menu-item>
+                                <button mat-menu-item (click)="navigateToEditarTipoInscripcion(row)">
                                     <mat-icon>edit</mat-icon>
                                     <span>{{"GLOBAL.editar" | translate}}</span>
                                 </button>
-                                <button mat-menu-item>
+                                <button mat-menu-item (click)="eliminar(row)" *ngIf="row.Activo">
                                     <mat-icon class="icon-delete">delete</mat-icon>
                                     <span>{{"GLOBAL.eliminar" | translate}}</span>
                                 </button>

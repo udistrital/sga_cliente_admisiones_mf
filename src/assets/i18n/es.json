@@ -1690,7 +1690,15 @@
         "error_recuperar_tipos_cupo": "Error al recuperar los tipos de cupos",
         "descripcion_crear_tipos_cupo": "¿Esta seguro/a de continuar con el registro del tipo de cupo?",
         "creacion_tipos_cupo_exito": "Creación exitosa del tipo de cupo",
-        "creacion_tipos_cupo_fallo": "Ocurrio un error tratando de crear el tipo de cupo"
+        "creacion_tipos_cupo_fallo": "Ocurrio un error tratando de crear el tipo de cupo",
+        "actualizar_tipos_cupo": "Actualizar tipo de cupo",
+        "descripcion_actualizar_tipos_cupo": "¿Esta seguro/a de continuar con la actualización del tipo de cupo?",
+        "actualizacion_tipos_cupo_exito": "Actualización exitosa del tipo de cupo",
+        "actualizacion_tipos_cupo_fallo": "Ocurrio un error tratando de actualizar el tipo de cupo",
+        "eliminar_tipos_cupo": "Eliminar tipo de cupo",
+        "descripcion_eliminar_tipos_cupo": "¿Esta seguro/a de continuar con la eliminación del tipo de cupo?",
+        "eliminacion_tipos_cupo_exito": "Eliminación exitosa del tipo de cupo",
+        "eliminacion_tipos_cupo_fallo": "Ocurrio un error tratando de eliminar el tipo de cupo"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Está seguro de inhabilitar este calendario?",
@@ -1927,6 +1935,7 @@
         "tipo_inscripcion_deshabilitado_error": "Error deshabilitando tipo inscripción",
         "seguro_actualizar_tipo_inscripcion": "¿Está seguro de actualizar este tipo de inscripción?",
         "tipo_inscripcion_actualizado": "Tipo inscripción actualizado",
+        "tipo_inscripcion_actualizado_error": "Ocurrió un error actualizando el tipo de inscripción",
         "seguro_continuar_registrar_tipo_inscripcion": "¿Está seguro de registrar este tipo de inscripción?",
         "tipo_inscripcion_creado": "Tipo de inscripción creado",
         "error_tipo_inscripcion_creado": "Error al crear el tipo de inscripción",

@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
+import { MODALS } from 'src/app/models/diccionario/diccionario';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 
@@ -60,7 +61,6 @@ export class ListaTipoInscripcionComponent {
         .subscribe(
           (res: any) => {
             this.niveles = res
-            console.log(res);
             resolve(res);
           },
           (error: any) => {
@@ -95,11 +95,64 @@ export class ListaTipoInscripcionComponent {
       const nivel: any = this.niveles.find((nivel: any) => nivel.Id == tipo.NivelId)
       tipo["Nivel"] = nivel ? nivel.Nombre : 'Indefinido';
     }
-    console.log(tiposInscripcion);
     return tiposInscripcion
   }
 
   navigateToCrearTipoInscripcion() {
-    this.router.navigate(['/crear-tipo-inscripcion']);
+    this.router.navigate(
+      ['/crear-tipo-inscripcion'], 
+      { state: { data: 
+        {editando: false} 
+      } }
+    );
+  }
+
+  navigateToEditarTipoInscripcion(data: any) {
+    this.router.navigate(
+      ['/crear-tipo-inscripcion'], 
+      { state: { data: {
+          editando: true,
+          info: data
+        }} 
+      }
+    );
+  }
+
+  eliminar(data: any) {
+    this.popUpManager.showPopUpGeneric(
+      this.translate.instant('tipo_inscripcion.tooltip_eliminar'),
+      this.translate.instant('tipo_inscripcion.seguro_deshabilitar_tipo_inscripcion'),
+      MODALS.INFO,
+      true).then(
+        async (action) => {
+          if (action.value) {
+            await this.prepararEliminacion(data);
+          }
+        });
+  }
+
+  async prepararEliminacion(data: any) {
+    this.loading = true;
+    data.Activo = false;
+    await this.actualizarTipoInscripcion(data);
+    this.loading = false;
+  }
+
+  actualizarTipoInscripcion(body: any) {
+    return new Promise((resolve, reject) => {
+      this.inscripcionService
+        .put('tipo_inscripcion/', body)
+        .subscribe(
+          (res: any) => {
+            this.popUpManager.showSuccessAlert(this.translate.instant('tipo_inscripcion.tipo_inscripcion_deshabilitado'));
+            resolve(true);
+          },
+          (error: any) => {
+            this.loading = false;
+            this.popUpManager.showErrorAlert(this.translate.instant('tipo_inscripcion.tipo_inscripcion_deshabilitado_error'));
+            reject(false);
+          }
+        );
+    });
   }
 }

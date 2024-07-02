@@ -32,13 +32,14 @@
                 <div class="form-col1">
                     <mat-form-field>
                         <mat-label>{{ 'GLOBAL.numero_orden' | translate }}</mat-label>
-                        <input matInput formControlName="numero_orden">
+                        <input type="number" matInput formControlName="numero_orden">
                     </mat-form-field>
                 </div>
             </div>
         </form>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-button class="boton-principal" (click)="guardar()">{{"cupos.crear_tipos_cupo" | translate}}</button>
+        <button mat-button class="boton-principal" (click)="guardar()" *ngIf="!editando">{{"cupos.crear_tipos_cupo" | translate}}</button>
+        <button mat-button class="boton-principal" (click)="actualizar()" *ngIf="editando">{{"cupos.actualizar_tipos_cupo" | translate}}</button>
     </mat-card-actions>
 </mat-card>

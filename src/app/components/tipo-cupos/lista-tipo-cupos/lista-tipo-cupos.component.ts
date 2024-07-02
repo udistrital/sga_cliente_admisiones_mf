@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
+import { MODALS } from 'src/app/models/diccionario/diccionario';
 import { ParametrosService } from 'src/app/services/parametros.service';
 
 @Component({
@@ -50,10 +51,9 @@ export class ListaTipoCuposComponent {
   cargarTiposCupos() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get('parametro?limit=0&query=TipoParametroId%3A87')
+        .get('parametro?sortby=Id&order=desc&limit=0&query=TipoParametroId%3A87')
         .subscribe(
           (res: any) => {
-            console.log(res);
             this.tiposCupos = res.Data;
             resolve(res);
           },
@@ -67,6 +67,64 @@ export class ListaTipoCuposComponent {
   }
 
   navigateToCrearTipoCupo() {
-    this.router.navigate(['/crear-tipo-cupos']);
+    this.router.navigate(
+      ['/crear-tipo-cupos'], 
+      { state: { data: 
+        {editando: false} 
+      } }
+    );
   }
+
+  navigateToEditarTipoCupo(data: any) {
+    this.router.navigate(
+      ['/crear-tipo-cupos'], 
+      { state: { data: {
+          editando: true,
+          info: data
+        }} 
+      }
+    );
+  }
+
+  eliminar(data: any) {
+    this.popUpManager.showPopUpGeneric(
+      this.translate.instant('cupos.eliminar_tipos_cupo'),
+      this.translate.instant('cupos.descripcion_eliminar_tipos_cupo'),
+      MODALS.INFO,
+      true).then(
+        async (action) => {
+          if (action.value) {
+            await this.prepararEliminacion(data);
+          }
+        });
+  }
+
+  async prepararEliminacion(data: any) {
+    this.loading = true;
+    data.Activo = false;
+    data.TipoParametroId = {
+      "Id": data.TipoParametroId.Id
+    }
+    await this.actualizarTipoCupo(data);
+    this.loading = false;
+  }
+
+  actualizarTipoCupo(body: any) {
+    return new Promise((resolve, reject) => {
+      this.parametrosService
+        .put('parametro/', body)
+        .subscribe(
+          (res: any) => {
+            this.popUpManager.showSuccessAlert(this.translate.instant('cupos.eliminacion_tipos_cupo_exito'));
+            resolve(true);
+          },
+          (error: any) => {
+            this.loading = false;
+            this.popUpManager.showErrorAlert(this.translate.instant('cupos.eliminacion_tipos_cupo_fallo'));
+            reject(false);
+          }
+        );
+    });
+  }
+  
 }

@@ -1658,7 +1658,15 @@
         "error_recuperar_tipos_cupo": "Error recovering quota types",
         "descripcion_crear_tipos_cupo": "Are you sure to continue with the registration of the quota type?",
         "creacion_tipos_cupo_exito": "Successful quota type creation",
-        "creacion_tipos_cupo_fallo": "An error occurred trying to create the quota type"
+        "creacion_tipos_cupo_fallo": "An error occurred trying to create the quota type",
+        "actualizar_tipos_cupo": "Update quota type",
+        "descripcion_actualizar_tipos_cupo": "Are you sure about continuing with updating the quota type?",
+        "actualizacion_tipos_cupo_exito": "Successful quota type update",
+        "actualizacion_tipos_cupo_fallo": "An error occurred trying to update the quota type",
+        "eliminar_tipos_cupo": "Delete quota type",
+        "descripcion_eliminar_tipos_cupo": "Are you sure about continuing with the elimination of the quota type?",
+        "eliminacion_tipos_cupo_exito": "Successful removal of quota type",
+        "eliminacion_tipos_cupo_fallo": "An error occurred trying to delete the quota type"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Are you sure to disable this calendar?",
@@ -1863,6 +1871,7 @@
         "tipo_inscripcion_deshabilitado_error": "Error disabling registration type",
         "seguro_actualizar_tipo_inscripcion": "Are you sure to update this registration type?",
         "tipo_inscripcion_actualizado": "Updated registration type",
+        "tipo_inscripcion_actualizado_error": "An error occurred updating the registration type",
         "seguro_continuar_registrar_tipo_inscripcion": "Are you sure you register this registration type?",
         "tipo_inscripcion_creado": "Type register created",
         "error_tipo_inscripcion_creado": "Error creating enrollment type",

@@ -14,6 +14,7 @@ import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.se
   styleUrls: ['./creacion-tipo-inscipcion.component.scss']
 })
 export class CreacionTipoInscipcionComponent {
+  data: any;
 
   infoTipoInscripcion = this.fb.group({
     nombre: ['', Validators.required],
@@ -25,6 +26,8 @@ export class CreacionTipoInscipcionComponent {
   });
 
   loading!: boolean;
+  editando: boolean = false;
+  infoInscripcion!: any;
   niveles!: any;
 
   constructor(
@@ -39,6 +42,12 @@ export class CreacionTipoInscipcionComponent {
   async ngOnInit() {
     this.loading = true;
     await this.cargarNiveles();
+    this.data = history.state.data;
+    this.editando = this.data.editando
+    if (this.editando) {
+      this.infoInscripcion = this.data.info
+      this.setearCamposFormularios(this.infoInscripcion)
+    }
     this.loading = false;
   }
 
@@ -49,7 +58,6 @@ export class CreacionTipoInscipcionComponent {
         .subscribe(
           (res: any) => {
             this.niveles = res
-            console.log(res);
             resolve(res);
           },
           (error: any) => {
@@ -90,9 +98,7 @@ export class CreacionTipoInscipcionComponent {
     newTipoInscripcion.NivelId = Number(this.infoTipoInscripcion.get('nivel')!.value) ?? 0;
     newTipoInscripcion.Especial = this.infoTipoInscripcion.get('especial')!.value ?? false;
 
-    console.log(newTipoInscripcion)
     const res = await this.crearTipoInscripcion(newTipoInscripcion);
-    console.log(res);
     if (res) {
       this.router.navigate(['/lista-tipo-inscripcion']);
     }
@@ -105,7 +111,6 @@ export class CreacionTipoInscipcionComponent {
         .post('tipo_inscripcion', body)
         .subscribe(
           (res: any) => {
-            console.log(res);
             this.popUpManager.showSuccessAlert(this.translate.instant('tipo_inscripcion.tipo_inscripcion_creado'));
             resolve(true);
           },
@@ -118,4 +123,66 @@ export class CreacionTipoInscipcionComponent {
     });
   }
 
+  setearCamposFormularios(data: any) {
+    const infoInscripcion: any = {
+      nombre: data['Nombre'],
+      descripcion: data['Descripcion'],
+      codigo_abreviacion: data['CodigoAbreviacion'],
+      numero_orden: data['NumeroOrden'],
+      especial: data['Especial']
+    }
+    this.infoTipoInscripcion.patchValue(infoInscripcion);
+  }
+
+  actualizar() {
+    this.infoTipoInscripcion.markAllAsTouched();
+    if (this.infoTipoInscripcion.valid) {
+      this.popUpManager.showPopUpGeneric(
+        this.translate.instant('tipo_inscripcion.tooltip_editar'),
+        this.translate.instant('tipo_inscripcion.seguro_actualizar_tipo_inscripcion'),
+        MODALS.INFO,
+        true).then(
+          async (action) => {
+            if (action.value) {
+              await this.prepararActualizacion();
+            }
+          });
+    } else {
+      this.popUpManager.showErrorAlert(this.translate.instant('ERROR.error_formulario_incompleto'));
+    }
+  }
+
+  async prepararActualizacion() {
+    this.loading = true;
+    this.infoInscripcion.Nombre = this.infoTipoInscripcion.get('nombre')!.value ?? this.infoInscripcion.Nombre;
+    this.infoInscripcion.Descripcion = this.infoTipoInscripcion.get('descripcion')!.value ?? this.infoInscripcion.Descripcion;
+    this.infoInscripcion.CodigoAbreviacion = this.infoTipoInscripcion.get('codigo_abreviacion')!.value ?? this.infoInscripcion.CodigoAbreviacion;
+    this.infoInscripcion.NumeroOrden = Number(this.infoTipoInscripcion.get('numero_orden')!.value) ?? this.infoInscripcion.NumeroOrden;
+    this.infoInscripcion.NivelId = Number(this.infoTipoInscripcion.get('nivel')!.value) ?? this.infoInscripcion.NivelId;
+    this.infoInscripcion.Especial = this.infoTipoInscripcion.get('especial')!.value ?? this.infoInscripcion.Especial;
+
+    const res = await this.actualizarTipoInscripcion(this.infoInscripcion);
+    if (res) {
+      this.router.navigate(['/lista-tipo-inscripcion']);
+    }
+    this.loading = false;
+  }
+
+  actualizarTipoInscripcion(body: any) {
+    return new Promise((resolve, reject) => {
+      this.inscripcionService
+        .put('tipo_inscripcion/', body)
+        .subscribe(
+          (res: any) => {
+            this.popUpManager.showSuccessAlert(this.translate.instant('tipo_inscripcion.tipo_inscripcion_actualizado'));
+            resolve(true);
+          },
+          (error: any) => {
+            this.loading = false;
+            this.popUpManager.showErrorAlert(this.translate.instant('tipo_inscripcion.tipo_inscripcion_actualizado_error'));
+            reject(false);
+          }
+        );
+    });
+  }
 }
