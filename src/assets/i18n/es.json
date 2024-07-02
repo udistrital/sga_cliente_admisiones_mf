@@ -2182,7 +2182,7 @@
         "nodata": "No se encontraron históricos"
     },
     "evaluacionpregrado": {
-        "aspirante": "Evaluación Aspirante Pregrado",
+        "aspirante": "Evaluación de Aspirantes a Pregrado",
         "facultades": "Facultades",
         "facultad": "Facultad",
         "estado": "Estado",
@@ -2193,17 +2193,22 @@
         "proyecto_curricular": "Proyecto Curricular",
         "variables": "Variables",
         "periodo": "Periodo",
-        "nivel_aviso": "Nivel de Aviso",
+        "nivel_aviso": "Nivel de Alerta",
         "seleccionar": "Seleccionar",
         "criterio_consultar": "Criterio a Consultar",
         "erro_selec_nivel": "Por favor seleccione un nivel",
         "tooltip_eliminar": "Eliminar",
-        "subcriterios": "Subcriterios",
-        "subcriterio": "Subcriterio"
+        "criterios": "Criterios",
+        "criterio": "Criterio",
+        "revision": "Revisión de Documentos",
+        "puntaje": "Calcular puntaje de los aspirantes",
+        "listado": "Listado de aspirantes registrados",
+        "evaluar_criterio": "Evaluar Criterio",
+        "revision_curricular": "Enviar para revisión al proyecto curricular",
+        "descargar_pdf": "Descargar listado (PDF/Excel)",
+        "definir_admitidos": "Definir listas de admitidos"
     },
-    
     "evaluacion-admitidos": {
-
         "titulo": "Listado admitidos",
         "listado_inscritos": "Listado de inscritos",
         "listado_inscritos_cupos_especiales": "Listado de inscritos  cupos especiales",
@@ -2217,15 +2222,16 @@
         "puntaje": "Puntaje ICFES",
         "puntaje_ponderado": "Puntaje ponderado",
         "tipo_inscripcion": "Tipo de inscripción",
-        "estado_inscripcion": "Estado"
-
+        "estado_inscripcion": "Estado",
+        "listado_admitidos_alerta_cumple": "Listado de personas inscritas que cumplen con el puntaje minimo requerido",
+        "listado_admitidos_alerta_no_cumple": "Listado de personas inscritas que NO cumplen con el puntaje minimo requerido"
     },
     "listado-oficializados": {
         "titulo": "Oficializacion",
         "info_listado_admitidos": "Este modulo le apoyara en el procso de depurar el listado de admitidos que han oficializado, a su vez liberar cupos de las personas que no terminan han terminao el proceso",
-        "plazos": "Primer plazo: Fecha 1 - Fecha 2",
-        "estado": "Estado: Abierto, culminada, solicitud de correos realizada",
-        "proceso_admision" : "Proceso de admisión",
+        "plazos": "Plazo Activo:",
+        "estado": "Estado:",
+        "proceso_admision": "Proceso de admisión",
         "fecha_inicial_final": "Fecha inicial - Fecha final",
         "estados": "Estado",
         "gestion": "Gestión",
@@ -2235,6 +2241,41 @@
         "descargar_listado": "Descargar listado",
         "sugerir_usuarios": "Sugerir usuarios",
         "solicitud_correos_institucionales": "Enviar Solicitud de correos institucionales",
-        "liberar_cupos": "Liberar cupos"
+        "liberar_cupos": "Liberar cupos",
+        "correo_sugerido": "Correo sugerido",
+        "correo_asignado": "Correo asignado"
+    },
+    "preinscripcion-proyectos-curriculares": {
+        "titulo": "Informacion Personal",
+        "primer_nombre": "Primer nombre",
+        "segundo_nombre": "Segundo nombre",
+        "primer_apellido": "Primer apellido",
+        "segundo_apellido": "Primer apellido",
+        "tipo_documento": "Tipo de documento",
+        "numero_documento": "Número de documento",
+        "fecha_expedicion": "Fecha de expedición",
+        "fecha_nacimiento": "Fecha de nacimiento",
+        "sexo": "Sexo",
+        "correo_eletronico": "Correo electrónico",
+        "telefono": "Teléfono",
+        "listado_preinscripciones": "Listado de inscripciones",
+        "recibo": "Recibo",
+        "inscripcion": "Inscripción",
+        "nivel": "Nivel",
+        "tipo_inscripcion": "Tipo de inscripción",
+        "estado_inscripcion": "Estado de inscripción",
+        "fecha_generacion": "Fecha de generación",
+        "estado_recibo": "Estado de recibo",
+        "descargar": "Descargar",
+        "opcion": "Opción",
+        "resultado": "Resultado",
+        "informacion_detalle_preinscripcion": "Información detallada de la inscripción",
+        "credencial": "Credencial",
+        "proyecto": "Proyecto",
+        "puntaje": "Puntaje",
+        "estado": "Estado",
+        "pin": "Recibos denerados (PIN)",
+        "alerta": "Aspirante, recuerde que solo podra generar hasta 3 recibos en estado pendiente de pago, si desea generar otra inscripcion a otro proyecto debera pagar al menos uno de los recibos generados",
+        "periodo_inscrito": "Periodo inscrito"
     }
 }
