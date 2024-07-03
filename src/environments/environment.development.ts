@@ -97,7 +97,6 @@ export const environment = {
     SGA_PROYECTO_CURRICULAR_MID: "http://pruebasapi2.intranetoas.udistrital.edu.co:8540/v1/",
     NOTIFICACION_MID: 'http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/',
     CALENDARIO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/",
-    SGA_PROYECTO_CURRICULAR_MID: "http://pruebasapi2.intranetoas.udistrital.edu.co:8540/v1/",
     //SOLICITUDES_ADMISIONES:'https://autenticacion.portaloas.udistrital.edu.co/apioas/solicitudes_crud/v1',
   };
   

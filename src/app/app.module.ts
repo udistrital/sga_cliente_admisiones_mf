@@ -99,7 +99,6 @@ import { ListadoAspirantesPregradoComponent } from './components/listado-aspiran
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
-import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
 import { LiquidacionPosgradoTableComponent } from './components/liquidacion-recibos/liquidacion-posgrado-table/liquidacion-posgrado-table.component';
 import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
 import { CrudListadosOficializadosComponent } from './components/crud-listados-oficializados/crud-listados-oficializados.component';
@@ -186,7 +185,6 @@ export function createTranslateLoader(http: HttpClient) {
     CargueSnpComponent,
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
-    CorreoInstitucionalComponent,
     LiquidacionPosgradoTableComponent,
     ListadosOficializadosComponent,
     CrudListadosOficializadosComponent,
