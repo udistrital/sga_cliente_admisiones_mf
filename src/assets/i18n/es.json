@@ -2593,7 +2593,9 @@
         "select_identificacion": "Número identificación docente:",
         "select_nombre": "Nombre del Docente:",
         "select_vinculacion": "Tipo de vinculación del docente:",
-        "select_horas": "Horas asignadas:"
+        "select_horas": "Horas asignadas:",
+        "mensaje_doctorado": "El calendario actual contiene múltiples periodos asignados",
+        "mensaje_doctorado_mensaje": "Por favor, revise los detalles para evitar conflictos en las asignaciones."
     },
     "liquidacion": {
         "recibos": "Información del proyecto curricular",

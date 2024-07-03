@@ -31,6 +31,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
+import { CalendarioMidService } from 'src/app/services/calendario_mid.service';
+import { EventosService } from 'src/app/services/eventos.service';
 
 
 @Component({
@@ -47,6 +49,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   loading: boolean = false;
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
+  Campo2Control = new FormControl('', [Validators.required]);
   settings: any;
   // dataSource: LocalDataSource;
   dataSourceColumn = ["credencial", "identificacion", "nombre", "estado", "acciones"]
@@ -74,6 +77,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   selectMultipleNivel: boolean = false;
   mostrarBoton = false;
   mostrarMensajeInicial = false;
+  nombresPeriodos: string = "";         
+  
 
 
   periodos: any = [];
@@ -83,6 +88,9 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   //info para notificaciones
   nombreRevisor = "";
   telefonoDep = "";
+
+  periodoMultiple: any;
+  listaPeriodos: any[] = [];
 
 
   constructor(
@@ -104,6 +112,9 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     private evaluacionInscripcionService: EvaluacionInscripcionService,
     private autenticationService: ImplicitAutenticationService,
     private oikosService: OikosService,
+    private calendarioMidService: CalendarioMidService,
+    private eventosService: EventosService,
+    
   ) {
     this.invitacion = new Invitacion();
     this.invitacionTemplate = new InvitacionTemplate();
@@ -215,6 +226,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     }
   }
 
+
   cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
     const nivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado");
     if (nivelDoctorado) {
@@ -228,7 +240,36 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
       this.mostrarMensajeInicial = false;
     }
     this.loadProyectos();
+    this.selectMultipleNivel = true;
+      this.mostrarBoton = true;
+      this.mostrarMensajeInicial = true;
   }
+
+  consultarPeriodosDoctorado(idProyecto: number) {
+    this.calendarioMidService.get(`calendario-proyecto/${idProyecto}`).subscribe(
+      (response: any) => {        
+        const CalendarioId = response.Data.CalendarioId;
+        this.eventosService.get(`calendario/${CalendarioId}`).subscribe(
+          (response2: any) => {
+            const listaPeriodos: number[] = JSON.parse(response2.MultiplePeriodoId);            
+            listaPeriodos.forEach(periodoId => {              
+              this.parametrosService.get(`periodo/${periodoId}`).subscribe(
+                (response3: any) => {
+                  this.nombresPeriodos = this.nombresPeriodos + response3.Data.Nombre + ', ';
+                }
+              )
+            });
+          },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendario') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
+          }
+        );
+      },
+      (error: any) => {        
+        this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendario') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
+      }
+    );
+  }  
 
   loadProyectos() {
     // this.dataSource.load([]);
@@ -240,6 +281,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
           this.autenticationService.getRole().then(
             // (rol: Array<String>) => {
             (rol: any) => {
+              rol = ["ADMIN_SGA"];
               let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
               if (r) {
                 this.proyectos = <any[]>response.filter(
@@ -285,40 +327,81 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   loadInscritos() {
-    this.loading = true;
-    // this.dataSource.load([]);
-    this.dataSource = new MatTableDataSource()
-    this.Aspirantes = [];
-    this.sgaMiAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
-      .subscribe(
-        (response: any) => {
-          if (response.Success == true && response.Status == 200) {
-            this.Aspirantes = response.Data;
-            this.cantidad_inscritos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO").length;
-            this.cantidad_inscritos_obs = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO con Observación").length;
-            this.cantidad_admitidos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "ADMITIDO").length;
-            this.cantidad_aspirantes = this.cantidad_inscritos + this.cantidad_inscritos_obs + this.cantidad_admitidos;
-            // this.dataSource.load(this.Aspirantes);
-            this.dataSource = new MatTableDataSource(this.Aspirantes)
-            setTimeout(() => {
-              this.dataSource.paginator = this.paginator;
-              this.dataSource.sort = this.sort;
-            }, 300);
-            this.loading = false;
-            this.mostrarConteos = true;
+    if(this.selectMultipleNivel) {
+      console.log(this.periodoMultiple)
+      let selectPeriodo: any [] = this.periodoMultiple;
+      this.Aspirantes = [];
+      this.loading = true;
+      this.dataSource = new MatTableDataSource()
+      selectPeriodo.forEach(async (periodo: any, i) => {
+        await this.sgaMiAdmisiones.get('admision/aspirantespor?id_periodo=' + periodo + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
+        .subscribe(
+          (response: any) => {
+            if (response.Success == true && response.Status == 200) {
+              this.Aspirantes.push(...response.Data);
+              if (i == selectPeriodo.length - 1) {
+                this.cantidad_inscritos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO").length;
+                this.cantidad_inscritos_obs = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO con Observación").length;
+                this.cantidad_admitidos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "ADMITIDO").length;
+                this.cantidad_aspirantes = this.cantidad_inscritos + this.cantidad_inscritos_obs + this.cantidad_admitidos;              
+                this.dataSource = new MatTableDataSource(this.Aspirantes)
+                setTimeout(() => {
+                  this.dataSource.paginator = this.paginator;
+                  this.dataSource.sort = this.sort;
+                }, 300);
+                this.loading = false;
+                this.mostrarConteos = true;
+              }
+            }
+          },
+          (error: HttpErrorResponse) => {
+            // ? No es error simplemente no había inscritos para ese periodo
           }
-        },
-        (error: HttpErrorResponse) => {
-          this.loading = false;
-          this.mostrarConteos = false;
-          Swal.fire({
-            icon: 'warning',
-            title: this.translate.instant('admision.titulo_no_aspirantes'),
-            text: this.translate.instant('admision.error_no_aspirantes'),
-            confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-          });
-        }
-      );
+        );
+
+        
+        
+      }
+    )    
+    } else {
+      this.loading = true;
+      // this.dataSource.load([]);
+      this.dataSource = new MatTableDataSource()
+      this.Aspirantes = [];
+      console.log('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
+      this.sgaMiAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=1')
+        .subscribe(
+          (response: any) => {
+            if (response.Success == true && response.Status == 200) {
+              this.Aspirantes = response.Data;
+              this.cantidad_inscritos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO").length;
+              this.cantidad_inscritos_obs = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "INSCRITO con Observación").length;
+              this.cantidad_admitidos = this.Aspirantes.filter((aspirante: any) => aspirante.Estado == "ADMITIDO").length;
+              this.cantidad_aspirantes = this.cantidad_inscritos + this.cantidad_inscritos_obs + this.cantidad_admitidos;              
+              this.dataSource = new MatTableDataSource(this.Aspirantes)
+              setTimeout(() => {
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+              }, 300);
+              this.loading = false;
+              this.mostrarConteos = true;            
+            }
+          },
+          (error: HttpErrorResponse) => {
+            this.loading = false;
+            this.mostrarConteos = false;
+            Swal.fire({
+              icon: 'warning',
+              title: this.translate.instant('admision.titulo_no_aspirantes'),
+              text: this.translate.instant('admision.error_no_aspirantes'),
+              confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+            });
+          }
+        );
+    }
+
+
+   
 
 
     /* this.inscripcionService.get('inscripcion?query=EstadoInscripcionId__Id:5,ProgramaAcademicoId:' +

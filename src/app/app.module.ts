@@ -110,6 +110,7 @@ import { SgaCalendarioMidService } from './services/sga_calendario_mid.service';
 import { EventoService } from './services/evento.service';
 import { SgaProyectoAcademicoService } from './services/sga_proyecto_academico.service';
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
+import { EventosService } from './services/eventos.service';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -252,6 +253,7 @@ export function createTranslateLoader(http: HttpClient) {
     EvaluacionInscripcionService,
     SgaCalendarioMidService,
     SgaProyectoAcademicoService,
+    EventosService,
   ],
   bootstrap: [AppComponent],
 })
