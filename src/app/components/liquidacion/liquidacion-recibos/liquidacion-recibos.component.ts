@@ -66,7 +66,7 @@ export class LiquidacionRecibosComponent {
   }
 
 
-  tablaRecibo:boolean=true
+  tablaRecibo: boolean = true
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
@@ -179,10 +179,10 @@ export class LiquidacionRecibosComponent {
 
   mostrarTabla() {
     this.tabla = true;
-    this.cargarAdmitidos(this.selectedPeriodo,this.selectednivel)
+    this.cargarAdmitidos(this.selectedPeriodo, this.selectednivel)
     this.calculoMatricula();
   }
-  
+
 
   mostrarFormulario: boolean = false;
 
@@ -273,7 +273,7 @@ export class LiquidacionRecibosComponent {
   valorB4: number[] = []
   PBM!: number
   mostrarElementosLiquidacion!: boolean;
- 
+
   displayedColumns: string[] = ['seleccion', 'codigo', 'documento', 'nombres', 'apellidos', 'A1', 'puntaje1', 'A2', 'puntaje2', 'A3', 'puntaje3', 'B1', 'puntaje4', 'B2', 'puntaje5', 'B3', 'puntaje6', 'B4', 'puntaje7', 'G1', 'G2', 'G3', 'G4', 'total', 'acciones'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -388,7 +388,7 @@ export class LiquidacionRecibosComponent {
 
   applyFilterProces(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase(); 
+    this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -403,8 +403,10 @@ export class LiquidacionRecibosComponent {
   cargarAdmitidos(id_periodo: undefined, id_proyecto: undefined) {
     return new Promise((resolve, reject) => {
       //const url = `liquidacion/?id_periodo=${id_periodo}&id_proyecto=${id_proyecto}`;
-      const url = `liquidacion/?id_periodo=9&id_proyecto=32`;
+      // const url = `liquidacion?id_periodo=9&id_proyecto=32`;
   
+      const url = `liquidacion/?id_periodo=9&id_proyecto=30`;
+
       this.sgaAdmisiones.get(url).subscribe(
         (response: { Data: any; }) => {
           console.log('Datos cargados:', response);
@@ -414,15 +416,15 @@ export class LiquidacionRecibosComponent {
             element.Seguro = true;
             element.Carne = true;
             element.Sistematizacion = true;
-            element.a1='1';
-            element.a2='1';
-            element.a3='1';
-            element.b1='1';
-            element.b2='1';
-            element.b3='1';
-            element.b4='1';
-            element.pbm=10;
-            element.Correo = "pruebas@udistrital.edu.co";
+            element.a1 = '1';
+            element.a2 = '1';
+            element.a3 = '1';
+            element.b1 = '1';
+            element.b2 = '1';
+            element.b3 = '1';
+            element.b4 = '1';
+            element.pbm = 10;
+            element.Correo = this.asignarCorreo(element.User);
             this.calculoMatricula();
           });
           resolve(data); // Resuelve la promesa con los datos cargados
@@ -435,7 +437,20 @@ export class LiquidacionRecibosComponent {
     });
   }
 
-  
+  validarCorreo(correo: string) {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(correo);
+  }
+
+  asignarCorreo(correo: string) {
+    if (this.validarCorreo(correo)) {
+      return correo;
+    } else {
+      return "correo@correo.com";
+    }
+  }
+
+
   guardarLiquidaciones() {
     this.admitidos.forEach(row => {
       const liqDetalle = [];
@@ -448,12 +463,12 @@ export class LiquidacionRecibosComponent {
       if (row.Sistematizacion) {
         liqDetalle.push({ tipo_concepto_id: 111, valor: 111 }); //No exixte parametro para sistematización 
       }
-      if (row.pbm) { 
+      if (row.pbm) {
         if (typeof row.pbm === 'number') {
           liqDetalle.push({ tipo_concepto_id: 111, valor: row.pbm }); //No exixte parametro para pbm
-      } else {
-        liqDetalle.push({ tipo_concepto_id: 111, valor: -1}); //No exixte parametro para pbm
-      }
+        } else {
+          liqDetalle.push({ tipo_concepto_id: 111, valor: -1 }); //No exixte parametro para pbm
+        }
       }
 
       const liquidacion = {
@@ -478,9 +493,9 @@ export class LiquidacionRecibosComponent {
     }
   }
 
-  calculoMatricula(){
+  calculoMatricula() {
     this.admitidos.forEach(element => {
-      element.totalMatricula = element.pbm*1000;
+      element.totalMatricula = element.pbm * 1000;
     });
   }
 
@@ -490,53 +505,53 @@ export class LiquidacionRecibosComponent {
       const reciboObs: { Ref: any; Descripcion: string; }[] = [];
       reciboConceptos.push({ Ref: "1", Descripcion: "MATRICULA", Valor: row.totalMatricula });
       if (row.Seguro) {
-        reciboConceptos.push({ Ref: "2", Descripcion:"SEGURO",Valor: 111 }); //No exixte parametro para seguro 
+        reciboConceptos.push({ Ref: "2", Descripcion: "SEGURO", Valor: 111 }); //No exixte parametro para seguro 
       }
       if (row.Carne) {
-        reciboConceptos.push({ Ref: "3", Descripcion:"CARNET",Valor: 111 }); //No exixte parametro para carné
+        reciboConceptos.push({ Ref: "3", Descripcion: "CARNET", Valor: 111 }); //No exixte parametro para carné
       }
       if (row.Sistematizacion) {
-        reciboConceptos.push({ Ref: "4", Descripcion:"SISTEMATIZACIÓN",Valor: 111 }); //No exixte parametro para sistematización 
+        reciboConceptos.push({ Ref: "4", Descripcion: "SISTEMATIZACIÓN", Valor: 111 }); //No exixte parametro para sistematización 
       }
       if (row.pbm) {
-        reciboConceptos.push({ Ref: "1", Descripcion:"MATRICULA",Valor: 111 }); //No exixte parametro para sistematización 
+        reciboConceptos.push({ Ref: "1", Descripcion: "MATRICULA", Valor: 111 }); //No exixte parametro para sistematización 
       }
       row.Descuentos.forEach((descuento: any) => {
         switch (descuento) {
           case 1:
-            reciboObs.push({ Ref: "1", Descripcion:"Certificado electoral" }); // Certificado electoral
+            reciboObs.push({ Ref: "1", Descripcion: "Certificado electoral" }); // Certificado electoral
             break;
           case 2:
-            reciboObs.push({ Ref: "2", Descripcion:"Certificado electoral" }); // Monitorias
+            reciboObs.push({ Ref: "2", Descripcion: "Certificado electoral" }); // Monitorias
             break;
           case 3:
-            reciboObs.push({ Ref: "3", Descripcion:"Representante de consejo superior y/o académico" }); // Representante de consejo superior y/o académico
+            reciboObs.push({ Ref: "3", Descripcion: "Representante de consejo superior y/o académico" }); // Representante de consejo superior y/o académico
             break;
           case 4:
-            reciboObs.push({ Ref: "4", Descripcion:"Mejor saber- pro (ECAES)" }); // Mejor saber- pro (ECAES)
+            reciboObs.push({ Ref: "4", Descripcion: "Mejor saber- pro (ECAES)" }); // Mejor saber- pro (ECAES)
             break;
           case 5:
-            reciboObs.push({ Ref: "5", Descripcion:"Pariente de personal de planta UD" }); // Pariente de personal de planta UD
+            reciboObs.push({ Ref: "5", Descripcion: "Pariente de personal de planta UD" }); // Pariente de personal de planta UD
             break;
           case 6:
-            reciboObs.push({ Ref: "6", Descripcion:"Egresado UD" }); // Egresado UD
+            reciboObs.push({ Ref: "6", Descripcion: "Egresado UD" }); // Egresado UD
             break;
           case 7:
-            reciboObs.push({ Ref: "7", Descripcion:"Beca de secretaría de educación" }); // Beca de secretaría de educación
+            reciboObs.push({ Ref: "7", Descripcion: "Beca de secretaría de educación" }); // Beca de secretaría de educación
             break;
           default:
             break;
         }
       });
       const recibo = {
-        Nombre: row.Nombre+row.PrimerApellido+row.SegundoApellido,
+        Nombre: row.Nombre + row.PrimerApellido + row.SegundoApellido,
         Tipo: "Estudiante",
         CodigoEstudiante: row.Codigo,
         Documento: row.Documento,
-        Periodo: this.selectedPeriodo.Nombre,
+        Periodo: "a",//this.selectedPeriodo.Nombre,
         Dependencia: {
           Tipo: "Proyecto Curricular",
-          Nombre: this.selectedProyecto.Nombre
+          Nombre: "a",//this.selectedProyecto.Nombre
         },
         Conceptos: reciboConceptos,
         Observaciones: reciboObs,
@@ -544,7 +559,8 @@ export class LiquidacionRecibosComponent {
         Fecha2: "30/02/2023",
         Recargo: 1.5,
         Comprobante: "0666",
-        Correo: row.Correo
+        Correo: row.Correo,
+        CorreosAlt: row.Correos
       };
       this.recibos.push(recibo);
     });
@@ -572,7 +588,8 @@ export class LiquidacionRecibosComponent {
               byteNumbers[j] = byteArray.charCodeAt(j);
             }
             const file = new Blob([new Uint8Array(byteNumbers)], { type: 'application/pdf' });
-            const fileName = `recibo_${recibo.CodigoEstudiante}_${this.selectedPeriodo.Id}_${this.selectedProyecto.Id}_${i}.pdf`;
+            const fileName = `recibo_${recibo.CodigoEstudiante}_${9}_${30}_${i}.pdf`;
+            //${this.selectedPeriodo.Id}_${this.selectedProyecto.Id}_${i}.pdf`;
             const fileWithFileName = new File([file], fileName, { type: file.type });
             this.pdfs.push(fileWithFileName);
 
@@ -581,6 +598,7 @@ export class LiquidacionRecibosComponent {
               data: response.data,
               fileName: fileName,
               correo: recibo.Correo,
+              correosAlt: recibo.CorreosAlt,
               nombre: recibo.Nombre,
               codigo: recibo.CodigoEstudiante
             };
@@ -620,7 +638,7 @@ export class LiquidacionRecibosComponent {
         Destinations: [
           {
             Destination: {
-              BccAddresses: [],
+              BccAddresses: [],//notificacion.correosAlt,
               CcAddresses: [],
               ToAddresses: [
                 notificacion.correo

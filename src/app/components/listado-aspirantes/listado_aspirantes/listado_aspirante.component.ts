@@ -26,6 +26,8 @@ import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.se
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { State } from './estado-inscripcion';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 @Component({
     // tslint:disable-next-line: component-selector
     selector: 'ngx-listado-aspirante',
@@ -91,7 +93,16 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     cantidad_inscritos: number = 0;
     cantidad_inscritos_obs: number = 0;
     mostrarConteos: boolean = false;
+    info_persona_id: any;
 
+    stateTransitions: Record<State, State[]> = {
+        'Inscripción solicitada': [],
+        'INSCRITO': ['INSCRITO con Observación', 'ADMITIDO', 'OPCIONADO', 'NO ADMITIDO'],
+        'INSCRITO con Observación': ['INSCRITO', 'ADMITIDO', 'OPCIONADO', 'NO ADMITIDO'],
+        'ADMITIDO': ['INSCRITO', 'INSCRITO con Observación', 'OPCIONADO', 'NO ADMITIDO'],
+        'OPCIONADO': ['INSCRITO', 'INSCRITO con Observación', 'ADMITIDO', 'NO ADMITIDO'],
+        'NO ADMITIDO': ['INSCRITO', 'INSCRITO con Observación', 'ADMITIDO', 'OPCIONADO']
+    };
 
     CampoControl = new FormControl('', [Validators.required]);
     Campo1Control = new FormControl('', [Validators.required]);
@@ -103,6 +114,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         private parametrosService: ParametrosService,
         private popUpManager: PopUpManager,
         private inscripcionService: InscripcionService,
+        private inscripcionMidService: InscripcionMidService,
+        private usuarioService: UserService,
         private tercerosService: TercerosService,
         private proyectoAcademicoService: ProyectoAcademicoService,
         private evaluacionService: EvaluacionInscripcionService,
@@ -230,8 +243,37 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         }
     }
 
+    hasTransition(currentState: string) {
+        if (currentState == null) {
+            return true;
+        }
+        if (!(currentState as State in this.stateTransitions)) {
+            return false;
+        }
+
+        const allowedStates = this.stateTransitions[currentState as State] || [];
+
+        return allowedStates.length > 0;
+    }
+
+    canChangeState(currentState: State, newState: string): boolean {
+        if (!(newState in this.stateTransitions)) {
+            return false;
+        }
+        const allowedStates = this.stateTransitions[currentState] || [];
+        return allowedStates.includes(newState as State);
+    }
+
+    filtrarEstados(currentState: any) {
+        if (!(currentState in this.stateTransitions)) {
+            return [];
+        }
+
+        return this.estados.filter((e: any) => this.canChangeState(currentState as State, e.title));
+    }
+
     onSaveConfirm(event: any) {
-        const newState = this.estados.filter((data: any) => (data.value === parseInt(event.newData.EstadoInscripcionId, 10)))[0];
+        const newState = this.estados.filter((data: any) => (data.value === parseInt(event.newData.NuevoEstadoInscripcionId, 10)))[0];
         if (newState.value == this.IdIncripcionSolicitada) {
             this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.no_cambiar_inscripcion_solicitada'))
         } else {
@@ -247,7 +289,10 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                         ...event.newData.Inscripcion,
                         ...{ EstadoInscripcionId: { Id: newState.value } }
                     }
-                    this.inscripcionService.put('inscripcion', updateState)
+                    event.newData.EstadoInscripcionId.Id = newState.value;
+                    event.newData.EstadoInscripcionId.Nombre = newState.title;
+                    event.newData.TerceroId = this.info_persona_id;
+                    this.inscripcionMidService.post('inscripciones/actualizar-inscripcion', updateState)
                         .subscribe((response) => {
                             Swal.fire(
                                 this.translate.instant('GLOBAL.' + 'operacion_exitosa'),
@@ -397,7 +442,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-
+        this.info_persona_id = this.usuarioService.getPersonaId();
     }
 
     ngOnChanges() {
@@ -407,10 +452,11 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     admitir(inscrito: any) {
         var updateState = inscrito.Inscripcion;
         updateState.EstadoInscripcionId.Id = this.estadoAdmitido.Id
+        updateState.TerceroId = this.info_persona_id;
         const promiseInscrito = new Promise((resolve, reject) => {
-            this.inscripcionService.put('inscripcion', updateState)
-                .subscribe((response) => {
-                    resolve(response);
+            this.inscripcionMidService.post('inscripciones/actualizar-inscripcion', updateState)
+                .subscribe((response: any) => {
+                    resolve(response.Data);
                     const data_notificacion = {
                         Email: inscrito.Email,
                         NombreAspirante: inscrito.NombreAspirante,

@@ -1,0 +1,347 @@
+<div>
+  <ng-template matStepLabel></ng-template>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="table-container" style="overflow-x: auto;">
+        <table mat-table [dataSource]="admitidos" class="mat-elevation-z8 scrollable-table">
+          <div>
+
+            <!-- Seleccion group -->
+            <ng-container matColumnDef="seleccionHeader">
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="1" class="border-right blanco"></th>
+            </ng-container>
+
+            <!-- Detalles del Pago group -->
+            <ng-container matColumnDef="detallesPagoHeader">
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="5" class="border-right">{{ 'liquidacion.detalle' | translate }}</th>
+            </ng-container>
+
+            <!-- Conceptos Base group -->
+            <ng-container matColumnDef="conceptosBaseHeader">
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right">{{ 'liquidacion.concepto_base' | translate }}</th>
+            </ng-container>
+
+            <!-- Conceptos Descuentos group -->
+            <ng-container matColumnDef="conceptosDescuentosHeader">
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="11" class="border-right">{{ 'liquidacion.conceptos_descuentos' | translate }}</th>
+            </ng-container>
+
+            <!-- Fecha Cuotas group -->
+            <ng-container matColumnDef="fechaPagoCoutasHeader">
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right cuotas">{{ 'liquidacion.fechas_pago_cuotas' | translate }}
+              </th>
+            </ng-container>
+
+            <!-- Porcentaje Cuotas group -->
+            <ng-container matColumnDef="porcentajeCoutasHeader">
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right cuotas">{{ 'liquidacion.porcentaje_cuotas' | translate }}</th>
+            </ng-container>
+
+
+            <!-- Seleccion Column -->
+            <ng-container matColumnDef="seleccion">
+              <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{ 'GLOBAL.seleccionar' | translate }}</th>
+              <td mat-cell *matCellDef="let row" class="border-right">
+                <mat-checkbox [color]="'primary'">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Detalles del Pago Column -->
+
+            <ng-container matColumnDef="codigo">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders"> {{'liquidacion.codigo' | translate}}</th>
+              <td mat-cell *matCellDef="let row"> {{row.Codigo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cedula">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders"> {{'liquidacion.documento' | translate}}</th>
+              <td mat-cell *matCellDef="let row"> {{row.Documento}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombreApellido">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.nombres_apellidos' | translate}}</th>
+              <td mat-cell *matCellDef="let row">{{row.Nombre}}{{row.PrimerApellido}}{{row.SegundoApellido}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="creditos">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.creditos' | translate}}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field>
+                  <input matInput placeholder="Créditos" [(ngModel)]="row.creditos"
+                    (change)="calcularValorMatricula(row)">
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cuotas">
+              <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{'liquidacion.cuotas' | translate}}</th>
+              <td mat-cell *matCellDef="let row" class="border-right">
+                <mat-form-field>
+                  <input matInput placeholder="Cuotas" [(ngModel)]="row.cuotas"
+                    (change)="actualizarValoresCuotas(row)">
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+
+            <!-- Conceptos Base Column -->
+
+            <ng-container matColumnDef="seguroEstudiantil">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.seguro' | translate}}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select [value]="row.Seguro ? 'true' : 'false'">
+                    <mat-option value="true">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option value="false">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="carneEstudiantil">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.carnet' | translate}}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select [value]="row.Carne ? 'true' : 'false'">
+                    <mat-option value="true">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option value="false">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sistematizacion">
+              <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{'liquidacion.sistematizacion' | translate}}</th>
+              <td mat-cell *matCellDef="let row" class="border-right">
+                <mat-form-field class="small-form-field">
+                  <mat-select [value]="row.Sistematizacion ? 'true' : 'false'">
+                    <mat-option value="true">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option value="false">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+
+            <!-- Conceptos Descuentos Column -->
+
+
+            <ng-container matColumnDef="votacion">
+              <th mat-header-cel mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.votacion' | translate}}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select (selectionChange)="toggleDescuento($event, row, 1)"
+                    [value]="row.Descuentos.includes(1) ? 'true' : 'false'" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="monitor">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.monitorias' | translate}}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select (selectionChange)="toggleDescuento($event, row, 2)"
+                    [value]="row.Descuentos.includes(2) ? 'true' : 'false'" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="egresado">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.egresado' | translate}}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select (selectionChange)="toggleDescuento($event, row, 6)"
+                    [value]="row.Descuentos.includes(6) ? 'true' : 'false'" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="docente">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.docente' | translate}}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select [(value)]="row.Codigo" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="beneficiario">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">RCSA</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select (selectionChange)="toggleDescuento($event, row, 3)"
+                    [value]="row.Descuentos.includes(3) ? 'true' : 'false'" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="beca">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">PPUD</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select (selectionChange)="toggleDescuento($event, row, 5)"
+                    [value]="row.Descuentos.includes(5) ? 'true' : 'false'" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mejorECAES">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">ECAES</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select (selectionChange)="toggleDescuento($event, row, 4)"
+                    [value]="row.Descuentos.includes(4) ? 'true' : 'false'" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="gradoHonor">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.beca' | translate}}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select (selectionChange)="toggleDescuento($event, row, 7)"
+                    [value]="row.Descuentos.includes(7) ? 'true' : 'false'" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="segundoHermano">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.segundo_hermano' | translate}}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select [(value)]="row.Codigo" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="secretariaEducacion">
+              <th mat-header-cell *matHeaderCellDef class="subHeaders">{{'liquidacion.secretaria' | translate}}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field class="small-form-field">
+                  <mat-select [(value)]="row.Codigo" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="doctoradoInterinstitucio">
+              <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{'liquidacion.doctorado_interinstitucional' | translate}}</th>
+              <td mat-cell *matCellDef="let row" class="border-right">
+                <mat-form-field class="small-form-field">
+                  <mat-select [(value)]="row.Codigo" placeholder="Seleccione">
+                    <mat-option [value]="'true'">{{'GLOBAL.si' | translate}}</mat-option>
+                    <mat-option [value]="'false'">{{'GLOBAL.no' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <!-- Fecha Pago Cuotas Column -->
+
+            <ng-container matColumnDef="fechaCuotaUno">
+              <th mat-header-cell *matHeaderCellDef class="cuotas">{{'liquidacion.primer_pago' | translate}}</th>
+              <td mat-cell *matCellDef="let row">{{ row.Codigo}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaCuotaDos">
+              <th mat-header-cell *matHeaderCellDef class="cuotas">{{'liquidacion.segundo_pago' | translate}}</th>
+              <td mat-cell *matCellDef="let row">{{ row.Codigo}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaCuotaTres">
+              <th mat-header-cell *matHeaderCellDef class="border-right cuotas">{{'liquidacion.tercer_pago' | translate}}</th>
+              <td mat-cell *matCellDef="let row" class="border-right">{{row.Codigo}}</td>
+            </ng-container>
+
+
+
+            <!-- Porcentaje Cuotas Column -->
+
+            <ng-container matColumnDef="primeraCuota">
+              <th mat-header-cell *matHeaderCellDef class="cuotas">{{'liquidacion.primera_cuota' | translate}}</th>
+              <td mat-cell *matCellDef="let row">{{ row.valorCuota1 }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="segundaCuota">
+              <th mat-header-cell *matHeaderCellDef class="cuotas">{{'liquidacion.segunda_cuota' | translate}}</th>
+              <td mat-cell *matCellDef="let row">{{ row.valorCuota2 }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="terceraCuota">
+              <th mat-header-cell *matHeaderCellDef class="border-right cuotas">{{'liquidacion.tercera_cuota' | translate}}</th>
+              <td mat-cell *matCellDef="let row" class="border-right">{{ row.valorCuota3 }}</td>
+            </ng-container>
+
+
+            <!-- Valor Recibo Column -->
+
+            <ng-container matColumnDef="valorRecibo">
+              <th mat-header-cell *matHeaderCellDef class="border-right">{{'liquidacion.total' | translate}}</th>
+              <td mat-cell *matCellDef="let row" class="border-right">{{ row.valorRecibo}}</td>
+            </ng-container>
+
+
+            <!-- Acciones Column -->
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef class="border-right">{{'liquidacion.acciones' | translate}}</th>
+              <td mat-cell *matCellDef="let row" class="border-right ">
+                <div class="action-container">
+                  <button mat-icon-button (click)="descargar(row)">
+                    <mat-icon>cloud_download</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-header-row
+              *matHeaderRowDef="['seleccion'].concat(detallesPagoColumns, conceptosBaseColumns, conceptosDescuentosColumns, porcentajeCoutasColumns, 'valorRecibo', 'acciones')">
+            </tr>
+            <tr mat-row
+              *matRowDef="let row; columns: ['seleccion'].concat(detallesPagoColumns, conceptosBaseColumns, conceptosDescuentosColumns, porcentajeCoutasColumns, 'valorRecibo', 'acciones')">
+            </tr>
+
+          </div>
+        </table>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+
+
+    </mat-card-content>
+  </mat-card>
+
+</div>
