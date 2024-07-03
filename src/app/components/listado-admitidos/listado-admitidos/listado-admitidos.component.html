@@ -1,4 +1,55 @@
-<mat-card class="card" style="margin-top: 20px;">
+<mat-card style="margin-top: 20px;">
+    <mat-card-content>
+        <div>
+            <div>
+
+                <div>
+                    <legend>
+                        <strong>{{'evaluacionpregrado.variables' | translate}}
+
+                        </strong>
+                    </legend>
+                </div>
+
+                <br><br>
+
+                <div>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>
+                            {{ 'evaluacionpregrado.periodo' | translate }}:
+                        </mat-label>
+                        <mat-select [(ngModel)]="periodo" [disabled]='false' [formControl]="periodoControl">
+                            <mat-option>
+                                --{{ 'evaluar.seleccionar' | translate }}--
+                            </mat-option>
+                            <mat-option *ngFor="let item of periodos" [value]="item.Id">
+                                {{ item.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>
+                            {{ 'evaluacionpregrado.criterio_consultar' | translate }}:
+                        </mat-label>
+                        <mat-select [formControl]="nivelControl" [(ngModel)]="select_nivel"
+                            (selectionChange)="cargarFacultades()" [disabled]='selectcriterio'>
+                            <mat-option *ngFor="let item of nivel_load" [value]="item.Id">
+                                {{ item.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="criterioControl.hasError('required')">
+                            {{ 'admision.erro_selec_criterio' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="viewFacultades" class="card" style="margin-top: 20px;">
     <mat-card-content>
         <div>
 
@@ -147,59 +198,9 @@
     </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="viewVariables" style="margin-top: 20px;">
-    <mat-card-content>
-        <div>
-            <div>
 
-                <div>
-                    <legend>
-                        <strong>{{'evaluacionpregrado.variables' | translate}}
 
-                        </strong>
-                    </legend>
-                </div>
-
-                <br><br>
-
-                <div>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>
-                            {{ 'evaluacionpregrado.periodo' | translate }}:
-                        </mat-label>
-                        <mat-select [(ngModel)]="periodo" [disabled]='false' [formControl]="periodoControl"
-                            (selectionChange)="loadCriterios()">
-                            <mat-option>
-                                --{{ 'evaluar.seleccionar' | translate }}--
-                            </mat-option>
-                            <mat-option *ngFor="let item of periodos" [value]="item.Id">
-                                {{ item.Nombre }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>
-                            {{ 'evaluacionpregrado.criterio_consultar' | translate }}:
-                        </mat-label>
-                        <mat-select [formControl]="criterioControl" [(ngModel)]="selectCriterio"
-                            [disabled]='selectcriterio' multiple>
-                            <mat-option *ngFor="let item of requisitosActuales" [value]="item.RequisitoId">
-                                {{ item.RequisitoId.Nombre }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="criterioControl.hasError('required')">
-                            {{ 'admision.erro_selec_criterio' | translate }}
-                        </mat-error>
-                    </mat-form-field>
-
-                </div>
-            </div>
-        </div>
-    </mat-card-content>
-</mat-card>
-
-<mat-card class="mt-20">
+<mat-card class="mt-20" *ngIf="viewAspirantesTables">
 
     <mat-card-header class="center-header">
         <mat-card-title>
@@ -210,17 +211,17 @@
     <div style="display: flex; justify-content: center;">
         <mat-card-content class="mt-20 info"
             style="display: flex; justify-content: center; align-items: center; text-align: center; width: 60%;">
-            <div>Listado de personas inscritas que cumplen con el puntaje minimo requerido</div>
+            <div> {{"evaluacion-admitidos.listado_admitidos_alerta_cumple" | translate}}</div>
         </mat-card-content>
     </div>
 
     <mat-card-content class="mt-20">
-        <app-tabla-listado-aspirantes></app-tabla-listado-aspirantes>
+        <app-tabla-listado-aspirantes [aspirantes]="aspirantesAdmitidos"></app-tabla-listado-aspirantes>
     </mat-card-content>
 
 </mat-card>
 
-<mat-card class="mt-20">
+<mat-card class="mt-20" *ngIf="viewAspirantesTables">
 
     <mat-card-header class="center-header">
         <mat-card-title>
@@ -231,17 +232,17 @@
     <div style="display: flex; justify-content: center;">
         <mat-card-content class="mt-20 info"
             style="display: flex; justify-content: center; align-items: center; text-align: center; width: 60%;">
-            <div>Listado de personas inscritas que NO cumplen con el puntaje minimo requerido</div>
+            <div>{{"evaluacion-admitidos.listado_admitidos_alerta_no_cumple" | translate}}</div>
         </mat-card-content>
     </div>
 
     <mat-card-content class="mt-20">
-        <app-tabla-listado-aspirantes></app-tabla-listado-aspirantes>
+        <app-tabla-listado-aspirantes [aspirantes]="aspirantesNoAdmitidos"></app-tabla-listado-aspirantes>
     </mat-card-content>
 
 </mat-card>
 
-<mat-card class="mt-20">
+<mat-card class="mt-20" *ngIf="false">
 
     <mat-card-header class="center-header">
         <mat-card-title>
@@ -252,7 +253,7 @@
     <div style="display: flex; justify-content: center;">
         <mat-card-content class="mt-20 info"
             style="display: flex; justify-content: center; align-items: center; text-align: center; width: 60%;">
-            <div>Listado de personas inscritas que cumplen con el puntaje minimo requerido</div>
+            <div>{{"evaluacion-admitidos.listado_admitidos_alerta_cumple" | translate}}</div>
         </mat-card-content>
     </div>
 
@@ -262,7 +263,7 @@
 
 </mat-card>
 
-<mat-card class="mt-20">
+<mat-card class="mt-20" *ngIf="false">
 
     <mat-card-header class="center-header">
         <mat-card-title>
@@ -273,7 +274,7 @@
     <div style="display: flex; justify-content: center;">
         <mat-card-content class="mt-20 info"
             style="display: flex; justify-content: center; align-items: center; text-align: center; width: 60%;">
-            <div>Listado de personas inscritas que NO cumplen con el puntaje minimo requerido</div>
+            <div>{{"evaluacion-admitidos.listado_admitidos_alerta_no_cumple" | translate}}</div>
         </mat-card-content>
     </div>
 
@@ -283,7 +284,7 @@
 
 </mat-card>
 
-<mat-card>
+<mat-card *ngIf="viewAspirantesTables">
     <mat-card-content style="display: flex; justify-content: center; align-items: center;">
         <button mat-icon-button class="boton-primary">
             {{"evaluacion-admitidos.notificacion" | translate}}
