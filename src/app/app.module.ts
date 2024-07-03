@@ -15,7 +15,7 @@ import { DialogoDocumentosTransferenciasComponent } from './components/transfere
 import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { NgModule } from '@angular/core';
+import { EventEmitter, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -99,7 +99,6 @@ import { ListadoAspirantesPregradoComponent } from './components/listado-aspiran
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
-import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
 import { LiquidacionPosgradoTableComponent } from './components/liquidacion-recibos/liquidacion-posgrado-table/liquidacion-posgrado-table.component';
 import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
 import { CrudListadosOficializadosComponent } from './components/crud-listados-oficializados/crud-listados-oficializados.component';
@@ -107,6 +106,9 @@ import { ListadoOficializadosComponent } from './components/listado-oficializado
 import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 import { TablaListadoAspirantesComponent } from './components/listado-admitidos/tabla-listado-aspirantes/tabla-listado-aspirantes.component';
+import { SgaCalendarioMidService } from './services/sga_calendario_mid.service';
+import { EventoService } from './services/evento.service';
+import { SgaProyectoAcademicoService } from './services/sga_proyecto_academico.service';
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 
 
@@ -183,7 +185,6 @@ export function createTranslateLoader(http: HttpClient) {
     CargueSnpComponent,
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
-    CorreoInstitucionalComponent,
     LiquidacionPosgradoTableComponent,
     ListadosOficializadosComponent,
     CrudListadosOficializadosComponent,
@@ -247,7 +248,10 @@ export function createTranslateLoader(http: HttpClient) {
     CampusMidService,
     ParametrosService,
     NotificacionesMidService,
+    EventoService,
     EvaluacionInscripcionService,
+    SgaCalendarioMidService,
+    SgaProyectoAcademicoService,
   ],
   bootstrap: [AppComponent],
 })
