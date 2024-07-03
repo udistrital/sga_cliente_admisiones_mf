@@ -30,6 +30,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 import { CalendarioMidService } from 'src/app/services/calendario_mid.service';
 import { EventosService } from 'src/app/services/eventos.service';
 
@@ -51,7 +52,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   Campo2Control = new FormControl('', [Validators.required]);
   settings: any;
   // dataSource: LocalDataSource;
-  dataSourceColumn=["credencial","identificacion","nombre","estado","acciones"]
+  dataSourceColumn = ["credencial", "identificacion", "nombre", "estado", "acciones"]
   dataSource!: MatTableDataSource<any>
   info_persona_id: any;
   periodo: any;
@@ -106,7 +107,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     private googleMidService: GoogleService,
     private pivotDocument: PivotDocument,
     private sgaMidService: SgaMidService,
-    private sgaMiAdmisiones : SgaAdmisionesMid,
+    private sgaMiAdmisiones: SgaAdmisionesMid,
+    private inscripcionesMidService: InscripcionMidService,
     private evaluacionInscripcionService: EvaluacionInscripcionService,
     private autenticationService: ImplicitAutenticationService,
     private oikosService: OikosService,
@@ -160,7 +162,11 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
-            this.periodo = res.Data.find((p: any) => p.Activo);
+            if (window.localStorage.getItem("IdPeriodoSelected")) {
+              this.periodo = res.Data.find((p: any) => p.Id == window.localStorage.getItem("IdPeriodoSelected"));
+            } else {
+              this.periodo = res.Data.find((p: any) => p.Activo);
+            }
             window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
             resolve(this.periodo);
             const periodos = <any[]>res['Data'];
@@ -168,6 +174,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
               this.periodos.push(element);
             });
           }
+          window.localStorage.removeItem("IdPeriodoSelected");
         },
           (error: HttpErrorResponse) => {
             reject(error);
@@ -190,6 +197,12 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
       (response: any) => {
         if (response !== null || response !== undefined) {
           this.nivel_load = <any>response;
+          console.log(this.nivel_load)
+          if (window.localStorage.getItem("Nivel")) {
+            this.selectednivel = this.nivel_load.find((p: any) => p.Id == window.localStorage.getItem("Nivel")).Id;
+            this.loadProyectos();
+            window.localStorage.removeItem("Nivel");
+          }
         }
       },
       error => {
@@ -274,6 +287,17 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                 this.proyectos = <any[]>response.filter(
                   (proyecto: any) => this.filtrarProyecto(proyecto),
                 );
+
+                if (window.localStorage.getItem("IdProyecto")) {
+                  const idProyecto = window.localStorage.getItem("IdProyecto");
+                  const proyecto = this.proyectos.find((p: any) => p.Id == idProyecto);
+                  if (proyecto) {
+                    this.proyectos_selected = proyecto.Id;
+                    this.loadInscritos();
+                  }
+                }
+                window.localStorage.removeItem("IdProyecto");
+
               } else {
                 const id_tercero = this.userService.getPersonaId();
                 this.sgaMiAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
@@ -568,7 +592,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                 if (!data.metadata.aprobado && data.metadata.observacion !== '') {
 
                   this.inscripcionInfo.EstadoInscripcionId.Id = 6; // 6 id de INSCRITO con Observacion
-                  this.inscripcionService.put('inscripcion', this.inscripcionInfo)
+                  this.inscripcionInfo.TerceroId = this.info_persona_id;
+                  this.inscripcionesMidService.post('inscripciones/actualizar-inscripcion', this.inscripcionInfo)
                     .subscribe(resp => {
                       this.popUpManager.showSuccessAlert(this.translate.instant('admision.registro_exito'))
                     }, err => {
@@ -620,11 +645,11 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
       };
       const fecha_format = hoy.toLocaleDateString('es-ES', options).split(',')[1].replace(' ', '').split('de')
 
-      this.sgaMidService.get('inscripciones/info_complementaria_tercero/' + this.info_persona_id)
+      this.inscripcionesMidService.get('inscripciones/informacion-complementaria/tercero/' + this.info_persona_id)
         .subscribe((resp: any) => {
-          if (resp.Response.Code == "200") {
+          if (resp.Status == "200") {
 
-            let info = resp.Response.Body[0];
+            let info = resp.Data[0];
             info.Correo != '' ? correos.push(info.Correo) : null;
             info.CorreoAlterno != '' ? correos.push(info.CorreoAlterno) : null;
 

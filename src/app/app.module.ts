@@ -1,5 +1,3 @@
-
-
 import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
 import { DocProgramaObligatorioComponent } from './components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component';
 import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
@@ -14,7 +12,6 @@ import { SolicitudTransferenciaComponent } from './components/transferencia/soli
 import { DefSuiteInscripProgramaComponent } from './components/suite-programa/def_suite_inscrip_programa/def-suite-inscrip-programa.component';
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { DialogoDocumentosTransferenciasComponent } from './components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
-import { CrudInfoPersonaComponent } from './components/transferencia/crud-info_persona/crud-info_persona.component';
 import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -65,7 +62,7 @@ import { CampusMidService } from './services/campus_mid.service';
 import { ViewPropuestaGradoComponent } from './components/evalucion-documentos-inscritos/view-propuesta_grado/view-propuesta_grado.component';
 import { StoreModule } from '@ngrx/store';
 import { rootReducer } from './store/rootReducer';
-import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+
 import { ListService } from './store/services/list.service';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
@@ -96,15 +93,24 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InscripcionMidService } from './services/sga_inscripcion_mid.service';
+import { TerceroMidService } from './services/sga_tercero_mid.service';
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
+import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
+import { CrudListadosOficializadosComponent } from './components/crud-listados-oficializados/crud-listados-oficializados.component';
+import { ListadoOficializadosComponent } from './components/listado-oficializados/listado-oficializados.component';
+import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
+import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+import { TablaListadoAspirantesComponent } from './components/listado-admitidos/tabla-listado-aspirantes/tabla-listado-aspirantes.component';
+import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 import { EventosService } from './services/eventos.service';
 
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, 'http://localhost:4207/assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -130,7 +136,6 @@ export function createTranslateLoader(http: HttpClient) {
     DinamicformComponent,
     ViewIdiomasComponent,
     TransferenciaComponent,
-    CrudInfoPersonaComponent,
     CustomizeButtonComponent,
     AsignacionCuposComponent,
     ListadoHistoricoComponent,
@@ -176,7 +181,14 @@ export function createTranslateLoader(http: HttpClient) {
     ListadoAspirantesPregradoComponent,
     CargueSnpComponent,
     SoporteConfiguracionComponent,
-    EvalucionAspirantePregradoComponent
+    EvalucionAspirantePregradoComponent,
+    ListadosOficializadosComponent,
+    CrudListadosOficializadosComponent,
+    ListadoOficializadosComponent,
+    ListadoAdmitidosComponent,
+    ListadoAspiranteComponent,
+    TablaListadoAspirantesComponent,
+    PreinscripcionProyectosCurricularesComponent
   ],
   imports: [
     CodificacionModule,
@@ -224,6 +236,8 @@ export function createTranslateLoader(http: HttpClient) {
     MatSnackBar,
     ListService,
     SgaMidService,
+    TerceroMidService,
+    InscripcionMidService,
     RequestManager,
     SgaAdmisionesMid,
     DocumentoService,

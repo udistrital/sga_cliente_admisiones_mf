@@ -85,7 +85,6 @@ export class ListDocumentoProyectoComponent implements OnInit {
             documento.Activo = 'No'
           }
           this.documentos.push(documento);
-          console.log(this.documentos)
           this.source = new MatTableDataSource(this.documentos);
           setTimeout(() => {
             this.source.paginator = this.paginator;

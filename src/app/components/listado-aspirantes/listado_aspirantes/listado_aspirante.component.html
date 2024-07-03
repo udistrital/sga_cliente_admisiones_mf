@@ -151,14 +151,15 @@ nbSpinnerMessage="{{ 'GLOBAL.cargando' | translate }}"> -->
 
               <td mat-cell *matCellDef="let row">
                 <p *ngIf="!row.mostrarBotones"> {{row.EstadoInscripcionId.Nombre}} </p>
-                <mat-form-field *ngIf="row.mostrarBotones" style="width: 100%;">
-                  <mat-select [(value)]="row.EstadoInscripcionId" style="color: black;">
+                <mat-form-field *ngIf="row.mostrarBotones && hasTransition(row.EstadoInscripcionId.Nombre)" style="width: 100%;">
+                  <mat-select [(value)]="row.NuevoEstadoInscripcionId" style="color: black;">
                     <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                    <mat-option *ngFor="let estado of estados" [value]="estado.value">
+                    <mat-option *ngFor="let estado of filtrarEstados(row.EstadoInscripcionId.Nombre)" [value]="estado.value">
                       {{estado.title}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+                <p *ngIf="row.mostrarBotones && !hasTransition(row.EstadoInscripcionId.Nombre)"> {{ 'inscripcion.no_permite_cambio' | translate:{ estado: row.EstadoInscripcionId.Nombre } }} </p>
               </td>
             </ng-container>
 

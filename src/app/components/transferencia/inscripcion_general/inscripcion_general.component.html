@@ -32,7 +32,7 @@
                     <mat-select [formControl]="Campo1Control" [(ngModel)]="selectedValue"
                         placeholder="{{ 'inscripcion.aviso_programa' | translate }}"
                         (ngModelChange)="tipo_inscripcion('programa')" >
-                        <mat-option>--Seleccionar--</mat-option>
+                        <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                         <mat-option *ngFor="let item of posgrados" [value]="item.ProyectoId">
                             {{ item.NombreProyecto }}
                         </mat-option>
@@ -42,7 +42,7 @@
                 <mat-form-field style="width: 100%;" *ngIf="tieneEnfasis">
                     <mat-select [formControl]="enfasisControl" [(ngModel)]="enfasisSelected"
                         placeholder="{{ 'enfasis.select_enfasis' | translate }}" (ngModelChange)="tipo_inscripcion('enfasis')">
-                        <mat-option>--Seleccionar--</mat-option>
+                        <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                         <mat-option *ngFor="let item of enfasis" [value]="item.Id">
                             {{ item.Nombre }}
                         </mat-option>

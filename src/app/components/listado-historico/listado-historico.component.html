@@ -1,11 +1,11 @@
 <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
   <mat-step [stepControl]="firstFormGroup">
 
-    <ng-template matStepLabel>Consulta listado historico de liquidación</ng-template>
+    <ng-template matStepLabel>{{ 'liquidacion.consulta_historica' | translate }}</ng-template>
 
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Información del proyecto curricular</mat-card-title>
+        <mat-card-title>{{ 'liquidacion.consulta_historica' | translate }}</mat-card-title>
       </mat-card-header>
 
       <br><br>
@@ -15,9 +15,9 @@
       <div class="form-container">
 
         <div>
-          <mat-card-subtitle>Proyecto curricular</mat-card-subtitle>
+          <mat-card-subtitle>{{ 'GLOBAL.proyecto_academico' | translate }}</mat-card-subtitle>
           <mat-form-field [formGroup]="firstFormGroup">
-            <mat-label>Selecciona un Proyecto</mat-label>
+            <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}</mat-label>
             <mat-select formControlName="validatorProyecto" required>
               <mat-option *ngFor="let food of foods" [value]="food.value">{{food.viewValue}}</mat-option>
             </mat-select>
@@ -25,9 +25,9 @@
         </div>
     
         <div>
-          <mat-card-subtitle>Año</mat-card-subtitle>
+          <mat-card-subtitle>{{ 'GLOBAL.ano' | translate }}</mat-card-subtitle>
           <mat-form-field [formGroup]="firstFormGroup">
-            <mat-label>Selecciona un Año</mat-label>
+            <mat-label>{{ 'GLOBAL.ano' | translate }}</mat-label>
             <mat-select formControlName="validatorFecha" required>
               <mat-option *ngFor="let food of foods" [value]="food.value">{{food.viewValue}}</mat-option>
             </mat-select>
@@ -35,9 +35,9 @@
         </div>
       
         <div>
-          <mat-card-subtitle>Periodo academico</mat-card-subtitle>
+          <mat-card-subtitle>{{ 'GLOBAL.periodo' | translate }}</mat-card-subtitle>
           <mat-form-field [formGroup]="firstFormGroup">
-            <mat-label>Selecciona un Periodo</mat-label>
+            <mat-label>{{ 'GLOBAL.periodo' | translate }}</mat-label>
             <mat-select formControlName="validatorPeriodo" required>
               <mat-option *ngFor="let food of foods" [value]="food.value">{{food.viewValue}}</mat-option>
             </mat-select>
@@ -45,9 +45,9 @@
         </div>
     
         <div>
-          <mat-card-subtitle>Semestre</mat-card-subtitle>
+          <mat-card-subtitle>{{ 'GLOBAL.semestre' | translate }}</mat-card-subtitle>
           <mat-form-field [formGroup]="firstFormGroup">
-            <mat-label>Selecciona un Semestre</mat-label>
+            <mat-label>{{ 'GLOBAL.semestre' | translate }}</mat-label>
             <mat-select formControlName="validatorSemestre" required>
                 <mat-option *ngFor="let food of foods" [value]="food.value">{{food.viewValue}}</mat-option>
             </mat-select>
@@ -55,16 +55,16 @@
           </div>
       </div>
 
-      <mat-card-subtitle>Codigo del estudiante</mat-card-subtitle>
+      <mat-card-subtitle>{{ 'GLOBAL.codigo' | translate }}</mat-card-subtitle>
       <form [formGroup]="firstFormGroup">
         <mat-form-field>
-          <mat-label>Codigo</mat-label>
+          <mat-label>{{ 'GLOBAL.codigo' | translate }}</mat-label>
           <input matInput placeholder="Codigo" formControlName="validatorCodigo" required>
         </mat-form-field>
       </form>
 
       <div class="button-stepper">
-        <button mat-stroked-button matStepperNext class="azulOscuro">Consultar</button>
+        <button mat-stroked-button matStepperNext class="azulOscuro">{{ 'GLOBAL.consultar' | translate }}</button>
       </div>
 
       </mat-card-content>
@@ -73,7 +73,7 @@
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">
 
-    <ng-template matStepLabel>listado</ng-template>
+    <ng-template matStepLabel>{{ 'GLOBAL.lista' | translate }}</ng-template>
 
     <mat-card>
       <mat-card-content>
@@ -82,54 +82,54 @@
           <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 scrollable-table">
             <!-- Detalles del Pago group -->
               <ng-container matColumnDef="detallesPagoHeader">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="5" class="border-right">Detalles del Pago</th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="5" class="border-right">{{ 'liquidacion.detalle' | translate }}</th>
               </ng-container>
 
               <!-- Conceptos Base group -->
               <ng-container matColumnDef="conceptosBaseHeader">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right">Conceptos Base</th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right">{{ 'liquidacion.concepto_base' | translate }}</th>
               </ng-container>
 
               <!-- Conceptos Descuentos group -->
               <ng-container matColumnDef="conceptosDescuentosHeader">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="11" class="border-right">Conceptos Descuentos</th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="11" class="border-right">{{ 'liquidacion.conceptos_descuentos' | translate }}</th>
               </ng-container>
 
               <!-- Fecha Cuotas group -->
               <ng-container matColumnDef="fechaPagoCoutasHeader">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right cuotas">Fechas Pago Cuotas</th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right cuotas">{{ 'liquidacion.fechas_pago_cuotas' | translate }}</th>
               </ng-container>
 
               <!-- Porcentaje Cuotas group -->
               <ng-container matColumnDef="porcentajeCoutasHeader">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right cuotas">Porcentaje de cada cuota</th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="3" class="border-right cuotas">{{ 'liquidacion.porcentaje_cuotas' | translate }}</th>
               </ng-container>
 
 
               <!-- Detalles del Pago Column -->
 
               <ng-container matColumnDef="codigo">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders"> Código </th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'GLOBAL.codigo' | translate }}</th>
                 <td mat-cell *matCellDef="let row"> {{row.detallesPago.codigo}} </td>
               </ng-container>
 
               <ng-container matColumnDef="cedula">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders"> Cédula </th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders"> {{ 'GLOBAL.Documento' | translate }} </th>
                 <td mat-cell *matCellDef="let row"> {{ row.detallesPago.cedula}} </td>
               </ng-container>
 
               <ng-container matColumnDef="nombreApellido">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Nombre y Apellido</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.nombres_apellidos' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.detallesPago.nombreApellido }}</td>
               </ng-container>
             
               <ng-container matColumnDef="creditos">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Créditos</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.creditos' | translate }}s</th>
                 <td mat-cell *matCellDef="let row">{{ row.detallesPago.creditos }}</td>
               </ng-container>
             
               <ng-container matColumnDef="cuotas">
-                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">Cuotas</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{ 'liquidacion.cuotas' | translate }}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">{{ row.detallesPago.cuotas }}</td>
               </ng-container>
 
@@ -137,17 +137,17 @@
               <!-- Conceptos Base Column -->
 
               <ng-container matColumnDef="seguroEstudiantil">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Seguro Estudiantil</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.seguro' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.conceptosBase.seguroEstudiantil ? 'Sí' : 'No' }}</td>
               </ng-container>
             
               <ng-container matColumnDef="carneEstudiantil">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Carné Estudiantil</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.carnet' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.conceptosBase.carneEstudiantil ? 'Sí' : 'No' }}</td>
               </ng-container>
             
               <ng-container matColumnDef="sistematizacion">
-                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">Sistematización</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{ 'liquidacion.sistematizacion' | translate }}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">{{ row.conceptosBase.sistematizacion ? 'Sí' : 'No' }}</td>
               </ng-container>
 
@@ -156,22 +156,22 @@
 
 
               <ng-container matColumnDef="votacion">
-                <th mat-header-cel mat-header-cell *matHeaderCellDef class="subHeaders">10% Votación</th>
+                <th mat-header-cel mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.votacion' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.conceptosDescuentos.votacion ? 'Sí' : 'No' }}</td>
               </ng-container>
             
               <ng-container matColumnDef="monitor">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Monitor</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.monitorias' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.conceptosDescuentos.monitor ? 'Sí' : 'No' }}</td>
               </ng-container>
             
               <ng-container matColumnDef="egresado">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Egresado</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.egresado' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.conceptosDescuentos.egresado ? 'Sí' : 'No' }}</td>
               </ng-container>
             
               <ng-container matColumnDef="docente">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Docente</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.docente' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.conceptosDescuentos.docente ? 'Sí' : 'No' }}</td>
               </ng-container>
             
@@ -181,7 +181,7 @@
               </ng-container>
             
               <ng-container matColumnDef="beca">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">Beca</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.beca' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.conceptosDescuentos.beca ? 'Sí' : 'No' }}</td>
               </ng-container>
             
@@ -196,34 +196,34 @@
               </ng-container>
             
               <ng-container matColumnDef="segundoHermano">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">50% Segundo Hermano</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.segundo_hermano' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.conceptosDescuentos.segundoHermano ? 'Sí' : 'No' }}</td>
               </ng-container>
             
               <ng-container matColumnDef="secretariaEducacion">
-                <th mat-header-cell *matHeaderCellDef class="subHeaders">70% Secretaria Educacion</th>
+                <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'liquidacion.secretaria' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.conceptosDescuentos.secretariaEducacion ? 'Sí' : 'No' }}</td>
               </ng-container>
 
               <ng-container matColumnDef="doctoradoInterinstitucio">
-                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">90% Doctorado Interinstitucio</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right subHeaders">{{ 'liquidacion.doctorado_interinstitucional' | translate }}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">{{ row.conceptosDescuentos.doctoradoInterinstitucio ? 'Sí' : 'No' }}</td>
               </ng-container>
 
               <!-- Fecha Pago Cuotas Column -->
 
               <ng-container matColumnDef="fechaCuotaUno">
-                <th mat-header-cell *matHeaderCellDef class="cuotas">Fecha Primer Pago</th>
+                <th mat-header-cell *matHeaderCellDef class="cuotas">{{ 'liquidacion.primer_pago' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.porcentajeCoutas.fechaCuotaUno }}</td>
               </ng-container>
 
               <ng-container matColumnDef="fechaCuotaDos">
-                <th mat-header-cell *matHeaderCellDef class="cuotas">Fecha Segundo Pago</th>
+                <th mat-header-cell *matHeaderCellDef class="cuotas">{{ 'liquidacion.segundo_pago' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.porcentajeCoutas.fechaCuotaDos }}</td>
               </ng-container>
 
               <ng-container matColumnDef="fechaCuotaTres">
-                <th mat-header-cell *matHeaderCellDef class="border-right cuotas">Fecha Tercer Pago</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right cuotas">{{ 'liquidacion.tercer_pago' | translate }}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">{{ row.porcentajeCoutas.fechaCuotaTres }}</td>
               </ng-container>
 
@@ -232,17 +232,17 @@
               <!-- Porcentaje Cuotas Column -->
 
               <ng-container matColumnDef="primeraCuota">
-                <th mat-header-cell *matHeaderCellDef class="cuotas">Primera Cuota</th>
+                <th mat-header-cell *matHeaderCellDef class="cuotas">{{ 'liquidacion.primera_cuota' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.porcentajeCoutas.primeraCuota }}%</td>
               </ng-container>
 
               <ng-container matColumnDef="segundaCuota">
-                <th mat-header-cell *matHeaderCellDef class="cuotas">Segunda Cuota</th>
+                <th mat-header-cell *matHeaderCellDef class="cuotas">{{ 'liquidacion.segunda_cuota' | translate }}</th>
                 <td mat-cell *matCellDef="let row">{{ row.porcentajeCoutas.segundaCuota }}%</td>
               </ng-container>
 
               <ng-container matColumnDef="terceraCuota">
-                <th mat-header-cell *matHeaderCellDef class="border-right cuotas">Tercera Cuota</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right cuotas">{{ 'liquidacion.tercera_cuota' | translate }}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">{{ row.porcentajeCoutas.terceraCuota }}%</td>
               </ng-container>
 
@@ -250,14 +250,14 @@
               <!-- Valor Recibo Column -->
 
               <ng-container matColumnDef="valorRecibo">
-                <th mat-header-cell *matHeaderCellDef class="border-right">Valor recibo</th>
+                <th mat-header-cell *matHeaderCellDef class="border-right">{{ 'liquidacion.total' | translate }}</th>
                 <td mat-cell *matCellDef="let row" class="border-right">0</td>
               </ng-container>
 
 
               <!-- Acciones Column -->
               <ng-container matColumnDef="acciones">
-                <th mat-header-cell *matHeaderCellDef class="border-right"> Acciones </th>
+                <th mat-header-cell *matHeaderCellDef class="border-right"> {{ 'GLOBAL.acciones' | translate }}</th>
                 <td mat-cell *matCellDef="let row" class="border-right"> 
                   <button mat-icon-button (click)="descargar(row)">
                     <mat-icon>cloud_download</mat-icon>
@@ -277,7 +277,7 @@
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator> 
 
         <div class="button-stepper">
-          <button mat-stroked-button matStepperNext class="azulOscuro">Descargar</button>
+          <button mat-stroked-button matStepperNext class="azulOscuro">{{ 'GLOBAL.descargar' | translate }}</button>
         </div>
 
       </mat-card-content>

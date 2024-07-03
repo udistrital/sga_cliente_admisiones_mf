@@ -20,6 +20,7 @@ import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service';
+import { UserService } from 'src/app/services/users.service';
 
 
 @Component({
@@ -40,6 +41,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
 
   info_actualizar_estados: any;
   info_info_persona: any;
+  info_persona_id: any;
   info_cupos: any;
   info_criterio_icfes_post: any;
   showFormPregrado: boolean = false;
@@ -84,7 +86,8 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     private router: Router,
     private http: HttpClient,
     private inscripcionService: InscripcionService,
-    private inscripcionMidService: InscripcionMidService,) {
+    private inscripcionMidService: InscripcionMidService,
+    private usuarioService: UserService) {
     this.settings_emphasys = {
       delete: {
         deleteButtonContent: '<i class="nb-trash"></i>',
@@ -217,12 +220,10 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     this.translate.use(language);
   }
   editarFila(data: any) {
-    console.log(data)
     this.show_editar=true;
 
   }
   eliminarFila(data: any) {
-    console.log(data)
 
   }
 
@@ -294,7 +295,6 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
           console.info(JSON.stringify(this.info_cupos));
           this.inscripcionMidService.post('cupos', this.info_cupos)
             .subscribe(res => {
-              console.log(res)
 
               const r = <any>res
               if (r !== null && r.status === 200) {
@@ -324,14 +324,13 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.show_posgrado = this.info_nivel;
     this.obtenerCupos();
+    this.info_persona_id = this.usuarioService.getPersonaId();
   }
 
   obtenerCupos() {
     this.http.get<any>(`${environment.INSCRIPCION_SERVICE}/cupos/`).subscribe(
       (response) => {
-        console.log(response);
         this.dataSource = response.data
-        console.log("Cupos:", this.dataSource);
       },
       (error) => {
         console.error('Error al obtener los cupos:', error);
@@ -435,7 +434,8 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
               if (element.PersonaId != undefined) {
                 if ((index + 1) <= this.info_cupos.CuposAsignados) {
                   element.EstadoInscripcionId.Id = 2;
-                  this.inscripcionService.put('inscripcion/', element)
+                  element.TerceroId = this.info_persona_id;
+                  this.inscripcionMidService.post('inscripciones/actualizar-inscripcion', element)
                     .subscribe(res => {
                       this.loading = false;
                     },
@@ -452,7 +452,8 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
                       });
                 } else {
                   element.EstadoInscripcionId.Id = 4;
-                  this.inscripcionService.put('inscripcion/', element)
+                  element.TerceroId = this.info_persona_id;
+                  this.inscripcionMidService.post('inscripciones/actualizar-inscripcion', element)
                     .subscribe(res => {
                       this.loading = false;
                     },

@@ -44,15 +44,12 @@ export class ComentariosCuposComponent {
     this.asignacionCupoService.datosSeleccionados$.subscribe((datos: any) => {
       this.receivedData = datos;
     });
-    console.log("data",this.receivedData)
   }
 
   obtenerComentarios() {
     this.http.get<any>(`${environment.INSCRIPCION_SERVICE}/documento_cupo?query=ProgramaAcademicoId:${this.receivedData.data.Id}`).subscribe(
       (response) => {
-        console.log(response);
         this.dataSource = response.data
-        console.log("Cupos:", this.dataSource);
       },
       (error) => {
         console.error('Error al obtener los cupos:', error);

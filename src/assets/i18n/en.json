@@ -1,38 +1,37 @@
 {
     "CODIFICACION": {
-      "TITLE": "Codification",
-      "VARIABLES_START": "Start Variables",
-      "SELECT_LEVEL": "Select Level",
-      "ERRORS": {
-        "SELECT_LEVEL": "Please select a level",
-        "SELECT_SUBLEVEL": "Please select a sublevel",
-        "SELECT_PROYECTO_CURRICULAR": "Please select a curricular project",
-        "SELECT_ANO_INICIO": "Please select a start year",
-        "SELECT_LISTADO_ADMITIDOS": "Please select an admitted list",
-        "INPUT_PROYECTO_CURRICULAR": "Please enter a curricular project code",
-        "SELECT_PERIODO_ACADEMICO": "Please select an academic period",
-        "INPUT_PLAN_ESTUDIOS": "Please enter a study plan"
-      },
-      "SELECT_SUBLEVEL": "Select Sublevel",
-      "SELECT_PROYECTO_CURRICULAR": "Select Curricular Project",
-      "SELECT_ANO_INICIO": "Select Start Year",
-      "SELECT_LISTADO_ADMITIDOS": "Select Admitted List",
-      "INPUT_PROYECTO_CURRICULAR": "Curricular Project Code",
-      "SELECT_PERIODO_ACADEMICO": "Select Academic Period",
-      "INPUT_PLAN_ESTUDIOS": "Study Plan",
-      "BUTTON_ACEPTAR": "Accept",
-      "TABLE_COLUMNA_APELLIDOS": "Last Names",
-      "TABLE_COLUMNA_NOMBRES": "First Names",
-      "TABLE_COLUMNA_ESTADO_ADMISION": "Admission Status",
-      "TABLE_COLUMNA_ENFASIS": "Emphasis",
-      "TABLE_COLUMNA_NUMERO_DOCUMENTO": "Document Number",
-      "TABLE_CODIGO": "Code",
-      "BUTTON_DESCARGAR_LISTADO": "Download List",
-      "BUTTON_GENERAR_CODIGOS": "Generate Codes",
-      "BUTTON_GENERAR_CODIFICACION": "Assign Codification",
-      "TABLE_COLUMNA_PUNTAJE": "score"
+        "TITLE": "Codification",
+        "VARIABLES_START": "Start Variables",
+        "SELECT_LEVEL": "Select Level",
+        "ERRORS": {
+            "SELECT_LEVEL": "Please select a level",
+            "SELECT_SUBLEVEL": "Please select a sublevel",
+            "SELECT_PROYECTO_CURRICULAR": "Please select a curricular project",
+            "SELECT_ANO_INICIO": "Please select a start year",
+            "SELECT_LISTADO_ADMITIDOS": "Please select an admitted list",
+            "INPUT_PROYECTO_CURRICULAR": "Please enter a curricular project code",
+            "SELECT_PERIODO_ACADEMICO": "Please select an academic period",
+            "INPUT_PLAN_ESTUDIOS": "Please enter a study plan"
+        },
+        "SELECT_SUBLEVEL": "Select Sublevel",
+        "SELECT_PROYECTO_CURRICULAR": "Select Curricular Project",
+        "SELECT_ANO_INICIO": "Select Start Year",
+        "SELECT_LISTADO_ADMITIDOS": "Select Admitted List",
+        "INPUT_PROYECTO_CURRICULAR": "Curricular Project Code",
+        "SELECT_PERIODO_ACADEMICO": "Select Academic Period",
+        "INPUT_PLAN_ESTUDIOS": "Study Plan",
+        "BUTTON_ACEPTAR": "Accept",
+        "TABLE_COLUMNA_APELLIDOS": "Last Names",
+        "TABLE_COLUMNA_NOMBRES": "First Names",
+        "TABLE_COLUMNA_ESTADO_ADMISION": "Admission Status",
+        "TABLE_COLUMNA_ENFASIS": "Emphasis",
+        "TABLE_COLUMNA_NUMERO_DOCUMENTO": "Document Number",
+        "TABLE_CODIGO": "Code",
+        "BUTTON_DESCARGAR_LISTADO": "Download List",
+        "BUTTON_GENERAR_CODIGOS": "Generate Codes",
+        "BUTTON_GENERAR_CODIFICACION": "Assign Codification",
+        "TABLE_COLUMNA_PUNTAJE": "score"
     },
-  
     "HOME": {
         "TITLE": "SGA",
         "SELECT": "Change language",
@@ -40,178 +39,13 @@
         "LOGOUT": "Logout",
         "THEME": "Theme"
     },
-    "MENU": {
-        "menu": {
-            "menu": "Menu",
-            "rol": "Rol",
-            "opciones": "Options"
-        },
-        "aplicaciones": "Apps",
-        "roles": "Roles",
-        "opciones": "Options",
-        "notificaciones": "Notifications",
-        "dashboard": "Home",
-        "administracion": {
-            "administracion": "Administration",
-            "enfasis": {
-                "enfasis": "Emphasis",
-                "list_enfasis": "Emphasis List",
-                "crud_enfasis": "Create Emphasis"
-            },
-            "tipo_inscripcion": "Inscription Type"
-        },
-        "produccion_academica": {
-            "produccion_academica": "Academic Production",
-            "list_produccion_academica": "Academic Production List",
-            "crud_produccion_academica": "Academic Production Crud"
-        },
-        "evento": {
-            "evento": "Events",
-            "list_evento": "Events List",
-            "crud_evento": "Events Crud"
-        },
-        "notas": {
-            "notas": "Grades",
-            "registro_notas": "Grades' register",
-            "captura_notas": "Grades' register state",
-            "definicion_cortes": "Set dates of cuts"
-        },
-        "asignaturas": {
-            "asignaturas": "Subjects",
-            "notas-parciales": "Partial grades"
-        },
-        "derechos_pecuniarios": {
-            "derechos_pecuniarios": "Financial entitlements",
-            "definir_conceptos": "Define Concepts",
-            "asignar_valores": "Assign Values",
-            "consultar_conceptos": "Consult concepts",
-            "recibos_derechos_pecuniarios": "Generation of payment \nreceipts"
-        },
-        "archivo_icfes": {
-            "archivo_icfes": "Icfes file",
-            "list_archivo": "File List",
-            "crud_archivo": "File Register"
-        },
-        "reportes": {
-            "reportes": "Reports",
-            "inscripciones": {
-                "inscripciones": "Inscriptions",
-                "aspirantes": "Inscritos por programa",
-                "admitidos": "Admitidos por programa",
-                "inscritos": "Aspirantes por programa"
-            },
-            "icfes": {
-                "icfes": "ICFES SNP Registration",
-                "icfes_por_proyecto": "Records by project"
-            },
-            "proyectos_curriculares": {
-                "proyectos_curriculares": "Academic projects",
-                "lista_proyectos_curriculares": "Project list",
-                "historico_acreditaciones": "Accreditation history"
-            }
-        },
-        "auth": {
-            "auth": "Auth",
-            "login": "Login",
-            "register": "Register",
-            "request-password": "Requet password",
-            "reset-password": "Reset password"
-        },
-        "tipo_periodo": {
-            "tipo_periodo": "Period type creation",
-            "lista_tipo_periodo": "List period types",
-            "crud_tipo_periodo": "Create a period type "
-        },
-        "periodo": {
-            "periodo": "Manage Period",
-            "lista_periodo": "Enable / Disable a period",
-            "crud_periodo": "Create a period"
-        },
-        "calendarioevento": {
-            "calendarioevento": "Academic Offer",
-            "lista_calendarioevento": "List the Academic offer",
-            "crud_calendarioevento": "Crud calendar event"
-        },
-        "calendarioacademico": {
-            "calendarioacademico": "Academic calendar",
-            "list_calendarioacademico": "List of academic calendars",
-            "buscar_calendario_proyecto": "Search calendar by project"
-        },
-        "proyecto_academico": {
-            "proyecto_academico": "Academic Project",
-            "list_proyecto_academico": "Academic Project List",
-            "crud_proyecto_academico": "Registration of an academic \nproject"
-        },
-        "inscripcion": {
-            "inscripcion": "Inscription",
-            "inscripcion_general": "Enrollment in an academic project",
-            "preinscripcion": "Pre-registration for \nacademic projects"
-        },
-        "admision": {
-            "evaluacion_documentos": "Evaluation of registration\n documents",
-            "evaluacion_aspirantes": "Aspirant evaluation",
-            "admision": "Admissions",
-            "criterios": "Admissions criteria for \nprojects",
-            "asignacion_cupos": "Assignment of quotas",
-            "actualizacion_estado": "Assignment of quotas \nfor projects",
-            "listado_aspirante": "List applicants",
-            "listar_aspirantes_proyecto": "List applicants for active projects",
-            "administrar_criterios": "Manage admission criteria",
-            "documentos_descuentos": "Assignment of documents\nand discounts by project",
-            "solicitud_transferencias": "Transfer Requests",
-            "definicion_suite_inscripcion_programa": "Enrollment SUITE\nby curricular project"
-        },
-        "solicitudes": {
-            "solicitudes": "Basic data",
-            "solicitudes_lista": "List of requests"
-        },
-        "gestionar_solicitudes": {
-            "gestionar_solicitudes": "Students basic data",
-            "solicitudes_actualizacion": "Updating data requests"
-        },
-        "solicitud": {
-            "solicitud": "Data update",
-            "actualizacion_datos": "Updating ID number request",
-            "actualizacion_nombres": "Updating names request",
-            "actualizacion": "Data update requests"
-        },
-        "practicas_academicas": {
-            "practicas_academicas": "Academic practices",
-            "crear_nueva_practica": "New Request",
-            "ver_nuevas_solicitudes": "New requests",
-            "en_proceso": "Requests in process",
-            "invitacion": "Invitation to academic\npractices"
-        },
-        "preinscripcion_espacios_academicos": {
-            "preinscripcion_espacios_academicos": "Academic spaces\npre-registration",
-            "preinscripcion_espacios": "Academic spaces\npre-registration"
-        },
-        "ptd": {
-            "ptd": "Teacher Work Plan",
-            "asignar-ptd": "Assign TWP (PTD)",
-            "verificar-ptd": "Verify TWP (PTD)",
-            "consolidado": "Consolidated",
-            "revision-consolidado": "Consolidated Revision",
-            "preasignar-ptd": "Pre-assignment TWP (PTD)"
-        },
-        "espacios_academicos": {
-            "espacios_academicos": "Academic Spaces",
-            "admin_espacios": "Manage Academic Spaces"
-        },
-        "plan_estudios": {
-            "plan_estudios": "Study Plan",
-            "crear_plan_estudios": "Create/Edit Study Plan",
-            "evaluar_plan_estudios": "Evaluate Study Plan",
-            "revisar_plan_estudios": "Review Study Plan"
-        },
-        "gestion-horarios": {
-            "gestion-horarios": "Schedule Management",
-            "disponibilidad-cupos": "Availability of places",
-            "horarios-grupos": "Schedules by Groups"
-        }
-    },
     "GLOBAL": {
         "admitir": "Admit",
+        "semestre": "Semester",
+        "generar": "Generate",
+        "consultar": "Consult",
+        "facultad":"Faculty",
+        "descargar":"Download",
         "aspirantes_inscritos": "Enrolled Applicants",
         "click_aqui": "Click here",
         "detalle": "Detail",
@@ -273,6 +107,7 @@
         "fecha_fin": "End date",
         "placeholder_fecha_fin": "E.g.: 24/08/2018",
         "periodo": "Period",
+        "comentarios": "Comments",
         "info_caracteristica": "Characteristic data",
         "alerta_llenar_campo": "You must fill this field",
         "tipo_periodo": "Type Period ",
@@ -1064,8 +899,9 @@
         "Facultad": "Faculty",
         "Proyecto": "Project",
         "Acciones": "Actions",
-        "SelectNivel": "Select level"
-
+        "SelectNivel": "Select level",
+        "SelectTipoInscripcion": "Select inscription type",
+        "SelectEstadoInscripcion": "Selet inscription status"
     },
     "evento": {
         "evento": "Event",
@@ -1099,23 +935,6 @@
         "evento_no_actualizado": "Event not updated",
         "descripcion": "Description",
         "placeholder_descripcion": "e.g. Inscriptions"
-    },
-    "tipo_periodo": {
-        "titulo": "List of Period types",
-        "subtitulo": "Types of Period",
-        "explicacion": "To list the types of periods that are in the organization.",
-        "seguro_continuar_registrar_tipo_periodo": "Are you sure you register this type of period?",
-        "tipo_periodo_creado": "Type period created",
-        "seguro_actualizar_tipo_periodo": "Are you sure you update this type of period?",
-        "tipo_periodo_actualizado": "Updated period type",
-        "seguro_eliminar_tipo_periodo": "Are you sure you want to eliminate this type of period?",
-        "tipo_periodo_eliminado": "Type period removed",
-        "tooltip_editar": "Edit type of period",
-        "tooltip_eliminar": "Remove type of period",
-        "tooltip_crear": "Create type of period",
-        "tooltip_ver_registro": "View",
-        "tooltip_cancelar": "Cancel",
-        "tooltip_guargar": "Save"
     },
     "periodo": {
         "seguro_actualizar_periodo": "Are you sure you update this period?",
@@ -1494,7 +1313,8 @@
         "no_edit_doc_aprobado": "You cannot edit approved document",
         "ya_existe_registro": "You already have information loaded for this field",
         "informar_estado_inscrito_obs": "Applicant, your enrollment is conditioned by observations in the attached documentation, please go to Registration Details to review and correct the information not approved. If you do not, you cannot continue with the process.",
-        "info_boton_cambio_inscrito": "Do not forget to press the button \"Confirm edition of documents with observations\" to return to the ENROLLED status, this is enabled when you have edited all the not approved documents."
+        "info_boton_cambio_inscrito": "Do not forget to press the button \"Confirm edition of documents with observations\" to return to the ENROLLED status, this is enabled when you have edited all the not approved documents.",
+        "no_permite_cambio": "The status '{{estado}}' does not allow changes."
     },
     "reingreso": {
         "reingreso_no_registrado": "Re-entry request not created",
@@ -1662,6 +1482,7 @@
     },
     "admision": {
         "error_proyecto": "Please, select a project",
+        "erro_valor_minimo": "The minimum value is 0",
         "proyecto": "Select the academic project",
         "nivel": "Select level",
         "estado": "State",
@@ -1768,7 +1589,7 @@
         "descargar_zip": "Download the applicant's documentary compilation",
         "no_vinculacion_no_rol": "Your user is not linked to any academic project and does not have the appropriate role",
         "multiple_vinculacion": "Your user appears linked to more than one academic project",
-        "notificar_observaciones":"Report observations",
+        "notificar_observaciones": "Report observations",
         "examen_de_estado": "The criterion to parameterize is a state exam?",
         "titulo_form_examen": "Corresponding level of the state exam",
         "saber_11": "Does it require Saber 11 (formerly ICFES)?",
@@ -1778,8 +1599,7 @@
         "archivo": "Does it require an attached file?",
         "seleccion_facultad": "Select the faculty",
         "ofertar": "Offer project",
-        "ofertar_opcion2": "Is it offered as option 2?",
-        "ofertar_opcion3": "Is it offered as option 3?",
+        "ofertar_opcion": "Is it offered as option",
         "parametrizacion_puntaje": "Global score parameterization",
         "valor_minimo": "Minimum value:",
         "listar_aspirantes_proyecto": "List applicants for active projects",
@@ -1804,6 +1624,34 @@
         "titulo_inscripcion_no_encontrada": "The inscription was not found",
         "inscripcion_no_encontrada": "No registration associated with the icfes code was found"
     },
+    
+    "oficializados": {
+        "titulo": "Officialization",
+        "mensaje": "This module will support you in the process of purifying the list of those admitted that have been made official; In turn, it will release the places for people who have not completed the process.",
+        "proceso": "Admission process",
+        "fechas": "Start and end dates",
+        "estado": "State",
+        "gestion": "Management",
+        "listado": "Official list",
+        "listado_no_oficializados": "Listed NOT official",
+        "facultad": "Faculty",
+        "codigo": "Code",
+        "documento": "Document",
+        "nombres": "Names",
+        "primer_nombre": "First name",
+        "segundo_nombre": "Second name",
+        "apellidos": "Surnames",
+        "primer_apellido": "First surname",
+        "segundo_apellido": "Second surname",
+        "correo_personal": "Personal mail",
+        "telefono": "Phone",
+        "sugerido": "Suggested user",
+        "asignado": "Assigned email",
+        "descargar": "Download list",
+        "liberar_cupos": "Release quotas",
+        "sugerir_usuarios": "Suggest users",
+        "enviar_correos": "Send institutional email request"
+    },
     "cupos": {
         "aviso_periodo": "Period in which the admission quotas are defined",
         "aviso_periodo_listar": "Period in which applicants will be listed",
@@ -1815,13 +1663,16 @@
         "aviso_proyecto_actualizar": "Select the academic projects you wish to update status",
         "aviso_proyec": "Select the academic project you wish to list",
         "erro_selec_nivel": "Please select the level!",
+        "selec_cuenta":"Select the account",
         "erro_selec_proyecto": "Please select at least one project!",
         "cupos": "Definition of quotas for the period and the selected academic projects",
         "asignar": "Assign quotas",
+        "erro_selec_inscripcion": "Please select at least one registration type",
         "seleccionar_admitidos": "Select admitted",
         "ver_listado_aspirantes": "Show list of applicants",
         "cupos_proyecto": "Number of assigned places",
         "cupos_disponibles": "Number of places available:",
+        "cupos_opcionados": "Number of optioned places:",
         "sin_cupos_periodo": "No quotas have been defined for this period or curricular project"
     },
     "calendario": {
@@ -2293,7 +2144,7 @@
     "ptd": {
         "espacio_academico": "Academic course",
         "proyecto": "Project",
-        "proyecto_curricular": "Curricular Project", 
+        "proyecto_curricular": "Curricular Project",
         "nombre_docente": "Teacher's name",
         "documento_docente": "Teacher's ID",
         "asignacion_ptd": "Teacher Work Plan Assignment",
@@ -2443,7 +2294,7 @@
         "pdf_solover_excel_imprimir": "Pdf document not suitable for printing or editing, please save the excel version provided."
     },
     "espacios_academicos": {
-        "espacios_academicos":"Academic Spaces",
+        "espacios_academicos": "Academic Spaces",
         "consulta_espacios": "Consult academic spaces",
         "resultados_espacios": "Results",
         "nuevo_espacio": "New academic space",
@@ -2502,7 +2353,7 @@
         "agregar_agrupacion_fail": "The Grouping could not be added"
     },
     "plan_estudios": {
-        "plan_estudios":"Study Plan",
+        "plan_estudios": "Study Plan",
         "plan_estudios_ciclos": "Study plan by cycles",
         "crear": "Create Study Plan",
         "crear_editar": "Create/Edit Study Plan",
@@ -2522,7 +2373,7 @@
         "planes_estudio_evaluados": "Evaluated study plans",
         "nombre_plan_estudios": "Study plan name",
         "nombre_plan_estudios_general": "General study plan name",
-        "select_proyecto":"Selection of the Curricular Project",
+        "select_proyecto": "Selection of the Curricular Project",
         "resolucion": "Resolution",
         "total_creditos": "Total Credits",
         "placeholder_total_creditos": "Number of credits greater than zero",
@@ -2587,40 +2438,41 @@
     },
     "gestion_horarios": {
         "encabezado": "Module for the Availability of quotas",
-        "label":"Availability of places",
+        "label": "Availability of places",
         "mensaje_inicial": "Please select the curricular project, the academic period and the semester that is to consult the availability of places by academic space",
+        "mensaje_doctorado": "The current calendar contains multiple assigned periods. Please review the details to avoid conflicts in the assignments.",
         "header_parametros": "Query definition",
         "periodo_academico": "Academic period",
-        "semestre":"Academic semester",
+        "semestre": "Academic semester",
         "header_resultados": "Query Results",
         "mensaje_tabla": "The table exposes the allocation of quotas for the different academic spaces for the information entered, you can edit the quotas or enable or disable the quotas",
         "codigo": "Code",
-        "espacio_academico":"Academic space",
-        "grupo":"Group",
+        "espacio_academico": "Academic space",
+        "grupo": "Group",
         "cupos": "Places",
-        "inscritos":"Inscribed",
+        "inscritos": "Inscribed",
         "disponibles": "Available",
-        "editar":"Edit",
-        "inactivar":"Inactivate",
+        "editar": "Edit",
+        "inactivar": "Inactivate",
         "encabezado_2": "Module for Schedules by group",
         "label_2": "Hours per group",
         "mensaje_inicial_2": "Please select the search criteria you wish to carry out, select the academic period, academic project, academic space and group to consult, the more criteria you select, the more specific the query will be",
         "reportes": "Download reports",
         "sede": "Campus",
-        "edificio":"Building",
-        "salon":"Lounge",
-        "proyecto_academico":"academic project",
+        "edificio": "Building",
+        "salon": "Lounge",
+        "proyecto_academico": "academic project",
         "dia": "Day",
         "hora": "Hour",
-        "encabezado_gestion":"Module for schedule management",
-        "mensaje_gestion":"User in this component you must select the action of interest to perform in the module",
+        "encabezado_gestion": "Module for schedule management",
+        "mensaje_gestion": "User in this component you must select the action of interest to perform in the module",
         "label_gestion": "Transversal information",
         "calendario_gestion": "Academic Calendar",
         "mensaje_calendario": "User, keep in mind that you can only manage schedules within the dates established here",
         "select_calendario": "Select the Academic Calendar",
-        "elije_fecha_inicio":"Initial date",
+        "elije_fecha_inicio": "Initial date",
         "elije_fecha_final": "Final date",
-        "suite":"Overall suite",
+        "suite": "Overall suite",
         "mensaje_suite": "User, please select the option you want to perform",
         "boton_1": "Group management",
         "boton_2": "Register schedule",
@@ -2629,7 +2481,7 @@
         "boton_5": "Report schedules",
         "encabezado_3": "Group management",
         "mensaje_inicial_3": "User, in this module you can create the courses that are of interest to you.",
-        "plan_estudios":"Curriculum",
+        "plan_estudios": "Curriculum",
         "header_grupos": "Group List",
         "codigo_grupo": "Group Code",
         "capacidad": "Group capacity",
@@ -2644,7 +2496,7 @@
         "label_2_codificacion": "Indicator for the group:",
         "label_3_codificacion": "Result code for the group",
         "label_4_codificacion": "Group capacity",
-        "encabezado_4":"Register schedule",
+        "encabezado_4": "Register schedule",
         "mensaje_inicial_4": "User in this module you will be able to manage schedules for your related curricular projects.",
         "header_especifico": "Specific information",
         "header_1_periodo": "Academic period",
@@ -2657,10 +2509,10 @@
         "select_salon": "Select the room from the list",
         "siguiente_horaria": "Continue with time information",
         "header_2_horaria": "Time information",
-        "mensaje_inicial_6":"Next you must graphically locate the academic space of interest.",
+        "mensaje_inicial_6": "Next you must graphically locate the academic space of interest.",
         "mensaje_inicial_7": "User, the assignment of academic load is optional as long as it is within the dates established in the general calendar",
         "header_horario_2": "Academic Load Assignment",
-        "guardar_parcial":"Save partial",
+        "guardar_parcial": "Save partial",
         "finalizar": "Finish",
         "select_identificacion": "Teacher identification number:",
         "select_nombre": "Teacher's name:",
@@ -2669,7 +2521,33 @@
     },
     "liquidacion": {
         "recibos": "Curriculum project information",
+        "detalle":"Detail",
+        "concepto_base": "Base concept",
+        "conceptos_descuentos": "Discount concepts",
+        "fechas_pago_cuotas": "Payment dates",
+        "nombres_apellidos": "Names and surnames",
+        "consulta_historica": "Consultation of historical liquidation list",
+        "info_1":"Curricular project information",
+        "cuotas": "Quotas",
+        "primera_cuota": "First quota",
+        "segunda_cuota": "Second quota",
+        "tercera_cuota": "Third quota",
+        "primer_pago": "First payment",
+        "segundo_pago": "Second payment",
+        "tercer_pago": "Third payment",
+        "beca": "Scholarship",
+        "segundo_hermano": "Second brother",
+        "doctorado_interinstitucional": "Interinstitutional doctorate",
+        "secretaria": "Secretary",
+        "seguro": "seguro",
+        "carnet": "ID card",
+        "votacion": "Voting",
+        "egresado": "Graduated",
+        "docente": "Teacher",
+        "monitorias": "Monitorships",
+        "sistematizacion": "Systematization",
         "plantilla": "Template",
+        "porcentaje_cuotas": "Percentage of quotas",
         "proyecto": "Project",
         "periodo_academico": "Academic period",
         "semestre": "Semester",
@@ -2696,14 +2574,14 @@
         "g2": "Systematization (One-time)",
         "g3": "Student ID Card (One-time)",
         "g4": "Student Insurance (Semester)",
-        "total":"Total",
-        "acciones":"Actions",
+        "total": "Total",
+        "acciones": "Actions",
         "codigo": "Code",
         "documento": "Document",
         "nombres": "Names",
         "apellidos": "Surnames"
     },
-    "listado_pregrado": {       
+    "listado_pregrado": {
         "listar": "List",
         "periodo": "Period",
         "seleccion_periodo": "Select a Period",
@@ -2748,17 +2626,17 @@
         "total": "Total global:",
         "pendientes": "Pending uploads:",
         "cargados": "Loaded:",
-        "cargar": "Upload file"},
-    "soporte-configuracion":{
-        "orden":"Order",
-        "convocatoria":"Call",
-        "Generacion":"Generation",
-        "Usuario":"User",
-        "nodata":"No historical data found"
- 
+        "cargar": "Upload file"
+    },
+    "soporte-configuracion": {
+        "orden": "Order",
+        "convocatoria": "Call",
+        "Generacion": "Generation",
+        "Usuario": "User",
+        "nodata": "No historical data found"
     },
     "evaluacionpregrado": {
-        "aspirante": "Applicant Evaluation",
+        "aspirante": "Undergraduate Applicant Evaluation",
         "facultades": "Faculties",
         "facultad": "Faculty",
         "estado": "Status",
@@ -2774,7 +2652,14 @@
         "criterio_consultar": "Criterion to Consult",
         "erro_selec_nivel": "Please select a level",
         "tooltip_eliminar": "Delete",
-        "subcriterios": "Subcriteria",
-        "subcriterio": "Subcriterion"
-      }
+        "criterios": "Criteria",
+        "criterio": "Criterion",
+        "revision": "Document Review",
+        "puntaje": "Calculate applicants' score",
+        "listado": "List of registered applicants",
+        "evaluar_criterio": "Evaluate Criterion",
+        "revision_curricular": "Send for review to the curricular project",
+        "descargar_pdf": "Download list (PDF/Excel)",
+        "definir_admitidos": "Define admitted lists"
+    }
 }

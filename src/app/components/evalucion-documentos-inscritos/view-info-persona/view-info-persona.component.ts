@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { InfoPersona } from 'src/app/models/informacion/info_persona';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 
@@ -13,6 +12,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { InfoCaracteristica } from 'src/app/models/informacion/info_caracteristica';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { ZipManagerService } from 'src/utils/zip-manager.service';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
+import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
 
 @Component({
   selector: 'ngx-view-info-persona',
@@ -64,10 +65,11 @@ export class ViewInfoPersonaComponent implements OnInit {
 
   @Output('docs_editados') docs_editados: EventEmitter<any> = new EventEmitter(true);
 
-  constructor(private sgaMidService: SgaMidService,
+  constructor(
     private documentoService: DocumentoService,
     private sanitization: DomSanitizer,
-
+    private inscripcionesMidService: InscripcionMidService,
+    private terceroMidService: TerceroMidService,
     private translate: TranslateService,
     private userService: UserService,
     private newNuxeoService: NewNuxeoService,
@@ -102,7 +104,7 @@ export class ViewInfoPersonaComponent implements OnInit {
     this.infoCarga.nCargas = 5;
     const id = this.info_persona_id ? this.info_persona_id : this.userService.getPersonaId();
     if (id !== undefined && id !== 0 && id.toString() !== '') {
-      this.sgaMidService.get('persona/consultar_persona/' + id)
+      this.terceroMidService.get('personas/consultar_persona/' + id)
         .subscribe((res:any) => {
           const r = <any>res;
           if (r !== null && r.Type !== 'error') {
@@ -113,14 +115,14 @@ export class ViewInfoPersonaComponent implements OnInit {
             sessionStorage.setItem('nameFolder', nombreCarpetaDocumental);
 
 
-            this.sgaMidService.get('persona/consultar_complementarios/' + this.info_persona_id)
+            this.terceroMidService.get('personas/' + this.info_persona_id + '/complementarios')
             .subscribe( (res:any) => {
               if (res !== null && res.Response.Code !== '404') {
                 this.info_info_caracteristica = <InfoCaracteristica>res.Response.Body[0].Data;
 
                 //this.lugarOrigen = this.info_info_caracteristica.Lugar["Lugar"].CIUDAD.Nombre + ", " + this.info_info_caracteristica.Lugar["Lugar"].DEPARTAMENTO.Nombre
 
-                this.sgaMidService.get('inscripciones/info_complementaria_tercero/' + this.info_persona_id)
+                this.inscripcionesMidService.get('inscripciones/informacion-complementaria/tercero/' + this.info_persona_id)
                   .subscribe((resp:any) => {
                     if (resp.Response.Code == "200") {
                       let rawDate = this.info_info_persona.FechaNacimiento.split('-')

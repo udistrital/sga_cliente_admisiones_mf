@@ -2,7 +2,7 @@
     <mat-card class="full-screen-card">
         <mat-card-header>
             <mat-card-title>
-                <h1>Generar reporte de codificación</h1>
+                <h1>{{ 'CODIFICACION.TITLE' | translate }}</h1>
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -10,7 +10,7 @@
                 <div class="grid">
 
                     <mat-form-field appearance="fill" class="grid-3">
-                        <mat-label>Seleccione el periodo</mat-label>
+                        <mat-label>{{ 'CODIFICACION.SELECT_PERIODO_ACADEMICO' | translate }}</mat-label>
                         <mat-select formControlName="periodoAcademico">
                             <mat-option *ngFor="let periodo of periodosAcademicos" [value]="periodo.Id">
                                 {{ periodo.Nombre }}
@@ -19,7 +19,7 @@
                     </mat-form-field>
 
                     <mat-form-field class="grid-3">
-                        <mat-label>Seleccione la facultad</mat-label>
+                        <mat-label>{{ 'CODIFICACION.SELECT_FACULTAD' | translate }}</mat-label>
                         <mat-select formControlName="facultad" (selectionChange)="onFacultadChange($event)">
                             <mat-option *ngFor="let facultad of facultades" [value]="facultad.Id">
                                 {{ facultad.Nombre }}
@@ -28,7 +28,7 @@
                     </mat-form-field>
 
                     <mat-form-field class="grid-3">
-                        <mat-label>Seleccione el proyecto curricular</mat-label>
+                        <mat-label>{{ 'CODIFICACION.SELECT_PROYECTO_CURRICULAR' | translate }}</mat-label>
                         <mat-select formControlName="proyectoCurricular">
                             <mat-option *ngFor="let proyecto of proyectos" [value]="proyecto.Id">
                                 {{ proyecto.Nombre }}
@@ -37,7 +37,7 @@
                     </mat-form-field>
                 </div>
                 <div class="centrar">
-                    <button class="primary-button" mat-raised-button color="primary" type="submit">Generar</button>
+                    <button class="primary-button" mat-raised-button color="primary" type="submit">{{ 'GLOBAL.generar' | translate }}</button>
                 </div>
             </form>
         </mat-card-content>
@@ -51,32 +51,32 @@
 
                     <!-- Periodo Column -->
                     <ng-container matColumnDef="Periodo">
-                        <th class="centrar" mat-header-cell *matHeaderCellDef> Name </th>
+                        <th class="centrar" mat-header-cell *matHeaderCellDef>{{ 'GLOBAL.nombre' | translate }}</th>
                         <td class="centrar" mat-cell *matCellDef="let element"> {{element.Periodo}} </td>
                     </ng-container>
 
                     <!-- Facultad Column -->
                     <ng-container matColumnDef="Facultad">
-                        <th class="centrar" mat-header-cell *matHeaderCellDef> Facultad </th>
+                        <th class="centrar" mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.facultad' | translate }}</th>
                         <td class="centrar" mat-cell *matCellDef="let element"> {{element.Facultad}} </td>
                     </ng-container>
 
                     <!-- Proyecto Column -->
                     <ng-container matColumnDef="Proyecto">
-                        <th class="centrar" mat-header-cell *matHeaderCellDef> Proyecto </th>
+                        <th class="centrar" mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.proyecto_academico' | translate }} </th>
                         <td class="centrar" mat-cell *matCellDef="let element"> {{element.Proyecto}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="Acciones">
-                        <th class="centrar" mat-header-cell *matHeaderCellDef> Acciones </th>
+                        <th class="centrar" mat-header-cell *matHeaderCellDef>{{ 'GLOBAL.acciones' | translate }}</th>
                         <td class="centrar" mat-cell *matCellDef="let element">
-                            <button mat-icon-button matTooltip="Descargar PDF" (click)="downloadFile(reportePdf, 'ReporteCodificacion.pdf')">
+                            <button mat-icon-button matTooltip="{{ 'GLOBAL.descargar' | translate }} PDF" (click)="downloadFile(reportePdf, 'ReporteCodificacion.pdf')">
                                 <mat-icon fontIcon="picture_as_pdf"></mat-icon>
                             </button>
-                            <button mat-icon-button matTooltip="Descargar Xlsx" (click)="downloadFile(reporteExcel, 'ReporteCodificacion.xlsx')">
+                            <button mat-icon-button matTooltip="{{ 'GLOBAL.descargar' | translate }} Xlsx" (click)="downloadFile(reporteExcel, 'ReporteCodificacion.xlsx')">
                                 <mat-icon fontIcon="table_chart"></mat-icon>
                             </button>
-                            <button mat-icon-button matTooltip="Ver PDF" (click)="openDialog()">
+                            <button mat-icon-button matTooltip="{{ 'GLOBAL.ver' | translate }} PDF" (click)="openDialog()">
                                 <mat-icon fontIcon="visibility"></mat-icon>
                             </button>
                         </td>

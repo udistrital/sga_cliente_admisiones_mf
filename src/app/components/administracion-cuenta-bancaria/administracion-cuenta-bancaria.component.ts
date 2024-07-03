@@ -181,8 +181,6 @@ export class AdministracionCuentaBancariaComponent {
   }
 
   filtrarProyecto(proyecto: any) {
-    console.log(proyecto)
-    console.log(this.selectednivel)
     if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
       return true
     }
@@ -258,11 +256,9 @@ export class AdministracionCuentaBancariaComponent {
 
   validarNvel() {
     this.esPosgrado = false;
-    console.log(this.selectednivel)
     this.projectService.get('nivel_formacion?query=Id:' + Number(this.selectednivel)).subscribe(
       // (response: NivelFormacion[]) => {
       (response: any) => {
-        console.log(response)
         this.nivelSelect = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null)
         if (this.nivelSelect[0].Nombre === 'Posgrado') {
           this.esPosgrado = true;
@@ -277,10 +273,8 @@ export class AdministracionCuentaBancariaComponent {
   obtenerCuentas() {
     this.parametrosService.get('parametro?query=TipoParametroId:37').subscribe(
       (response) => {
-        console.log(response);
         this.dataSource = response;
         this.cuentas = this.dataSource.Data
-        console.log("Cuentas:", this.cuentas);
       },
       (error) => {
         console.error('Error al obtener las cuentas:', error);
@@ -302,17 +296,14 @@ export class AdministracionCuentaBancariaComponent {
   }
 
   guardar(cuenta: any): void {
-    console.log("res",cuenta.Data);
     cuenta.Data.Activo=true;
     this.parametrosService.put(`parametro?query=Id:${cuenta.Data.Id}`,cuenta).subscribe(
       (response) => {
-        console.log(response);
       },
       (error) => {
         console.error('Error al guardar la cuenta:', error);
       }
     );
-    console.log("form",this.asignacionForm.value);
 
   }
 
