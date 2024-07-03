@@ -27,6 +27,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { State } from './estado-inscripcion';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 @Component({
     // tslint:disable-next-line: component-selector
     selector: 'ngx-listado-aspirante',
@@ -92,6 +93,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     cantidad_inscritos: number = 0;
     cantidad_inscritos_obs: number = 0;
     mostrarConteos: boolean = false;
+    info_persona_id: any;
 
     stateTransitions: Record<State, State[]> = {
         'Inscripción solicitada': [],
@@ -112,6 +114,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         private parametrosService: ParametrosService,
         private popUpManager: PopUpManager,
         private inscripcionService: InscripcionService,
+        private inscripcionMidService: InscripcionMidService,
+        private usuarioService: UserService,
         private tercerosService: TercerosService,
         private proyectoAcademicoService: ProyectoAcademicoService,
         private evaluacionService: EvaluacionInscripcionService,
@@ -287,7 +291,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                     }
                     event.newData.EstadoInscripcionId.Id = newState.value;
                     event.newData.EstadoInscripcionId.Nombre = newState.title;
-                    this.inscripcionService.put('inscripcion', updateState)
+                    event.newData.TerceroId = this.info_persona_id;
+                    this.inscripcionMidService.post('inscripciones/actualizar-inscripcion', updateState)
                         .subscribe((response) => {
                             Swal.fire(
                                 this.translate.instant('GLOBAL.' + 'operacion_exitosa'),
@@ -437,7 +442,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-
+        this.info_persona_id = this.usuarioService.getPersonaId();
     }
 
     ngOnChanges() {
@@ -447,10 +452,11 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     admitir(inscrito: any) {
         var updateState = inscrito.Inscripcion;
         updateState.EstadoInscripcionId.Id = this.estadoAdmitido.Id
+        updateState.TerceroId = this.info_persona_id;
         const promiseInscrito = new Promise((resolve, reject) => {
-            this.inscripcionService.put('inscripcion', updateState)
-                .subscribe((response) => {
-                    resolve(response);
+            this.inscripcionMidService.post('inscripciones/actualizar-inscripcion', updateState)
+                .subscribe((response: any) => {
+                    resolve(response.Data);
                     const data_notificacion = {
                         Email: inscrito.Email,
                         NombreAspirante: inscrito.NombreAspirante,
