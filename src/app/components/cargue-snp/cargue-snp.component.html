@@ -93,8 +93,8 @@
         <br><br>
         <mat-card>
           <mat-card-content>
-            <div class="table-container" style="overflow-x: auto;">
-              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 scrollable-table">
+            <div class="table">
+              <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
 
                 <ng-container matColumnDef="Orden">
                   <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.orden' | translate }}</th>
