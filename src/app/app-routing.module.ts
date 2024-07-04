@@ -26,11 +26,10 @@ import { RepotesInscripcionesComponent } from './components/repotes-inscripcione
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
-import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
+import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
 import { ListadoOficializadosComponent } from './components/listado-oficializados/listado-oficializados.component';
 import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
-
 
 const routes: Routes = [
   {
@@ -121,8 +120,12 @@ const routes: Routes = [
     component: CargueSnpComponent,
   },
   {
-    path:"correo-institucional", 
-    component: CorreoInstitucionalComponent,
+    path:"listados-oficializados", 
+    component: ListadosOficializadosComponent
+  },
+  {
+    path:"listados-oficializados", 
+    component: ListadosOficializadosComponent
   },
   {
     path:"listado-oficializados", 
