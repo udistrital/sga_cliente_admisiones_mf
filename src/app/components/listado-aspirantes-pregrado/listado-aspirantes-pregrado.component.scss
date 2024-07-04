@@ -93,6 +93,8 @@ table {
   cursor: pointer;
   color: white !important;
   display: flex;
+  padding: 10px 15px;
+  border-radius: 10px;
 }
 
 .link:hover {
@@ -178,6 +180,20 @@ mat-table {
   height: 100%;
   background-color: rgba(117, 115, 115, 0.5);
   z-index: 1;
+}
+
+.filtro {
+  width: 100%;
+}
+
+.boton-acciones {
+  cursor: pointer;
+}
+
+.boton-acciones .item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 @media(width > 580px) {

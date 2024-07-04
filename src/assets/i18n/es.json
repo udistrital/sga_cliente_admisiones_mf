@@ -619,7 +619,8 @@
         "placeholder_direccion_entidad": "Ej: Cra 8 # 40-78 Piso 1",
         "item": "Ítem",
         "evaluar": "Evaluar",
-        "tipo_inscripcion": "Seleccione el tipo de inscripción"
+        "tipo_inscripcion": "Seleccione el tipo de inscripción",
+        "filtro": "Filtro"
     },
     "ERROR": {
         "general": "La solicitud no pudo ser cumplida",
