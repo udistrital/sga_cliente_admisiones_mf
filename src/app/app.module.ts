@@ -64,7 +64,7 @@ import { CampusMidService } from './services/campus_mid.service';
 import { ViewPropuestaGradoComponent } from './components/evalucion-documentos-inscritos/view-propuesta_grado/view-propuesta_grado.component';
 import { StoreModule } from '@ngrx/store';
 import { rootReducer } from './store/rootReducer';
-import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+
 import { ListService } from './store/services/list.service';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
@@ -105,6 +105,11 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 import { CorreoInstitucionalComponent } from './components/correo-institucional/correo-institucional.component';
 import { LiquidacionPosgradoTableComponent } from './components/liquidacion-recibos/liquidacion-posgrado-table/liquidacion-posgrado-table.component';
+import { ListadoOficializadosComponent } from './components/listado-oficializados/listado-oficializados.component';
+import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
+import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
+import { TablaListadoAspirantesComponent } from './components/listado-admitidos/tabla-listado-aspirantes/tabla-listado-aspirantes.component';
+import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -181,7 +186,12 @@ export function createTranslateLoader(http: HttpClient) {
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
     CorreoInstitucionalComponent,
-    LiquidacionPosgradoTableComponent
+    LiquidacionPosgradoTableComponent,
+    ListadoOficializadosComponent,
+    ListadoAdmitidosComponent,
+    ListadoAspiranteComponent,
+    TablaListadoAspirantesComponent,
+    PreinscripcionProyectosCurricularesComponent
   ],
   imports: [
     CodificacionModule,

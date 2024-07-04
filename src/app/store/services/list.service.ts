@@ -3,7 +3,6 @@ import { IAppState } from '../app.state';
 import { Store } from '@ngrx/store';
 import { REDUCER_LIST } from '../reducer.constants';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
-import { CoreService } from 'src/app/services/core.service';
 import { TercerosService } from 'src/app/services/terceros.service';
 import { IdiomaService } from 'src/app/services/idioma.service';
 import { UbicacionService } from 'src/app/services/ubicacion.service';
@@ -21,7 +20,6 @@ export class ListService {
   constructor(
     private inscripcionService: InscripcionService,
     private idiomaService: IdiomaService,
-    private coreService: CoreService,
     private tercerosService: TercerosService,
     private ubicacionService: UbicacionService,
     private programaAcademicoService: ProyectoAcademicoService,
@@ -669,10 +667,11 @@ export class ListService {
     this.store.select(<any>REDUCER_LIST.PeriodoAcademico).subscribe(
       (list: any) => {
         if (!list || list.length === 0) {
-          this.coreService.get('periodo/?query=Activo:true&limit=0')
+          this.parametrosService.get('periodo/?query=Activo:true&limit=0')
             .subscribe(
               (result: any) => {
-                this.addList(REDUCER_LIST.PeriodoAcademico, result);
+                const r = <any>result.Data;
+                this.addList(REDUCER_LIST.PeriodoAcademico, r);
               },
               error => {
                 this.addList(REDUCER_LIST.PeriodoAcademico, []);
