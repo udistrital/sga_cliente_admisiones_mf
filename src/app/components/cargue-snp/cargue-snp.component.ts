@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
@@ -10,6 +10,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 
 // interface Food {
 //   value: string;
@@ -43,7 +45,9 @@ interface Tile {
   styleUrls: ['./cargue-snp.component.scss']
 })
 export class CargueSnpComponent {
-
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  
   formulario: boolean = false;
   dataSource = new MatTableDataSource<any>();
 
@@ -181,45 +185,51 @@ export class CargueSnpComponent {
 
     this.inscripciones = await this.buscarInscripciones(proyecto, periodo);
     const requisitoPrograma: any = await this.buscarRequisitoProgramaAcademico(proyecto, periodo)
-    this.detallesEvaluacion = await this.verificarEstadoCargaIcfes()
-    this.requisitoPrograma = requisitoPrograma[0]
-    let count = 0
-    for (const inscripcion of this.inscripciones) {
-      const infoIcfes: any = await this.buscarInscripcionPregrado(inscripcion.Id)
-      if (Object.keys(infoIcfes[0]).length > 0) {
-        count += 1
-        const persona: any = await this.consultarTercero(inscripcion.PersonaId);
-        const detalle = this.detallesEvaluacion.find((item: any) => item.InscripcionId === inscripcion.Id)
+    if (requisitoPrograma.length > 0 && typeof requisitoPrograma[0] === 'object' && requisitoPrograma[0] !== null && Object.keys(requisitoPrograma[0]).length > 0) {
+      this.detallesEvaluacion = await this.verificarEstadoCargaIcfes()
+      this.requisitoPrograma = requisitoPrograma[0]
+      let count = 0
+      for (const inscripcion of this.inscripciones) {
+        const infoIcfes: any = await this.buscarInscripcionPregrado(inscripcion.Id)
+        if (Object.keys(infoIcfes[0]).length > 0) {
+          count += 1
+          const persona: any = await this.consultarTercero(inscripcion.PersonaId);
+          const detalle = this.detallesEvaluacion.find((item: any) => item.InscripcionId === inscripcion.Id)
 
-        if (detalle) {
-          this.inscritosCargados += 1;
+          if (detalle) {
+            this.inscritosCargados += 1;
+          } else {
+            this.inscritosPendientes += 1;
+          }
+
+          const inscritoData = {
+            "persona_id": inscripcion.PersonaId,
+            "inscripcion_id": inscripcion.Id,
+            "inscripcion_pregrado_id": infoIcfes[0].Id,
+            "numeral": count,
+            "credencial": 123,
+            "num_doc_icfes": infoIcfes[0].NumeroIdentificacionIcfes,
+            "num_doc_actual": persona.NumeroIdentificacion,
+            "nombre_completo": persona.NombreCompleto,
+            "telefono": persona.Telefono,
+            "correo": persona.UsuarioWSO2,
+            "cod_proyecto": inscripcion.ProgramaAcademicoId,
+            "snp": infoIcfes[0].CodigoIcfes,
+            "estado_carga": detalle ? true : false
+          }
+          this.inscritosData.push(inscritoData);
         } else {
-          this.inscritosPendientes += 1;
+          continue;
         }
-
-        const inscritoData = {
-          "persona_id": inscripcion.PersonaId,
-          "inscripcion_id": inscripcion.Id,
-          "inscripcion_pregrado_id": infoIcfes[0].Id,
-          "numeral": count,
-          "credencial": 123,
-          "num_doc_icfes": infoIcfes[0].NumeroIdentificacionIcfes,
-          "num_doc_actual": persona.NumeroIdentificacion,
-          "nombre_completo": persona.NombreCompleto,
-          "telefono": persona.Telefono,
-          "correo": persona.UsuarioWSO2,
-          "cod_proyecto": inscripcion.ProgramaAcademicoId,
-          "snp": infoIcfes[0].CodigoIcfes,
-          "estado_carga": detalle ? true : false
-        }
-        this.inscritosData.push(inscritoData);
-      } else {
-        continue;
       }
+      this.totalInscritos = this.inscritosPendientes + this.inscritosCargados;
+      this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      stepper.next();
+    } else {
+      this.popUpManager.showAlert(this.translate.instant('admision.titulo_programa_sin_requisitos'), this.translate.instant('admision.programa_sin_requisitos'));
     }
-    this.totalInscritos = this.inscritosPendientes + this.inscritosCargados;
-    this.dataSource = new MatTableDataSource<any>(this.inscritosData);
-    stepper.next();
     this.loading = false;
   }
 
@@ -291,7 +301,7 @@ export class CargueSnpComponent {
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.requisito_programa_error'));
             this.loading = false;
-            console.log(error);
+            console.error(error);
             reject([]);
           });
     });
@@ -421,5 +431,16 @@ export class CargueSnpComponent {
       }
     }
     this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }
