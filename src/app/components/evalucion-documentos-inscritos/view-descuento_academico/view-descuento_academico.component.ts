@@ -15,6 +15,7 @@ import { ZipManagerService } from 'src/utils/zip-manager.service';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 import { decrypt } from 'src/utils/util-encrypt';
+import { UserService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'ngx-view-descuento-academico',
@@ -77,6 +78,7 @@ export class ViewDescuentoAcademicoComponent implements OnInit {
     private inscripcionesMidService: InscripcionMidService,
     private utilidades: UtilidadesService,
     private zipManagerService: ZipManagerService,
+    private userService: UserService,
     private popUpManager: PopUpManager,) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
     });
@@ -95,8 +97,8 @@ export class ViewDescuentoAcademicoComponent implements OnInit {
     this.url_editar.emit(true);
   }
 
-  loadData(): void {
-    const id = decrypt(window.localStorage.getItem('persona_id'));
+  async loadData(): Promise<void> {
+    const id = await this.userService.getPersonaId();
     this.inscripcionesMidService.get('/academico/descuento/detalle?' + id + '&DependenciaId=' +
       sessionStorage.getItem('ProgramaAcademicoId') + '&PeriodoId=' + sessionStorage.getItem('IdPeriodo'))
       .subscribe((result: any) => {

@@ -1,0 +1,325 @@
+<div>
+    <mat-card style="margin-top: 20px;">
+        <mat-card-content>
+            <div>
+                <div>
+
+                    <div>
+                        <legend>
+                            <strong>{{'evaluacionpregrado.variables' | translate}}
+
+                            </strong>
+                        </legend>
+                    </div>
+
+                    <br><br>
+
+                    <div>
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>
+                                {{ 'evaluacionpregrado.periodo' | translate }}:
+                            </mat-label>
+                            <mat-select [(ngModel)]="periodo" [disabled]='false' [formControl]="periodoControl" (selectionChange)="selectionChange()">
+                                <mat-option>
+                                    --{{ 'evaluar.seleccionar' | translate }}--
+                                </mat-option>
+                                <mat-option *ngFor="let item of periodos" [value]="item.Id">
+                                    {{ item.Nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mt-20">
+
+        <mat-card-header class="center-header ">
+            <mat-card-title>
+                {{"listado-oficializados.titulo" | translate}}
+            </mat-card-title>
+        </mat-card-header>
+
+        <div style="display: flex; justify-content: center;">
+            <mat-card-content class="mt-20 info"
+                style="display: flex; justify-content: center; align-items: center; text-align: center; width: 60%;">
+                <div> {{"listado-oficializados.info_listado_admitidos" | translate}}</div>
+            </mat-card-content>
+        </div>
+
+        <div style="display: flex;" *ngIf="viewProceso">
+            <section class="mt-20">
+                <mat-card-content>
+                    <mat-option>
+                        {{"listado-oficializados.plazos" | translate}}
+                        {{cicloActual}}
+                    </mat-option>
+                </mat-card-content>
+            </section>
+
+            <section class="mt-20">
+                <mat-card-content>
+                    <mat-option>
+                        {{"listado-oficializados.estado" | translate}}
+                        {{estado}}
+                    </mat-option>
+                </mat-card-content>
+            </section>
+        </div>
+
+        <br><br>
+
+    </mat-card>
+
+    <mat-card *ngIf="viewProceso" class="mt-20">
+        <div class="mat-elevation-z8 table">
+            <table mat-table [dataSource]="datasourceListado" matSort>
+
+                <!-- Columns -->
+                <ng-container matColumnDef="proceso">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"listado-oficializados.proceso_admision" |
+                        translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Descripcion}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechas">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"listado-oficializados.fecha_inicial_final"
+                        | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.FechaInicio}} & {{element.FechaFin}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"listado-oficializados.estados" |
+                        translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span *ngIf="element.Activo == true"> Activo </span>
+                        <span *ngIf="element.Activo != true"> Inactivo </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="gestion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"listado-oficializados.gestion" |
+                        translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button (click)="ConsultaAspirantePorNivel(11); ConsultaAspirantePorNivel(12)">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+                <!-- Header and Row Declarations -->
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsListados"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsListados;"></tr>
+                <tr class="mat-row" *matNoDataRow>
+
+                    <td mat-cell class="mat-cell" colspan="4"> {{ 'evaluacionpregrado.nodata' | translate }}</td>
+
+                </tr>
+            </table>
+            <mat-paginator #paginator0 [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+
+            <br><br>
+
+        </div>
+    </mat-card>
+
+    <mat-card *ngIf="viewOficializados" class="mt-20">
+        <mat-card-header class="center-header">
+
+            <mat-card-title>
+                {{"listado-oficializados.listado_oficializados" | translate}}
+            </mat-card-title>
+
+        </mat-card-header>
+
+        <mat-card-content class="mt-20">
+
+            <div class="mat-elevation-z8 table ">
+                <table mat-table [dataSource]="datasourceOficializado" matSort>
+
+                    <!-- Columns -->
+                    <ng-container matColumnDef="facultad">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"evaluacionpregrado.facultad" |
+                            translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.facultad}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codigo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"CODIFICACION.TABLE_CODIGO" |
+                            translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="documento">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{"CODIFICACION.TABLE_COLUMNA_NUMERO_DOCUMENTO" |
+                            translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"CODIFICACION.TABLE_COLUMNA_NOMBRES" |
+                            translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="apellido">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"CODIFICACION.TABLE_COLUMNA_APELLIDOS"
+                            | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.apellido}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="correo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"listado-oficializados.correo_personal"
+                            | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.correopersonal}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="telefono">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"GLOBAL.telefono" | translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.telefono}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="correosugerido">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{"listado-oficializados.correo_sugerido"
+                            | translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.correoSugerido}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="correoasignado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"listado-oficializados.correo_asignado"
+                            | translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.correoAsignado}} </td>
+                    </ng-container>
+
+                    <!-- Header and Row Declarations -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsOficializado"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsOficializado;"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+
+                        <td mat-cell class="mat-cell" colspan="4"> {{ 'evaluacionpregrado.nodata' | translate }}</td>
+
+                    </tr>
+                </table>
+                <mat-paginator #paginator1 [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+
+            </div>
+
+            <br><br>
+
+            <button mat-icon-button class="boton-primary">
+                {{ "listado-oficializados.descargar_listado" | translate }}
+            </button>
+
+            <button mat-icon-button class="boton-primary">
+                {{ "listado-oficializados.sugerir_usuarios" | translate }}
+            </button>
+            <button mat-icon-button class="boton-primary">
+                {{ "listado-oficializados.solicitud_correos_institucionales" | translate }}
+            </button>
+
+        </mat-card-content>
+
+    </mat-card>
+
+    <mat-card *ngIf="viewNoOficializados" class="mt-20">
+        <mat-card-header class="center-header">
+
+            <mat-card-title>
+                {{"listado-oficializados.listado_no_oficializados" | translate}}
+            </mat-card-title>
+
+        </mat-card-header>
+
+        <mat-card-content class="mt-20">
+
+            <div class="mat-elevation-z8 table">
+                <table mat-table [dataSource]="datasourceNoOficializados" matSort>
+
+                    <!-- Columns -->
+                    <ng-container matColumnDef="facultad">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"evaluacionpregrado.facultad" |
+                            translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.facultad}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codigo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"CODIFICACION.TABLE_CODIGO" |
+                            translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="documento">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            {{"CODIFICACION.TABLE_COLUMNA_NUMERO_DOCUMENTO" |
+                            translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"CODIFICACION.TABLE_COLUMNA_NOMBRES" |
+                            translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="apellido">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"CODIFICACION.TABLE_COLUMNA_APELLIDOS"
+                            | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.apellido}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="correo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"listado-oficializados.correo_personal"
+                            | translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.correopersonal}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="telefono">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"GLOBAL.telefono" | translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.telefono}} </td>
+                    </ng-container>
+
+                    <!-- Header and Row Declarations -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsNOficializado"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsNOficializado;"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+
+                        <td mat-cell class="mat-cell" colspan="4"> {{ 'evaluacionpregrado.nodata' | translate }}</td>
+
+                    </tr>
+                </table>
+                <mat-paginator #paginator2 [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+
+
+            </div>
+
+            <br><br>
+
+            <button mat-icon-button class="boton-primary">
+                {{ "listado-oficializados.descargar_listado" | translate }}
+            </button>
+
+            <button mat-icon-button class="boton-primary">
+                {{ "listado-oficializados.liberar_cupos" | translate }}
+            </button>
+
+        </mat-card-content>
+
+    </mat-card>
+
+</div>
