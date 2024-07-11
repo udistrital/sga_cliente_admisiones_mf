@@ -1,3 +1,6 @@
+<div [class.loader-div]="loading">
+  <mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+</div>
 <mat-card class="card" style="margin-top: 20px;">
   <mat-card-content>
     <div>
@@ -9,6 +12,11 @@
           <legend><strong>{{'evaluacionpregrado.facultades' | translate}}</strong> </legend>
           <br><br>
         </div>
+
+        <mat-form-field class="filtro">
+          <mat-label>{{"GLOBAL.filtro" | translate}}</mat-label>
+          <input matInput (keyup)="applyFilterFacultades($event)" placeholder="Ex. Mia" #input1>
+        </mat-form-field>
 
         <div class="mat-elevation-z8 table">
           <table mat-table [dataSource]="datasourceFacultades" matSort>
@@ -40,7 +48,7 @@
               <td mat-cell *matCellDef="let row">
                 <button mat-icon-button style="color:var(--primary); background: transparent; border: none;"
                   title="{{ 'admision.tooltip_eliminar' | translate }}" mat-icon-button color="warn"
-                  (click)="cargarProyectosCurriculares(row.FacultadId)">
+                  (click)="cargarProyectosCurriculares(row)">
                   <mat-icon>search</mat-icon>
                 </button>
               </td>
@@ -51,7 +59,8 @@
               <td class="mat-cell" colspan="4"> {{ 'evaluacionpregrado.nodata' | translate }}</td>
             </tr>
           </table>
-          <mat-paginator #paginator1 [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+          <!-- <mat-paginator #paginator1 [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator> -->
+          <mat-paginator #paginator1 [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
         </div>
         <br><br>
       </div>
@@ -67,42 +76,55 @@
           <legend><strong>{{'evaluacionpregrado.proyectos_curriculares' | translate}}</strong> </legend>
           <br><br>
         </div>
+        <mat-form-field class="filtro">
+          <mat-label>{{"GLOBAL.filtro" | translate}}</mat-label>
+          <input matInput (keyup)="applyFilterCurriculares($event)" placeholder="Ex. Mia" #input2>
+        </mat-form-field>
         <div class="mat-elevation-z8 table">
           <table mat-table [dataSource]="datasourceCurriculares" matSort>
+
             <ng-container matColumnDef="curricular">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 {{ 'evaluacionpregrado.proyecto_curricular' | translate }}
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.DependenciaId.Nombre }}</td>
             </ng-container>
+
             <ng-container matColumnDef="estado">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 {{ 'evaluacionpregrado.estado' | translate }}
               </th>
               <td mat-cell *matCellDef="let row">
-                <span *ngIf="row.Activo == true">{{ 'GLOBAL.activo' | translate }}</span>
-                <span *ngIf="row.Activo != true">{{ 'GLOBAL.inactivo' | translate }}</span>
+                <span *ngIf="row.DependenciaId.Activo == true">{{ 'GLOBAL.activo' | translate }}</span>
+                <span *ngIf="row.DependenciaId.Activo != true">{{ 'GLOBAL.inactivo' | translate }}</span>
               </td>
             </ng-container>
+
             <ng-container matColumnDef="accion">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 {{ 'evaluacionpregrado.accion' | translate }}
               </th>
               <td mat-cell *matCellDef="let row">
-                <button style="color:var(--primary); background: transparent; border: none;"
-                  title="{{ 'admision.tooltip_eliminar' | translate }}" (click)="consultarproyecto(row.Id)">
+                <button mat-icon-button style="color:var(--primary); background: transparent; border: none;"
+                  title="{{ 'admision.tooltip_eliminar' | translate }}" mat-icon-button color="warn"
+                  (click)="consultarproyecto(row.DependenciaId.Id)">
                   <mat-icon>search</mat-icon>
                 </button>
+                <!-- <button style="color:var(--primary); background: transparent; border: none;"
+                  title="{{ 'admision.tooltip_eliminar' | translate }}" (click)="consultarproyecto(row.DependenciaId.Id)">
+                  <mat-icon>search</mat-icon>
+                </button> -->
               </td>
             </ng-container>
+            
             <tr mat-header-row *matHeaderRowDef="columnsCurriculares"></tr>
             <tr mat-row *matRowDef="let row; columns: columnsCurriculares;"></tr>
             <tr class="mat-row" *matNoDataRow>
               <td class="mat-cell" colspan="4">{{ 'evaluacionpregrado.nodata' | translate }}</td>
             </tr>
           </table>
-
-          <mat-paginator #paginator2 [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+          <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+          <!-- <mat-paginator #paginator2 [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator> -->
         </div>
         <br><br>
       </div>
@@ -153,7 +175,7 @@
 </mat-card>
 <mat-card class="documentos" *ngIf="viewSubcriterios" style="margin-top: 20px;">
   <div style="margin: 20px;">
-    <button (click)="ModuleEvaluarDoucimentos()">{{ 'evaluacionpregrado.revision' | translate }}</button>
+    <button class="boton-revisar-documentos" (click)="ModuleEvaluarDoucimentos()">{{ 'evaluacionpregrado.revision' | translate }}</button>
   </div>
 </mat-card>
 <mat-card *ngIf="viewSubcriterios" style="margin-top: 20px;">
@@ -162,7 +184,7 @@
       <legend><strong>{{'evaluacionpregrado.criterios' | translate}}</strong> </legend>
       <br><br>
     </div>
-    <div class="row-layout" style="margin-bottom: 20px;" id="info_basica">
+    <div class="row-layout contenedor-criterios" style="margin-bottom: 20px;" id="info_basica">
       <mat-card class="exp-card" *ngFor="let criterios of selectCriterio">
         <mat-card-header>{{ 'evaluacionpregrado.criterio' | translate }}
           {{criterios.Nombre}}</mat-card-header>
@@ -190,7 +212,7 @@
           <legend><strong>{{'evaluacionpregrado.listado' | translate}}</strong> </legend>
           <br><br>
           <mat-card-content style="width: 100%;">
-            <div class="col-sm-6 col-md-4 col-lg-3 folder" style="margin-bottom: 20px;" align="center" id="info_basica">
+            <!-- <div class="col-sm-6 col-md-4 col-lg-3 folder" style="margin-bottom: 20px;" align="center" id="info_basica">
               <fieldset [ngClass]="{'fieldseter': true}">
                 <legend>&nbsp; {{ 'evaluacionpregrado.subcriterio'| translate }}</legend>
                 <mat-card class="exp-card">
@@ -201,7 +223,11 @@
                   </mat-card-content>
                 </mat-card>
               </fieldset>
-            </div>
+            </div> -->
+            <mat-form-field class="filtro">
+              <mat-label>{{"GLOBAL.filtro" | translate}}</mat-label>
+              <input matInput (keyup)="applyFilterPuntaje($event)" placeholder="Ex. Mia" #input3>
+            </mat-form-field>
             <div class="mat-elevation-z8">
               <table mat-table [dataSource]="datasourcePuntajeAspirantes" matSort>
                 <!-- Dynamic Columns -->
@@ -219,7 +245,8 @@
                 <tr mat-header-row *matHeaderRowDef="columnspuntajeaspirantes"></tr>
                 <tr mat-row *matRowDef="let row; columns: columnspuntajeaspirantes"></tr>
               </table>
-              <mat-paginator #paginator3 [pageSize]="10" [showFirstLastButtons]="true"></mat-paginator>
+              <!-- <mat-paginator #paginator3 [pageSize]="10" [showFirstLastButtons]="true"></mat-paginator> -->
+              <mat-paginator #paginator3 [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
             </div>
           </mat-card-content>
 
