@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table'; // Import the MatTableDataSource class
+import { MatTableDataSource } from '@angular/material/table';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { OikosService } from 'src/app/services/oikos.service';
 import { SgaProyectoCurricularMidService } from 'src/app/services/sga-proyecto-curricular-mid.service';
@@ -12,6 +12,12 @@ import { EventoService } from 'src/app/services/evento.service';
 import { FormControl, Validators } from '@angular/forms';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+
+interface CorreoAsignado {
+  correoAsignado: string;
+  usuarioSugerido: string;
+}
 
 @Component({
   selector: 'app-listado-oficializados',
@@ -34,32 +40,30 @@ export class ListadoOficializadosComponent {
   cicloActual!: string;
   estado!: boolean;
 
-
   //Tabla de proceso de calendario y fechas
   proceso!: string;
-  datasourceListado = new MatTableDataSource<any>(); // Use MatTableDataSource instead of matTableDataSource
+  datasourceListado = new MatTableDataSource<any>();
   @ViewChild('paginator0') paginator0!: MatPaginator;
   displayedColumnsListados: string[] = ['proceso', 'fechas', 'estado', 'gestion'];
 
   //tabla de oficializados
-  datasourceOficializado = new MatTableDataSource<any>;
+  datasourceOficializado = new MatTableDataSource<any>();
   @ViewChild('paginator1') paginator1!: MatPaginator;
   displayedColumnsOficializado: string[] = ['facultad', 'codigo', 'documento', 'nombre', "apellido", "correo", "telefono", "correosugerido", "correoasignado"];
 
   //tabla de no oficializados
   datasourceNoOficializados = new MatTableDataSource<any>();
   @ViewChild('paginator2') paginator2!: MatPaginator;
-  displayedColumnsNOficializado: string[] = ['facultad', 'codigo', 'documento', 'nombre', "apellido", "correo", "telefono",];
+  displayedColumnsNOficializado: string[] = ['facultad', 'codigo', 'documento', 'nombre', "apellido", "correo", "telefono"];
 
   constructor(
-
     private eventoService: EventoService,
     private terceroService: TercerosService,
     private parametrosService: ParametrosService,
     private inscripcionService: InscripcionService,
     private calendarioService: SgaCalendarioMidService,
-    private sgaProyectoCurricularMidService: SgaProyectoCurricularMidService
-
+    private sgaProyectoCurricularMidService: SgaProyectoCurricularMidService,
+    private sgaAdmisionesMid: SgaAdmisionesMid
   ) { }
 
   ngOnInit(): void {
@@ -68,7 +72,6 @@ export class ListadoOficializadosComponent {
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      
       this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
@@ -80,13 +83,12 @@ export class ListadoOficializadosComponent {
             periodos.forEach((element: any) => {
               this.periodos.push(element);
             });
-            
-            this.periodo = localStorage.getItem('IdPeriodo')
+            this.periodo = localStorage.getItem('IdPeriodo');
           }
         },
-          (error: HttpErrorResponse) => {
-            reject(error);
-          });
+        (error: HttpErrorResponse) => {
+          reject(error);
+        });
     });
   }
 
@@ -98,18 +100,17 @@ export class ListadoOficializadosComponent {
         evento.forEach((element: any) => {
           if (regex.test(element.Nombre)) {
             this.calendarioService.get(`calendario-academico/v2/${element.Id}`).subscribe((calendario: any) => {
-              const data = calendario.Data[0].proceso
+              const data = calendario.Data[0].proceso;
               data.forEach((proceso: any) => {
                 if (proceso.Proceso == "Proceso admitidos") {
                   this.datasourceListado = new MatTableDataSource(proceso.Actividades);
                   this.datasourceListado.paginator = this.paginator0;
                   this.viewProceso = true;
                   proceso.Actividades.forEach((actividad: any) => {
-                    console.log(actividad)
                     const fechaInicio = new Date(actividad.FechaInicio);
                     const fechaFin = new Date(actividad.FechaFin);
                     if (fechaActual >= fechaInicio && fechaActual <= fechaFin) {
-                      this.cicloActual = actividad.Descripcion
+                      this.cicloActual = actividad.Descripcion;
                     }
                   });
                 }
@@ -118,20 +119,20 @@ export class ListadoOficializadosComponent {
           }
         });
       } else {
-        console.log("Error en consultar Eventos")
+        console.log("Error en consultar Eventos");
       }
     });
   }
 
   ConsultaAspirantePorNivel(idEstadoFormacion: number) {
     const data: any[] = [];
-    const consultedTerceros = new Set(); // Set para almacenar los IDs de terceros ya consultados
-    const consultedProgramas = new Set(); // Set para almacenar los IDs de programas ya consultados
+    const consultedTerceros = new Set();
+    const consultedProgramas = new Set();
     this.sgaProyectoCurricularMidService.get(`proyecto-academico?query=NivelFormacionId:Id:1`).subscribe((proyectos: any) => {
       if (proyectos.Status === 200 && proyectos.Success === true) {
         const observables = proyectos.Data.map((proyecto: any) => {
           if (consultedProgramas.has(proyecto.ProyectoAcademico.Id)) {
-            return of([]); // Retorna un observable vacío si el programa ya fue consultado
+            return of([]);
           }
           consultedProgramas.add(proyecto.ProyectoAcademico.Id);
 
@@ -140,7 +141,7 @@ export class ListadoOficializadosComponent {
               forkJoin(
                 inscripciones.map((inscripcion: any) => {
                   if (consultedTerceros.has(inscripcion.PersonaId)) {
-                    return of(null); // Retorna un observable nulo si el tercero ya fue consultado
+                    return of(null);
                   }
                   consultedTerceros.add(inscripcion.PersonaId);
 
@@ -148,7 +149,6 @@ export class ListadoOficializadosComponent {
                     mergeMap((tercero: any) =>
                       this.terceroService.get(`datos_identificacion?query=TerceroId.Id:${tercero[0].Id}`).pipe(
                         mergeMap((dataDocumento: any) => {
-                          console.log(tercero)
                           if (dataDocumento[0].TipoDocumentoId.Nombre === "CÉDULA DE CIUDADANÍA" || dataDocumento[0].TipoDocumentoId.Nombre === "TARJETA DE EXTRANJERÍA") {
                             return this.terceroService.get(`info_complementaria_tercero?query=TerceroId.Id:${tercero[0].Id}`).pipe(
                               map((infocomplementaria: any) => {
@@ -178,7 +178,7 @@ export class ListadoOficializadosComponent {
                               })
                             );
                           } else {
-                            return of(null); // Retorna un observable nulo si no cumple la condición
+                            return of(null);
                           }
                         })
                       )
@@ -189,35 +189,55 @@ export class ListadoOficializadosComponent {
             )
           );
         });
-        //11 Estado de inscripciopn Corresponde a matriculados
         if (idEstadoFormacion == 11) {
           forkJoin(observables).subscribe((results: any) => {
             results.flat().forEach((item: any) => {
-              if (item && !data.some(d => d.codigo === item.codigo)) data.push(item); // Verifica si el elemento ya está en data antes de agregarlo
+              if (item && !data.some(d => d.codigo === item.codigo)) data.push(item);
             });
-            this.datasourceOficializado = new MatTableDataSource(data); // Asigna el resultado a dataSourceOficializados
-            console.log(this.datasourceOficializado.data);
+            this.datasourceOficializado = new MatTableDataSource(data);
             this.datasourceOficializado.paginator = this.paginator1;
             this.viewOficializados = true;
+            this.asignarCorreos();
           });
         }
-        // 12 estado de inscripcion No Oficializado
         if (idEstadoFormacion == 12) {
           forkJoin(observables).subscribe((results: any) => {
             results.flat().forEach((item: any) => {
-              if (item && !data.some(d => d.codigo === item.codigo)) data.push(item); // Verifica si el elemento ya está en data antes de agregarlo
+              if (item && !data.some(d => d.codigo === item.codigo)) data.push(item);
             });
-            this.datasourceNoOficializados = new MatTableDataSource(data); // Asigna el resultado a dataSourceOficializados
-            console.log(this.datasourceNoOficializados.data);
+            this.datasourceNoOficializados = new MatTableDataSource(data);
             this.datasourceNoOficializados.paginator = this.paginator2;
             this.viewNoOficializados = true;
+            this.asignarCorreos();
           });
-
         }
-
       }
     });
   }
 
-
+  asignarCorreos() {
+    const idPeriodo = localStorage.getItem('IdPeriodo');
+    this.sgaAdmisionesMid.get(`gestion-correos/correo-sugerido?id_periodo=${idPeriodo}`).subscribe((res: any) => {
+      if (res && res.data) {
+        const correosAsignados: CorreoAsignado[] = res.data.map((correo: any) => {
+          return {
+            correoAsignado: correo.correo_asignado,
+            usuarioSugerido: correo.usuarioSugerido
+          };
+        });
+        this.datasourceOficializado.data.forEach((element: any) => {
+          const correo = correosAsignados.find((c: CorreoAsignado) => c.usuarioSugerido === element.correoSugerido);
+          if (correo) {
+            element.correoAsignado = correo.correoAsignado;
+          }
+        });
+        this.datasourceNoOficializados.data.forEach((element: any) => {
+          const correo = correosAsignados.find((c: CorreoAsignado) => c.usuarioSugerido === element.correoSugerido);
+          if (correo) {
+            element.correoAsignado = correo.correoAsignado;
+          }
+        });
+      }
+    });
+  }
 }

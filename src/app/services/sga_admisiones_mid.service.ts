@@ -1,4 +1,3 @@
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
@@ -8,12 +7,11 @@ const httpOptions = {
   headers: new HttpHeaders({
     'Accept': 'application/json',
   }),
-}
+};
 
 const path = environment.SGA_ADMISIONES_MID;
 
 @Injectable()
-
 export class SgaAdmisionesMid {
 
   constructor(private requestManager: RequestManager, private http: HttpClient) {
