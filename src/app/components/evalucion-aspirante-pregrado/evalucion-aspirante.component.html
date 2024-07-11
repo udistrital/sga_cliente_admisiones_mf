@@ -193,18 +193,17 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="boton-busqueda">
+    <!-- <div class="boton-busqueda">
       <div>
         <button class="boton-primary" (click)="puntajeAspirantes()">{{ 'admision.calcular' | translate
           }}</button>
       </div>
-    </div>
-    <br /><br />
+    </div> -->
   </mat-card-content>
 </mat-card>
 
 
-<mat-card *ngIf="viewTablePuntaje" style="margin-top: 20px;">
+<mat-card *ngIf="viewSubcriterios" style="margin-top: 20px;">
   <mat-card-content style="width: 100%;">
     <div>
       <div>
@@ -212,18 +211,6 @@
           <legend><strong>{{'evaluacionpregrado.listado' | translate}}</strong> </legend>
           <br><br>
           <mat-card-content style="width: 100%;">
-            <!-- <div class="col-sm-6 col-md-4 col-lg-3 folder" style="margin-bottom: 20px;" align="center" id="info_basica">
-              <fieldset [ngClass]="{'fieldseter': true}">
-                <legend>&nbsp; {{ 'evaluacionpregrado.subcriterio'| translate }}</legend>
-                <mat-card class="exp-card">
-                  <mat-card-header>{{ 'evaluacionpregrado.subcriterio' | translate }} {{ "Nombre del criterio"
-                    }}</mat-card-header>
-                  <mat-card-content class="icon-form">
-                    <mat-icon fontIcon="folder" class="folder-icon"></mat-icon>
-                  </mat-card-content>
-                </mat-card>
-              </fieldset>
-            </div> -->
             <mat-form-field class="filtro">
               <mat-label>{{"GLOBAL.filtro" | translate}}</mat-label>
               <input matInput (keyup)="applyFilterPuntaje($event)" placeholder="Ex. Mia" #input3>
