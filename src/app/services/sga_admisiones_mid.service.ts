@@ -32,4 +32,9 @@ export class SgaAdmisionesMid {
     this.requestManager.setPath('SGA_ADMISIONES_MID');
     return this.requestManager.put(endpoint, element);
   }
+
+  obtenerCorreosAsignados(idPeriodo: number) {
+    const url = `gestion-correos/correo-sugerido?id_periodo=${idPeriodo}`;
+    return this.http.get<{ correo_asignado: string, usuarioSugerido: string }[]>(`${path}/${url}`, httpOptions);
+  }
 }

@@ -1,12 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
-import { OikosService } from 'src/app/services/oikos.service';
 import { SgaProyectoCurricularMidService } from 'src/app/services/sga-proyecto-curricular-mid.service';
 import { SgaCalendarioMidService } from 'src/app/services/sga_calendario_mid.service';
 import { TercerosService } from 'src/app/services/terceros.service';
 import { forkJoin, of } from 'rxjs';
-import { mergeMap, map, switchMap } from 'rxjs/operators';
+import { mergeMap, map } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { EventoService } from 'src/app/services/evento.service';
 import { FormControl, Validators } from '@angular/forms';
@@ -24,37 +23,39 @@ interface CorreoAsignado {
   templateUrl: './listado-oficializados.component.html',
   styleUrls: ['./listado-oficializados.component.scss']
 })
-export class ListadoOficializadosComponent {
+export class ListadoOficializadosComponent implements OnInit {
 
   // *ngIf
   viewProceso = false;
   viewOficializados = false;
   viewNoOficializados = false;
 
-  //Formulario variables
+  // Formulario variables
   periodo!: any;
   periodos: any = [];
   periodoControl = new FormControl('', [Validators.required]);
 
-  //fehas activa
+  // Fechas activas
   cicloActual!: string;
   estado!: boolean;
 
-  //Tabla de proceso de calendario y fechas
+  // Tabla de proceso de calendario y fechas
   proceso!: string;
   datasourceListado = new MatTableDataSource<any>();
   @ViewChild('paginator0') paginator0!: MatPaginator;
   displayedColumnsListados: string[] = ['proceso', 'fechas', 'estado', 'gestion'];
 
-  //tabla de oficializados
+  // Tabla de oficializados
   datasourceOficializado = new MatTableDataSource<any>();
   @ViewChild('paginator1') paginator1!: MatPaginator;
   displayedColumnsOficializado: string[] = ['facultad', 'codigo', 'documento', 'nombre', "apellido", "correo", "telefono", "correosugerido", "correoasignado"];
+  asignarCorreos: any;
 
-  //tabla de no oficializados
+  // Tabla de no oficializados
   datasourceNoOficializados = new MatTableDataSource<any>();
   @ViewChild('paginator2') paginator2!: MatPaginator;
   displayedColumnsNOficializado: string[] = ['facultad', 'codigo', 'documento', 'nombre', "apellido", "correo", "telefono"];
+  
 
   constructor(
     private eventoService: EventoService,
@@ -84,6 +85,7 @@ export class ListadoOficializadosComponent {
               this.periodos.push(element);
             });
             this.periodo = localStorage.getItem('IdPeriodo');
+            this.cargarCorreosAsignados(); // Cargar correos asignados después de obtener el periodo
           }
         },
         (error: HttpErrorResponse) => {
@@ -172,8 +174,8 @@ export class ListadoOficializadosComponent {
                                   apellido: `${tercero[0].PrimerApellido} ${tercero[0].SegundoApellido}`,
                                   correopersonal: correo,
                                   telefono: telefono,
-                                  correoSugerido: `${tercero[0].PrimerNombre[0]}${tercero[0].SegundoNombre[0]}${tercero[0].PrimerApellido}${tercero[0].SegundoApellido[0]}@udistrital.edu.co`,
-                                  correoAsignado: tercero[0].UsuarioWSO2
+                                  correoSugerido: '',
+                                  correoAsignado: ''
                                 };
                               })
                             );
@@ -197,7 +199,7 @@ export class ListadoOficializadosComponent {
             this.datasourceOficializado = new MatTableDataSource(data);
             this.datasourceOficializado.paginator = this.paginator1;
             this.viewOficializados = true;
-            this.asignarCorreos();
+            this.asignarCorreos(this.datasourceOficializado.data);
           });
         }
         if (idEstadoFormacion == 12) {
@@ -208,16 +210,16 @@ export class ListadoOficializadosComponent {
             this.datasourceNoOficializados = new MatTableDataSource(data);
             this.datasourceNoOficializados.paginator = this.paginator2;
             this.viewNoOficializados = true;
-            this.asignarCorreos();
+            this.asignarCorreos(this.datasourceNoOficializados.data);
           });
         }
       }
     });
   }
 
-  asignarCorreos() {
+  cargarCorreosAsignados() {
     const idPeriodo = localStorage.getItem('IdPeriodo');
-    this.sgaAdmisionesMid.get(`gestion-correos/correo-sugerido?id_periodo=${idPeriodo}`).subscribe((res: any) => {
+    this.sgaAdmisionesMid.obtenerCorreosAsignados(45).subscribe((res: any) => {
       if (res && res.data) {
         const correosAsignados: CorreoAsignado[] = res.data.map((correo: any) => {
           return {
@@ -225,18 +227,18 @@ export class ListadoOficializadosComponent {
             usuarioSugerido: correo.usuarioSugerido
           };
         });
+
+        // Asignar correos sugeridos y asignados a los datos oficiales
         this.datasourceOficializado.data.forEach((element: any) => {
-          const correo = correosAsignados.find((c: CorreoAsignado) => c.usuarioSugerido === element.correoSugerido);
+          const correo = correosAsignados.find(c => c.correoAsignado === element.correoAsignado); // Encontrar el correo asignado correcto
           if (correo) {
+            element.correoSugerido = correo.usuarioSugerido;
             element.correoAsignado = correo.correoAsignado;
           }
         });
-        this.datasourceNoOficializados.data.forEach((element: any) => {
-          const correo = correosAsignados.find((c: CorreoAsignado) => c.usuarioSugerido === element.correoSugerido);
-          if (correo) {
-            element.correoAsignado = correo.correoAsignado;
-          }
-        });
+
+        // Refrescar la tabla para mostrar los cambios
+        this.datasourceOficializado._updateChangeSubscription();
       }
     });
   }
