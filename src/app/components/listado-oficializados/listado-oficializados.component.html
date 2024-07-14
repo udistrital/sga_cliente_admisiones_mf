@@ -1,3 +1,6 @@
+<div [class.loader-div]="loading">
+	<mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+</div>
 <div>
     <mat-card style="margin-top: 20px;">
         <mat-card-content>
@@ -19,7 +22,7 @@
                             <mat-label>
                                 {{ 'evaluacionpregrado.periodo' | translate }}:
                             </mat-label>
-                            <mat-select [(ngModel)]="periodo" [disabled]='false' [formControl]="periodoControl" (selectionChange)="selectionChange()">
+                            <mat-select [(ngModel)]="periodo" [disabled]='false' [formControl]="periodoControl">
                                 <mat-option>
                                     --{{ 'evaluar.seleccionar' | translate }}--
                                 </mat-option>
@@ -28,6 +31,9 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
+                    </div>
+                    <div class="contenedor-botones">
+                        <button mat-stroked-button class="boton-general btn boton-primary" (click)="generarBusqueda()">{{ 'GLOBAL.buscar' | translate }}</button>
                     </div>
                 </div>
             </div>
@@ -107,7 +113,7 @@
                         translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        <button mat-icon-button (click)="ConsultaAspirantePorNivel(11); ConsultaAspirantePorNivel(12)">
+                        <button mat-icon-button (click)="consultaAspirantePorNivel(11); consultaAspirantePorNivel(12)">
                             <mat-icon>search</mat-icon>
                         </button>
                     </td>
@@ -121,7 +127,7 @@
 
                 </tr>
             </table>
-            <mat-paginator #paginator0 [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+            <mat-paginator #paginator0 [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page"></mat-paginator>
 
             <br><br>
 
@@ -217,16 +223,17 @@
 
             <br><br>
 
-            <button mat-icon-button class="boton-primary">
-                {{ "listado-oficializados.descargar_listado" | translate }}
-            </button>
-
-            <button mat-icon-button class="boton-primary">
-                {{ "listado-oficializados.sugerir_usuarios" | translate }}
-            </button>
-            <button mat-icon-button class="boton-primary">
-                {{ "listado-oficializados.solicitud_correos_institucionales" | translate }}
-            </button>
+            <div class="contenedor-botones">
+                <button mat-stroked-button class="boton-primary">
+                    {{ "listado-oficializados.descargar_listado" | translate }}
+                </button>
+                <button mat-stroked-button class="boton-primary">
+                    {{ "listado-oficializados.sugerir_usuarios" | translate }}
+                </button>
+                <button mat-stroked-button class="boton-primary">
+                    {{ "listado-oficializados.solicitud_correos_institucionales" | translate }}
+                </button>
+            </div>
 
         </mat-card-content>
 

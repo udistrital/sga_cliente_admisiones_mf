@@ -589,7 +589,8 @@
         "direccion_entidad": "Entity Address",
         "placeholder_direccion_entidad": "E.g.: Cra 8 # 40-78 Piso 1",
         "item": "Item",
-        "evaluar": "Evaluate"
+        "evaluar": "Evaluate",
+        "filtro": "Filter"
     },
     "ERROR": {
         "general": "The request could not be satisfied",
@@ -1622,7 +1623,8 @@
         "titulo_detalle_evaluacion_existente": "Existing evaluation detail",
         "detalle_evaluacion_existente": "The evaluation detail information is already registered",
         "titulo_inscripcion_no_encontrada": "The inscription was not found",
-        "inscripcion_no_encontrada": "No registration associated with the icfes code was found"
+        "inscripcion_no_encontrada": "No registration associated with the icfes code was found",
+        "seleccion_facultades": "Select the faculty you want to consult"
     },
     
     "oficializados": {
@@ -2635,29 +2637,29 @@
         "Usuario": "User",
         "nodata": "No historical data found"
     },
-    "evaluacionpregrado": {
-        "aspirante": "Undergraduate Applicant Evaluation",
+    "evaluacionPregrado": {
+        "aspirante": "Undergraduate applicant evaluation",
         "facultades": "Faculties",
         "facultad": "Faculty",
         "estado": "Status",
         "completado": "% Completed",
         "accion": "Action",
         "nodata": "No data available",
-        "proyectos_curriculares": "Curricular Projects",
-        "proyecto_curricular": "Curricular Project",
+        "proyectos_curriculares": "Curricular projects",
+        "proyecto_curricular": "Curricular project",
         "variables": "Variables",
         "periodo": "Period",
-        "nivel_aviso": "Alert Level",
+        "nivel_aviso": "Alert level",
         "seleccionar": "Select",
-        "criterio_consultar": "Criterion to Consult",
+        "criterio_consultar": "Criterion to consult",
         "erro_selec_nivel": "Please select a level",
         "tooltip_eliminar": "Delete",
         "criterios": "Criteria",
         "criterio": "Criterion",
-        "revision": "Document Review",
+        "revision": "Document review",
         "puntaje": "Calculate applicants' score",
         "listado": "List of registered applicants",
-        "evaluar_criterio": "Evaluate Criterion",
+        "evaluar_criterio": "Evaluate criterion",
         "revision_curricular": "Send for review to the curricular project",
         "descargar_pdf": "Download list (PDF/Excel)",
         "definir_admitidos": "Define admitted lists"
@@ -2684,7 +2686,7 @@
     "listado-oficializados": {
         "titulo": "Officialization",
         "info_listado_admitidos": "This module will assist you in the process of refining the list of admitted students who have been officialized, as well as freeing up spots for those who have not completed the process.",
-        "plazos": "Active Deadline:",
+        "plazos": "Active deadline:",
         "estado": "Status:",
         "proceso_admision": "Admission Process",
         "fecha_inicial_final": "Start Date - End Date",
