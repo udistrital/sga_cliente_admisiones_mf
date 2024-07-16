@@ -1624,7 +1624,8 @@
         "detalle_evaluacion_existente": "The evaluation detail information is already registered",
         "titulo_inscripcion_no_encontrada": "The inscription was not found",
         "inscripcion_no_encontrada": "No registration associated with the icfes code was found",
-        "seleccion_facultades": "Select the faculty you want to consult"
+        "seleccion_facultades": "Select the faculty you want to consult",
+        "inscripcion_pregrado_error": "Error consulting the undergraduate registration for this candidate"
     },
     
     "oficializados": {

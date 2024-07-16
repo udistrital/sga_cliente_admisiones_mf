@@ -134,9 +134,7 @@ export class EvalucionAspirantePregradoComponent {
   cargarProyectosCurriculares(data: any) {
     this.loading = true;
     this.viewCurriculares = true;
-    console.log(data.ProyectosAcademicos, this.proyectosPregrado)
     const proyectoAcademicoIds = new Set(data.ProyectosAcademicos.map((item: any) => item.ProyectoAcademicoId));
-    console.log(proyectoAcademicoIds)
     // Estos son los proyectos de la facultad
     const proyectosFiltrados = this.proyectosPregrado.filter(item => proyectoAcademicoIds.has(item.DependenciaId.Id));
     console.log(proyectosFiltrados)

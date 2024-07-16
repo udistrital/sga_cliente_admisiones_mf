@@ -167,7 +167,6 @@ export class ListadoOficializadosComponent {
   consultarCalendarioByperiodo(periodo: number) {
     return new Promise((resolve, reject) => {
       this.eventoService.get(`calendario?query=PeriodoId:${periodo}&sortby=Id&order=asc&limit=0`).subscribe((res: any) => {
-        console.log(res);
         if (res != null && res != undefined && res != "") {
           resolve(res);
         } else {
@@ -211,6 +210,7 @@ export class ListadoOficializadosComponent {
     const consultedTerceros = new Set(); // Set para almacenar los IDs de terceros ya consultados
     const consultedProgramas = new Set(); // Set para almacenar los IDs de programas ya consultados
     this.sgaProyectoCurricularMidService.get(`proyecto-academico?query=NivelFormacionId:Id:1`).subscribe((proyectos: any) => {
+      console.log(proyectos);
       if (proyectos.Status === 200 && proyectos.Success === true) {
         const observables = proyectos.Data.map((proyecto: any) => {
           if (consultedProgramas.has(proyecto.ProyectoAcademico.Id)) {

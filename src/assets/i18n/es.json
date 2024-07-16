@@ -1657,7 +1657,8 @@
         "detalle_evaluacion_existente": "Ya se encuentra registrada la información de detalle de evaluación",
         "titulo_inscripcion_no_encontrada": "La inscripción no fue encontrada",
         "inscripcion_no_encontrada": "No se encontró una inscripción asociada al código icfes",
-        "seleccion_facultades": "Seleccione la facultad que quiere consultar"
+        "seleccion_facultades": "Seleccione la facultad que quiere consultar",
+        "inscripcion_pregrado_error": "Error consultando la inscripción de pregrado para este aspirante"
     },
     "oficializados": {
         "titulo": "Oficialización",
