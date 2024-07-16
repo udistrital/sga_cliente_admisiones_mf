@@ -99,7 +99,6 @@
             </mat-form-field>
             <div class="table-container" style="overflow-x: auto;">
               <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 scrollable-table">
-
                 <ng-container matColumnDef="Orden">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.orden' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.numeral}} </td>

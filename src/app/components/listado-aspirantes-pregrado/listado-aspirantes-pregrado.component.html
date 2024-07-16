@@ -161,6 +161,15 @@
                 <ng-container matColumnDef="EstadoRecibo">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.estado_recibo' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.estado_recibo}} </td>
+                    <div
+                      class="status-indicator"
+                      [ngClass]="{
+                        active: row.estado_recibo === 'Pago',
+                        inactive: row.estado_recibo === 'Vencido'
+                      }"
+                    >
+                      {{ row.estado_recibo === 'Pago' ? "Pago" : "Vencido"}}
+                    </div>
                 </ng-container>
               
                 <ng-container matColumnDef="Credencial">
@@ -217,6 +226,7 @@
                               </button>
                           </mat-menu>
                       </div>
+
                   </td>
               </ng-container>
 

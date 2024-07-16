@@ -2,6 +2,9 @@
   margin-top: 15px;
 }
 
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: var(--color100);
+}
 
 .mat-expansion-panel-body{
   overflow: auto;
