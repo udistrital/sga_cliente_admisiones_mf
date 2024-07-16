@@ -619,7 +619,8 @@
         "placeholder_direccion_entidad": "Ej: Cra 8 # 40-78 Piso 1",
         "item": "Ítem",
         "evaluar": "Evaluar",
-        "tipo_inscripcion": "Seleccione el tipo de inscripción"
+        "tipo_inscripcion": "Seleccione el tipo de inscripción",
+        "filtro": "Filtro"
     },
     "ERROR": {
         "general": "La solicitud no pudo ser cumplida",
@@ -1655,7 +1656,9 @@
         "titulo_detalle_evaluacion_existente": "Detalle evaluación existente",
         "detalle_evaluacion_existente": "Ya se encuentra registrada la información de detalle de evaluación",
         "titulo_inscripcion_no_encontrada": "La inscripción no fue encontrada",
-        "inscripcion_no_encontrada": "No se encontró una inscripción asociada al código icfes"
+        "inscripcion_no_encontrada": "No se encontró una inscripción asociada al código icfes",
+        "titulo_programa_sin_requisitos": "Programa académico sin requisitos",
+        "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico"
     },
     "oficializados": {
         "titulo": "Oficialización",

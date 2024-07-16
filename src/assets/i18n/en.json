@@ -589,7 +589,8 @@
         "direccion_entidad": "Entity Address",
         "placeholder_direccion_entidad": "E.g.: Cra 8 # 40-78 Piso 1",
         "item": "Item",
-        "evaluar": "Evaluate"
+        "evaluar": "Evaluate",
+        "filtro": "Filter"
     },
     "ERROR": {
         "general": "The request could not be satisfied",
@@ -1622,7 +1623,9 @@
         "titulo_detalle_evaluacion_existente": "Existing evaluation detail",
         "detalle_evaluacion_existente": "The evaluation detail information is already registered",
         "titulo_inscripcion_no_encontrada": "The inscription was not found",
-        "inscripcion_no_encontrada": "No registration associated with the icfes code was found"
+        "inscripcion_no_encontrada": "No registration associated with the icfes code was found",
+        "titulo_programa_sin_requisitos": "Academic program without requirements",
+        "programa_sin_requisitos": "No assessment requirements found for this academic program"
     },
     
     "oficializados": {

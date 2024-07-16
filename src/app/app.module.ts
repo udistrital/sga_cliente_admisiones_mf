@@ -225,6 +225,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatGridListModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
+    MatMenuModule,
     NgxExtendedPdfViewerModule,
     MatMenuModule,
     MatButtonModule,

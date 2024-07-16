@@ -177,6 +177,10 @@ button-disabled {
   border-radius: 5px;
 }
 
+.filtro {
+  width: 100%;
+}
+
 @media(width > 580px) {
   .form-container {
     grid-template-columns: repeat(2, 1fr);
