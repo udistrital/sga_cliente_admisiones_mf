@@ -129,7 +129,7 @@ const routes: Routes = [
   },
   {
     path:"listado-oficializados", 
-    component: ListadoOficializadosComponent,
+    component: ListadosOficializadosComponent,
   },
   {
     path:"listado-admitidos", 
