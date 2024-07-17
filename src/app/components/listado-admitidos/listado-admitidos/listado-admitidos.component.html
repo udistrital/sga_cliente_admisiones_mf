@@ -217,6 +217,9 @@
         <div class="mt-20 info contenedor-info"> {{"evaluacion-admitidos.listado_admitidos_alerta_no_cumple" | translate}}</div>
         <app-tabla-listado-aspirantes [aspirantes]="aspirantesNoAdmitidos"></app-tabla-listado-aspirantes>
     </mat-card-content>
+    <button (click)="descargarListadoOficializados(2)" mat-icon-button class="boton-primary mt-20">
+        {{ "listado-oficializados.descargar_listado" | translate }}
+    </button>
 
 </mat-card>
 
@@ -238,6 +241,9 @@
     <mat-card-content class="mt-20">
         <app-tabla-listado-aspirantes [aspirantes]="aspirantesNoAdmitidos"></app-tabla-listado-aspirantes>
     </mat-card-content>
+    <button (click)="descargarListadoOficializados(4)" mat-icon-button class="boton-primary mt-20">
+        {{ "listado-oficializados.descargar_listado" | translate }}
+    </button>
 
 </mat-card> -->
 
@@ -259,6 +265,9 @@
     <mat-card-content class="mt-20">
         <app-tabla-listado-aspirantes></app-tabla-listado-aspirantes>
     </mat-card-content>
+    <button (click)="descargarListadoOficializados(11)" mat-icon-button class="boton-primary mt-20">
+        {{ "listado-oficializados.descargar_listado" | translate }}
+    </button>
 
 </mat-card>
 
@@ -275,15 +284,19 @@
             style="display: flex; justify-content: center; align-items: center; text-align: center; width: 60%;">
             <div>{{"evaluacion-admitidos.listado_admitidos_alerta_no_cumple" | translate}}</div>
         </mat-card-content>
+
     </div>
 
     <mat-card-content class="mt-20">
         <app-tabla-listado-aspirantes></app-tabla-listado-aspirantes>
     </mat-card-content>
+    <button (click)="descargarListadoOficializados(11)" mat-icon-button class="boton-primary">
+        {{ "listado-oficializados.descargar_listado" | translate }}
+    </button>
 
 </mat-card>
 
-<mat-card *ngIf="viewAspirantesTables">
+<mat-card class="mt-20" *ngIf="viewAspirantesTables">
     <mat-card-content style="display: flex; justify-content: center; align-items: center;">
         <div class="contenedor-botones">
             <button mat-icon-button class="boton-primary boton-notificacion">

@@ -234,7 +234,6 @@
                     {{ "listado-oficializados.solicitud_correos_institucionales" | translate }}
                 </button>
             </div>
-
         </mat-card-content>
 
     </mat-card>
@@ -317,7 +316,7 @@
 
             <br><br>
 
-            <button mat-icon-button class="boton-primary">
+            <button (click)="descargarListadoOficializados(12)" mat-icon-button class="boton-primary">
                 {{ "listado-oficializados.descargar_listado" | translate }}
             </button>
 

@@ -21,6 +21,9 @@ import * as JSZip from 'jszip';
 import * as saveAs from 'file-saver';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.service';
+import { OikosService } from 'src/app/services/oikos.service';
+import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
 
 @Component({
   selector: 'app-liquidacion-recibos',
@@ -29,14 +32,18 @@ import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.se
 })
 
 export class LiquidacionRecibosComponent {
-
   @Input()
   recibosUrl!: string;
+  displayedColumns: string[] = ['seleccion', 'codigo', 'documento', 'nombres', 'apellidos', 'A1', 'puntaje1', 'A2', 'puntaje2', 'A3', 'puntaje3', 'B1', 'puntaje4', 'B2', 'puntaje5', 'B3', 'puntaje6', 'B4', 'puntaje7', 'G1', 'G2', 'G3', 'G4', 'total', 'acciones'];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  dataSource = new MatTableDataSource<any>;
 
   selectedProyecto: any;
   selectedPeriodo: any;
   proyectos: any[] = [];
   periodos: any[] = [];
+  facultades!: any[]
   niveles!: NivelFormacion[];
   nivelSelect!: NivelFormacion[];
   selectednivel: any = 1;
@@ -49,22 +56,105 @@ export class LiquidacionRecibosComponent {
   pdfs: File[] = [];
   notificaciones: any[] = [];
   generados: boolean = false;
+  inscripciones: any = [];
 
-  constructor(private _formBuilder: FormBuilder, private translate: TranslateService,
-    private parametrosService: ParametrosService,
-    private popUpManager: PopUpManager,
-    private projectService: ProyectoAcademicoService,
-    private userService: UserService,
-    private sgaAdmisiones: SgaAdmisionesMid,
-    private liquidacionService: LiquidacionService,
-    private autenticationService: ImplicitAutenticationService,
-    private inscripcionService: InscripcionService,
-    private notificacionService: NotificacionesMidService) {
+  mostrarFormulario: boolean = false;
 
-    this.cargarProyectos();
-    this.cargarPeriodo();
+  variableA: A = {
+    A1: {
+      "1": 0,
+      "2": 25,
+      "3": 45,
+      "4": 75,
+      "5": 95,
+      "6": 100,
+      "No Informa": 100,
+      "Área rural": 20,
+      "Ciudad menor de cien mil habitantes": 45,
+      "Ciudad mayor de cien mil habitantes": 70
+    },
+    A2: {
+      "Entre 0 y,004": 15,
+      "Entre 0.0041 y 0.08": 20,
+      "Entre 0.081 y 0.12": 30,
+      "Entre 0.121 y 0.16": 40,
+      "Entre 0.161 y 0.2": 50,
+      "Entre 0.21 y 0,3": 60,
+      "Entre 0.31 y 0.4": 70,
+      "Entre 0.41 y 0.5": 80,
+      "Entre 0.51 y 0.6": 90,
+      "Entre 0.61 y 0.7": 100,
+      "Mayor de 0.71": 100,
+      "No informa": 100,
+    },
+    A3: {
+      "Entre 0 y 2": 15,
+      "Entre 2,1 y 2,5": 25,
+      "Entre 2,5 y 3": 30,
+      "Entre 3 y 4": 35,
+      "Entre 4 y 5": 40,
+      "Entre 5 y 5,5": 45,
+      "Entre 5,5 y 6": 50,
+      "Entre 6 y 6,5": 55,
+      "Entre 6,5 y 7": 60,
+      "Entre 7 y 7,5": 70,
+      "Entre 7,5 y 8": 75,
+      "Entre 8 y 9,5": 80,
+      "Entre 9,5 y 11": 85,
+      "Entre 11 y 14": 90,
+      "Entre 14 y 18": 95,
+      ">18": 100,
+      "No informa": 100,
+    }
   }
 
+  variableB: B = {
+    B1: {
+      "1": 0.6,
+      "2": 0.6,
+      "3": 0.9,
+      "4": 0.9,
+      "5": 1,
+      "6": 1,
+      "Área rural": 0.6,
+      "Ciudad menor de cien mil habitantes": 0.9,
+      "Ciudad mayor de cien mil habitantes": 1
+    },
+    B2: {
+      "Fuera del perimetro urbano": 0.9,
+      "Dentro del perimetro urbano": 1,
+
+    },
+    B3: {
+      "Vive solo": 0.85,
+      "Es casado": 0.85,
+      "Otro": 1,
+    },
+    B4: {
+      "Empleado": 0.9,
+      "Desempleado": 1,
+    }
+  }
+
+  data: liquidacion[] = []
+  llavesA1: string[] = []
+  valorA1: number[] = []
+  llavesA2: string[] = []
+  valorA2: number[] = []
+  llavesA3: string[] = []
+  valorA3: number[] = []
+  llavesB1: string[] = []
+  valorB1: number[] = []
+  llavesB2: string[] = []
+  valorB2: number[] = []
+  llavesB3: string[] = []
+  valorB3: number[] = []
+  llavesB4: string[] = []
+  valorB4: number[] = []
+  PBM!: number
+  mostrarElementosLiquidacion!: boolean;
+
+  loading: boolean = false;
 
   tablaRecibo: boolean = true
   CampoControl = new FormControl('', [Validators.required]);
@@ -72,17 +162,31 @@ export class LiquidacionRecibosComponent {
   Campo2Control = new FormControl('', [Validators.required]);
 
   firstFormGroup = this._formBuilder.group({
+    validatorFacultad: ['', Validators.required],
     validatorProyecto: ['', Validators.required],
     validatorPeriodo: ['', Validators.required],
-    validatorSemestre: ['', Validators.required]
   });
 
+  constructor(private _formBuilder: FormBuilder, private translate: TranslateService,
+    private parametrosService: ParametrosService,
+    private popUpManager: PopUpManager,
+    private projectService: ProyectoAcademicoService,
+    private userService: UserService,
+    private sgaAdmisiones: SgaAdmisionesMid,
+    private sgamidService: SgaMidService,
+    private liquidacionService: LiquidacionService,
+    private inscripcionMidService: InscripcionMidService,
+    private autenticationService: ImplicitAutenticationService,
+    private inscripcionService: InscripcionService,
+    private oikosService: OikosService,
+    private notificacionService: NotificacionesMidService) {
+
+  }
 
   ngOnInit() {
-    this.cargarProyectos();
+    this.loading = true;
+    this.cargarFacultades();
     this.cargarPeriodo();
-    this.generarRegistros();
-    this.calculoMatricula();
 
     const validatorProyectoControl = this.firstFormGroup.get('validatorProyecto');
     const validatorPeridoControl = this.firstFormGroup.get('validatorPeriodo');
@@ -101,58 +205,27 @@ export class LiquidacionRecibosComponent {
     } else {
       console.error('El control "validatorProyecto" es nulo.');
     }
+    this.loading = false;
   }
 
-  cargarProyectos() {
-    this.projectService.get('proyecto_academico_institucion?limit=0').subscribe(
-      (response: any) => {
-        this.autenticationService.getRole().then(
-          // (rol: Array <String>) => {
-          (rol: any) => {
-            let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
-            if (r) {
-              this.proyectos = <any[]>response.filter(
-                (proyecto: any) => this.filtrarProyecto(proyecto),
-              );
-            } else {
-              const id_tercero = this.userService.getPersonaId();
-              this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
-                (respDependencia: any) => {
-                  const dependencias = <Number[]>respDependencia.Data.DependenciaId;
-                  this.proyectos = <any[]>response.filter(
-                    (proyecto: any) => dependencias.includes(proyecto.Id)
-                  );
-                  if (dependencias.length > 1) {
-                    this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
-                    //this.proyectos.forEach(p => { p.Id = undefined })
-                  }
-                },
-                (error: any) => {
-                  this.popUpManager.showErrorAlert(this.translate.instant('admision.no_vinculacion_no_rol') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
-                }
-              );
-            }
-          }
-        );
-      },
-      error => {
-        this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-      },
-    );
+  cargarFacultades() {
+    return new Promise((resolve, reject) => {
+      this.oikosService.get('dependencia_padre/FacultadesConProyectos?Activo:true&limit=0')
+        .subscribe((res: any) => {
+          this.facultades = res;
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
+            console.error(error);
+            reject([]);
+          });
+    });
   }
-  filtrarProyecto(proyecto: any) {
-    if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
-      return true
-    }
-    if (proyecto['NivelFormacionId']['NivelFormacionPadreId'] !== null) {
-      if (proyecto['NivelFormacionId']['NivelFormacionPadreId']['Id'] === this.selectednivel) {
-        return true
-      } else {
-        return false
-      }
-    } else {
-      return false
-    }
+
+  onFacultadChange(event: any) {
+    const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
+    this.proyectos = facultad.Opciones;
   }
 
   cargarPeriodo() {
@@ -177,207 +250,228 @@ export class LiquidacionRecibosComponent {
     });
   }
 
-  mostrarTabla() {
+  async realizarBusqueda() {
+    this.loading = true;
+    const proyecto = this.firstFormGroup.get('validatorProyecto')?.value;
+    const periodo = this.firstFormGroup.get('validatorPeriodo')?.value;
+    this.inscripciones = await this.buscarInscripcionesAdmitidosLegalizados(proyecto, periodo)
+    await this.generarRegistros();
     this.tabla = true;
-    this.cargarAdmitidos(this.selectedPeriodo, this.selectednivel)
-    this.calculoMatricula();
+    this.loading = false;
   }
 
-
-  mostrarFormulario: boolean = false;
-
-  variableA: A = {
-    A1: {
-      "1": 0,
-      "2": 25,
-      "3": 45,
-      "4": 75,
-      "5": 95,
-      "6": 100,
-      "No Informa": 100,
-      "Area Rural": 20,
-      "Ciudad menor de 100mil habitantes": 45,
-      "Ciudad mayor de 100mil habitantes": 70
-    },
-    A2: {
-      "Entre 0 y,004": 15,
-      "Entre 0.0041 y 0.08": 20,
-      "Entre 0.081 y 0.12": 30,
-      "Entre 0.121 y 0.16": 40,
-      "Entre 0.161 y 0.2": 50,
-      "Entre 0.21 y 0,3": 60,
-      "Entre 0.31 y 0.4": 70,
-      "Entre 0.41 y 0.5": 80,
-      "Entre 0.51 y 0.6": 90,
-      "Entre 0.61 y 0.7": 100,
-      "No informa": 100,
-    },
-    A3: {
-      "Entre 0 y 2": 15,
-      "Entre 2,1 y 2,5": 25,
-      "Entre 2,5 y 3": 30,
-      "Entre 3 y 4": 35,
-      "Entre 4 y 5": 40,
-      "Entre 5 y 5,5": 45,
-      "Entre 5,5 y 6": 50,
-      "Entre 6 y 6,5": 55,
-      "Entre 6,5 y 7": 60,
-      "Entre 7 y 7,5": 70,
-      "Entre 7,5 y 8": 75,
-      "Entre 8 y 9,5": 80,
-      "Entre 9,5 y 11": 85,
-      "Entre 11 y 14": 90,
-      "Entre 14 y 18": 95,
-      ">18": 100,
-      "No informa": 100,
-    }
-  }
-
-
-  variableB: B = {
-    B1: {
-      "Estrato 1 y 2 o rural": 0.6,
-      "Estrato 3 y 4 ciudad < 100 mil hab, no estratificada": 0.9,
-      "Estrato 5 y 6, > 100 mil habitantes no estratificada": 1,
-
-    },
-    B2: {
-      "Fuera del Perimetro Urbano": 0.9,
-      "Dentro del Perimetro Urbano": 1,
-
-    },
-    B3: {
-      "Vive solo o es casado": 0.85,
-      "Otros": 1,
-    },
-    B4: {
-      "Trabaja": 0.9,
-      "No trabaja": 1,
-    }
-  }
-
-  data: liquidacion[] = []
-  llavesA1: string[] = []
-  valorA1: number[] = []
-  llavesA2: string[] = []
-  valorA2: number[] = []
-  llavesA3: string[] = []
-  valorA3: number[] = []
-  llavesB1: string[] = []
-  valorB1: number[] = []
-  llavesB2: string[] = []
-  valorB2: number[] = []
-  llavesB3: string[] = []
-  valorB3: number[] = []
-  llavesB4: string[] = []
-  valorB4: number[] = []
-  PBM!: number
-  mostrarElementosLiquidacion!: boolean;
-
-  displayedColumns: string[] = ['seleccion', 'codigo', 'documento', 'nombres', 'apellidos', 'A1', 'puntaje1', 'A2', 'puntaje2', 'A3', 'puntaje3', 'B1', 'puntaje4', 'B2', 'puntaje5', 'B3', 'puntaje6', 'B4', 'puntaje7', 'G1', 'G2', 'G3', 'G4', 'total', 'acciones'];
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  dataSource = new MatTableDataSource<liquidacion>;
-
-  generarRegistros() {
-    for (let i = 0; i < 20; i++) {
-      const liquidaciondata: liquidacion = {
-        seleccion: true,
-        codigo: i + 1,
-        documetno: 100000000 + i,
-        nombres: "Nombre" + (i + 1),
-        apellidos: "Apellido" + (i + 1),
-        A: {
-          A1: "1",
-          puntajeA1: this.variableA.A1["1"],
-          A2: "Entre 0 y,004",
-          puntajeA2: this.variableA.A2["Entre 0 y,004"],
-          A3: "Entre 0 y 2",
-          puntajeA3: this.variableA.A3["Entre 0 y 2"],
+  buscarInscripcionesAdmitidosLegalizados(proyecto: any, periodo: any) {
+    return new Promise((resolve, reject) => {
+      this.inscripcionService.get('inscripcion?query=Activo:true,ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:8&sortby=Id&order=asc')
+        .subscribe((res: any) => {
+          resolve(res)
         },
-        B: {
-          B1: "Estrato 1 y 2 o rural",
-          puntajeB1: this.variableB.B1["Estrato 1 y 2 o rural"],
-          B2: "Fuera del Perimetro Urbano",
-          puntajeB2: this.variableB.B2["Fuera del Perimetro Urbano"],
-          B3: "Vive solo o es casado",
-          puntajeB3: this.variableB.B3["Vive solo o es casado"],
-          B4: "Trabaja",
-          puntajeB4: this.variableB.B4["Trabaja"],
-        },
-        general: {
-          pbm: 10,
-        },
-        estado_edicion: false,
-        inscripcionId: 0,
-        personaId: 0
-      };
-      this.data.push(liquidaciondata);
-      this.dataSource = new MatTableDataSource(this.data);
-
-      setTimeout(() => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      }, 300);
-
-    }
-
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+            console.error(error);
+            this.loading = false;
+            reject([]);
+          });
+    });
   }
 
-  obtenerClaves(variableA: A, variableB: B) {
-    const { A1, A2, A3 } = variableA
-    const { B1, B2, B3, B4 } = variableB
-    const calves = Object.keys(A1)
-    const calves2 = Object.keys(A2)
-    const calves3 = Object.keys(A3)
-    const calves4 = Object.keys(B1)
-    const calves5 = Object.keys(B2)
-    const calves6 = Object.keys(B3)
-    const calves7 = Object.keys(B4)
-    calves.forEach(llave => this.llavesA1.push(llave))
-    calves2.forEach(llave => this.llavesA2.push(llave))
-    calves3.forEach(llave => this.llavesA3.push(llave))
-    calves4.forEach(llave => this.llavesB1.push(llave))
-    calves5.forEach(llave => this.llavesB2.push(llave))
-    calves6.forEach(llave => this.llavesB3.push(llave))
-    calves7.forEach(llave => this.llavesB4.push(llave))
-    this.valorA1 = Object.values(this.variableA.A1);
-    this.valorA2 = Object.values(this.variableA.A2);
-    this.valorA3 = Object.values(this.variableA.A3);
-    this.valorA1 = Object.values(this.variableB.B1);
-    this.valorA2 = Object.values(this.variableB.B2);
-    this.valorA3 = Object.values(this.variableB.B3);
-    this.valorA3 = Object.values(this.variableB.B4);
-
+  async generarRegistros() {
+    this.loading = true;
+    this.data = [];
+  
+    for (const inscripcion of this.inscripciones) {
+      try {
+        const persona: any = await this.consultarTercero(inscripcion.PersonaId);
+        if (Array.isArray(persona) && persona.length === 0) {
+          continue;
+        }
+  
+        const infoLegalizacion: any = await this.getLegalizacionMatricula(persona.Id);
+        if (infoLegalizacion === "No existe legalizacion") {
+          continue;
+        }
+  
+        if (!infoLegalizacion || infoLegalizacion.pensionSM11 == null || infoLegalizacion.ingresosSMCostea == null) {
+          console.error('Datos incompletos en infoLegalizacion:', infoLegalizacion);
+          continue;
+        }
+  
+        const valorStringA2 = this.calcularValorPension(infoLegalizacion.pensionSM11);
+        const valorStringA3 = this.calcularValorIngresos(infoLegalizacion.ingresosSMCostea);
+  
+        const valorLiquidacionData: any = {
+          "estado_edicion": false,
+          "inscripcionId": inscripcion.Id,
+          "personaId": persona.Id,
+          "seleccion": true,
+          "codigo": 1000,
+          "documento": persona.NumeroIdentificacion,
+          "nombres": `${persona.PrimerNombre} ${persona.SegundoNombre}`,
+          "apellidos": `${persona.PrimerApellido} ${persona.SegundoApellido}`,
+          A: {
+            A1: infoLegalizacion.estratoCostea,
+            puntajeA1: this.variableA.A1[infoLegalizacion.estratoCostea],
+            A2: infoLegalizacion.pensionSM11,
+            puntajeA2: this.variableA.A2[valorStringA2],
+            A3: infoLegalizacion.ingresosSMCostea,
+            puntajeA3: this.variableA.A3[valorStringA3],
+          },
+          B: {
+            B1: infoLegalizacion.estratoCostea,
+            puntajeB1: this.variableB.B1[infoLegalizacion.estratoCostea],
+            B2: infoLegalizacion.ubicacionResidenciaCostea,
+            puntajeB2: this.variableB.B2[infoLegalizacion.ubicacionResidenciaCostea],
+            B3: infoLegalizacion.nucleoFamiliar,
+            puntajeB3: this.variableB.B3[infoLegalizacion.nucleoFamiliar],
+            B4: infoLegalizacion.situacionLaboral,
+            puntajeB4: this.variableB.B4[infoLegalizacion.situacionLaboral],
+          },
+          general: {
+            pbm: 10,
+          },
+        };
+  
+        this.calculoPBM(valorLiquidacionData);
+        this.data.push(valorLiquidacionData);
+      } catch (error) {
+        console.error('Error procesando inscripción:', inscripcion, error);
+      }
+    }
+    this.dataSource = new MatTableDataSource(this.data);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  
+    this.loading = false;
   }
 
-
-
-  actualizarpuntaje(element: liquidacion, caso: string) {
-    switch (caso) {
-      case 'A1':
-        element.A.puntajeA1 = this.variableA.A1[element.A.A1];
-        break;
-      case 'A2':
-        element.A.puntajeA2 = this.variableA.A2[element.A.A2];;
-        break;
-      case 'A3':
-        element.A.puntajeA3 = this.variableA.A3[element.A.A3];;
-        break;
-      case 'B1':
-        element.B.puntajeB1 = this.variableB.B1[element.B.B1];;
-        break;
-      case 'B2':
-        element.B.puntajeB2 = this.variableB.B2[element.B.B2];;
-        break;
-      case 'B3':
-        element.B.puntajeB3 = this.variableB.B3[element.B.B3];;
-        break;
-      case 'B4':
-        element.B.puntajeB4 = this.variableB.B4[element.B.B4];;
-        break;
+  async consultarTercero(personaId: any): Promise<any | []> {
+    try {
+      const response = await this.sgamidService.get('persona/consultar_persona/' + personaId).toPromise();
+      return response;
+    } catch (error) {
+      this.loading = false;
+      console.error(error)
+      return []; 
     }
-    this.calculoPBM(element)
+  }
+
+  async getLegalizacionMatricula(personaId: any) {
+    return new Promise((resolve, reject) => {
+      //this.loading = true;
+      this.inscripcionMidService.get('legalizacion/informacion-legalizacion/' + personaId)
+        .subscribe((res: any) => {
+          resolve(res.Data);
+        },
+          (error: any) => {
+            this.loading = false;
+            this.popUpManager.showErrorAlert(
+              this.translate.instant('admision.legalizacion_error')
+            );
+          });
+    });
+  }
+
+  calcularValorPension(valorSM: any) {
+    let valorString;
+
+    switch (true) {
+      case valorSM <= 0.004:
+        valorString = "Entre 0 y,004"
+        break;
+      case valorSM <= 0.08:
+        valorString = "Entre 0.0041 y 0.08"
+        break;
+      case valorSM <= 0.12:
+        valorString = "Entre 0.081 y 0.12"
+        break;
+      case valorSM <= 0.16:
+        valorString = "Entre 0.121 y 0.16"
+        break;
+      case valorSM <= 0.2:
+        valorString = "Entre 0.161 y 0.2"
+        break;
+      case valorSM <= 0.3:
+        valorString = "Entre 0.21 y 0,3"
+        break;
+      case valorSM <= 0.4:
+        valorString = "Entre 0.31 y 0.4"
+        break;
+      case valorSM <= 0.5:
+        valorString = "Entre 0.41 y 0.5"
+        break;
+      case valorSM <= 0.6:
+        valorString = "Entre 0.51 y 0.6"
+        break;
+      case valorSM <= 0.7:
+        valorString = "Entre 0.61 y 0.7"
+        break;
+      case valorSM > 0.7:
+        valorString = "Entre 0.61 y 0.7"
+        break;
+      default:
+        valorString = "No informa"
+    }
+
+    return valorString;
+  }
+
+  calcularValorIngresos(valorSM: any) {
+    let valorString;
+
+    switch (true) {
+      case valorSM <= 2:
+        valorString = "Entre 0 y 2"
+        break;
+      case valorSM <= 2.5:
+        valorString = "Entre 2,1 y 2,5"
+        break;
+      case valorSM <= 3:
+        valorString = "Entre 2,5 y 3"
+        break;
+      case valorSM <= 4:
+        valorString = "Entre 3 y 4"
+        break;
+      case valorSM <= 5:
+        valorString = "Entre 4 y 5"
+        break;
+      case valorSM <= 5.5:
+        valorString = "Entre 5 y 5,5"
+        break;
+      case valorSM <= 6:
+        valorString = "Entre 5,5 y 6"
+        break;
+      case valorSM <= 6.5:
+        valorString = "Entre 6 y 6,5"
+        break;
+      case valorSM <= 7:
+        valorString = "Entre 6,5 y 7"
+        break;
+      case valorSM <= 7.5:
+        valorString = "Entre 7 y 7,5"
+        break;
+      case valorSM <= 8:
+        valorString = "Entre 7,5 y 8"
+        break;
+      case valorSM <= 9.5:
+        valorString = "Entre 8 y 9,5"
+        break;
+      case valorSM <= 11:
+        valorString = "Entre 9,5 y 11"
+        break;
+      case valorSM <= 14:
+        valorString = "Entre 11 y 14"
+        break;
+      case valorSM <= 18:
+        valorString = "Entre 14 y 18"
+        break;
+      case valorSM > 18:
+        valorString = ">18"
+        break;
+      default:
+        valorString = "No informa"
+    }
+
+    return valorString;
   }
 
   calculoPBM(element: liquidacion) {
@@ -399,57 +493,6 @@ export class LiquidacionRecibosComponent {
       const recibosUrlChange = changes['recibosUrl'];
     }
   }
-
-  cargarAdmitidos(id_periodo: undefined, id_proyecto: undefined) {
-    return new Promise((resolve, reject) => {
-      //const url = `liquidacion/?id_periodo=${id_periodo}&id_proyecto=${id_proyecto}`;
-      // const url = `liquidacion?id_periodo=9&id_proyecto=32`;
-  
-      const url = `liquidacion/?id_periodo=9&id_proyecto=30`;
-
-      this.sgaAdmisiones.get(url).subscribe(
-        (response: { Data: any; }) => {
-          console.log('Datos cargados:', response);
-          const data = response.Data;
-          this.admitidos = data;
-          this.admitidos.forEach(element => {
-            element.Seguro = true;
-            element.Carne = true;
-            element.Sistematizacion = true;
-            element.a1 = '1';
-            element.a2 = '1';
-            element.a3 = '1';
-            element.b1 = '1';
-            element.b2 = '1';
-            element.b3 = '1';
-            element.b4 = '1';
-            element.pbm = 10;
-            element.Correo = this.asignarCorreo(element.User);
-            this.calculoMatricula();
-          });
-          resolve(data); // Resuelve la promesa con los datos cargados
-        },
-        (error: any) => {
-          console.error('Error al cargar datos:', error);
-          reject(error); // Rechaza la promesa con el error
-        }
-      );
-    });
-  }
-
-  validarCorreo(correo: string) {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return regex.test(correo);
-  }
-
-  asignarCorreo(correo: string) {
-    if (this.validarCorreo(correo)) {
-      return correo;
-    } else {
-      return "correo@correo.com";
-    }
-  }
-
 
   guardarLiquidaciones() {
     this.admitidos.forEach(row => {
@@ -491,12 +534,6 @@ export class LiquidacionRecibosComponent {
           }
         );
     }
-  }
-
-  calculoMatricula() {
-    this.admitidos.forEach(element => {
-      element.totalMatricula = element.pbm * 1000;
-    });
   }
 
   generarRecibos() {

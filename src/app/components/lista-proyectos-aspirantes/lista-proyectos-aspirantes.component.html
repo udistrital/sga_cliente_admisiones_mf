@@ -47,7 +47,7 @@
                             <mat-option *ngFor="let item of niveles" [value]="item.Id">
                                 {{item.Nombre}}
                             </mat-option>
-                        </mat-select> -->
+                        </mat-select> -->p
                         <!-- <mat-error *ngIf="nivelFormControl.hasError('required')">{{ 'cupos.error_selec_nivel' |
                             translate
                             }}</mat-error> -->
@@ -67,7 +67,6 @@
                         <mat-panel-description>{{ 'GLOBAL.aspirantes_inscritos' | translate }}: <b class="ml-1"> {{
                                 proyecto.cantidad_aspirantes}}</b></mat-panel-description>
                     </mat-expansion-panel-header>
-
                     <!-- Muestra la información del proyecto si hay aspirantes -->
                     <div *ngIf="proyecto.cantidad_aspirantes != 0">
                         <!-- Tarjeta con resumen de estados de inscripción -->

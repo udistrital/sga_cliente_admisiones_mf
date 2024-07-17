@@ -14,6 +14,8 @@ import { ParametrosService } from 'src/app/services/parametros.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TranslateService } from '@ngx-translate/core';
+import * as saveAs from 'file-saver';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 @Component({
   selector: 'app-listado-oficializados',
@@ -65,6 +67,7 @@ export class ListadoOficializadosComponent {
     private sgaProyectoCurricularMidService: SgaProyectoCurricularMidService,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
+    private sgaAdmisionesMidService: SgaAdmisionesMid,
 
   ) { }
 
@@ -76,7 +79,7 @@ export class ListadoOficializadosComponent {
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      
+
       this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
@@ -88,7 +91,7 @@ export class ListadoOficializadosComponent {
             periodos.forEach((element: any) => {
               this.periodos.push(element);
             });
-            
+
             this.periodo = localStorage.getItem('IdPeriodo')
           }
         },
@@ -218,7 +221,7 @@ export class ListadoOficializadosComponent {
           }
           consultedProgramas.add(proyecto.ProyectoAcademico.Id);
 
-          return this.inscripcionService.get(`inscripcion?query=EstadoInscripcionId.Id:${idEstadoFormacion}&PeriodoId${this.periodo}0&ProgramaAcademicoId:${proyecto.ProyectoAcademico.Id}&limit=10`).pipe(
+          return this.inscripcionService.get(`inscripcion?query=EstadoInscripcionId.Id:${idEstadoFormacion}&PeriodoId${this.periodo}&ProgramaAcademicoId:${proyecto.ProyectoAcademico.Id}&limit=10`).pipe(
             mergeMap((inscripciones: any) =>
               forkJoin(
                 inscripciones.map((inscripcion: any) => {
@@ -302,5 +305,31 @@ export class ListadoOficializadosComponent {
     });
   }
 
+  descargarListadoOficializados(estado:number){
+    this.sgaAdmisionesMidService.get(`admision/listadooficializados/${this.periodo}/1/${estado}`).subscribe((res: any) => {
+      if (res.status === 200 && res.success === true ){
+        console.log(res.data.Pdf)
+        const base64String = res.data.Pdf;
+        this.downloadPdf(base64String);
+
+      }else{
+        console.log("Error en la consulta de listado oficializados")
+      }
+
+    });
+  }
+
+  downloadPdf(resBase64String: string) {
+    console.log("Hola1")
+    const base64String: string = resBase64String;
+    const byteCharacters = atob(base64String);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    saveAs(blob, 'ListadOficializados.pdf');
+  }
 
 }
