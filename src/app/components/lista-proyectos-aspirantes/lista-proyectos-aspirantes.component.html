@@ -1,7 +1,7 @@
+<div [class.loader-div]="loading">
+    <mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+</div>
 <mat-card>
-    <div [class.loader-div]="loading">
-        <mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
-    </div>
     <mat-card-header>
         <mat-card-title>{{ 'admision.listar_aspirantes_proyecto' | translate }}</mat-card-title>
     </mat-card-header>
@@ -16,12 +16,18 @@
                 <div class="form-col1">
                     <mat-form-field>
                         <mat-label>{{ 'calendario.periodo' | translate }}:</mat-label>
-                        <mat-select [(ngModel)]="periodo" formControlName="periodoFormControl" (selectionChange)="cambiarPeriodo()">
+                        <mat-select [(ngModel)]="periodo" formControlName="periodoFormControl">
                             <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                             <mat-option *ngFor="let item of periodos" [value]="item">
                                 {{item.Nombre}}
                             </mat-option>
                         </mat-select>
+                        <!-- <mat-select [(ngModel)]="periodo" formControlName="periodoFormControl" (selectionChange)="cambiarPeriodo()">
+                            <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                            <mat-option *ngFor="let item of periodos" [value]="item">
+                                {{item.Nombre}}
+                            </mat-option>
+                        </mat-select> -->
                     </mat-form-field>
                 </div>
 
@@ -29,20 +35,26 @@
                 <div>
                     <mat-form-field>
                         <mat-label>{{ 'GLOBAL.nivel' | translate }}:</mat-label>
-                        <mat-select formControlName="nivelFormControl" [(ngModel)]="nivel"
-                            (selectionChange)="cargarProyectos()">
+                        <mat-select formControlName="nivelFormControl" [(ngModel)]="nivel">
                             <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                             <mat-option *ngFor="let item of niveles" [value]="item.Id">
                                 {{item.Nombre}}
                             </mat-option>
                         </mat-select>
+                        <!-- <mat-select formControlName="nivelFormControl" [(ngModel)]="nivel"
+                            (selectionChange)="cargarProyectos()">
+                            <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                            <mat-option *ngFor="let item of niveles" [value]="item.Id">
+                                {{item.Nombre}}
+                            </mat-option>
+                        </mat-select> -->p
                         <!-- <mat-error *ngIf="nivelFormControl.hasError('required')">{{ 'cupos.error_selec_nivel' |
                             translate
                             }}</mat-error> -->
                     </mat-form-field>
                 </div>
             </form>
-
+            <button mat-stroked-button class="" (click)="generarBusqueda()">{{ 'GLOBAL.buscar' | translate }}</button>
             <div *ngIf="proyectosActivosConListaAspirantes != null">
                 <hr>
                 <h5 class="">{{ 'GLOBAL.lista' | translate }}</h5>
@@ -55,7 +67,6 @@
                         <mat-panel-description>{{ 'GLOBAL.aspirantes_inscritos' | translate }}: <b class="ml-1"> {{
                                 proyecto.cantidad_aspirantes}}</b></mat-panel-description>
                     </mat-expansion-panel-header>
-
                     <!-- Muestra la información del proyecto si hay aspirantes -->
                     <div *ngIf="proyecto.cantidad_aspirantes != 0">
                         <!-- Tarjeta con resumen de estados de inscripción -->

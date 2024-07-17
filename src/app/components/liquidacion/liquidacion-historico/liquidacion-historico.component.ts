@@ -80,9 +80,9 @@ export class LiquidacionHistoricoComponent {
       );
     }
 
-    onSelectLevel () {
-      console.log(this.selectedLevel);
-    }
+  // onSelectLevel () {
+  //   console.log(this.selectedLevel);
+  // }
 
   cargarFacultades() {
     return new Promise((resolve, reject) => {
@@ -152,8 +152,7 @@ export class LiquidacionHistoricoComponent {
 
   buscarInscripcionesAdmitidosLegalizados(proyecto: any, periodo: any) {
     return new Promise((resolve, reject) => {
-      this.inscripcionService.get('inscripcion?query=Activo:true,ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:8&sortby=Id&order=asc')
-      //this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:27,PeriodoId:40,EstadoInscripcionId.Id:8&sortby=Id&order=asc')
+      this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:8&sortby=Id&order=asc')
         .subscribe((res: any) => {
           resolve(res)
         },

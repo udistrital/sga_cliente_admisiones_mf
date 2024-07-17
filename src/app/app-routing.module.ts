@@ -128,10 +128,6 @@ const routes: Routes = [
     component: ListadosOficializadosComponent
   },
   {
-    path:"listados-oficializados", 
-    component: ListadosOficializadosComponent
-  },
-  {
     path:"listado-oficializados", 
     component: ListadoOficializadosComponent,
   },
