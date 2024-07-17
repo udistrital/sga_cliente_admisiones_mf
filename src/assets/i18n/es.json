@@ -620,7 +620,8 @@
         "item": "Ítem",
         "evaluar": "Evaluar",
         "tipo_inscripcion": "Seleccione el tipo de inscripción",
-        "filtro": "Filtro"
+        "filtro": "Filtro",
+        "especial": "Especial"
     },
     "ERROR": {
         "general": "La solicitud no pudo ser cumplida",
@@ -643,7 +644,8 @@
         "fallo_informacion_en": "Ha habido un error al consultar la información sobre",
         "sin_informacion_en": "No se ha encontrado información sobre",
         "persiste_error_comunique_OAS": "Regrese e intente de nuevo más tarde. Si el error persiste, comuníquese con Oficina Asesora de Tecnologías e Información (OATI)",
-        "error_previsualizar_doc": "No se pudo visualizar el documento, no es un formato válido o no se ha encontrado."
+        "error_previsualizar_doc": "No se pudo visualizar el documento, no es un formato válido o no se ha encontrado.",
+        "error_formulario_incompleto": "El formulario esta incompleto"
     },
     "recibo_pago": {
         "generado": "El recibo de pago ha sido generado correctamente",
@@ -1657,6 +1659,10 @@
         "detalle_evaluacion_existente": "Ya se encuentra registrada la información de detalle de evaluación",
         "titulo_inscripcion_no_encontrada": "La inscripción no fue encontrada",
         "inscripcion_no_encontrada": "No se encontró una inscripción asociada al código icfes",
+        "error_obtener_cupos": "Error al obtener cupos",
+        "tipo_cupo": "Tipo cupo",
+        "error_nieveles": "Ocurrio un error al recuperar los niveles",
+        "error_tipo_inscripcion": "Ocurrio un error al recuperar los tipos de inscripción"
         "titulo_programa_sin_requisitos": "Programa académico sin requisitos",
         "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico"
     },
@@ -1708,7 +1714,21 @@
         "ver_listado_aspirantes": "Ver listado de aspirantes",
         "cupos_proyecto": "Cantidad de cupos asignados",
         "cupos_disponibles": "Cantidad de cupos disponibles:",
-        "sin_cupos_periodo": "No se ha definido cupos para este periodo o proyecto curricular"
+        "sin_cupos_periodo": "No se ha definido cupos para este periodo o proyecto curricular",
+        "tipos_cupo": "Tipos de cupos",
+        "crear_tipos_cupo": "Crear tipos de cupos",
+        "error_recuperar_tipos_cupo": "Error al recuperar los tipos de cupos",
+        "descripcion_crear_tipos_cupo": "¿Esta seguro/a de continuar con el registro del tipo de cupo?",
+        "creacion_tipos_cupo_exito": "Creación exitosa del tipo de cupo",
+        "creacion_tipos_cupo_fallo": "Ocurrio un error tratando de crear el tipo de cupo",
+        "actualizar_tipos_cupo": "Actualizar tipo de cupo",
+        "descripcion_actualizar_tipos_cupo": "¿Esta seguro/a de continuar con la actualización del tipo de cupo?",
+        "actualizacion_tipos_cupo_exito": "Actualización exitosa del tipo de cupo",
+        "actualizacion_tipos_cupo_fallo": "Ocurrio un error tratando de actualizar el tipo de cupo",
+        "eliminar_tipos_cupo": "Eliminar tipo de cupo",
+        "descripcion_eliminar_tipos_cupo": "¿Esta seguro/a de continuar con la eliminación del tipo de cupo?",
+        "eliminacion_tipos_cupo_exito": "Eliminación exitosa del tipo de cupo",
+        "eliminacion_tipos_cupo_fallo": "Ocurrio un error tratando de eliminar el tipo de cupo"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Está seguro de inhabilitar este calendario?",
@@ -1945,8 +1965,10 @@
         "tipo_inscripcion_deshabilitado_error": "Error deshabilitando tipo inscripción",
         "seguro_actualizar_tipo_inscripcion": "¿Está seguro de actualizar este tipo de inscripción?",
         "tipo_inscripcion_actualizado": "Tipo inscripción actualizado",
+        "tipo_inscripcion_actualizado_error": "Ocurrió un error actualizando el tipo de inscripción",
         "seguro_continuar_registrar_tipo_inscripcion": "¿Está seguro de registrar este tipo de inscripción?",
         "tipo_inscripcion_creado": "Tipo de inscripción creado",
+        "error_tipo_inscripcion_creado": "Error al crear el tipo de inscripción",
         "tooltip_eliminar": "Eliminar tipo de inscripción",
         "tooltip_crear": "Crear tipo de inscripción",
         "tooltip_editar": "Editar tipo de inscripción",
