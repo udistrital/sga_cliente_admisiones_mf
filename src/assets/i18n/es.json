@@ -619,7 +619,9 @@
         "placeholder_direccion_entidad": "Ej: Cra 8 # 40-78 Piso 1",
         "item": "Ítem",
         "evaluar": "Evaluar",
-        "tipo_inscripcion": "Seleccione el tipo de inscripción"
+        "tipo_inscripcion": "Seleccione el tipo de inscripción",
+        "filtro": "Filtro",
+        "especial": "Especial"
     },
     "ERROR": {
         "general": "La solicitud no pudo ser cumplida",
@@ -642,7 +644,8 @@
         "fallo_informacion_en": "Ha habido un error al consultar la información sobre",
         "sin_informacion_en": "No se ha encontrado información sobre",
         "persiste_error_comunique_OAS": "Regrese e intente de nuevo más tarde. Si el error persiste, comuníquese con Oficina Asesora de Tecnologías e Información (OATI)",
-        "error_previsualizar_doc": "No se pudo visualizar el documento, no es un formato válido o no se ha encontrado."
+        "error_previsualizar_doc": "No se pudo visualizar el documento, no es un formato válido o no se ha encontrado.",
+        "error_formulario_incompleto": "El formulario esta incompleto"
     },
     "recibo_pago": {
         "generado": "El recibo de pago ha sido generado correctamente",
@@ -1655,7 +1658,15 @@
         "titulo_detalle_evaluacion_existente": "Detalle evaluación existente",
         "detalle_evaluacion_existente": "Ya se encuentra registrada la información de detalle de evaluación",
         "titulo_inscripcion_no_encontrada": "La inscripción no fue encontrada",
-        "inscripcion_no_encontrada": "No se encontró una inscripción asociada al código icfes"
+        "inscripcion_no_encontrada": "No se encontró una inscripción asociada al código icfes",
+        "seleccion_facultades": "Seleccione la facultad que quiere consultar",
+        "inscripcion_pregrado_error": "Error consultando la inscripción de pregrado para este aspirante"
+        "error_obtener_cupos": "Error al obtener cupos",
+        "tipo_cupo": "Tipo cupo",
+        "error_nieveles": "Ocurrio un error al recuperar los niveles",
+        "error_tipo_inscripcion": "Ocurrio un error al recuperar los tipos de inscripción"
+        "titulo_programa_sin_requisitos": "Programa académico sin requisitos",
+        "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico"
     },
     "oficializados": {
         "titulo": "Oficialización",
@@ -1705,7 +1716,21 @@
         "ver_listado_aspirantes": "Ver listado de aspirantes",
         "cupos_proyecto": "Cantidad de cupos asignados",
         "cupos_disponibles": "Cantidad de cupos disponibles:",
-        "sin_cupos_periodo": "No se ha definido cupos para este periodo o proyecto curricular"
+        "sin_cupos_periodo": "No se ha definido cupos para este periodo o proyecto curricular",
+        "tipos_cupo": "Tipos de cupos",
+        "crear_tipos_cupo": "Crear tipos de cupos",
+        "error_recuperar_tipos_cupo": "Error al recuperar los tipos de cupos",
+        "descripcion_crear_tipos_cupo": "¿Esta seguro/a de continuar con el registro del tipo de cupo?",
+        "creacion_tipos_cupo_exito": "Creación exitosa del tipo de cupo",
+        "creacion_tipos_cupo_fallo": "Ocurrio un error tratando de crear el tipo de cupo",
+        "actualizar_tipos_cupo": "Actualizar tipo de cupo",
+        "descripcion_actualizar_tipos_cupo": "¿Esta seguro/a de continuar con la actualización del tipo de cupo?",
+        "actualizacion_tipos_cupo_exito": "Actualización exitosa del tipo de cupo",
+        "actualizacion_tipos_cupo_fallo": "Ocurrio un error tratando de actualizar el tipo de cupo",
+        "eliminar_tipos_cupo": "Eliminar tipo de cupo",
+        "descripcion_eliminar_tipos_cupo": "¿Esta seguro/a de continuar con la eliminación del tipo de cupo?",
+        "eliminacion_tipos_cupo_exito": "Eliminación exitosa del tipo de cupo",
+        "eliminacion_tipos_cupo_fallo": "Ocurrio un error tratando de eliminar el tipo de cupo"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Está seguro de inhabilitar este calendario?",
@@ -1942,8 +1967,10 @@
         "tipo_inscripcion_deshabilitado_error": "Error deshabilitando tipo inscripción",
         "seguro_actualizar_tipo_inscripcion": "¿Está seguro de actualizar este tipo de inscripción?",
         "tipo_inscripcion_actualizado": "Tipo inscripción actualizado",
+        "tipo_inscripcion_actualizado_error": "Ocurrió un error actualizando el tipo de inscripción",
         "seguro_continuar_registrar_tipo_inscripcion": "¿Está seguro de registrar este tipo de inscripción?",
         "tipo_inscripcion_creado": "Tipo de inscripción creado",
+        "error_tipo_inscripcion_creado": "Error al crear el tipo de inscripción",
         "tooltip_eliminar": "Eliminar tipo de inscripción",
         "tooltip_crear": "Crear tipo de inscripción",
         "tooltip_editar": "Editar tipo de inscripción",
@@ -2593,7 +2620,9 @@
         "select_identificacion": "Número identificación docente:",
         "select_nombre": "Nombre del Docente:",
         "select_vinculacion": "Tipo de vinculación del docente:",
-        "select_horas": "Horas asignadas:"
+        "select_horas": "Horas asignadas:",
+        "mensaje_doctorado": "El calendario actual contiene múltiples periodos asignados",
+        "mensaje_doctorado_mensaje": "Por favor, revise los detalles para evitar conflictos en las asignaciones."
     },
     "liquidacion": {
         "recibos": "Información del proyecto curricular",
@@ -2711,38 +2740,57 @@
         "usuario": "Usuario",
         "nodata": "No se encontraron históricos"
     },
-    "evaluacionpregrado": {
-        "aspirante": "Evaluación Aspirante Pregrado",
+    "evaluacionPregrado": {
+        "aspirante": "Evaluación de aspirantes a pregrado",
         "facultades": "Facultades",
         "facultad": "Facultad",
         "estado": "Estado",
         "completado": "% Completado",
         "accion": "Acción",
         "nodata": "No hay datos disponibles",
-        "proyectos_curriculares": "Proyectos Curriculares",
-        "proyecto_curricular": "Proyecto Curricular",
+        "proyectos_curriculares": "Proyectos curriculares",
+        "proyecto_curricular": "Proyecto curricular",
         "variables": "Variables",
         "periodo": "Periodo",
-        "nivel_aviso": "Nivel de Aviso",
+        "nivel_aviso": "Nivel de alerta",
         "seleccionar": "Seleccionar",
-        "criterio_consultar": "Criterio a Consultar",
+        "criterio_consultar": "Criterio a consultar",
         "erro_selec_nivel": "Por favor seleccione un nivel",
         "tooltip_eliminar": "Eliminar",
-        "subcriterios": "Subcriterios",
-        "subcriterio": "Subcriterio"
+        "criterios": "Criterios",
+        "criterio": "Criterio",
+        "revision": "Revisión de documentos",
+        "puntaje": "Calcular puntaje de los aspirantes",
+        "listado": "Listado de aspirantes registrados",
+        "evaluar_criterio": "Evaluar criterio",
+        "revision_curricular": "Enviar para revisión al proyecto curricular",
+        "descargar_pdf": "Descargar listado (PDF/Excel)",
+        "definir_admitidos": "Definir listas de admitidos"
     },
     "evaluacion-admitidos": {
         "titulo": "Listado admitidos",
         "listado_inscritos": "Listado de inscritos",
         "listado_inscritos_cupos_especiales": "Listado de inscritos  cupos especiales",
-        "notificacion": "Enviar notificaciones"
+        "notificacion": "Enviar notificaciones",
+        "numero": "Numero",
+        "credencial": "Credencial",
+        "nombres": "Nombres",
+        "apellidos": "Apellidos",
+        "documento": "Documento",
+        "snp": "SNP",
+        "puntaje": "Puntaje ICFES",
+        "puntaje_ponderado": "Puntaje ponderado",
+        "tipo_inscripcion": "Tipo de inscripción",
+        "estado_inscripcion": "Estado",
+        "listado_admitidos_alerta_cumple": "Listado de personas inscritas que cumplen con el puntaje minimo requerido",
+        "listado_admitidos_alerta_no_cumple": "Listado de personas inscritas que NO cumplen con el puntaje minimo requerido"
     },
     "listado-oficializados": {
-        "titulo": "Oficializacion",
-        "info_listado_admitidos": "Este modulo le apoyara en el procso de depurar el listado de admitidos que han oficializado, a su vez liberar cupos de las personas que no terminan han terminao el proceso",
-        "plazos": "Primer plazo: Fecha 1 - Fecha 2",
-        "estado": "Estado: Abierto, culminada, solicitud de correos realizada",
-        "proceso_admision" : "Proceso de admisión",
+        "titulo": "Oficialización",
+        "info_listado_admitidos": "Este modulo le apoyara en el proceso de depurar el listado de admitidos que han oficializado, a su vez liberar cupos de las personas que no terminan han terminado el proceso",
+        "plazos": "Plazo activo:",
+        "estado": "Estado:",
+        "proceso_admision": "Proceso de admisión",
         "fecha_inicial_final": "Fecha inicial - Fecha final",
         "estados": "Estado",
         "gestion": "Gestión",
@@ -2752,9 +2800,10 @@
         "descargar_listado": "Descargar listado",
         "sugerir_usuarios": "Sugerir usuarios",
         "solicitud_correos_institucionales": "Enviar Solicitud de correos institucionales",
-        "liberar_cupos": "Liberar cupos"
-       },
-
+        "liberar_cupos": "Liberar cupos",
+        "correo_sugerido": "Correo sugerido",
+        "correo_asignado": "Correo asignado"
+    },
       "preinscripcion-proyectos-curriculares": {
         "titulo": "Informacion Personal",
         "primer_nombre": "Primer nombre",
@@ -2765,7 +2814,7 @@
         "numero_documento": "Número de documento",
         "fecha_expedicion": "Fecha de expedición",
         "fecha_nacimiento": "Fecha de nacimiento",
-        "sexo":"Sexo",
+        "sexo": "Sexo",
         "correo_eletronico": "Correo electrónico",
         "telefono": "Teléfono",
         "listado_preinscripciones": "Listado de inscripciones",
@@ -2787,7 +2836,6 @@
         "pin": "Recibos denerados (PIN)",
         "alerta": "Aspirante, recuerde que solo podra generar hasta 3 recibos en estado pendiente de pago, si desea generar otra inscripcion a otro proyecto debera pagar al menos uno de los recibos generados",
         "periodo_inscrito": "Periodo inscrito"
-
-        
-      }
+    }
 }
+

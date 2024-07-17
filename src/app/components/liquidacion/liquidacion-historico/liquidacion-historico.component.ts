@@ -7,6 +7,9 @@ import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service'
 import { OikosService } from 'src/app/services/oikos.service';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
+import { NivelFormacion } from 'src/app/models/proyecto_academico/nivel_formacion';
+
 
 @Component({
   selector: 'app-liquidacion-historico',
@@ -15,8 +18,8 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 })
 export class LiquidacionHistoricoComponent {
   datosTabla: any;
-  tablahistorico:boolean=true
 
+  nivelControl = new FormControl('', [Validators.required]);
   proyectoControl = new FormControl('', [Validators.required]);
   facultadControl = new FormControl('', [Validators.required]);
   periodoControl = new FormControl('', [Validators.required]);
@@ -29,6 +32,14 @@ export class LiquidacionHistoricoComponent {
   loading: boolean = false;
   inscripciones: any = [];
 
+  niveles: NivelFormacion[] = [];
+  selectedLevel: any;
+  tablaHistorico! : boolean;
+  initialized = false;
+
+  selectedProyecto! : any;
+  selectedPeriodo! : any;
+
   constructor(
     private _formBuilder: FormBuilder, 
     private oikosService: OikosService,
@@ -38,6 +49,7 @@ export class LiquidacionHistoricoComponent {
     private inscripcionService: InscripcionService,
     private sgamidService: SgaMidService,
     private inscripcionMidService: InscripcionMidService,
+    private projectService: ProyectoAcademicoService,
   )
   {}
 
@@ -49,8 +61,28 @@ export class LiquidacionHistoricoComponent {
     this.loading = true;
     await this.cargarFacultades();
     await this.cargarPeriodos();
+    await this.nivel_load();
     this.loading = false;
   }
+
+  async nivel_load() {
+      this.projectService.get('nivel_formacion?query=Activo:true').subscribe(
+        (response: any) => {
+          for (let i = 0; i < response.length; i++) {
+            if (response[i].Id === 1 || response[i].Id === 2) {
+              this.niveles.push(response[i]);
+            }
+          }
+        },
+        error => {
+          this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+        },
+      );
+    }
+
+  // onSelectLevel () {
+  //   console.log(this.selectedLevel);
+  // }
 
   cargarFacultades() {
     return new Promise((resolve, reject) => {
@@ -89,16 +121,33 @@ export class LiquidacionHistoricoComponent {
 
   async realizarBusqueda() {
     this.loading = true;
+    this.initialized = true;
     const proyecto = this.proyectoControl.value;
     const periodo = this.periodoControl.value;
 
-    this.inscripciones = await this.buscarInscripcionesAdmitidosLegalizados(proyecto, periodo)
+    if (this.selectedLevel === 1) {
+      this.tablaHistorico = true;
 
-    this.datosTabla = {
-      "inscripciones": this.inscripciones,
-      "visible": true
+      this.inscripciones = await this.buscarInscripcionesAdmitidosLegalizados(proyecto, periodo)
+
+      this.datosTabla = {
+        "inscripciones": this.inscripciones,
+        "visible": true
+      }
+      this.loading = false;
+
+
+    } else {
+      this.tablaHistorico = false;
+      this.datosTabla = {
+        "proyecto": this.proyectosCurriculares,
+        "periodo": this.selectedPeriodo,
+        "visible": true
+      }
+      this.loading = false;
     }
-    this.loading = false;
+
+    
   }
 
   buscarInscripcionesAdmitidosLegalizados(proyecto: any, periodo: any) {

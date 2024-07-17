@@ -27,9 +27,13 @@ import { ListadoAspirantesPregradoComponent } from './components/listado-aspiran
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
 import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
+import { ListadoOficializadosComponent } from './components/listado-oficializados/listado-oficializados.component';
 import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
-
+import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lista-tipo-inscripcion/lista-tipo-inscripcion.component';
+import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/creacion-tipo-inscipcion/creacion-tipo-inscipcion.component';
+import { ListaTipoCuposComponent } from './components/tipo-cupos/lista-tipo-cupos/lista-tipo-cupos.component';
+import { CreacionTipoCuposComponent } from './components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component';
 
 const routes: Routes = [
   {
@@ -120,6 +124,10 @@ const routes: Routes = [
     component: CargueSnpComponent,
   },
   {
+    path:"listados-oficializados", 
+    component: ListadosOficializadosComponent
+  },
+  {
     path:"listado-oficializados", 
     component: ListadosOficializadosComponent,
   },
@@ -130,6 +138,22 @@ const routes: Routes = [
   {
     path:"inscripcion-proyectos-curriculares", 
     component: PreinscripcionProyectosCurricularesComponent,
+  },
+  {
+    path:"lista-tipo-inscripcion", 
+    component: ListaTipoInscripcionComponent,
+  },
+  {
+    path:"crear-tipo-inscripcion", 
+    component: CreacionTipoInscipcionComponent,
+  },
+  {
+    path:"lista-tipo-cupos", 
+    component: ListaTipoCuposComponent,
+  },
+  {
+    path:"crear-tipo-cupos", 
+    component: CreacionTipoCuposComponent,
   },
 ];
 

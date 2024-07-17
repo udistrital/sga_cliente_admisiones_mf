@@ -36,15 +36,6 @@ export const environment = {
     PRODUCCION_ACADEMICA_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/produccion_academica_crud/v2/',
     DOCUMENTO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/documento_crud/v2/',
     CAMPUS_MID: 'http://localhost:8095/v1/',
-    SPAGOBI: {
-      PROTOCOL: 'https',
-      HOST: 'inteligenciainstitucional.portaloas.udistrital.edu.co',
-      PORT: '443',
-      CONTEXTPATH: 'knowage',
-      USER: 'desarrollooas',
-      PASSWORD: 'desarrollooas',
-      TIPO_REPORTE: '',
-    },
     CORE_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/core_crud/v2/',
     //CORE_SERVICE: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8105/v1/',
     EVENTO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/sesiones_crud/v2/',
@@ -54,7 +45,8 @@ export const environment = {
     PROYECTO_ACADEMICO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/proyecto_academico_crud/v1/',
     //PROYECTO_ACADEMICO_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8116/v1/',
     //SGA_ADMISIONES_MID: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8547/v1/',
-    SGA_ADMISIONES_MID: 'http://localhost:8090/v1/',
+    SGA_ADMISIONES_MID: 'http://localhost:8080/v1/',
+    SGA_CALENDARIO_MID: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8107/v1/',
     //SGA_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/sga_mid/v1/',
     //INSCRIPCION_MID_SERVICE: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8543/v1/',
     INSCRIPCION_MID_SERVICE: 'http://localhost:8090/v1/',
@@ -96,6 +88,7 @@ export const environment = {
     LIQUIDACION_SERVICE: 'http://localhost:8080/v1/',
     SGA_PROYECTO_CURRICULAR_MID: "http://pruebasapi2.intranetoas.udistrital.edu.co:8540/v1/",
     NOTIFICACION_MID: 'http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/',
-
+    CALENDARIO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/",
+    //SOLICITUDES_ADMISIONES:'https://autenticacion.portaloas.udistrital.edu.co/apioas/solicitudes_crud/v1',
   };
   

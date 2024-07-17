@@ -19,6 +19,8 @@ import { ImplicitAutenticationService } from 'src/app/services/implicit_autentic
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { CalendarioMidService } from 'src/app/services/calendario_mid.service';
+import { EventosService } from 'src/app/services/eventos.service';
 
 
 @Component({
@@ -121,6 +123,10 @@ export class EvaluacionAspirantesComponent implements OnInit {
   criterio = [];
   cantidad_aspirantes: number = 0;
   selectMultipleNivel: boolean = false;
+  mostrarBoton = false;
+  mostrarMensajeInicial = false;
+  periodoMultiple: any;
+  nombresPeriodos: string = "";         
 
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
@@ -134,6 +140,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private evaluacionService: EvaluacionInscripcionService,
     private sgaMidAdmisiones: SgaAdmisionesMid,
     private popUpManager: PopUpManager,
+    private calendarioMidService: CalendarioMidService,
+    private eventosService: EventosService,
 
     private autenticationService: ImplicitAutenticationService,) {
     this.translate = translate;
@@ -249,11 +257,46 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
-    const idNivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado")!.Id;
-    this.selectMultipleNivel = (idNivelDoctorado === nivelSeleccionado);
+    const nivelDoctorado = this.nivel_load.find((nivel: any) => nivel.Nombre === "Doctorado");
+    if (nivelDoctorado) {
+      const esDoctorado = nivelDoctorado.Id === nivelSeleccionado;
+      this.selectMultipleNivel = esDoctorado;
+      this.mostrarBoton = esDoctorado;
+      this.mostrarMensajeInicial = esDoctorado;
+    } else {
+      this.selectMultipleNivel = false;
+      this.mostrarBoton = false;
+      this.mostrarMensajeInicial = false;
+    }
     this.loadProyectos();
   }
 
+  consultarPeriodosDoctorado(idProyecto: number) {
+    this.calendarioMidService.get(`calendario-proyecto/${idProyecto}`).subscribe(
+      (response: any) => {        
+        const CalendarioId = response.Data.CalendarioId;
+        this.eventosService.get(`calendario/${CalendarioId}`).subscribe(
+          (response2: any) => {
+            const listaPeriodos: number[] = JSON.parse(response2.MultiplePeriodoId);            
+            listaPeriodos.forEach(periodoId => {              
+              this.parametrosService.get(`periodo/${periodoId}`).subscribe(
+                (response3: any) => {
+                  this.nombresPeriodos = this.nombresPeriodos + response3.Data.Nombre + ', ';
+                }
+              )
+            });
+          },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendario') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
+          }
+        );
+      },
+      (error: any) => {        
+        this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendario') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
+      }
+    );
+  }  
+  
   loadProyectos() {
     this.notas = false;
     this.selectprograma = false;

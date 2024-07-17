@@ -150,59 +150,76 @@ export class LiquidacionTableComponent implements OnInit{
   async generarRegistros() {
     this.loading = true;
     this.data = [];
-
-    for (const inscripcion of this.inscripciones) {
-      const persona: any = await this.consultarTercero(inscripcion.PersonaId);
-      if (Array.isArray(persona) && persona.length === 0) {
-        continue;
+  
+    if (this.inscripciones.length != 0 && Object.keys(this.inscripciones[0]).length != 0) {
+      for (const inscripcion of this.inscripciones) {
+        try {
+          const persona: any = await this.consultarTercero(inscripcion.PersonaId);
+          if (Array.isArray(persona) && persona.length === 0) {
+            continue;
+          }
+    
+          const infoLegalizacion: any = await this.getLegalizacionMatricula(persona.Id);
+          if (infoLegalizacion === "No existe legalizacion") {
+            continue;
+          }
+    
+          if (!infoLegalizacion || infoLegalizacion.pensionSM11 == null || infoLegalizacion.ingresosSMCostea == null) {
+            console.error('Datos incompletos en infoLegalizacion:', infoLegalizacion);
+            continue;
+          }
+    
+          const valorStringA2 = this.calcularValorPension(infoLegalizacion.pensionSM11);
+          const valorStringA3 = this.calcularValorIngresos(infoLegalizacion.ingresosSMCostea);
+    
+          const valorLiquidacionData: any = {
+            "estado_edicion": false,
+            "inscripcionId": inscripcion.Id,
+            "personaId": persona.Id,
+            "seleccion": true,
+            "codigo": 1000,
+            "documento": persona.NumeroIdentificacion,
+            "nombres": `${persona.PrimerNombre} ${persona.SegundoNombre}`,
+            "apellidos": `${persona.PrimerApellido} ${persona.SegundoApellido}`,
+            A: {
+              A1: infoLegalizacion.estratoCostea,
+              puntajeA1: this.variableA.A1[infoLegalizacion.estratoCostea],
+              A2: infoLegalizacion.pensionSM11,
+              puntajeA2: this.variableA.A2[valorStringA2],
+              A3: infoLegalizacion.ingresosSMCostea,
+              puntajeA3: this.variableA.A3[valorStringA3],
+            },
+            B: {
+              B1: infoLegalizacion.estratoCostea,
+              puntajeB1: this.variableB.B1[infoLegalizacion.estratoCostea],
+              B2: infoLegalizacion.ubicacionResidenciaCostea,
+              puntajeB2: this.variableB.B2[infoLegalizacion.ubicacionResidenciaCostea],
+              B3: infoLegalizacion.nucleoFamiliar,
+              puntajeB3: this.variableB.B3[infoLegalizacion.nucleoFamiliar],
+              B4: infoLegalizacion.situacionLaboral,
+              puntajeB4: this.variableB.B4[infoLegalizacion.situacionLaboral],
+            },
+            general: {
+              pbm: 10,
+            },
+          };
+    
+          this.calculoPBM(valorLiquidacionData);
+          this.data.push(valorLiquidacionData);
+          this.dataSource = new MatTableDataSource(this.data);
+    
+          setTimeout(() => {
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          }, 300);
+        } catch (error) {
+          console.error('Error procesando inscripción:', inscripcion, error);
+        }
       }
-      const infoLegalizacion: any = await this.getLegalizacionMatricula(persona.Id)
-      if (infoLegalizacion == "No existe legalizacion") {
-        continue;
-      }
-      const valorStringA2 = this.calcularValorPension(infoLegalizacion.pensionSM11)
-      const valorStringA3 = this.calcularValorIngresos(infoLegalizacion.ingresosSMCostea)
-
-      const valorLiquidacionData: any = {
-        "estado_edicion": false,
-        "inscripcionId": inscripcion.Id,
-        "personaId": persona.Id,
-        "seleccion": true,
-        "codigo": 1000,
-        "documento": persona.NumeroIdentificacion,
-        "nombres": persona.PrimerNombre + "" + persona.SegundoNombre,
-        "apellidos": persona.PrimerApellido + "" + persona.SegundoApellido,
-        A: {
-          A1: infoLegalizacion.estratoCostea,
-          puntajeA1: this.variableA.A1[infoLegalizacion.estratoCostea],
-          A2: infoLegalizacion.pensionSM11,
-          puntajeA2: this.variableA.A2[valorStringA2],
-          A3: infoLegalizacion.ingresosSMCostea,
-          puntajeA3: this.variableA.A3[valorStringA3],
-        },
-        B: {
-          B1: infoLegalizacion.estratoCostea,
-          puntajeB1: this.variableB.B1[infoLegalizacion.estratoCostea],
-          B2: infoLegalizacion.ubicacionResidenciaCostea,
-          puntajeB2: this.variableB.B2[infoLegalizacion.ubicacionResidenciaCostea],
-          B3: infoLegalizacion.nucleoFamiliar,
-          puntajeB3: this.variableB.B3[infoLegalizacion.nucleoFamiliar],
-          B4: infoLegalizacion.situacionLaboral,
-          puntajeB4: this.variableB.B4[infoLegalizacion.situacionLaboral],
-        },
-        general: {
-          pbm: 10,
-        },
-      }
-      this.calculoPBM(valorLiquidacionData);
-      this.data.push(valorLiquidacionData);
-      this.dataSource = new MatTableDataSource(this.data);
-
-      setTimeout(() => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      }, 300);
+    } else {
+      this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'))
     }
+  
     this.loading = false;
   }
 
@@ -337,7 +354,8 @@ export class LiquidacionTableComponent implements OnInit{
       //this.loading = true;
       this.inscripcionMidService.get('legalizacion/informacion-legalizacion/' + personaId)
         .subscribe((res: any) => {
-          resolve(res.data);
+          console.log(res)
+          resolve(res.Data);
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(

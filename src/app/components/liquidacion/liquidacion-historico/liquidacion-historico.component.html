@@ -12,6 +12,19 @@
                 <div class="contenedor-formulario">
 
                     <mat-form-field>
+                        <mat-select [formControl]="nivelControl" [(ngModel)]="selectedLevel"
+                            placeholder="{{ 'calendario.para' | translate }}">
+                            <mat-option>--Seleccionar--</mat-option>
+                            <mat-option *ngFor="let nivel of niveles" [value]="nivel.Id">
+                                {{ nivel.Nombre }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="facultadControl.hasError('required')">
+                            {{ 'inscripcion.erro_selec_nivel' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
                         <mat-label>{{ 'listado_pregrado.facultad' | translate }}:</mat-label>
                         <mat-select [formControl]="facultadControl" (selectionChange)="onFacultadChange($event)">
                             <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
@@ -23,7 +36,7 @@
 
                     <mat-form-field>
                         <mat-label>{{ 'reportes.Proyecto' | translate }}</mat-label>
-                        <mat-select [formControl]="proyectoControl">
+                        <mat-select [formControl]="proyectoControl" [(ngModel)]="selectedProyecto">
                             <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                             <mat-option *ngFor="let item of proyectosCurriculares" [value]="item.Id">{{item.Nombre}}</mat-option>
                         </mat-select>
@@ -35,7 +48,7 @@
 
                     <mat-form-field>
                         <mat-label>{{ 'reportes.Periodo' | translate }}:</mat-label>
-                        <mat-select [formControl]="periodoControl">
+                        <mat-select [formControl]="periodoControl" [(ngModel)]="selectedPeriodo">
                             <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
                              <mat-option *ngFor="let item of periodos" [value]="item.Id"> {{item.Nombre}} </mat-option> 
                         </mat-select>
@@ -55,6 +68,10 @@
         </div>
     </mat-card-content>
 </mat-card>
-<div class="contenedor-tabla-liquidacion">
+<div class="contenedor-tabla-liquidacion" *ngIf="initialized && tablaHistorico">
     <app-liquidacion-table  [datosRecibos]="datosTabla"></app-liquidacion-table>
+</div>
+
+<div class="contenedor-tabla-liquidacion" *ngIf="initialized && !tablaHistorico">
+    <app-liquidacion-posgrado-table  [datosRecibos]="datosTabla"></app-liquidacion-posgrado-table>
 </div>

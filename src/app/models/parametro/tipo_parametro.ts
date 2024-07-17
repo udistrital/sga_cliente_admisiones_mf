@@ -5,4 +5,6 @@ export class TipoParametro {
     CodigoAbreviacion!: string;
     Activo!: boolean;
     NumeroOrden!: number;
+    TipoParametroId!: {};
+    ParametroPadreId!: {} | null;
   }

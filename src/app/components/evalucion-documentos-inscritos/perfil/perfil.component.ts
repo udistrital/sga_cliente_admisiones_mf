@@ -162,7 +162,8 @@ export class PerfilComponent implements OnInit {
     this.inscripcionService.get('inscripcion/' + this.info_inscripcion_id)
       .subscribe((resG: any) => {
         resG.EstadoInscripcionId.Id = 5; // id inscrito.
-        this.inscripcionService.put('inscripcion', resG)
+        resG.TerceroId = this.info_persona_id;
+        this.inscripcionesMidService.post('inscripciones/actualizar-inscripcion', resG)
           .subscribe(res => {
             sessionStorage.setItem('IdEstadoInscripcion', "");
             this.editar("", 'salir_preinscripcion');
