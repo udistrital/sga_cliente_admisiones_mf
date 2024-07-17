@@ -589,7 +589,9 @@
         "direccion_entidad": "Entity Address",
         "placeholder_direccion_entidad": "E.g.: Cra 8 # 40-78 Piso 1",
         "item": "Item",
-        "evaluar": "Evaluate"
+        "evaluar": "Evaluate",
+        "especial": "Special"
+        "filtro": "Filter"
     },
     "ERROR": {
         "general": "The request could not be satisfied",
@@ -612,7 +614,8 @@
         "fallo_informacion_en": "There was an error querying the information about",
         "sin_informacion_en": "No information has been found about",
         "persiste_error_comunique_OAS": "Please return and try again later. If the error persists, contact the Technology and Information Advisory Office (Oficina Asesora de Tecnologías e Información)",
-        "error_previsualizar_doc": "The document could not be viewed, it is not a valid format, or it was not found."
+        "error_previsualizar_doc": "The document could not be viewed, it is not a valid format, or it was not found.",
+        "error_formulario_incompleto": "The form is incomplete"
     },
     "recibo_pago": {
         "generado": "The payment receipt has been generated correctly",
@@ -1622,7 +1625,15 @@
         "titulo_detalle_evaluacion_existente": "Existing evaluation detail",
         "detalle_evaluacion_existente": "The evaluation detail information is already registered",
         "titulo_inscripcion_no_encontrada": "The inscription was not found",
-        "inscripcion_no_encontrada": "No registration associated with the icfes code was found"
+        "inscripcion_no_encontrada": "No registration associated with the icfes code was found",
+        "seleccion_facultades": "Select the faculty you want to consult",
+        "inscripcion_pregrado_error": "Error consulting the undergraduate registration for this candidate"
+        "error_obtener_cupos": "Error when obtaining quotas",
+        "tipo_cupo": "Quota type",
+        "error_nieveles": "An error occurred while retrieving levels",
+        "error_tipo_inscripcion": "An error occurred while retrieving registration types"
+        "titulo_programa_sin_requisitos": "Academic program without requirements",
+        "programa_sin_requisitos": "No assessment requirements found for this academic program"
     },
     
     "oficializados": {
@@ -1673,7 +1684,21 @@
         "cupos_proyecto": "Number of assigned places",
         "cupos_disponibles": "Number of places available:",
         "cupos_opcionados": "Number of optioned places:",
-        "sin_cupos_periodo": "No quotas have been defined for this period or curricular project"
+        "sin_cupos_periodo": "No quotas have been defined for this period or curricular project",
+        "tipos_cupo": "Types of quotas",
+        "crear_tipos_cupo": "Create quota types",
+        "error_recuperar_tipos_cupo": "Error recovering quota types",
+        "descripcion_crear_tipos_cupo": "Are you sure to continue with the registration of the quota type?",
+        "creacion_tipos_cupo_exito": "Successful quota type creation",
+        "creacion_tipos_cupo_fallo": "An error occurred trying to create the quota type",
+        "actualizar_tipos_cupo": "Update quota type",
+        "descripcion_actualizar_tipos_cupo": "Are you sure about continuing with updating the quota type?",
+        "actualizacion_tipos_cupo_exito": "Successful quota type update",
+        "actualizacion_tipos_cupo_fallo": "An error occurred trying to update the quota type",
+        "eliminar_tipos_cupo": "Delete quota type",
+        "descripcion_eliminar_tipos_cupo": "Are you sure about continuing with the elimination of the quota type?",
+        "eliminacion_tipos_cupo_exito": "Successful removal of quota type",
+        "eliminacion_tipos_cupo_fallo": "An error occurred trying to delete the quota type"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Are you sure to disable this calendar?",
@@ -1878,8 +1903,10 @@
         "tipo_inscripcion_deshabilitado_error": "Error disabling registration type",
         "seguro_actualizar_tipo_inscripcion": "Are you sure to update this registration type?",
         "tipo_inscripcion_actualizado": "Updated registration type",
+        "tipo_inscripcion_actualizado_error": "An error occurred updating the registration type",
         "seguro_continuar_registrar_tipo_inscripcion": "Are you sure you register this registration type?",
         "tipo_inscripcion_creado": "Type register created",
+        "error_tipo_inscripcion_creado": "Error creating enrollment type",
         "tooltip_eliminar": "Remove registration type",
         "tooltip_crear": "Create new registration type",
         "tooltip_editar": "Edit registration type",
@@ -2635,29 +2662,29 @@
         "Usuario": "User",
         "nodata": "No historical data found"
     },
-    "evaluacionpregrado": {
-        "aspirante": "Undergraduate Applicant Evaluation",
+    "evaluacionPregrado": {
+        "aspirante": "Undergraduate applicant evaluation",
         "facultades": "Faculties",
         "facultad": "Faculty",
         "estado": "Status",
         "completado": "% Completed",
         "accion": "Action",
         "nodata": "No data available",
-        "proyectos_curriculares": "Curricular Projects",
-        "proyecto_curricular": "Curricular Project",
+        "proyectos_curriculares": "Curricular projects",
+        "proyecto_curricular": "Curricular project",
         "variables": "Variables",
         "periodo": "Period",
-        "nivel_aviso": "Alert Level",
+        "nivel_aviso": "Alert level",
         "seleccionar": "Select",
-        "criterio_consultar": "Criterion to Consult",
+        "criterio_consultar": "Criterion to consult",
         "erro_selec_nivel": "Please select a level",
         "tooltip_eliminar": "Delete",
         "criterios": "Criteria",
         "criterio": "Criterion",
-        "revision": "Document Review",
+        "revision": "Document review",
         "puntaje": "Calculate applicants' score",
         "listado": "List of registered applicants",
-        "evaluar_criterio": "Evaluate Criterion",
+        "evaluar_criterio": "Evaluate criterion",
         "revision_curricular": "Send for review to the curricular project",
         "descargar_pdf": "Download list (PDF/Excel)",
         "definir_admitidos": "Define admitted lists"
@@ -2684,7 +2711,7 @@
     "listado-oficializados": {
         "titulo": "Officialization",
         "info_listado_admitidos": "This module will assist you in the process of refining the list of admitted students who have been officialized, as well as freeing up spots for those who have not completed the process.",
-        "plazos": "Active Deadline:",
+        "plazos": "Active deadline:",
         "estado": "Status:",
         "proceso_admision": "Admission Process",
         "fecha_inicial_final": "Start Date - End Date",

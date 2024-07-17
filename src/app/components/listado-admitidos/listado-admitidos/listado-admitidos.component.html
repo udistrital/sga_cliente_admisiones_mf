@@ -1,3 +1,6 @@
+<div [class.loader-div]="loading">
+	<mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+</div>
 <mat-card style="margin-top: 20px;">
     <mat-card-content>
         <div>
@@ -5,7 +8,7 @@
 
                 <div>
                     <legend>
-                        <strong>{{'evaluacionpregrado.variables' | translate}}
+                        <strong>{{'evaluacionPregrado.variables' | translate}}
 
                         </strong>
                     </legend>
@@ -16,11 +19,11 @@
                 <div>
                     <mat-form-field style="width: 100%;">
                         <mat-label>
-                            {{ 'evaluacionpregrado.periodo' | translate }}:
+                            {{ 'evaluacionPregrado.periodo' | translate }}:
                         </mat-label>
                         <mat-select [(ngModel)]="periodo" [disabled]='false' [formControl]="periodoControl">
                             <mat-option>
-                                --{{ 'evaluar.seleccionar' | translate }}--
+                                --{{ 'GLOBAL.seleccionar' | translate }}--
                             </mat-option>
                             <mat-option *ngFor="let item of periodos" [value]="item.Id">
                                 {{ item.Nombre }}
@@ -30,10 +33,9 @@
 
                     <mat-form-field style="width: 100%;">
                         <mat-label>
-                            {{ 'evaluacionpregrado.criterio_consultar' | translate }}:
+                            {{ 'evaluacionPregrado.criterio_consultar' | translate }}:
                         </mat-label>
-                        <mat-select [formControl]="nivelControl" [(ngModel)]="select_nivel"
-                            (selectionChange)="cargarFacultades()" [disabled]='selectcriterio'>
+                        <mat-select [formControl]="nivelControl" [(ngModel)]="select_nivel" [disabled]='selectcriterio'>
                             <mat-option *ngFor="let item of nivel_load" [value]="item.Id">
                                 {{ item.Nombre }}
                             </mat-option>
@@ -43,6 +45,9 @@
                         </mat-error>
                     </mat-form-field>
 
+                </div>
+                <div class="contenedor-botones">
+                    <button mat-stroked-button class="boton-general btn boton-primary" (click)="generarBusqueda()">{{ 'GLOBAL.buscar' | translate }}</button>
                 </div>
             </div>
         </div>
@@ -61,7 +66,7 @@
                 <div>
                     <legend>
                         <strong>
-                            {{'evaluacionpregrado.facultades' | translate}}
+                            {{'evaluacionPregrado.facultades' | translate}}
                         </strong>
                     </legend>
                 </div>
@@ -73,7 +78,7 @@
 
                         <ng-container matColumnDef="facultad">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                {{ 'evaluacionpregrado.facultad' | translate }}
+                                {{ 'evaluacionPregrado.facultad' | translate }}
                             </th>
                             <td mat-cell *matCellDef="let row">
                                 {{ row.Facultad }}
@@ -82,7 +87,7 @@
 
                         <ng-container matColumnDef="estado">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                {{ 'evaluacionpregrado.estado' | translate }}
+                                {{ 'evaluacionPregrado.estado' | translate }}
                             </th>
                             <td mat-cell *matCellDef="let row">
                                 <span *ngIf="row.Porcentaje == 100" class="estado-activo">Completado</span>
@@ -92,7 +97,7 @@
 
                         <ng-container matColumnDef="%">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                {{ 'evaluacionpregrado.completado' | translate }}
+                                {{ 'evaluacionPregrado.completado' | translate }}
                             </th>
                             <td mat-cell *matCellDef="let row">
                                 {{ row.Porcentaje }}%
@@ -101,13 +106,13 @@
 
                         <ng-container matColumnDef="accion">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                {{ 'evaluacionpregrado.accion' | translate }}
+                                {{ 'evaluacionPregrado.accion' | translate }}
                             </th>
                             <td mat-cell *matCellDef="let row">
                                 <button mat-icon-button
                                     style="color:var(--primary); background: transparent; border: none;"
                                     title="{{ 'admision.tooltip_eliminar' | translate }}" mat-icon-button color="warn"
-                                    (click)="cargarProyectosCurriculares(row.FacultadId)">
+                                    (click)="cargarProyectosCurriculares(row)">
                                     <mat-icon>search</mat-icon>
                                 </button>
                             </td>
@@ -117,7 +122,7 @@
                         <tr mat-row *matRowDef="let row; columns: columnsFacultades;"></tr>
                         <tr class="mat-row" *matNoDataRow>
 
-                            <td class="mat-cell" colspan="4"> {{ 'evaluacionpregrado.nodata' | translate }}</td>
+                            <td class="mat-cell" colspan="4"> {{ 'evaluacionPregrado.nodata' | translate }}</td>
 
                         </tr>
 
@@ -140,7 +145,7 @@
                 <div>
                     <legend>
                         <strong>
-                            {{'evaluacionpregrado.proyectos_curriculares' | translate}}
+                            {{'evaluacionPregrado.proyectos_curriculares' | translate}}
                         </strong>
                     </legend>
                 </div>
@@ -151,30 +156,30 @@
                     <table mat-table [dataSource]="datasourceCurriculares" matSort>
                         <ng-container matColumnDef="curricular">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                {{ 'evaluacionpregrado.proyecto_curricular' | translate }}
+                                {{ 'evaluacionPregrado.proyecto_curricular' | translate }}
                             </th>
                             <td mat-cell *matCellDef="let row">
-                                {{ row.Nombre }}
+                                {{ row.DependenciaId.Nombre }}
                             </td>
                         </ng-container>
 
                         <ng-container matColumnDef="estado">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                {{ 'evaluacionpregrado.estado' | translate }}
+                                {{ 'evaluacionPregrado.estado' | translate }}
                             </th>
                             <td mat-cell *matCellDef="let row">
-                                <span *ngIf="row.Activo == true">{{ 'GLOBAL.activo' | translate }}</span>
-                                <span *ngIf="row.Activo != true">{{ 'GLOBAL.inactivo' | translate }}</span>
+                                <span *ngIf="row.DependenciaId.Activo == true">{{ 'GLOBAL.activo' | translate }}</span>
+                                <span *ngIf="row.DependenciaId.Activo != true">{{ 'GLOBAL.inactivo' | translate }}</span>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="accion">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                {{ 'evaluacionpregrado.accion' | translate }}
+                                {{ 'evaluacionPregrado.accion' | translate }}
                             </th>
                             <td mat-cell *matCellDef="let row">
-                                <button style="color:var(--primary); background: transparent; border: none;"
+                                <button mat-icon-button style="color:var(--primary); background: transparent; border: none;"
                                     title="{{ 'admision.tooltip_eliminar' | translate }}"
-                                    (click)="consultarproyecto(row.Id)">
+                                    (click)="consultarproyecto(row.DependenciaId.Id)">
                                     <mat-icon>search</mat-icon>
                                 </button>
                             </td>
@@ -184,7 +189,7 @@
                         <tr mat-row *matRowDef="let row; columns: columnsCurriculares;"></tr>
                         <tr class="mat-row" *matNoDataRow>
 
-                            <td class="mat-cell" colspan="4">{{ 'evaluacionpregrado.nodata' | translate }}</td>
+                            <td class="mat-cell" colspan="4">{{ 'evaluacionPregrado.nodata' | translate }}</td>
 
                         </tr>
                     </table>
@@ -203,25 +208,22 @@
 <mat-card class="mt-20" *ngIf="viewAspirantesTables">
 
     <mat-card-header class="center-header">
-        <mat-card-title>
-            {{"evaluacion-admitidos.listado_inscritos" | translate}}
-        </mat-card-title>
+        <mat-card-title> {{"evaluacion-admitidos.listado_inscritos" | translate}} </mat-card-title>
     </mat-card-header>
 
-    <div style="display: flex; justify-content: center;">
-        <mat-card-content class="mt-20 info"
-            style="display: flex; justify-content: center; align-items: center; text-align: center; width: 60%;">
-            <div> {{"evaluacion-admitidos.listado_admitidos_alerta_cumple" | translate}}</div>
-        </mat-card-content>
-    </div>
-
     <mat-card-content class="mt-20">
+        <div class="mt-20 info contenedor-info"> {{"evaluacion-admitidos.listado_admitidos_alerta_cumple" | translate}}</div>
         <app-tabla-listado-aspirantes [aspirantes]="aspirantesAdmitidos"></app-tabla-listado-aspirantes>
+        <div class="mt-20 info contenedor-info"> {{"evaluacion-admitidos.listado_admitidos_alerta_no_cumple" | translate}}</div>
+        <app-tabla-listado-aspirantes [aspirantes]="aspirantesNoAdmitidos"></app-tabla-listado-aspirantes>
     </mat-card-content>
+    <button (click)="descargarListadoOficializados(2)" mat-icon-button class="boton-primary mt-20">
+        {{ "listado-oficializados.descargar_listado" | translate }}
+    </button>
 
 </mat-card>
 
-<mat-card class="mt-20" *ngIf="viewAspirantesTables">
+<!-- <mat-card class="mt-20" *ngIf="viewAspirantesTables">
 
     <mat-card-header class="center-header">
         <mat-card-title>
@@ -239,8 +241,11 @@
     <mat-card-content class="mt-20">
         <app-tabla-listado-aspirantes [aspirantes]="aspirantesNoAdmitidos"></app-tabla-listado-aspirantes>
     </mat-card-content>
+    <button (click)="descargarListadoOficializados(4)" mat-icon-button class="boton-primary mt-20">
+        {{ "listado-oficializados.descargar_listado" | translate }}
+    </button>
 
-</mat-card>
+</mat-card> -->
 
 <mat-card class="mt-20" *ngIf="false">
 
@@ -260,6 +265,9 @@
     <mat-card-content class="mt-20">
         <app-tabla-listado-aspirantes></app-tabla-listado-aspirantes>
     </mat-card-content>
+    <button (click)="descargarListadoOficializados(11)" mat-icon-button class="boton-primary mt-20">
+        {{ "listado-oficializados.descargar_listado" | translate }}
+    </button>
 
 </mat-card>
 
@@ -276,18 +284,24 @@
             style="display: flex; justify-content: center; align-items: center; text-align: center; width: 60%;">
             <div>{{"evaluacion-admitidos.listado_admitidos_alerta_no_cumple" | translate}}</div>
         </mat-card-content>
+
     </div>
 
     <mat-card-content class="mt-20">
         <app-tabla-listado-aspirantes></app-tabla-listado-aspirantes>
     </mat-card-content>
+    <button (click)="descargarListadoOficializados(11)" mat-icon-button class="boton-primary">
+        {{ "listado-oficializados.descargar_listado" | translate }}
+    </button>
 
 </mat-card>
 
-<mat-card *ngIf="viewAspirantesTables">
+<mat-card class="mt-20" *ngIf="viewAspirantesTables">
     <mat-card-content style="display: flex; justify-content: center; align-items: center;">
-        <button mat-icon-button class="boton-primary">
-            {{"evaluacion-admitidos.notificacion" | translate}}
-        </button>
+        <div class="contenedor-botones">
+            <button mat-icon-button class="boton-primary boton-notificacion">
+                {{"evaluacion-admitidos.notificacion" | translate}}
+            </button>
+        </div>
     </mat-card-content>
 </mat-card>

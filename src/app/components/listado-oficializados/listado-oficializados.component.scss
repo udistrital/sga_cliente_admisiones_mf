@@ -17,3 +17,35 @@
 .mt-20 {
     margin-top: 20px;
 }
+
+.loader-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(117, 115, 115, 0.5);
+    /* Fondo semitransparente rojo */
+    z-index: 1;
+}
+
+.contenedor-botones {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenedor-botones button {
+    color: var(--md-primary-contrast-A700);
+    margin: 10px;
+}
+
+@media(width < 650px) {
+    .contenedor-botones {
+        flex-direction: column;
+    }
+}

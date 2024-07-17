@@ -92,6 +92,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatRadioModule } from '@angular/material/radio';
+import {MatButtonModule} from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InscripcionMidService } from './services/sga_inscripcion_mid.service';
 import { TerceroMidService } from './services/sga_tercero_mid.service';
@@ -110,6 +113,10 @@ import { SgaCalendarioMidService } from './services/sga_calendario_mid.service';
 import { EventoService } from './services/evento.service';
 import { SgaProyectoAcademicoService } from './services/sga_proyecto_academico.service';
 import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
+import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lista-tipo-inscripcion/lista-tipo-inscripcion.component';
+import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/creacion-tipo-inscipcion/creacion-tipo-inscipcion.component';
+import { ListaTipoCuposComponent } from './components/tipo-cupos/lista-tipo-cupos/lista-tipo-cupos.component';
+import { CreacionTipoCuposComponent } from './components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component';
 import { EventosService } from './services/eventos.service';
 
 
@@ -151,8 +158,7 @@ export function createTranslateLoader(http: HttpClient) {
     ViewInfoPersonaComponent,
     DialogoCriteriosComponent,
     DialogoCriteriosComponent,
-    CriterioAdmisionComponent,
-    ListadoAspiranteComponent,
+    CriterioAdmisionComponent,    
     DialogoDocumentosComponent,
     DialogPreviewFileComponent,
     CrudAsignacionCupoComponent,
@@ -186,6 +192,10 @@ export function createTranslateLoader(http: HttpClient) {
     CargueSnpComponent,
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
+    ListaTipoInscripcionComponent,
+    CreacionTipoInscipcionComponent,
+    ListaTipoCuposComponent,
+    CreacionTipoCuposComponent,
     LiquidacionPosgradoTableComponent,
     ListadosOficializadosComponent,
     CrudListadosOficializadosComponent,
@@ -193,7 +203,7 @@ export function createTranslateLoader(http: HttpClient) {
     ListadoAdmitidosComponent,
     ListadoAspiranteComponent,
     TablaListadoAspirantesComponent,
-    PreinscripcionProyectosCurricularesComponent
+    PreinscripcionProyectosCurricularesComponent,
   ],
   imports: [
     CodificacionModule,
@@ -213,6 +223,7 @@ export function createTranslateLoader(http: HttpClient) {
     AppRoutingModule,
     MatCheckboxModule,
     MatExpansionModule,
+    MatMenuModule,
     MatFormFieldModule,
     MatPaginatorModule,
     MatNativeDateModule,
@@ -221,9 +232,13 @@ export function createTranslateLoader(http: HttpClient) {
     MatSortModule,
     MatAutocompleteModule,
     MatGridListModule,
+    MatRadioModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
+    MatMenuModule,
     NgxExtendedPdfViewerModule,
+    MatMenuModule,
+    MatButtonModule,
     StoreModule.forRoot(rootReducer),
     HttpClientModule,
     TranslateModule.forRoot({

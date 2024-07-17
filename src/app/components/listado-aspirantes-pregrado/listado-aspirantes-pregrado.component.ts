@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
@@ -10,28 +10,8 @@ import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service'
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { MatStepper } from '@angular/material/stepper';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
-
-interface Food {
-  value: string;
-  viewValue: string;
-}
-
-interface colums {
-  Orden: number;
-  // Documento: string;
-  NombreCompleto: string;
-  Telefono: string;
-  Correo: string;
-  Puntaje: number;
-  TipoInscripcion: string;
-  EstadoInscripcion: string;
-  EstadoRecibo: string;
-  Credencial: string;
-  IdentificacionEnExamenEstado: string;
-  IdentificacionActual: string;
-  CodigoProyecto: string;
-  SNP: string;
-}
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 interface Tile {
   color: string;
@@ -48,6 +28,9 @@ interface Tile {
   styleUrls: ['./listado-aspirantes-pregrado.component.scss']
 })
 export class ListadoAspirantesPregradoComponent {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  
   formulario: boolean = false;
   dataSource!: MatTableDataSource<any>;
 
@@ -82,12 +65,6 @@ export class ListadoAspirantesPregradoComponent {
   });
   isLinear = true;
 
-  // foods: Food[] = [
-  //   {value: 'steak-0', viewValue: 'Steak'},
-  //   {value: 'pizza-1', viewValue: 'Pizza'},
-  //   {value: 'tacos-2', viewValue: 'Tacos'},
-  // ];
-
   tiles: Tile[] = [
     {text: '0', cols: 7, rows: 1, color: '#03678F', textColor: 'white'},
     {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
@@ -99,7 +76,6 @@ export class ListadoAspirantesPregradoComponent {
     {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
   ];
 
-  //****************************************************//
   proyectosCurriculares!: any[]
   periodos!: any[]
   facultades!: any[]
@@ -131,41 +107,6 @@ export class ListadoAspirantesPregradoComponent {
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
     });
-
-    // const columns: colums[] = [
-    //   {
-    //     Orden: 1,
-    //     NombreCompleto: 'Juan Perez',
-    //     Telefono: '1234567890',
-    //     Correo: 'juan.perez@example.com',
-    //     Puntaje: 100,
-    //     TipoInscripcion: 'Tipo 1',
-    //     EstadoInscripcion: 'Inscrito',
-    //     EstadoRecibo: 'Pagado',
-    //     Credencial: 'Credencial 1',
-    //     IdentificacionEnExamenEstado: '11111111',
-    //     IdentificacionActual: '11111112',
-    //     CodigoProyecto: 'Proyecto 1',
-    //     SNP: 'SNP 1'
-    //   },
-    //   {
-    //     Orden: 2,
-    //     NombreCompleto: 'Maria Rodriguez',
-    //     Telefono: '0987654321',
-    //     Correo: 'maria.rodriguez@example.com',
-    //     Puntaje: 95,
-    //     TipoInscripcion: 'Tipo 2',
-    //     EstadoInscripcion: 'Inscrito',
-    //     EstadoRecibo: 'Pagado',
-    //     Credencial: 'Credencial 2',
-    //     IdentificacionEnExamenEstado: '22222222',
-    //     IdentificacionActual: '12111112',
-    //     CodigoProyecto: 'Proyecto 2',
-    //     SNP: 'SNP 2'
-    //   }
-    // ];
-
-    // this.dataSource.data = columns.map(info => ({data: info}));
   }
 
   async ngOnInit() {
@@ -184,12 +125,11 @@ export class ListadoAspirantesPregradoComponent {
       this.oikosService.get('dependencia_padre/FacultadesConProyectos?Activo:true&limit=0')
         .subscribe((res: any) => {
           this.facultades = res;
-          console.log(this.facultades);
           resolve(res)
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
-            console.log(error);
+            console.error(error);
             reject([]);
           });
     });
@@ -200,12 +140,11 @@ export class ListadoAspirantesPregradoComponent {
       this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           this.periodos = res.Data;
-          console.log(this.periodos);
           resolve(res)
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.periodo_error'));
-            console.log(error);
+            console.error(error);
             reject([]);
           });
     });
@@ -222,46 +161,49 @@ export class ListadoAspirantesPregradoComponent {
     this.loading = true;
     const proyecto = this.firstFormGroup.get('validatorProyecto')?.value;
     const periodo = this.firstFormGroup.get('validatorPeriodo')?.value;
-    
+
     this.reiniciarDatosTablas();
     this.inscripciones = await this.buscarInscripciones(proyecto, periodo);
     let count = 0
-    console.log("INSCRIPCIONES: ", this.inscripciones)
-    for (const inscripcion of this.inscripciones) {
-      const infoIcfes: any = await this.buscarInscripcionPregrado(inscripcion.Id)
-      if (Object.keys(infoIcfes[0]).length > 0) {
-        count += 1
-        const persona: any = await this.consultarTercero(inscripcion.PersonaId);
-        this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.Nombre)
-        console.log("INFO ICFES: ", count, infoIcfes, infoIcfes[0], inscripcion.Id, persona);
+    if (this.inscripciones.length > 0 && typeof this.inscripciones[0] === 'object' && this.inscripciones[0] !== null && Object.keys(this.inscripciones[0]).length > 0) {
+      for (const inscripcion of this.inscripciones) {
+        const infoIcfes: any = await this.buscarInscripcionPregrado(inscripcion.Id)
+        if (Object.keys(infoIcfes[0]).length > 0) {
+          count += 1
+          const persona: any = await this.consultarTercero(inscripcion.PersonaId);
+          this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.Nombre)
 
-        const inscritoData = {
-          "persona_id": inscripcion.PersonaId,
-          "inscripcion_id": inscripcion.Id,
-          "inscripcion_pregrado_id": infoIcfes[0].Id,
-          "numeral": count,
-          "credencial": 123,
-          "num_doc_icfes": infoIcfes[0].NumeroIdentificacionIcfes,
-          "num_doc_actual": persona.NumeroIdentificacion,
-          "nombre_completo": persona.NombreCompleto,
-          "telefono": persona.Telefono,
-          "correo": persona.UsuarioWSO2,
-          "cod_proyecto": inscripcion.ProgramaAcademicoId,
-          "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
-          "puntaje": inscripcion.NotaFinal,
-          "estado_inscripcion": inscripcion.EstadoInscripcionId.Nombre,
-          "estado_recibo": "Pagado",
-          "snp": infoIcfes[0].CodigoIcfes,
-          "estado_edicion": false
+          const inscritoData = {
+            "persona_id": inscripcion.PersonaId,
+            "inscripcion_id": inscripcion.Id,
+            "inscripcion_pregrado_id": infoIcfes[0].Id,
+            "numeral": count,
+            "credencial": 123,
+            "num_doc_icfes": infoIcfes[0].NumeroIdentificacionIcfes,
+            "num_doc_actual": persona.NumeroIdentificacion,
+            "nombre_completo": persona.NombreCompleto,
+            "telefono": persona.Telefono,
+            "correo": persona.UsuarioWSO2,
+            "cod_proyecto": inscripcion.ProgramaAcademicoId,
+            "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
+            "puntaje": inscripcion.NotaFinal,
+            "estado_inscripcion": inscripcion.EstadoInscripcionId.Nombre,
+            "estado_recibo": "Pagado",
+            "snp": infoIcfes[0].CodigoIcfes,
+            "estado_edicion": false
+          }
+          this.inscritosData.push(inscritoData);
+        } else {
+          continue;
         }
-        this.inscritosData.push(inscritoData);
-      } else {
-        continue;
       }
+      this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      stepper.next();
+    } else {
+      this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
     }
-    console.log(this.inscritosData)
-    this.dataSource = new MatTableDataSource<any>(this.inscritosData);
-    stepper.next();
     this.loading = false;
   }
 
@@ -273,7 +215,8 @@ export class ListadoAspirantesPregradoComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
+            console.error(error);
+            this.loading = false;
             reject([]);
           });
     });
@@ -287,7 +230,8 @@ export class ListadoAspirantesPregradoComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
+            console.error(error);
+            this.loading = false;
             reject([]);
           });
     });
@@ -301,14 +245,14 @@ export class ListadoAspirantesPregradoComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.tercero_error'));
-            console.log(error);
+            console.error(error);
+            this.loading = false;
             reject([]);
           });
     });
   }
 
   descargarArchivo() {
-    console.log("Descargando...")
     // Contenido del archivo de texto
     const contenidoArchivo = this.inscritosData.map(objeto => `${objeto.snp}, ${objeto.num_doc_icfes}`).join('\n');
 
@@ -333,21 +277,13 @@ export class ListadoAspirantesPregradoComponent {
   }
 
   editar = async (orden: any) => {
-    //let valorOriginal = ""
-    console.log('Editando la fila con orden:', orden, this.editingRowId);
     if (this.editingRowId === orden) {
-      console.log('Saliendo edición guardando');
       const row = this.inscritosData.find(item => item.numeral === orden);
-      console.log("DATOS ACTUALIZACION1:", row.snp)
-      console.log("DATOS ACTUALIZACION2:", this.valorOriginal)
       if (row.snp != this.valorOriginal) {
         this.loading = true;
-        console.log("Entro actualizacion", this.valorOriginal, row.snp);
         let inscripcionP: any = await this.buscarInscripcionPregrado(row.inscripcion_id);
-        console.log(" inscripcion recuperada",inscripcionP)
         inscripcionP[0].CodigoIcfes = row.snp;
         const res = await this.actualizarInscripcionPregrado(inscripcionP[0]);
-        console.log(" result",res)
         this.valorOriginal = "";
         this.loading = false;
       }
@@ -355,9 +291,7 @@ export class ListadoAspirantesPregradoComponent {
       this.formulario = false;
       this.cambiarEstado(orden, false)
     } else {
-      console.log('Entrando a edición');
       const row = this.inscritosData.find(item => item.numeral === orden);
-      console.log("VALOR A:", row.snp);
       this.valorOriginal = row.snp;
       this.editingRowId = orden;
       this.formulario = true;
@@ -372,6 +306,8 @@ export class ListadoAspirantesPregradoComponent {
       }
     }
     this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   reiniciarDatosTablas() {
@@ -421,17 +357,18 @@ export class ListadoAspirantesPregradoComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.actualizacion_detalle_evaluacion_error'));
-            console.log(error);
+            console.error(error);
             reject([]);
           });
     });
   }
 
-  // salirEdicion(orden: any) {
-  //   console.log('Saliendo edición click afuera');
-  //   this.editingRowId = null;
-  //   this.formulario = false;
-  //   this.cambiarEstado(orden, false);
-  // }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
 
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 }

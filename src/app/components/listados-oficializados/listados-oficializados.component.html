@@ -36,22 +36,22 @@
                 <mat-cell *matCellDef="let row">{{ row.Fechas }}</mat-cell> 
               </ng-container> 
               <ng-container matColumnDef="Estado">
-                <mat-header-cell *matHeaderCellDef>{{ "oficializados.estado" | translate }}</mat-header-cell> 
-                <mat-cell *matCellDef="let row">{{ row.Estado }}</mat-cell> 
-              </ng-container> 
-              <ng-container matColumnDef="Gestion"> 
-                <mat-header-cell *matHeaderCellDef>{{ "oficializados.gestion" | translate }}</mat-header-cell> 
-                <mat-cell *matCellDef="let row"> 
-                  <div> 
-                    <button mat-mini-fab class="blue-header-icon" (click)="onCreate()"> 
-                      <mat-icon>edit_outline</mat-icon> 
-                    </button> 
-                  </div> 
-                </mat-cell> 
-              </ng-container> 
-              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row> 
-              <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row> 
-            </mat-table> 
+                <mat-header-cell *matHeaderCellDef>{{ "oficializados.estado" | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.Estado }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Gestion">
+                <mat-header-cell *matHeaderCellDef>{{ "oficializados.gestion" | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <div>
+                    <button mat-mini-fab class="blue-header-icon" (click)="onView()">
+                      <mat-icon class="large-icon">pageview</mat-icon>
+                    </button>
+                  </div>                  
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
             <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
           </mat-tab> 
         </div> 
