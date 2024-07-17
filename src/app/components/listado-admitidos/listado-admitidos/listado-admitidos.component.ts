@@ -4,6 +4,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
+import * as saveAs from 'file-saver';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
@@ -194,8 +195,38 @@ export class ListadoAdmitidosComponent {
           }
           this.viewAspirantesTables = true
         });
+      } else {
+        this.popUpManager.showErrorAlert(this.translate.instant('ERROR.general'));
       }
 
     });
+  }
+
+
+  descargarListadoOficializados(estadoFormacion: number) {
+    this.sgaMidAdmisiones.get(`admision/Listadoadmitidos/${this.periodo}/${estadoFormacion}/${this.selectedcurricular}`).subscribe((res: any) => {
+      if (res.status === 200 && res.success === true) {
+        console.log(res.data.Pdf)
+        const base64String = res.data.Pdf;
+        this.downloadPdf(base64String);
+
+      } else {
+        console.log("Error en la consulta de listado oficializados")
+      }
+
+    });
+  }
+
+  downloadPdf(resBase64String: string) {
+    console.log("Hola1")
+    const base64String: string = resBase64String;
+    const byteCharacters = atob(base64String);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    saveAs(blob, 'ListadoAdmitidos.pdf');
   }
 }
