@@ -193,11 +193,10 @@ export function createTranslateLoader(http: HttpClient) {
     CargueSnpComponent,
     SoporteConfiguracionComponent,
     EvalucionAspirantePregradoComponent,
-    CorreoInstitucionalComponent,
     ListaTipoInscripcionComponent,
     CreacionTipoInscipcionComponent,
     ListaTipoCuposComponent,
-    CreacionTipoCuposComponent
+    CreacionTipoCuposComponent,
     LiquidacionPosgradoTableComponent,
     ListadosOficializadosComponent,
     CrudListadosOficializadosComponent,
@@ -205,7 +204,7 @@ export function createTranslateLoader(http: HttpClient) {
     ListadoAdmitidosComponent,
     ListadoAspiranteComponent,
     TablaListadoAspirantesComponent,
-    PreinscripcionProyectosCurricularesComponent
+    PreinscripcionProyectosCurricularesComponent,
   ],
   imports: [
     CodificacionModule,
