@@ -590,8 +590,8 @@
         "placeholder_direccion_entidad": "E.g.: Cra 8 # 40-78 Piso 1",
         "item": "Item",
         "evaluar": "Evaluate",
-        "filtro": "Filter",
         "especial": "Special"
+        "filtro": "Filter"
     },
     "ERROR": {
         "general": "The request could not be satisfied",
@@ -1630,6 +1630,8 @@
         "tipo_cupo": "Quota type",
         "error_nieveles": "An error occurred while retrieving levels",
         "error_tipo_inscripcion": "An error occurred while retrieving registration types"
+        "titulo_programa_sin_requisitos": "Academic program without requirements",
+        "programa_sin_requisitos": "No assessment requirements found for this academic program"
     },
     
     "oficializados": {

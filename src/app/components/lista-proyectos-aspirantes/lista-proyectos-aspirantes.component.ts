@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, QueryList, ViewChildren } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,8 +17,12 @@ import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
   styleUrls: ['./lista-proyectos-aspirantes.component.scss']
 })
 export class ListaProyectosAspirantesComponent implements OnDestroy{
-
   @ViewChildren(MatPaginator) paginators!: QueryList<MatPaginator>;
+
+  infoFiltrado = this.fb.group({
+    nivelFormControl: ['', Validators.required],
+    periodoFormControl: ['', Validators.required]
+  });
 
   subscripcion: Subscription = new Subscription()
 
@@ -27,16 +31,18 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
   nivel: any;
   periodo: any;
   proyectosActivosConListaAspirantes: any
+  loading: boolean = false;
   
   aspirantesColumnas: any[] = []
   aspirantesConstructorTabla: any[] = [];
   niveles: any[] = [];
   periodos: any[] = [];
 
-  nivelFormControl = new FormControl('', [Validators.required]);
-  periodoFormControl = new FormControl('', [Validators.required]);
+  // nivelFormControl = new FormControl('', [Validators.required]);
+  // periodoFormControl = new FormControl('', [Validators.required]);
 
   constructor(
+    private fb: FormBuilder,
     private admisionesMid: SgaAdmisionesMid,
     private evaluacionService: EvaluacionInscripcionService,
     private parametrosService: ParametrosService,
@@ -177,7 +183,7 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
   }
 
   cambiarPeriodo() {
-    this.nivelFormControl.setValue('')
+    //this.nivelFormControl.setValue('')
     this.proyectosActivosConListaAspirantes = true
   }
 

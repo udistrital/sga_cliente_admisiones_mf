@@ -1663,6 +1663,8 @@
         "tipo_cupo": "Tipo cupo",
         "error_nieveles": "Ocurrio un error al recuperar los niveles",
         "error_tipo_inscripcion": "Ocurrio un error al recuperar los tipos de inscripción"
+        "titulo_programa_sin_requisitos": "Programa académico sin requisitos",
+        "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico"
     },
     "oficializados": {
         "titulo": "Oficialización",

@@ -2,6 +2,10 @@
   margin-top: 15px
 }
 
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: var(--color100);
+}
+
 button:hover {
   color: #0093cd;
   border: none;

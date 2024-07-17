@@ -21,8 +21,8 @@
                 <mat-icon class="icon-search" matPrefix>search</mat-icon>
               </div>
             </div>
-            <div class="mat-elevation-z8">
-              <table mat-table [dataSource]="criterioSource" matSort>
+            <div class="table">
+              <table mat-table [dataSource]="criterioSource" matSort class="full-width-table">
                 <ng-container matColumnDef="nombre">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> {{'GLOBAL.nombre' |
                     translate}} </th>
@@ -40,10 +40,40 @@
                     <p *ngIf="row.Asistencia == true"> {{'admision.asistencia' | translate}} </p>
                     <p  *ngIf="row.Asistencia == false"> {{'GLOBAL.NA' | translate}} </p></td>
                 </ng-container>
+
                 <ng-container matColumnDef="acciones">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'GLOBAL.acciones' | translate}} </th>
                   <td mat-cell *matCellDef="let row">
-                    <div class="separacion-acciones">
+                    <button
+                      mat-icon-button
+                      [matMenuTriggerFor]="menu"
+                      color="accent"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button
+                        mat-menu-item
+                        (click)="editarCriterio({data:row})"
+                      >
+                        <mat-icon fontIcon="edit" color="accent"></mat-icon>
+                        <span>{{
+                          "admision.tooltip_editar" | translate
+                        }}</span>
+                      </button>
+
+                      <button
+                        mat-menu-item
+                        (click)="inactivarCriterio({data:row})"
+                      >
+                        <mat-icon fontIcon="unpublished" color="warn"></mat-icon>
+                        <span>{{
+                          "admision.tooltip_eliminar" | translate
+                        }}</span>
+                      </button>
+                    </mat-menu>
+                  </td>
+                    <!-- <div class="separacion-acciones">
                       <button aria-hidden="false" title="{{'admision.tooltip_editar' | translate}}"
                         class=" table-button icon" (click)="editarCriterio({data:row})">
                         <mat-icon fontIcon="edit"></mat-icon>
@@ -52,7 +82,7 @@
                         class=" table-button icon" (click)="inactivarCriterio({data:row})">
                         <mat-icon fontIcon="delete"></mat-icon>
                       </button>
-                    </div>
+                    </div> -->
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="criterioColumn"></tr>
                 <tr mat-row *matRowDef="let row; columns: criterioColumn;"></tr>
@@ -88,8 +118,8 @@
                       <mat-icon style="height: 30px;" class="icon-search" matPrefix>search</mat-icon>
                     </div>
                   </div>
-                  <div class="mat-elevation-z8">
-                    <table mat-table [dataSource]="criterio.Subcriterios" matSort>
+                  <div class="table">
+                    <table mat-table [dataSource]="criterio.Subcriterios" matSort class="full-width-table">
 
                       <ng-container matColumnDef="nombre">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 30%;"> {{'calendario.nombre'
@@ -114,6 +144,36 @@
                       <ng-container matColumnDef="acciones">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'GLOBAL.acciones' | translate}} </th>
                         <td mat-cell *matCellDef="let row">
+                          <button
+                            mat-icon-button
+                            [matMenuTriggerFor]="menu"
+                            color="accent"
+                          >
+                            <mat-icon>more_vert</mat-icon>
+                          </button>
+                          <mat-menu #menu="matMenu">
+                            <button
+                              mat-menu-item
+                              (click)="editarSubcriterio({data:row})"
+                            >
+                              <mat-icon fontIcon="edit" color="accent"></mat-icon>
+                              <span>{{
+                                "calendario.tooltip_editar" | translate
+                              }}</span>
+                            </button>
+      
+                            <button
+                              mat-menu-item
+                              (click)="inactivarCriterio($event)"
+                            >
+                              <mat-icon fontIcon="unpublished" color="warn"></mat-icon>
+                              <span>{{
+                                "calendario.tooltip_inactivar" | translate
+                              }}</span>
+                            </button>
+                          </mat-menu>
+                        </td>
+                        <!-- <td mat-cell *matCellDef="let row">
                           <div class="separacion-acciones">
                             <button aria-hidden="false" title="{{'calendario.tooltip_editar' | translate}}"
                               class=" table-button  " (click)="editarSubcriterio({data:row})">
@@ -125,7 +185,7 @@
                               <mat-icon fontIcon="delete">
                               </mat-icon>
                             </button>
-                          </div>
+                          </div> -->
                       </ng-container>
                       <tr mat-header-row *matHeaderRowDef="criterioColumn"></tr>
                       <tr mat-row *matRowDef="let row; columns: criterioColumn;"></tr>
