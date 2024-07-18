@@ -15,19 +15,17 @@
 -->
 
 
-<mat-card [hidden]="!show_posgrado">
+<!-- <mat-card [hidden]="!show_posgrado">
     <ngx-dinamicform *ngIf="show_posgrado" [normalform]="formAsigancionCupoPosgrado" [modeloData]="info_info_persona"
         (result)="validarForm($event)" [clean]="clean">
     </ngx-dinamicform>
-</mat-card>
-<mat-card [hidden]="show_posgrado">
+</mat-card> -->
+<mat-card class="mt-20" [hidden]="show_posgrado">
     <mat-card-content>
-        <div class="container">
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="container">
-                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <div>
+            <div>
+                <div>
+                    <table mat-table [dataSource]="dataSource">
 
 
                         <ng-container matColumnDef="NombreInscripcion">
@@ -83,24 +81,27 @@
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let cupo; columns: displayedColumns;"></tr>
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">{{'calendario.sin_procesos' | translate}}</td>
+                        </tr>
                     </table>
-
+                    <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
                 </div>
 
             </div>
         </div>
-        <div>
-            <button class="boton-primary" mat-button type="button" (click)="listarComentarios()">{{ 'GLOBAL.comentarios' | translate }}</button>
+        <div class="mt-20">
+            <button class="boton-primary" mat-button type="button" (click)="listarComentarios()"
+                style="margin-right: 20px;">{{ 'GLOBAL.comentarios' | translate }}</button>
+            <button class="boton-primary" mat-button type="button" (click)="createCupos()">{{ 'GLOBAL.guardar' |
+                translate }}</button>
         </div>
 
-        <button class="boton-primary" mat-button type="button" (click)="createCupos()">{{ 'GLOBAL.guardar' | translate }}</button>
+
     </mat-card-content>
 </mat-card>
-<mat-card [hidden]="!show_editar">
-    <ngx-dinamicform *ngIf="!show_posgrado"
-                 [normalform]="formAsigancionCupoPregrado"
-                 [modeloData]="info_info_persona"
-                 (result)="validarForm($event)"
-                 [clean]="clean">
-    </ngx-dinamicform> 
+<mat-card class="mt-20" [hidden]="!show_editar">
+    <ngx-dinamicform *ngIf="!show_posgrado" [normalform]="formAsigancionCupoPregrado" [modeloData]="info_info_persona"
+        (result)="validarForm($event)" [clean]="clean">
+    </ngx-dinamicform>
 </mat-card>

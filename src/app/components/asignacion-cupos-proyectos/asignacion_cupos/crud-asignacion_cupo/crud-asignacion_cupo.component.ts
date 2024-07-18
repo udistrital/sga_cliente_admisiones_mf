@@ -1,6 +1,6 @@
 import { FORM_ASIGNACION_CUPO_POSGRADO } from './form-asignacion_cupo_posgrado';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ViewChild } from '@angular/core';
 import { FORM_ASIGNACION_CUPO } from './form-asignacion_cupo';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -21,6 +21,7 @@ import { Router } from '@angular/router';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service';
 import { UserService } from 'src/app/services/users.service';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
@@ -38,6 +39,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   @Output() eventChange = new EventEmitter();
   // tslint:disable-next-line: no-output-rename
   @Output('result') result: EventEmitter<any> = new EventEmitter();
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   info_actualizar_estados: any;
   info_info_persona: any;
@@ -69,7 +71,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
   niveles!: NivelFormacion[];
   show_posgrado: boolean = false;
 
-  dataSource: any;
+  dataSource = new MatTableDataSource<any>();
   displayedColumns: string[] = ['NombreInscripcion', 'Nombre', 'Activo', 'CuposHabilitados', 'CuposOpcionados', 'editar', 'eliminar'];
   totalCupos: number = 0;
   cupo: any;
@@ -331,6 +333,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
     this.http.get<any>(`${environment.INSCRIPCION_SERVICE}/cupos/`).subscribe(
       (response) => {
         this.dataSource = response.data
+        this.dataSource.paginator = this.paginator;
       },
       (error) => {
         console.error('Error al obtener los cupos:', error);
