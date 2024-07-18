@@ -95,12 +95,9 @@ export class ListadoAdmitidosComponent {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
             this.periodo = res.Data.find((p: any) => p.Activo);
+            this.periodos = res.Data;
             window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
             resolve(this.periodo);
-            const periodos = <any[]>res['Data'];
-            periodos.forEach((element: any) => {
-              this.periodos.push(element);
-            });
           } else {
             this.loading = false;
             reject(false);
@@ -114,25 +111,11 @@ export class ListadoAdmitidosComponent {
     });
   }
 
-  // loadLevel() {
-  //   this.projectService.get('nivel_formacion?limit=0').subscribe(
-  //     (response: any) => {
-  //       if (response !== null || response !== undefined) {
-  //         this.nivel_load = <any>response;
-  //       }
-  //     },
-  //     (error: any) => {
-  //       this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-  //       this.loading = false;
-  //     },
-  //   );
-  // }
-
   loadLevel() {
     return new Promise((resolve, reject) => {
       this.projectService.get('nivel_formacion?limit=0').subscribe((res: any) => {
         if (res !== null || res !== undefined) {
-          this.nivel_load = <any>res;
+          this.nivel_load = res.filter((item: any) => item.Id == 1);
           resolve(true);
         } else {
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
@@ -167,6 +150,9 @@ export class ListadoAdmitidosComponent {
 
   async generarBusqueda() {
     this.loading = true;
+    this.viewFacultades = false;
+    this.viewCurriculares = false;
+    this.viewAspirantesTables = false;
     await this.cargarFacultades();
     this.loading = false;
   }
@@ -196,27 +182,10 @@ export class ListadoAdmitidosComponent {
     });
   }
 
-  // cargarProyectosCurriculares(id: number) {
-  //   this.viewCurriculares = true;
-  //   this.sgaMidAdmisiones.get(`admision/academicos/inscritos/${id}/${this.select_nivel}`).subscribe((res: any) => {
-  //     if (res.status == 200) {
-  //       if (res.data) {
-  //         this.proyectosCurriculares = res.data;
-  //         this.datasourceCurriculares = new MatTableDataSource<any>(this.proyectosCurriculares);
-  //         this.datasourceCurriculares.paginator = this.paginator2;
-  //         this.viewCurriculares = true;
-  //       } else {
-  //         this.popUpManager.showErrorAlert(this.translate.instant('admision.proyectos_no_data'));
-  //       }
-  //     } else {
-  //       this.popUpManager.showErrorAlert(this.translate.instant('admision.proyectos_error'));
-  //     }
-  //   })
-  // }
-
   cargarProyectosCurriculares(data: any) {
     this.loading = true;
-    this.viewCurriculares = true;
+    this.viewCurriculares = false;
+    this.viewAspirantesTables = false;
     const proyectoAcademicoIds = new Set(data.ProyectosAcademicos.map((item: any) => item.ProyectoAcademicoId));
     // Estos son los proyectos de la facultad
     const proyectosFiltrados = this.proyectosPregrado.filter(item => proyectoAcademicoIds.has(item.DependenciaId.Id));
@@ -224,13 +193,14 @@ export class ListadoAdmitidosComponent {
       this.proyectosCurriculares = proyectosFiltrados;
       this.datasourceCurriculares = new MatTableDataSource<any>(this.proyectosCurriculares);
       this.datasourceCurriculares.paginator = this.paginator2;
-      //this.datasourceCurriculares.sort = this.sort2;
     }
+    this.viewCurriculares = true;
     this.loading = false;
   }
 
   async consultarproyecto(Id: number) {
     this.loading = true;
+    this.viewAspirantesTables = false;
     window.localStorage.setItem('IdProyecto', String(Id));
     this.selectedcurricular = Id
     await this.loadCriterios();
@@ -240,7 +210,6 @@ export class ListadoAdmitidosComponent {
   recuperarrequisitosProgramaAcademico(programa: any, periodo: any) {
     return new Promise((resolve, reject) => {
       this.EvalaucionInscripcionServices.get('requisito_programa_academico?query=ProgramaAcademicoId:' + programa + ',PeriodoId:' + periodo + '&sortby=Id&order=asc&limit=0').subscribe((res: any) => {
-        console.log(res);
         if (res !== null || res !== undefined && res.status == 200) {
           this.requisitosActuales = res;
           this.selectcriterio = false;
@@ -270,7 +239,6 @@ export class ListadoAdmitidosComponent {
   recuperarInscripciones(programa: any, periodo: any) {
     return new Promise((resolve, reject) => {
       this.inscripcionService.get(`inscripcion?query=Activo:true,ProgramaAcademicoId:${programa},PeriodoId:${periodo}&sortby=Id&order=asc&limit=0`).subscribe((res: any) => {
-        console.log(res);
         if (res !== null || res !== undefined) {
           resolve(res);
         } else {
@@ -289,74 +257,40 @@ export class ListadoAdmitidosComponent {
   }
 
   async loadCriterios() {
-    // this.EvalaucionInscripcionServices.get('requisito_programa_academico?query=ProgramaAcademicoId:' + this.selectedcurricular + ',PeriodoId:' + this.periodo + '&sortby=Id&order=asc&limit=0').subscribe((res: any) => {
-    //     if (res !== null || res !== undefined && res.status == 200) {
-    //       this.requisitosActuales = res;
-    //       this.selectcriterio = false;
-    //       this.criterio_selected = [];
-    //       this.selectCriterio = [];
-    //       this.requisitosActuales.forEach(async (element: any) => {
-    //         if (this.requisitosActuales != "ICFES") {
-    //           await this.selectCriterio.push(element.RequisitoId);
-    //         }
-
-    //       });
-    //     }
-    //   })
-    console.log(this.selectedcurricular, this.periodo)
+    let admitidos: any[] = [];
+    let noAdmitidos: any[] = [];
     await this.recuperarrequisitosProgramaAcademico(this.selectedcurricular, this.periodo);
     const response: any = await this.recuperarInscripciones(this.selectedcurricular, this.periodo)
-    response.forEach((element: any) => {
-
-      // Estados de inscripción admitidos u opcionados
-      if (element.EstadoInscripcionId.Id == 2 || element.EstadoInscripcionId.Id == 3) {
-        this.aspirantesAdmitidos.push(element);
-      } else {
-        this.popUpManager.showErrorAlert(this.translate.instant('ERROR.general'));
+    if (Object.keys(response[0]).length != 0) {
+      for (const element of response) {
+        if (element.EstadoInscripcionId.Id == 2 || element.EstadoInscripcionId.Id == 3) {
+          admitidos.push(element);
+        } else if (element.EstadoInscripcionId.Id == 4) {
+          noAdmitidos.push(element);
+        }
       }
-
-      // Estados de inscripción de no admitidos
-      if (element.EstadoInscripcionId.Id == 4) {
-        this.aspirantesNoAdmitidos.push(element);
-      }
-      this.viewAspirantesTables = true
-    });
-
-    // this.inscripcionService.get(`inscripcion?query=ProgramaAcademicoId:${this.selectedcurricular}&PeriodoId:${this.periodo}`).subscribe((response: any) => {
-    //   if (response !== null || response !== undefined) {
-    //     response.forEach((element: any) => {
-
-    //       if (element.EstadoInscripcionId.Nombre == 'ADMITIDO' || element.EstadoInscripcionId.Nombre == 'OPCIONADO') {
-    //         this.aspirantesAdmitidos.push(element);
-    //       }
-
-    //       if (element.EstadoInscripcionId.Nombre == 'NO ADMITIDO') {
-    //         this.aspirantesNoAdmitidos.push(element);
-    //       }
-    //       this.viewAspirantesTables = true
-    //     });
-    //   }
-
-    // });
+      this.aspirantesAdmitidos = admitidos;
+      this.aspirantesNoAdmitidos = noAdmitidos;
+      this.viewAspirantesTables = true;
+    } else {
+      this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
+    }
   }
-
 
   descargarListadoOficializados(estadoFormacion: number) {
     this.sgaMidAdmisiones.get(`admision/Listadoadmitidos/${this.periodo}/${estadoFormacion}/${this.selectedcurricular}`).subscribe((res: any) => {
       if (res.status === 200 && res.success === true) {
-        console.log(res.data.Pdf)
         const base64String = res.data.Pdf;
         this.downloadPdf(base64String);
 
       } else {
-        console.log("Error en la consulta de listado oficializados")
+        console.error("Error en la consulta de listado oficializados")
       }
 
     });
   }
 
   downloadPdf(resBase64String: string) {
-    console.log("Hola1")
     const base64String: string = resBase64String;
     const byteCharacters = atob(base64String);
     const byteNumbers = new Array(byteCharacters.length);
