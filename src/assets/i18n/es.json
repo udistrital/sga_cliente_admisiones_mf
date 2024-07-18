@@ -527,7 +527,7 @@
         "info_familiar": "Información familiar",
         "institucion": "Institución",
         "programa": "Programa",
-        "proyecto_academico": "Proyecto Curricular",
+        "proyecto_academico": "Proyecto curricular",
         "creditos": "Créditos",
         "clasificacion": "Clasificación",
         "tooltip_ver_registro": "Ver",
@@ -1666,7 +1666,10 @@
         "error_nieveles": "Ocurrio un error al recuperar los niveles",
         "error_tipo_inscripcion": "Ocurrio un error al recuperar los tipos de inscripción",
         "titulo_programa_sin_requisitos": "Programa académico sin requisitos",
-        "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico"
+        "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico",
+        "titulo_aspirantes_no_encontrados": "No se encontraron aspirantes",
+        "aspirantes_oficializados_no_encontrados": "No se encontraron aspirantes oficializados",
+        "aspirantes_no_oficializados_no_encontrados": "No se encontraron aspirantes no oficializados"
     },
     "oficializados": {
         "titulo": "Oficialización",
