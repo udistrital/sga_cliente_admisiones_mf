@@ -1,89 +1,9 @@
-.card{
-  margin-top: 15px
-}
-
+//HOVER SOBRE LAS FILAS
 .mat-mdc-row:hover .mat-mdc-cell {
   background-color: var(--color100);
 }
 
-button:hover {
-  color: #0093cd;
-  border: none;
-}
-
-.boton-primary {
-
-  height: 45px;
-  border: solid 1px #03678f;
-  border-radius: 5px;
-  font-weight: 300;
-  background-color: #03678f;
-  border-color: #03678f;
-  margin: 0;
-  cursor: pointer;
-  color: white !important;
-
-}
-
-.table-button {
-  border: solid 1px #03678f;
-  border-radius: 5px;
-  background: #03678f;
-  color: white;
-  border: none;
-  width: 40%;
-
-}
-
-
-.search-container {
-  height: 35px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-
-.search-input {
-  height: 35px;
-}
-
-.search-input:focus {
-  border-color: #03678f;
-}
-
-.icon-search {
-  width: 35px;
-  height: 35px;
-  border: solid 1.5px #03678f;
-  color: white;
-  font-size: 25px;
-  border-radius: 1px;
-  padding-top: 3px;
-  padding-left: 3px;
-  margin-right: 10px;
-  background-color: #03678f;
-}
-
-th {
-  color: black;
-}
-
-.boton-primary-table {
-  border: solid 1px #03678f;
-  border-radius: 5px;
-  font-weight: 300;
-  background-color: #03678f;
-  border-color: #03678f;
-
-  cursor: pointer;
-  color: white !important;
-  padding: 8px;
-}
-
-
-
-
-.separacion-acciones {
-  display: flex;
-  justify-content: space-around;
+// COLOR EN LOS MAT-EXPANSION-PANEL
+.mat-expansion-panel-gradient {
+  background: linear-gradient(0deg, var(--color100) 0%, white 100%);
 }
