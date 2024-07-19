@@ -1636,7 +1636,8 @@
         "programa_sin_requisitos": "No assessment requirements found for this academic program",
         "titulo_aspirantes_no_encontrados": "No applicants found",
         "aspirantes_oficializados_no_encontrados": "No official candidates found",
-        "aspirantes_no_oficializados_no_encontrados": "No unofficial candidates were found"
+        "aspirantes_no_oficializados_no_encontrados": "No unofficial candidates were found",
+        "filtrar-aspirantes": "Filter applicants"
     },
     
     "oficializados": {
