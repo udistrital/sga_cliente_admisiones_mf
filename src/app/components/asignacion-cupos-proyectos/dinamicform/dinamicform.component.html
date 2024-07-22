@@ -984,7 +984,7 @@
             class="row {{ c.ocultar ? 'no-mostrar' : '' }}"
           >
             <div class="{{ c.claseGrid }}">
-              <button mat-button id="{{ c.id }}" (click)="auxButton(c)">
+              <button mat-flat-button color="accent" id="{{ c.id }}" (click)="auxButton(c)">
                 <i class="{{ c.icono }}"></i>
                 {{ c.label }}
               </button>
@@ -1006,7 +1006,9 @@
       *ngIf="normalform.btnLimpiar || normalform.btn"
     >
       <button
-        class="btn btn-primary btn-sm {{
+        mat-flat-button
+        color="accent"
+        class="{{
           !normalform.btnLimpiar ? 'no-mostrar' : ''
         }}"
         (click)="clearForm()"
@@ -1015,7 +1017,9 @@
         {{ normalform.btnLimpiar | translate }}
       </button>
       <button
-        class="btn btn-success btn-sm ml-2 {{
+        mat-flat-button
+        color="accent"
+        class="{{
           !normalform.btn ? 'no-mostrar' : ''
         }}"
         (click)="validForm()"
