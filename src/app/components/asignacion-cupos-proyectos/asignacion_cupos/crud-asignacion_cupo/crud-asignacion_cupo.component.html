@@ -13,18 +13,27 @@
                  [clean]="clean">
 </ngx-dinamicform> 
 -->
+<mat-divider></mat-divider>
+
+<ngx-dinamicform
+  *ngIf="!show_posgrado"
+  [normalform]="formAsigancionCupoPosgrado"
+  [modeloData]="info_info_persona"
+  (result)="validarForm($event)"
+  [clean]="clean"
+>
+</ngx-dinamicform>
+
+<ngx-dinamicform
+  *ngIf="show_posgrado"
+  [normalform]="formAsigancionCupoPregrado"
+  [modeloData]="info_info_persona"
+  (result)="validarForm($event)"
+  [clean]="clean"
+>
+</ngx-dinamicform>
 
 <div [hidden]="!show_posgrado">
-  <ngx-dinamicform
-    *ngIf="show_posgrado"
-    [normalform]="formAsigancionCupoPosgrado"
-    [modeloData]="info_info_persona"
-    (result)="validarForm($event)"
-    [clean]="clean"
-  >
-  </ngx-dinamicform>
-</div>
-<div [hidden]="show_posgrado">
   <!-- TABLA -->
   <table mat-table [dataSource]="dataSource" class="table">
     <ng-container matColumnDef="NombreInscripcion">
@@ -91,33 +100,23 @@
     <tr mat-row *matRowDef="let cupo; columns: displayedColumns"></tr>
   </table>
 
-  <div style="display: flex; gap: 1em; flex-wrap: wrap;" class="margin-y">
+  <div style="display: flex; gap: 1em; flex-wrap: wrap" class="margin-y">
     <button
-    color="accent"
-    mat-flat-button
-    type="button"
-    (click)="listarComentarios()"
-  >
-    {{ "GLOBAL.comentarios" | translate }}
-  </button>
+      color="accent"
+      mat-flat-button
+      type="button"
+      (click)="listarComentarios()"
+    >
+      {{ "GLOBAL.comentarios" | translate }}
+    </button>
 
-  <button
-    color="accent"
-    mat-flat-button
-    type="button"
-    (click)="createCupos()"
-  >
-    {{ "GLOBAL.guardar" | translate }}
-  </button>
+    <button
+      color="accent"
+      mat-flat-button
+      type="button"
+      (click)="createCupos()"
+    >
+      {{ "GLOBAL.guardar" | translate }}
+    </button>
   </div>
-</div>
-<div [hidden]="show_editar">
-  <ngx-dinamicform
-    *ngIf="!show_posgrado"
-    [normalform]="formAsigancionCupoPregrado"
-    [modeloData]="info_info_persona"
-    (result)="validarForm($event)"
-    [clean]="clean"
-  >
-  </ngx-dinamicform>
 </div>
