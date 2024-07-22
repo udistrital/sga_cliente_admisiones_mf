@@ -121,6 +121,7 @@ import { EventosService } from "./services/eventos.service";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginatorIntl } from "./services/paginatorIntl.service";
+import { MatDividerModule } from "@angular/material/divider";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -248,6 +249,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatToolbarModule,
     StoreModule.forRoot(rootReducer),
     HttpClientModule,
+    MatDividerModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
