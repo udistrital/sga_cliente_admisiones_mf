@@ -1637,7 +1637,10 @@
         "titulo_aspirantes_no_encontrados": "No applicants found",
         "aspirantes_oficializados_no_encontrados": "No official candidates found",
         "aspirantes_no_oficializados_no_encontrados": "No unofficial candidates were found",
-        "filtrar-aspirantes": "Filter applicants"
+        "filtrar-aspirantes": "Filter applicants",
+        "actualizacion_aspirantes_puntaje_minimo": "Update of applicants by minimum score",
+        "exito_actualizar_aspirantes": "Successful update of applicants",
+        "error_actualizar_aspirantes": "An error occurred trying to update the candidates"
     },
     
     "oficializados": {

@@ -111,7 +111,7 @@
                     <mat-icon>search</mat-icon>
                     <span>{{ 'admision.enlistar' | translate }}</span>
                   </button>
-                  <button mat-menu-item>
+                  <button mat-menu-item (click)="filtrarAspirantesPuntajeMinimo(row.DependenciaId.Id)">
                     <mat-icon>filter_alt</mat-icon>
                     <span>{{ 'admision.filtrar-aspirantes' | translate }}</span>
                   </button>
@@ -133,7 +133,23 @@
     </div>
   </mat-card-content>
 </mat-card>
-
+<mat-card *ngIf="viewVariablesPuntajeMinimo">
+  <mat-card-header>
+    <mat-card-title>{{"evaluacionPregrado.variables" | translate}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field>
+      <mat-label>{{ 'evaluacionPregrado.periodo' | translate }}:</mat-label>
+      <mat-select [(ngModel)]="periodo" [disabled]='false' [formControl]="periodoControl">
+        <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+        <mat-option *ngFor="let item of periodos" [value]="item.Id">{{ item.Nombre }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card-content>
+  <mat-card-actions class="boton-busqueda">
+    <button class="boton-primary" (click)="realizarBusquedaPuntajeMinimo()">{{ 'GLOBAL.continuar' | translate }}</button>
+  </mat-card-actions>
+</mat-card>
 <mat-card *ngIf="viewVariables" style="margin-top: 20px;">
   <mat-card-content>
     <div>
@@ -147,7 +163,7 @@
             <mat-label>{{ 'evaluacionPregrado.periodo' | translate }}:</mat-label>
             <mat-select [(ngModel)]="periodo" [disabled]='false' [formControl]="periodoControl"
               (selectionChange)="loadCriterios()">
-              <mat-option>--{{ 'evaluar.seleccionar' | translate }}--</mat-option>
+              <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
               <mat-option *ngFor="let item of periodos" [value]="item.Id">{{ item.Nombre }}</mat-option>
             </mat-select>
           </mat-form-field>

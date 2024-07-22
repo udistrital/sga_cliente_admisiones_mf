@@ -111,6 +111,10 @@
     grid-column: span 1;
 }
 
+mat-form-field {
+    width: 100%;
+}
+
 @media (max-width: 992px) {
     .contenedor-criterios {
       grid-template-columns: repeat(2, 1fr);

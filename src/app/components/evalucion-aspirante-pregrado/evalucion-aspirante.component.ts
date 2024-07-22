@@ -49,6 +49,7 @@ export class EvalucionAspirantePregradoComponent {
   requisitosActuales: any = [];
   proyectosCurriculares!: any[];
   viewVariables: boolean = false;
+  viewVariablesPuntajeMinimo: boolean = false;
   selectcriterio: boolean = true;
   proyectosPregrado!: any[];
 
@@ -181,6 +182,41 @@ export class EvalucionAspirantePregradoComponent {
         this.loading = false;
       },
     );
+  }
+
+  async filtrarAspirantesPuntajeMinimo(id: number) {
+    this.loading = true;
+    this.selectedcurricular = id;
+    await this.cargarPeriodo();
+    this.viewVariablesPuntajeMinimo = true;
+    this.loading = false;
+  }
+
+  async realizarBusquedaPuntajeMinimo() {
+    console.log(this.periodo, this.selectedcurricular)
+    const body = {
+      proyecto: this.selectedcurricular + "",
+      periodo: this.periodo + ""
+    }
+    await this.actualizarAspirantes(body)
+  }
+
+  actualizarAspirantes(body: any) {
+    return new Promise((resolve, reject) => {
+      this.sgaMidAdmisiones.put(`admision/puntaje-minimo`, body)
+        .subscribe((res: any) => {
+          console.log(res);
+          this.viewVariablesPuntajeMinimo = false;
+          this.popUpManager.showAlert(this.translate.instant('admision.actualizacion_aspirantes_puntaje_minimo'), this.translate.instant('admision.exito_actualizar_aspirantes'))
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.error_actualizar_aspirantes'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
+          });
+    });
   }
 
   async consultarproyecto(Id: number) {
