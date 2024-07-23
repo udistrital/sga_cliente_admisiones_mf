@@ -44,6 +44,15 @@
     margin: 10px;
 }
 
+.contenedor-no-data {
+    padding: 15px 0;
+    text-align: center;
+}
+
+.actions-listado {
+    margin: auto;
+}
+
 @media(width < 650px) {
     .contenedor-botones {
         flex-direction: column;

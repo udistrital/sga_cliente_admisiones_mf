@@ -590,7 +590,7 @@
         "placeholder_direccion_entidad": "E.g.: Cra 8 # 40-78 Piso 1",
         "item": "Item",
         "evaluar": "Evaluate",
-        "especial": "Special"
+        "especial": "Special",
         "filtro": "Filter"
     },
     "ERROR": {
@@ -1627,13 +1627,20 @@
         "titulo_inscripcion_no_encontrada": "The inscription was not found",
         "inscripcion_no_encontrada": "No registration associated with the icfes code was found",
         "seleccion_facultades": "Select the faculty you want to consult",
-        "inscripcion_pregrado_error": "Error consulting the undergraduate registration for this candidate"
+        "inscripcion_pregrado_error": "Error consulting the undergraduate registration for this candidate",
         "error_obtener_cupos": "Error when obtaining quotas",
         "tipo_cupo": "Quota type",
         "error_nieveles": "An error occurred while retrieving levels",
-        "error_tipo_inscripcion": "An error occurred while retrieving registration types"
+        "error_tipo_inscripcion": "An error occurred while retrieving registration types",
         "titulo_programa_sin_requisitos": "Academic program without requirements",
-        "programa_sin_requisitos": "No assessment requirements found for this academic program"
+        "programa_sin_requisitos": "No assessment requirements found for this academic program",
+        "titulo_aspirantes_no_encontrados": "No applicants found",
+        "aspirantes_oficializados_no_encontrados": "No official candidates found",
+        "aspirantes_no_oficializados_no_encontrados": "No unofficial candidates were found",
+        "filtrar-aspirantes": "Filter applicants",
+        "actualizacion_aspirantes_puntaje_minimo": "Update of applicants by minimum score",
+        "exito_actualizar_aspirantes": "Successful update of applicants",
+        "error_actualizar_aspirantes": "An error occurred trying to update the candidates"
     },
     
     "oficializados": {

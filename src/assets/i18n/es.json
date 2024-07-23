@@ -527,7 +527,7 @@
         "info_familiar": "Información familiar",
         "institucion": "Institución",
         "programa": "Programa",
-        "proyecto_academico": "Proyecto Curricular",
+        "proyecto_academico": "Proyecto curricular",
         "creditos": "Créditos",
         "clasificacion": "Clasificación",
         "tooltip_ver_registro": "Ver",
@@ -1660,13 +1660,20 @@
         "titulo_inscripcion_no_encontrada": "La inscripción no fue encontrada",
         "inscripcion_no_encontrada": "No se encontró una inscripción asociada al código icfes",
         "seleccion_facultades": "Seleccione la facultad que quiere consultar",
-        "inscripcion_pregrado_error": "Error consultando la inscripción de pregrado para este aspirante"
+        "inscripcion_pregrado_error": "Error consultando la inscripción de pregrado para este aspirante",
         "error_obtener_cupos": "Error al obtener cupos",
         "tipo_cupo": "Tipo cupo",
         "error_nieveles": "Ocurrio un error al recuperar los niveles",
-        "error_tipo_inscripcion": "Ocurrio un error al recuperar los tipos de inscripción"
+        "error_tipo_inscripcion": "Ocurrio un error al recuperar los tipos de inscripción",
         "titulo_programa_sin_requisitos": "Programa académico sin requisitos",
-        "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico"
+        "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico",
+        "titulo_aspirantes_no_encontrados": "No se encontraron aspirantes",
+        "aspirantes_oficializados_no_encontrados": "No se encontraron aspirantes oficializados",
+        "aspirantes_no_oficializados_no_encontrados": "No se encontraron aspirantes no oficializados",
+        "filtrar-aspirantes": "Filtrar aspirantes",
+        "actualizacion_aspirantes_puntaje_minimo": "Actualización de aspirantes por puntaje mínimo",
+        "exito_actualizar_aspirantes": "Actualización existosa de los aspirantes",
+        "error_actualizar_aspirantes": "Ocurrio un error tratando de actualizar los aspirantes"
     },
     "oficializados": {
         "titulo": "Oficialización",
