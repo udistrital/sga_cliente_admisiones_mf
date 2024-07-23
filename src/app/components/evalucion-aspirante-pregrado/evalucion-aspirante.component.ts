@@ -49,6 +49,7 @@ export class EvalucionAspirantePregradoComponent {
   requisitosActuales: any = [];
   proyectosCurriculares!: any[];
   viewVariables: boolean = false;
+  viewVariablesPuntajeMinimo: boolean = false;
   selectcriterio: boolean = true;
   proyectosPregrado!: any[];
 
@@ -93,7 +94,6 @@ export class EvalucionAspirantePregradoComponent {
       this.sgaMidAdmisiones.get('admision/facultad/inscritos')
         .subscribe((res: any) => {
           if (res.Data) {
-            console.log(res.Data)
             this.facultades = res.Data;
             this.datasourceFacultades = new MatTableDataSource<any>(this.facultades);
             this.datasourceFacultades.paginator = this.paginator1;
@@ -117,9 +117,7 @@ export class EvalucionAspirantePregradoComponent {
     return new Promise((resolve, reject) => {
       this.oikosService.get('dependencia_tipo_dependencia?query=Activo:true,TipoDependenciaId:14&sortby=Id&order=asc&limit=0')
         .subscribe((res: any) => {
-          console.log(res);
           this.proyectosPregrado = res;
-          //this.loading = false;
           resolve(res)
         },
           (error: any) => {
@@ -133,18 +131,19 @@ export class EvalucionAspirantePregradoComponent {
 
   cargarProyectosCurriculares(data: any) {
     this.loading = true;
-    this.viewCurriculares = true;
+    this.viewCurriculares = false;
+    this.viewVariables = false;
+    this.viewSubcriterios = false;
     const proyectoAcademicoIds = new Set(data.ProyectosAcademicos.map((item: any) => item.ProyectoAcademicoId));
     // Estos son los proyectos de la facultad
     const proyectosFiltrados = this.proyectosPregrado.filter(item => proyectoAcademicoIds.has(item.DependenciaId.Id));
-    console.log(proyectosFiltrados)
     if (proyectosFiltrados) {
       this.proyectosCurriculares = proyectosFiltrados;
-      console.log(this.proyectosCurriculares)
       this.datasourceCurriculares = new MatTableDataSource<any>(this.proyectosCurriculares);
       this.datasourceCurriculares.paginator = this.paginator2;
       this.datasourceCurriculares.sort = this.sort2;
     }
+    this.viewCurriculares = true;
     this.loading = false;
   }
 
@@ -185,8 +184,45 @@ export class EvalucionAspirantePregradoComponent {
     );
   }
 
+  async filtrarAspirantesPuntajeMinimo(id: number) {
+    this.loading = true;
+    this.selectedcurricular = id;
+    await this.cargarPeriodo();
+    this.viewVariablesPuntajeMinimo = true;
+    this.loading = false;
+  }
+
+  async realizarBusquedaPuntajeMinimo() {
+    console.log(this.periodo, this.selectedcurricular)
+    const body = {
+      proyecto: this.selectedcurricular + "",
+      periodo: this.periodo + ""
+    }
+    await this.actualizarAspirantes(body)
+  }
+
+  actualizarAspirantes(body: any) {
+    return new Promise((resolve, reject) => {
+      this.sgaMidAdmisiones.put(`admision/puntaje-minimo`, body)
+        .subscribe((res: any) => {
+          console.log(res);
+          this.viewVariablesPuntajeMinimo = false;
+          this.popUpManager.showAlert(this.translate.instant('admision.actualizacion_aspirantes_puntaje_minimo'), this.translate.instant('admision.exito_actualizar_aspirantes'))
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.error_actualizar_aspirantes'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
+          });
+    });
+  }
+
   async consultarproyecto(Id: number) {
     this.loading = true;
+    this.viewVariables = false;
+    this.viewSubcriterios = false;
     window.localStorage.setItem('IdProyecto', String(Id));
     this.viewVariables = true;
     this.selectedcurricular = Id
@@ -199,7 +235,6 @@ export class EvalucionAspirantePregradoComponent {
     this.loading = true;
     this.EvalaucionInscripcionServices.get('requisito_programa_academico?query=Activo:true,ProgramaAcademicoId:' + this.selectedcurricular + ',PeriodoId:' + this.periodo + '&sortby=Id&order=asc&limit=0')
     .subscribe((res: any) => {
-      console.log(res);
       if (res !== null || res !== undefined && res.status == 200) {
         this.requisitosActuales = res;
 
@@ -219,16 +254,14 @@ export class EvalucionAspirantePregradoComponent {
 
   async realizarBusqueda() {
     this.loading = true;
-    console.log(this.columnspuntajeaspirantes)
+    this.viewSubcriterios = false;
     let inscritosData: any[] = [];
     const inscripciones: any = await this.recuperarInscripciones(this.selectedcurricular, this.periodo)
-    console.log(inscripciones);
     for (const inscripcion of inscripciones) {
       const persona: any = await this.consultarTercero(inscripcion.PersonaId);
       if (Array.isArray(persona) && persona.length === 0) {
         continue;
       }
-      console.log(persona);
 
       const dataInscrito: any = {
         "Credencial": 123,
@@ -248,16 +281,11 @@ export class EvalucionAspirantePregradoComponent {
     this.requisitosActuales.forEach((element: any) => {
       this.columnspuntajeaspirantes.push(element.RequisitoId.Nombre);
     });
-    console.log(this.columnspuntajeaspirantes);
-    console.log(data);
     for (const item of data) {
-      console.log(item);
       for (const requisito of this.requisitosActuales) {
-        console.log(requisito.RequisitoId.Nombre);
         item[requisito.RequisitoId.Nombre] = "";
       }
     }
-    console.log(data);
     return data;
   }
 
@@ -270,7 +298,7 @@ export class EvalucionAspirantePregradoComponent {
           (error: any) => {
             this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
+            console.error(error);
             reject([]);
           });
     });
@@ -286,58 +314,6 @@ export class EvalucionAspirantePregradoComponent {
       return [];
     }
   }
-
-  // puntajeAspirantes() {
-  //   this.InscripcionService.get(`inscripcion?query=Activo:true,ProgramaAcademicoId:${this.selectedcurricular},PeriodoId:${this.periodo}&sortby=Id&order=asc&limit=0`)
-  //     .subscribe((res: any) => {
-  //       this.viewTablePuntaje = true;
-  //       console.log(res);
-  //       if (res != null && res != undefined) {
-  //         let IdPersonas: any[] = [];
-  //         res.forEach((element: any) => {
-  //           IdPersonas.push({ Id: element.PersonaId });
-  //         });
-  //         const dataEvaluacion = {
-  //           IdPeriodo: this.periodo,
-  //           IdPersona: IdPersonas,
-  //           IdPrograma: this.selectedcurricular,
-  //         };
-  //         console.log(dataEvaluacion)
-
-  //         this.sgaMidAdmisiones.put('admision/calcular_nota', dataEvaluacion).subscribe(
-  //           (response: any) => {
-  //             console.log(response);
-  //             if (response.Status === 200) {
-  //               this.popUpManager.showSuccessAlert(this.translate.instant('admision.calculo_exito'));
-  //               this.requisitosActuales.forEach((element: any) => {
-  //                 this.columnspuntajeaspirantes.push(element.RequisitoId.Nombre);
-  //                 this.sgaMidAdmisiones.get(`admision/evaluacionpregrado/${this.periodo}/${this.selectedcurricular}`).subscribe((res: any) => {
-  //                   console.log(res);
-  //                   if (res.Status == 200 && res.Success == true) {
-  //                     // Ordenar los datos por el puntaje total en orden descendente
-  //                     res.Data.sort((a: any, b: any) => b.Total - a.Total);
-  //                     this.datasourcePuntajeAspirantes = new MatTableDataSource(res.Data);
-  //                     this.datasourcePuntajeAspirantes.paginator = this.paginator3;
-  //                     this.datasourcePuntajeAspirantes.sort = this.sort3;
-  //                   } else {
-  //                     this.popUpManager.showErrorAlert(this.translate.instant('admision.inscritos_no_data'));
-  //                   }
-  //                 });
-  //               });
-  //               this.columnspuntajeaspirantes.push("Total");
-  //             } else {
-  //               this.popUpManager.showErrorToast(this.translate.instant('admision.calculo_error'));
-  //             }
-  //           },
-  //           error => {
-  //             this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
-  //           },
-  //         );
-  //       } else {
-  //         this.popUpManager.showErrorAlert(this.translate.instant('admision.inscritos_no_data'));
-  //       }
-  //     });
-  // }
 
   ModuleEvaluarDoucimentos() {
     window.localStorage.setItem('IdPeriodoSelected', this.periodo);
