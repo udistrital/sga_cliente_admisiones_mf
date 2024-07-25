@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
+import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
@@ -39,6 +40,7 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
   constructor(
     private admisionesMid: SgaAdmisionesMid,
     private evaluacionService: EvaluacionInscripcionService,
+    private inscripcionService: InscripcionService,
     private parametrosService: ParametrosService,
     private popUpManager: PopUpManager,
     private projectService: ProyectoAcademicoService,
@@ -162,7 +164,8 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
     const proyectoId = proyecto.ProyectoId
     const periodoId = this.periodo.Id
 
-    this.subscripcion.add(this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
+    // this.subscripcion.add(this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
+      this.subscripcion.add(this.inscripcionService.get('cupo_inscripcion/?query=ProgramaAcademicoId :' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
       (response: any) => {
         if (response !== null && response !== undefined && response[0].Id !== undefined) {
           proyecto.cuposProyecto = response[0].CuposHabilitados;
