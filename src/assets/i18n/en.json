@@ -597,7 +597,8 @@
     "previous_page": "Previous page",
     "first_page": "First page",
     "last_page": "Last page",
-    "of": "of"
+    "of": "of",
+    "ir_observacion": "Go to observation"
   },
   "ERROR": {
     "general": "The request could not be satisfied",

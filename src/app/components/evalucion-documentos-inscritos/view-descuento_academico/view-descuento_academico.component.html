@@ -25,12 +25,12 @@
       <td>{{ descuento.Soporte ? descuento.Soporte.observacion : "" }}</td>
       <td *ngIf="descuento.Soporte !== undefined">
         <button
-          mat-button
+          mat-icon-button
           type="button"
-          class="boton-primary"
+          color="accent"
           (click)="abrirDocumento(descuento.Soporte)"
         >
-          <mat-icon fontIcon="search"></mat-icon>
+          <mat-icon>file_open</mat-icon>
         </button>
       </td>
     </tr>

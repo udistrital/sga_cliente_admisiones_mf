@@ -1,14 +1,14 @@
-<mat-card>
+<mat-card class="margin-y">
   <mat-card-content>
     <div class="row">
       <div class="col-md-1"></div>
-      <div class="col-md-10">
-        <h2 *ngIf="imprimir" class="text-center">
+      <div class="col-md-10 margin-y">
+        <h3 *ngIf="imprimir" class="text-center">
           {{ "inscripcion.comprobante_inscripcion" | translate }}
-        </h2>
-        <h2 *ngIf="!imprimir" class="text-center">
+        </h3>
+        <h3 *ngIf="!imprimir" class="text-center">
           {{ "inscripcion.perfil" | translate }}
-        </h2>
+        </h3>
       </div>
       <div class="col-md-1">
         <h2 *ngIf="!en_revision && !imprimir">
@@ -312,11 +312,6 @@
     </div>
 
     <br />
-    <!-- <ngb-progressbar type="success" [value]="((contTag*reduceWhenloading)/maxTags*100)" [animated]="true">
-      </ngb-progressbar> -->
-    <!-- <ngb-progressbar id="progressbar" type="success" [value]="progressDownloadDocs" [striped]="loading" [animated]="true">
-      </ngb-progressbar> -->
-    <br />
     <div class="preinscription-alert" *ngIf="imprimir">
       <div class="col-md-12">
         {{ "inscripcion.info_impresion_auto" | translate }}
@@ -343,29 +338,6 @@
         {{ "inscripcion.nota_confirmar_ajuste" | translate }}
       </div>
     </div>
-
-    <!--<ngx-view-info-caracteristica
-          (url_editar)="editar($event,'info_caracteristica')"
-          info_caracteristica_id="{{info_persona_id}}" class="col-md-6"></ngx-view-info-caracteristica>
-        <ngx-view-informacion-contacto
-          (url_editar)="editar($event,'info_contacto')"
-          persona_id="{{info_persona_id}}" class="col-md-6"></ngx-view-informacion-contacto>-->
-    <!--<ngx-view-libro (url_editar)="editar($event,'default')"
-          persona_id="{{info_persona_id}}" class="col-md-12"></ngx-view-libro>
-        <ngx-view-articulo (url_editar)="editar($event,'default')"
-          persona_id="{{info_persona_id}}" class="col-md-12"></ngx-view-articulo>
-        <ngx-view-traduccion (url_editar)="editar($event,'default')"
-          persona_id="{{info_persona_id}}" class="col-md-12"></ngx-view-traduccion>
-        <ngx-view-otra-publicacion (url_editar)="editar($event,'default')"
-          persona_id="{{info_persona_id}}" class="col-md-12"></ngx-view-otra-puRegresarblicacion>
-        <ngx-view-otro-documento (url_editar)="editar($event,'default')"
-          persona_id="{{info_persona_id}}" class="col-md-12"></ngx-view-otro-documento>
-        <ngx-view-produccion-tecnica (url_editar)="editar($event,'default')"
-          persona_id="{{info_persona_id}}" class="col-md-12"></ngx-view-produccion-tecnica>
-        <ngx-view-produccion-artes-arqu-diseno (url_editar)="editar($event,'default')"
-          persona_id="{{info_persona_id}}" class="col-md-12"></ngx-view-produccion-artes-arqu-diseno>-->
-
-    <!-- <div class="col-md-12" *ngIf="(contTag >= maxTags)"> -->
     <div
       class="col-md-12"
       *ngIf="progressDownloadDocs >= 100"
@@ -373,7 +345,8 @@
     >
       <button
         *ngIf="en_revision"
-        class="boton-primary"
+        mat-flat-button
+        color="accent"
         (click)="descargar_compilado_zip()"
       >
         {{ "admision.descargar_zip" | translate }}
@@ -381,8 +354,8 @@
       <button
         *ngIf="estado_inscripcion == 'INSCRITO con Observación' && en_revision"
         class="boton-primary"
-        mat-raised-button
-        color="primary"
+        mat-flat-button
+        color="accent"
         (click)="notificar_observaciones_aspirante()"
       >
         {{ "admision.notificar_observaciones" | translate }}
@@ -390,8 +363,8 @@
       <button
         *ngIf="imprimir"
         class="boton-primary"
-        mat-raised-button
-        color="primary"
+        mat-flat-button
+        color="accent"
         (click)="editar($event, 'salir_preinscripcion')"
       >
         {{ "GLOBAL.regresar" | translate }}

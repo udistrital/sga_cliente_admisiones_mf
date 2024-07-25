@@ -627,7 +627,8 @@
     "previous_page": "Página anterior",
     "first_page": "Primera página",
     "last_page": "Última página",
-    "of": "de"
+    "of": "de",
+    "ir_observacion": "Ir a observación"
   },
   "ERROR": {
     "general": "La solicitud no pudo ser cumplida",
