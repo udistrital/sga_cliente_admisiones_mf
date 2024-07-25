@@ -13,7 +13,7 @@
 
                     <mat-form-field>
                         <mat-select [formControl]="nivelControl" [(ngModel)]="selectedLevel"
-                            placeholder="{{ 'calendario.para' | translate }}" (selectionChange)="onSelectLevel()">
+                            placeholder="{{ 'calendario.para' | translate }}">
                             <mat-option>--Seleccionar--</mat-option>
                             <mat-option *ngFor="let nivel of niveles" [value]="nivel.Id">
                                 {{ nivel.Nombre }}
