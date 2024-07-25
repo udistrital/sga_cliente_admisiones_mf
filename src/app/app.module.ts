@@ -122,6 +122,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginatorIntl } from "./services/paginatorIntl.service";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -250,6 +251,7 @@ export function createTranslateLoader(http: HttpClient) {
     StoreModule.forRoot(rootReducer),
     HttpClientModule,
     MatDividerModule,
+    MatTooltipModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
