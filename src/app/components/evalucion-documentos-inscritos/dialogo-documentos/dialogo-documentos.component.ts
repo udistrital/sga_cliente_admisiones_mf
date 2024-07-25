@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
@@ -11,6 +11,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./dialogo-documentos.component.scss'],
 })
 export class DialogoDocumentosComponent implements OnInit {
+  @ViewChild('formElement') formElement!: ElementRef;
 
   revisionForm!: FormGroup;
   tabName: string = "";
@@ -124,4 +125,7 @@ export class DialogoDocumentosComponent implements OnInit {
     this.loading = false;
   }
 
+  scrollToForm() {
+    this.formElement.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
 }
