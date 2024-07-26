@@ -11,7 +11,8 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TipoCriterio } from '../../../models/admision/tipo_criterio';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { FormControl, Validators } from '@angular/forms';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { CheckboxAssistanceComponent } from './checkbox-assistance/checkbox-assistance.component'; 

@@ -17,7 +17,8 @@ import { Documento } from 'src/app/models/documento/documento';
 import { GoogleService } from 'src/app/services/google.service';
 import { Invitacion } from 'src/app/models/correo/invitacion';
 import { InvitacionTemplate } from '../../../models/correo/invitacionTemplate'
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { PivotDocument } from 'src/utils/pivot_document.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';

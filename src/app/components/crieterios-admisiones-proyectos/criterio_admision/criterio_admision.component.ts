@@ -8,7 +8,8 @@ import { UserService } from 'src/app/services/users.service';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inscripcion } from '../../../models/inscripcion/inscripcion'
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { FormControl, Validators, FormGroup, FormBuilder, ReactiveFormsModule  } from '@angular/forms';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';

@@ -3,7 +3,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 // import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 // import 'style-loader!angular2-toaster/toaster.css';
 // import { NbDialogRef } from '@nebular/theme';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -178,7 +179,7 @@ export class ListDescuentoProyectoComponent implements OnInit {
       showCancelButton: true,
     };
     Swal.fire(opt)
-      .then((willDelete) => {
+      .then((willDelete:any) => {
         if (willDelete.value) {
           this.info_desc_programa = <TipoDescuento>event.data;
           this.info_desc_programa.Activo = false;
@@ -196,7 +197,7 @@ export class ListDescuentoProyectoComponent implements OnInit {
                   showCancelButton: true,
                 };
 
-                Swal.fire(opt1).then((willCreate) => {
+                Swal.fire(opt1).then((willCreate:any) => {
                   if (willCreate.value) {
                     this.loadData();
                     this.activetabFather();

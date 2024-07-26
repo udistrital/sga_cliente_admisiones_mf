@@ -6,7 +6,8 @@ import { UserService } from 'src/app/services/users.service';
 import { DocumentoService } from 'src/app/services/documento.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { ProduccionAcademicaPost } from 'src/app/models/produccion_academica/produccion_academica';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
@@ -89,8 +90,9 @@ export class ViewProduccionAcademicaComponent implements OnInit {
     this.inscripcionesMidService.get('academico/produccion/' + this.persona_id)
       .subscribe((res: any) => {
         if (res !== null) {
-          if (res.Response.Code === '200') {
-            this.info_produccion_academica = <Array<ProduccionAcademicaPost>>res.Response.Body[0];
+          console.log("Produccion Academica", res);
+          if (res.Status === 200 && res.Data !== null) {
+            this.info_produccion_academica = <Array<ProduccionAcademicaPost>>res.Data;
             this.infoCarga.nCargas = this.info_produccion_academica.length;
             this.info_produccion_academica.forEach((produccion:any) => {
               produccion["VerSoportes"] = false;

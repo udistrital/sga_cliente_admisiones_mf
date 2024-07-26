@@ -10,7 +10,8 @@ import {
 import { FORM_ASIGNACION_CUPO } from "./form-asignacion_cupo";
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import Swal from "sweetalert2";
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { SgaMidService } from "src/app/services/sga_mid.service";
 import { SgaAdmisionesMid } from "src/app/services/sga_admisiones_mid.service";
 import { MatSelect } from "@angular/material/select";
@@ -320,7 +321,7 @@ export class CrudAsignacionCupoComponent implements OnInit, OnChanges {
       confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
       cancelButtonText: this.translate.instant("GLOBAL.cancelar"),
     };
-    Swal.fire(opt).then((willDelete) => {
+    Swal.fire(opt).then((willDelete: any) => {
       this.loading = true;
       if (willDelete.value) {
         console.info(JSON.stringify(this.info_cupos));

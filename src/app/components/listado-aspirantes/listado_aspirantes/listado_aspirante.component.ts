@@ -3,7 +3,8 @@ import { Input, Output, EventEmitter } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inscripcion } from '../../../models/inscripcion/inscripcion';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { FormControl, Validators } from '@angular/forms';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { PopUpManager } from '../../../managers/popUpManager';
@@ -283,7 +284,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: this.translate.instant('GLOBAL.' + 'actualizar')
-            }).then((result) => {
+            }).then((result:any) => {
                 if (result.value) {
                     const updateState = {
                         ...event.newData.Inscripcion,

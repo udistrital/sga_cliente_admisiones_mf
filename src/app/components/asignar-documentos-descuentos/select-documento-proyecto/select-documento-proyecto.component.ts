@@ -2,7 +2,8 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 // import { LocalDataSource } from 'ng2-smart-table';
 // import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 //  
 import { Subscription } from 'rxjs';
 // import { NbDialogRef } from '@nebular/theme';
@@ -150,7 +151,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
                   showCancelButton: true,
                 };
 
-                Swal.fire(opt1).then((willCreate) => {
+                Swal.fire(opt1).then((willCreate:any) => {
                   if (willCreate.value) {
                     this.loadDataProyecto();
                   }
@@ -185,7 +186,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
       showCancelButton: true,
     };
     Swal.fire(opt)
-      .then((willDelete) => {
+      .then((willDelete:any) => {
 
         if (willDelete.value) {
           Swal.fire({
@@ -221,7 +222,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
                 showCancelButton: true,
               };
 
-              Swal.fire(opt1).then((willDelete1) => {
+              Swal.fire(opt1).then((willDelete1:any) => {
                 if (willDelete1.value) {
                   this.loadDataProyecto();
                 }

@@ -3,7 +3,8 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UtilidadesService } from 'src/app/services/utilidades.service';

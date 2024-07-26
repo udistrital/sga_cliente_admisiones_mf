@@ -3,8 +3,8 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { IdiomaService } from 'src/app/services/idioma.service';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { UserService } from '../../../services/users.service';
-import Swal from 'sweetalert2';
-// import 'style-loader!angular2-toaster/toaster.css';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -72,6 +72,7 @@ export class ViewIdiomasComponent implements OnInit {
     this.idiomaService.get('conocimiento_idioma?query=Activo:true,TercerosId:' + this.persona_id +
       '&limit=0')
       .subscribe((res:any) => {
+        console.log("IDIOMAS", res);
         if (res !== null && JSON.stringify(res[0]) !== '{}') {
           const data = <Array<any>>res;
           this.info_idioma = data;
