@@ -111,3 +111,7 @@ th{
     flex-direction: column;
   }
 }
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: var(--color100);
+}

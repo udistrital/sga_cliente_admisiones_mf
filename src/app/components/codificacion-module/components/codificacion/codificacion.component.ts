@@ -66,7 +66,7 @@ export class CodificacionComponent {
       anoInicio: ["", Validators.required],
       codigoProyectoCurricular: [
         "",
-        [Validators.required, Validators.pattern("[0-9]*")],
+
       ],
       //planEstudios: ["", Validators.required],
       periodoAcademico: ["", Validators.required],
@@ -97,11 +97,11 @@ export class CodificacionComponent {
           this.niveles = [
             { value: -1, viewValue: "Todos" },
             ...resp
-              .filter((nivel:any) => !nivel.NivelFormacionPadreId)
-              .map((nivel:any) => ({ value: nivel.Id, viewValue: nivel.Nombre })),
+              .filter((nivel: any) => !nivel.NivelFormacionPadreId)
+              .map((nivel: any) => ({ value: nivel.Id, viewValue: nivel.Nombre })),
           ];
         },
-        (err:any) => {
+        (err: any) => {
           console.error(err);
         }
       );
@@ -111,8 +111,8 @@ export class CodificacionComponent {
     this.codificacionService
       .getProyectosCurriculares()
       .subscribe(
-        (data:any) => (this.proyectosCurriculares = data),
-        (error:any) => console.error(error)
+        (data: any) => (this.proyectosCurriculares = data),
+        (error: any) => console.error(error)
       );
   }
 
@@ -120,11 +120,11 @@ export class CodificacionComponent {
     this.codificacionService
       .getPeriodosAcademicos()
       .subscribe(
-        (data:any) => {
+        (data: any) => {
           this.periodosAcademicos = data
           this.extraerAnosInicio();
         },
-        (error:any) => console.error(error)
+        (error: any) => console.error(error)
       );
   }
 
@@ -163,12 +163,13 @@ export class CodificacionComponent {
     const idProyecto = this.selectionForm.get('proyectoCurricular')?.value
     const idPeriodo = this.selectionForm.get('periodoAcademico')?.value
     const codigoProyecto = this.selectionForm.get('codigoProyectoCurricular')?.value
+    const nivel = this.niveles.find(nivel => nivel.value === this.selectionForm.get('nivel')?.value)
 
     this.codificacionService
-      .getAdmitidos(idPeriodo, idProyecto, this.periodoValue, codigoProyecto)
+      .getAdmitidos(idPeriodo, idProyecto, this.periodoValue, codigoProyecto, nivel?.viewValue)
       .subscribe(
         {
-          next: (data:any) => {
+          next: (data: any) => {
             this.boolListado = true
             this.openSnackBar('Información encontrada')
             this.dataSource = data.data
@@ -181,7 +182,7 @@ export class CodificacionComponent {
               this.openSnackBar('Recuerda asignar los puntajes de los estudiantes')
             }
           },
-          error: (error:any) => {
+          error: (error: any) => {
             this.openSnackBar('No se encontró información')
           }
         }
@@ -190,7 +191,7 @@ export class CodificacionComponent {
 
   generarCodigos() {
     this.codificacionService.postGenerarCodigos(this.dataSource, 1).subscribe({
-      next: (data:any) => {
+      next: (data: any) => {
         if (data.data) {
           this.openSnackBar('Codigos generados')
           this.dataSource = data.data
@@ -203,13 +204,13 @@ export class CodificacionComponent {
 
   asignarCodificacion() {
     this.codificacionService.postGuardarCodigos(this.dataSource).subscribe({
-      next: (data:any) => {
+      next: (data: any) => {
         if (data.data) {
           this.openSnackBar('Codificación asignada')
           this.getAdmitidos()
         }
       },
-      error: (error:any) => this.openSnackBar('Codificación no asignada')
+      error: (error: any) => this.openSnackBar('Codificación no asignada')
     });
   }
 
@@ -302,10 +303,10 @@ export class CodificacionComponent {
       .getPlanDeEstudios(id)
       .subscribe(
         {
-          next: (data:any) => {
+          next: (data: any) => {
             this.planEstudiosFiltrados = data.Data
           },
-          error: (error:any) => console.error(error)
+          error: (error: any) => console.error(error)
         }
       );
   }

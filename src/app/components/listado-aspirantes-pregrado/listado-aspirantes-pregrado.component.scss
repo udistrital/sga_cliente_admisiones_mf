@@ -5,20 +5,20 @@
 
 }
 
-table {
-  width: 100%;
-  border-collapse: separate;
-  th {
-      text-align: center;
-      color: white;
-      background-color: var(--primary);
-  }
-  td {
-      text-align: center !important;
-      border-right: whitesmoke;
-      border-left: whitesmoke;
-  }
-}
+// table {
+//   width: 100%;
+//   border-collapse: separate;
+//   th {
+//       text-align: center;
+//       color: white;
+//       background-color: var(--primary);
+//   }
+//   td {
+//       text-align: center !important;
+//       border-right: whitesmoke;
+//       border-left: whitesmoke;
+//   }
+// }
 
 .btn-barcode,
 .container-button-column {
@@ -93,6 +93,8 @@ table {
   cursor: pointer;
   color: white !important;
   display: flex;
+  padding: 10px 15px;
+  border-radius: 10px;
 }
 
 .link:hover {
@@ -180,6 +182,20 @@ mat-table {
   z-index: 1;
 }
 
+.filtro {
+  width: 100%;
+}
+
+.boton-acciones {
+  cursor: pointer;
+}
+
+.boton-acciones .item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 @media(width > 580px) {
   .form-container {
     grid-template-columns: repeat(2, 1fr);
@@ -190,4 +206,21 @@ mat-table {
   .form-container {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+/* Estilos para el indicador de estado */
+.status-indicator {
+  margin-top: 0.3em;
+  font-weight: bold;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.3rem;
+}
+.status-indicator.active {
+  color: white;
+  background-color: var(--success-accent);
+}
+.status-indicator.inactive {
+  color: white;
+  background-color: var(--danger-base);
 }

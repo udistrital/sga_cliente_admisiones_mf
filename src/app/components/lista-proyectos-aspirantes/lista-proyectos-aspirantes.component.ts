@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, QueryList, ViewChildren } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
@@ -18,8 +18,12 @@ import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
   styleUrls: ['./lista-proyectos-aspirantes.component.scss']
 })
 export class ListaProyectosAspirantesComponent implements OnDestroy{
-
   @ViewChildren(MatPaginator) paginators!: QueryList<MatPaginator>;
+
+  infoFiltrado = this.fb.group({
+    nivelFormControl: ['', Validators.required],
+    periodoFormControl: ['', Validators.required]
+  });
 
   subscripcion: Subscription = new Subscription()
 
@@ -28,16 +32,18 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
   nivel: any;
   periodo: any;
   proyectosActivosConListaAspirantes: any
+  loading: boolean = false;
   
   aspirantesColumnas: any[] = []
   aspirantesConstructorTabla: any[] = [];
   niveles: any[] = [];
   periodos: any[] = [];
 
-  nivelFormControl = new FormControl('', [Validators.required]);
-  periodoFormControl = new FormControl('', [Validators.required]);
+  // nivelFormControl = new FormControl('', [Validators.required]);
+  // periodoFormControl = new FormControl('', [Validators.required]);
 
   constructor(
+    private fb: FormBuilder,
     private admisionesMid: SgaAdmisionesMid,
     private evaluacionService: EvaluacionInscripcionService,
     private inscripcionService: InscripcionService,
@@ -45,9 +51,13 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
     private popUpManager: PopUpManager,
     private projectService: ProyectoAcademicoService,
     private translate: TranslateService,
-  ) {
+  ) { }
+
+  async ngOnInit() {
+    this.loading = true;
     this.cargarNiveles()
-    this.cargarPeriodo()
+    await this.cargarPeriodo()
+    this.loading = false;
   }
 
   cargarPeriodo() {
@@ -66,6 +76,8 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
           }
         },
           (error: HttpErrorResponse) => {
+            console.error(error);
+            this.loading = false;
             reject(error);
           }))
     });
@@ -74,29 +86,65 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
   cargarNiveles() {
     this.subscripcion.add(this.projectService.get('nivel_formacion?limit=0').subscribe(
       (response: any) => {
-        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.Nombre === 'Posgrado')
+        console.log(response)
+        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && (nivel.Id === 1 || nivel.Id === 2))
       },
       error => {
+        console.error(error);
+        this.loading = false;
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
       },
     ))
   }
 
-  cargarProyectos() {
-    const periodo = this.periodo.Id
-    const nivel = this.nivel
+  async generarBusqueda() {
+    this.loading = true;
+    console.log(this.nivel)
+    const res = await this.cargarProyectos();
+    if (res) {
+      this.cargarInformacionEnPanelesExpansivos()
+    }
+    this.loading = false;
+  }
 
-    this.subscripcion.add(this.admisionesMid.get(
-      "admision/aspirantes-de-proyectos-activos?id-nivel=" + nivel + "&id-periodo=" + periodo + "&tipo-lista=3")
-      .subscribe((res: any) => {
-        if (res.Success) {
+  // cargarProyectos() {
+  //   const periodo = this.periodo.Id
+  //   const nivel = this.nivel
+
+  //   this.subscripcion.add(this.admisionesMid.get(
+  //     "admision/aspirantes-de-proyectos-activos?id-nivel=" + nivel + "&id-periodo=" + periodo + "&tipo-lista=3")
+  //     .subscribe((res: any) => {
+  //       console.log(res);
+  //       if (res.Success) {
+  //         this.proyectosActivosConListaAspirantes = res.Data;
+  //         this.cargarInformacionEnPanelesExpansivos()
+  //       } else {
+  //         this.proyectosActivosConListaAspirantes = null
+  //         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+  //       }
+  //     }))
+  // }
+
+  cargarProyectos() {
+    return new Promise((resolve, reject) => {
+      this.subscripcion.add(this.admisionesMid.get("admision/aspirantes-de-proyectos-activos?id-nivel=" + this.nivel + "&id-periodo=" + this.periodo.Id + "&tipo-lista=3").subscribe((res: any) => {
+        console.log(res);
+        if (res.Success && res.Data != null) {
           this.proyectosActivosConListaAspirantes = res.Data;
-          this.cargarInformacionEnPanelesExpansivos()
+          resolve(true)
         } else {
           this.proyectosActivosConListaAspirantes = null
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+          this.loading = false;
+          reject(false);
         }
-      }))
+      },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+          this.loading = false;
+          reject(error);
+        }))
+    });
   }
 
   cargarInformacionEnPanelesExpansivos() {
@@ -138,6 +186,7 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
 
   calcularRecuentosInscripciones(): void {
     let proyectos: any[] = this.proyectosActivosConListaAspirantes;
+    console.log(proyectos)
     proyectos.forEach((proyecto: any) => {
       let aspirantes = proyecto.Aspirantes;
 
@@ -154,6 +203,7 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
 
   cargarCuposParaProyectos() {
     if (this.proyectosActivosConListaAspirantes != null) {
+      console.log(this.proyectosActivosConListaAspirantes)
       this.proyectosActivosConListaAspirantes.forEach((proyecto: any) => {
         this.cargarCantidadCupos(proyecto);
       });
@@ -167,6 +217,7 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
     // this.subscripcion.add(this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
       this.subscripcion.add(this.inscripcionService.get('cupo_inscripcion/?query=ProgramaAcademicoId :' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
       (response: any) => {
+        console.log(response)
         if (response !== null && response !== undefined && response[0].Id !== undefined) {
           proyecto.cuposProyecto = response[0].CuposHabilitados;
         } else {
@@ -180,7 +231,7 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
   }
 
   cambiarPeriodo() {
-    this.nivelFormControl.setValue('')
+    //this.nivelFormControl.setValue('')
     this.proyectosActivosConListaAspirantes = true
   }
 

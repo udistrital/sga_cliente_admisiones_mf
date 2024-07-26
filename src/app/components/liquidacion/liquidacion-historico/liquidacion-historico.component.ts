@@ -75,13 +75,11 @@ export class LiquidacionHistoricoComponent {
           }
         },
         error => {
+          console.error(error);
+          this.loading = false;
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
         },
       );
-    }
-
-    onSelectLevel () {
-      console.log(this.selectedLevel);
     }
 
   cargarFacultades() {
@@ -92,8 +90,9 @@ export class LiquidacionHistoricoComponent {
           resolve(res)
         },
           (error: any) => {
+            this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
-            console.log(error);
+            console.error(error);
             reject([]);
           });
     });
@@ -112,8 +111,9 @@ export class LiquidacionHistoricoComponent {
           resolve(res)
         },
           (error: any) => {
+            this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.periodo_error'));
-            console.log(error);
+            console.error(error);
             reject([]);
           });
     });
@@ -127,8 +127,7 @@ export class LiquidacionHistoricoComponent {
 
     if (this.selectedLevel === 1) {
       this.tablaHistorico = true;
-
-      this.inscripciones = await this.buscarInscripcionesAdmitidosLegalizados(proyecto, periodo)
+      this.inscripciones = await this.buscarInscripciones(proyecto, periodo);
 
       this.datosTabla = {
         "inscripciones": this.inscripciones,
@@ -150,6 +149,22 @@ export class LiquidacionHistoricoComponent {
     
   }
 
+  async buscarInscripciones(proyecto: any, periodo: any) {
+    const inscripcionesLegalizadas: any = await this.buscarInscripcionesAdmitidosLegalizados(proyecto, periodo);
+    const inscripcionesMatriculadas: any = await this.buscarInscripcionesMatriculados(proyecto, periodo);
+    const inscripcionesNoLegalizadas: any = await this.buscarInscripcionesNoLegalizados(proyecto, periodo);
+
+    const legalizados = Object.keys(inscripcionesLegalizadas[0]).length === 0 
+      ? Object.keys(inscripcionesMatriculadas[0]).length === 0 ? [] : inscripcionesMatriculadas
+      : Object.keys(inscripcionesMatriculadas[0]).length === 0 ? inscripcionesLegalizadas : inscripcionesLegalizadas.concat(inscripcionesMatriculadas)
+
+    const inscripciones = legalizados.length === 0
+      ? Object.keys(inscripcionesNoLegalizadas[0]).length === 0 ? [] : inscripcionesNoLegalizadas
+      : Object.keys(inscripcionesNoLegalizadas[0]).length === 0 ? legalizados : legalizados.concat(inscripcionesNoLegalizadas)
+
+    return inscripciones;
+  }
+
   buscarInscripcionesAdmitidosLegalizados(proyecto: any, periodo: any) {
     return new Promise((resolve, reject) => {
       this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:8&sortby=Id&order=asc')
@@ -159,7 +174,38 @@ export class LiquidacionHistoricoComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
+            console.error(error);
+            this.loading = false;
+            reject([]);
+          });
+    });
+  }
+
+  buscarInscripcionesMatriculados(proyecto: any, periodo: any) {
+    return new Promise((resolve, reject) => {
+      this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:11&sortby=Id&order=asc&limit=0')
+        .subscribe((res: any) => {
+          resolve(res)
+        },
+          (error: any) => {
+            this.loading = false;
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+            console.error(error);
+            reject([]);
+          });
+    });
+  }
+
+  buscarInscripcionesNoLegalizados(proyecto: any, periodo: any) {
+    return new Promise((resolve, reject) => {
+      this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:12&sortby=Id&order=asc&limit=0')
+        .subscribe((res: any) => {
+          resolve(res)
+        },
+          (error: any) => {
+            this.loading = false;
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+            console.error(error);
             reject([]);
           });
     });

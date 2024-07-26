@@ -12,13 +12,24 @@
 }
 
 .blue-header-icon {
-  background-color: #03678f;
-  color: white;
+  color: #03678f;
+  background-color: transparent;
   border: none;
-  margin-right: 0.5rem;
   outline: none;
   padding: 3px;
   border-radius: 4px;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blue-header-icon mat-icon {
+  font-size: 40px !important;
+  width: auto !important;
+  height: auto !important;
+  background-color: transparent;
 }
 
 mat-header-cell {
@@ -52,7 +63,7 @@ mat-header-cell {
   border-radius: 5px;
   font-weight: 300;
   background-color: #03678f;
-  border-color: #03678f;    
+  border-color: #03678f;
   margin-right: 10px;
   cursor: pointer;
   color: white !important;
