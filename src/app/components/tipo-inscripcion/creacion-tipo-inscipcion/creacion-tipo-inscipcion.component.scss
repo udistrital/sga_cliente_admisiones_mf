@@ -12,7 +12,16 @@
     z-index: 1;
 }
 
-.contenedor-no-data {
-    text-align: center;
-    padding: 15px 0;
+.form-principal mat-form-field {
+    width: 100%;
+}
+
+.boton-principal {
+    margin: auto;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid;
+    background-color: var(--md-primary-600);
+    color: var(--md-primary-contrast-400);
+    cursor: pointer;
 }
