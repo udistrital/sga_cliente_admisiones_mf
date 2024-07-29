@@ -38,9 +38,6 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
   niveles: any[] = [];
   periodos: any[] = [];
 
-  // nivelFormControl = new FormControl('', [Validators.required]);
-  // periodoFormControl = new FormControl('', [Validators.required]);
-
   constructor(
     private fb: FormBuilder,
     private admisionesMid: SgaAdmisionesMid,
@@ -104,24 +101,6 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
     }
     this.loading = false;
   }
-
-  // cargarProyectos() {
-  //   const periodo = this.periodo.Id
-  //   const nivel = this.nivel
-
-  //   this.subscripcion.add(this.admisionesMid.get(
-  //     "admision/aspirantes-de-proyectos-activos?id-nivel=" + nivel + "&id-periodo=" + periodo + "&tipo-lista=3")
-  //     .subscribe((res: any) => {
-  //       console.log(res);
-  //       if (res.Success) {
-  //         this.proyectosActivosConListaAspirantes = res.Data;
-  //         this.cargarInformacionEnPanelesExpansivos()
-  //       } else {
-  //         this.proyectosActivosConListaAspirantes = null
-  //         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-  //       }
-  //     }))
-  // }
 
   cargarProyectos() {
     return new Promise((resolve, reject) => {
@@ -188,14 +167,20 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
     proyectos.forEach((proyecto: any) => {
       let aspirantes = proyecto.Aspirantes;
 
-      proyecto.cantidad_inscrip_solicitada = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.Nombre === 'Inscripción solicitada').length;
-      proyecto.cantidad_admitidos = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.Nombre === 'ADMITIDO').length;
-      proyecto.cantidad_opcionados = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.Nombre === 'OPCIONADO').length;
-      proyecto.cantidad_no_admitidos = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.Nombre === 'NO ADMITIDO').length;
-      proyecto.cantidad_inscritos = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.Nombre === 'INSCRITO').length;
-      proyecto.cantidad_inscritos_obs = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.Nombre === 'INSCRITO con Observación').length;
+      proyecto.cantidad_inscrip_solicitada = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.CodigoAbreviacion === 'INSCSOL').length;
+      proyecto.cantidad_admitidos = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.CodigoAbreviacion === 'ADM').length;
+      proyecto.cantidad_opcionados = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.CodigoAbreviacion === 'OPC').length;
+      proyecto.cantidad_no_admitidos = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.CodigoAbreviacion === 'NOADM').length;
+      proyecto.cantidad_inscritos = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.CodigoAbreviacion === 'INSCREAL').length;
+      proyecto.cantidad_inscritos_obs = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.CodigoAbreviacion === 'INSCOBS').length;
+      //****//
+      proyecto.cantidad_admitidos_leg = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.CodigoAbreviacion === 'ADMLEG').length;
+      proyecto.cantidad_admitidos_obs = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.CodigoAbreviacion === 'ADMOBS').length;
+      proyecto.cantidad_matriculados = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.CodigoAbreviacion === 'ADMAT').length;
+      proyecto.cantidad_no_oficial = aspirantes.filter((aspirante: any) => aspirante.EstadoInscripcionId.CodigoAbreviacion === 'NOOFI').length;
 
-      proyecto.cantidad_aspirantes = proyecto.cantidad_inscrip_solicitada + proyecto.cantidad_admitidos + proyecto.cantidad_opcionados + proyecto.cantidad_no_admitidos + proyecto.cantidad_inscritos + proyecto.cantidad_inscritos_obs;
+
+      proyecto.cantidad_aspirantes = proyecto.cantidad_inscrip_solicitada + proyecto.cantidad_admitidos + proyecto.cantidad_opcionados + proyecto.cantidad_no_admitidos + proyecto.cantidad_inscritos + proyecto.cantidad_inscritos_obs + proyecto.cantidad_admitidos_leg + proyecto.cantidad_admitidos_obs + proyecto.cantidad_matriculados + proyecto.cantidad_no_oficial;
     });
   }
 
