@@ -1,0 +1,59 @@
+<mat-card>
+    <mat-card-content>
+        <div class="mt-20">
+            <legend>
+                &nbsp; Tipos Cupos
+            </legend>
+        </div>
+        <div>
+            <div>
+                <table mat-table [dataSource]="dataSource">
+                    <ng-container matColumnDef="Nombre">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.nombre' | translate }}</th>
+                        <td mat-cell *matCellDef="let cupo"> {{ cupo.Nombre }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Descripcion">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.descripcion' | translate }}</th>
+                        <td mat-cell *matCellDef="let cupo"> {{ cupo.Descripcion }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Tipo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.Tipo' | translate }} </th>
+                        <td mat-cell *matCellDef="let cupo">
+                        <td mat-cell *matCellDef="let cupo"> {{ cupo.Tipo }} </td>
+
+                    </ng-container>
+
+                    <ng-container matColumnDef="Subtipo">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.subtipo' | translate }} </th>
+                        <td mat-cell *matCellDef="let cupo">
+                        <td mat-cell *matCellDef="let cupo"> {{ cupo.Subtipo }} </td>
+
+                    </ng-container>
+
+                    <ng-container matColumnDef="Estado">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.estado' | translate }} </th>
+                        <td mat-cell *matCellDef="let cupo"> {{ cupo.estado }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Acciones">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.acciones' | translate }} </th>
+                        <td mat-cell *matCellDef="let cupo"> {{ cupo.Acciones }} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let cupo; columns: displayedColumns;"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No se han encontrado tipos cupo</td>
+                    </tr>
+                </table>
+                <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+            </div>
+        </div>
+        <mat-card-actions>
+            <button>Guardar</button>
+            <button (click)="CrearEditarTiposCupos()">Editar</button>
+        </mat-card-actions>
+    </mat-card-content>
+</mat-card>
