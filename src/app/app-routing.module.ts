@@ -108,10 +108,6 @@ const routes: Routes = [
     path:"liquidacion-historico", 
     component: LiquidacionHistoricoComponent,
   },
-   {
-     path:"soporte-configuracion", 
-     component: SoporteConfiguracionComponent ,
-   },
     {path:"reportes-inscritos", 
     component: RepotesInscripcionesComponent,
   },
