@@ -92,6 +92,10 @@ export class ListadoAspirantesPregradoComponent {
   inscripcionesOpcionadas: any = 0;
   inscripcionesInscritas: any = 0;
   inscripcionesInscritasObservacion: any = 0;
+  inscripcionesAdmitidasLegalizadas: any = 0;
+  inscripcionesAdmitidasObservacion: any = 0;
+  inscripcionesMatriculadas: any = 0;
+  inscripcionesNoOficializadas: any = 0;
   inscripcionesTotal: any = 0;
 
   valorOriginal: any = ""
@@ -173,8 +177,6 @@ export class ListadoAspirantesPregradoComponent {
 
   onFacultadChange(event: any) {
     this.loading = true;
-    // const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
-    // this.proyectosCurriculares = facultad.Opciones;
     const programas = this.proyectosPregrado.filter((item: any) => item.FacultadId == event.value);
     this.proyectosCurriculares = programas;
     this.loading = false;
@@ -194,7 +196,7 @@ export class ListadoAspirantesPregradoComponent {
         if (Object.keys(infoIcfes[0]).length > 0) {
           count += 1
           const persona: any = await this.consultarTercero(inscripcion.PersonaId);
-          this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.Nombre)
+          this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
 
           const inscritoData = {
             "persona_id": inscripcion.PersonaId,
@@ -348,23 +350,35 @@ export class ListadoAspirantesPregradoComponent {
   cargarResumenInscripciones(estado: any) {
     this.inscripcionesTotal += 1;
     switch (estado) {
-      case "Inscripción solicitada":
+      case "INSCSOL":
         this.inscripcionesSolicitadas += 1;
         break;
-      case "ADMITIDO":
+      case "ADM":
         this.inscripcionesAdmitidas += 1;
         break;
-      case "OPCIONADO":
+      case "OPC":
         this.inscripcionesOpcionadas += 1;
         break;
-      case "NO ADMITIDO":
+      case "NOADM":
         this.inscripcionesNoAdmitidas += 1;
         break;
-      case "INSCRITO":
+      case "INSCREAL":
         this.inscripcionesInscritas += 1;
         break;
-      case "INSCRITO con Observación":
+      case "INSCOBS":
         this.inscripcionesInscritasObservacion += 1;
+        break;
+      case "ADMLEG":
+        this.inscripcionesAdmitidasLegalizadas += 1;
+        break;
+      case "ADMOBS":
+        this.inscripcionesAdmitidasObservacion += 1;
+        break;
+      case "ADMAT":
+        this.inscripcionesMatriculadas += 1;
+        break;
+      case "NOOFI":
+        this.inscripcionesNoOficializadas += 1;
         break;
       default:
         console.error("Estado inesperado:", estado);
