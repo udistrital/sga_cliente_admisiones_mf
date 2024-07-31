@@ -74,20 +74,18 @@
 
                 <!-- Tag de criterios -->
                 <div class="row" *ngIf="tipo_inscripcion_selected" style="justify-content: space-around;">
-
+                
                   <div class="col-sm-6 col-md-4 col-lg-3" align="center" id="info_basica">
-
-                    <mat-card class="exp-card"
-                             (click)="openSelectDocumentoProyectoComponent()">
+                
+                    <mat-card class="exp-card" (click)="openSelectDocumentoProyectoComponent()">
                       <mat-card-header>{{ 'documento_proyecto.documentos' | translate }}</mat-card-header>
                       <mat-card-content class="icon-form">
                         <mat-icon fontIcon="folder" class="folder-icon"></mat-icon>
                       </mat-card-content>
                     </mat-card>
                   </div>
-                      <div class="col-sm-6 col-md-4 col-lg-3" align="center" id="info_basica" *ngIsGranted="['VICERRECTOR', 'ASESOR_VICE']" >
-                    <mat-card class="exp-card"
-                             (click)="openSelectDescuentoProyectoComponent()">
+                  <div class="col-sm-6 col-md-4 col-lg-3" align="center" id="info_basica" *ngIsGranted="['VICERRECTOR', 'ASESOR_VICE']">
+                    <mat-card class="exp-card" (click)="openSelectDescuentoProyectoComponent()">
                       <mat-card-header>{{ 'documento_proyecto.descuentos' | translate }}</mat-card-header>
                       <mat-card-content class="icon-form">
                         <mat-icon fontIcon="folder" class="folder-icon"></mat-icon>

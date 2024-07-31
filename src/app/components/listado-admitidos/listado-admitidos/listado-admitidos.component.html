@@ -159,7 +159,7 @@
                                 {{ 'evaluacionPregrado.proyecto_curricular' | translate }}
                             </th>
                             <td mat-cell *matCellDef="let row">
-                                {{ row.DependenciaId.Nombre }}
+                                {{ row.Nombre }}
                             </td>
                         </ng-container>
 
@@ -168,8 +168,8 @@
                                 {{ 'evaluacionPregrado.estado' | translate }}
                             </th>
                             <td mat-cell *matCellDef="let row">
-                                <span *ngIf="row.DependenciaId.Activo == true">{{ 'GLOBAL.activo' | translate }}</span>
-                                <span *ngIf="row.DependenciaId.Activo != true">{{ 'GLOBAL.inactivo' | translate }}</span>
+                                <span *ngIf="row.Activo == true">{{ 'GLOBAL.activo' | translate }}</span>
+                                <span *ngIf="row.Activo != true">{{ 'GLOBAL.inactivo' | translate }}</span>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="accion">
@@ -179,7 +179,7 @@
                             <td mat-cell *matCellDef="let row">
                                 <button mat-icon-button style="color:var(--primary); background: transparent; border: none;"
                                     title="{{ 'admision.tooltip_eliminar' | translate }}"
-                                    (click)="consultarproyecto(row.DependenciaId.Id)">
+                                    (click)="consultarproyecto(row.Id)">
                                     <mat-icon>search</mat-icon>
                                 </button>
                             </td>

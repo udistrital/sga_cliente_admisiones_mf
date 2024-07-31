@@ -57,6 +57,7 @@ export class LiquidacionRecibosComponent {
   notificaciones: any[] = [];
   generados: boolean = false;
   inscripciones: any = [];
+  proyectosPregrado!: any[];
 
   mostrarFormulario: boolean = false;
 
@@ -183,10 +184,11 @@ export class LiquidacionRecibosComponent {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loading = true;
-    this.cargarFacultades();
-    this.cargarPeriodo();
+    await this.cargarFacultades();
+    await this.cargarPeriodo();
+    await this.cargarProyectosPregrado();
 
     const validatorProyectoControl = this.firstFormGroup.get('validatorProyecto');
     const validatorPeridoControl = this.firstFormGroup.get('validatorPeriodo');
@@ -208,6 +210,22 @@ export class LiquidacionRecibosComponent {
     this.loading = false;
   }
 
+  cargarProyectosPregrado() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get('proyecto_academico_institucion?query=Activo:true,NivelFormacionId:1&sortby=Id&order=asc&limit=0')
+        .subscribe((res: any) => {
+          this.proyectosPregrado = res;
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_admision.facultades_error'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
+          });
+    });
+  }
+
   cargarFacultades() {
     return new Promise((resolve, reject) => {
       this.oikosService.get('dependencia_padre/FacultadesConProyectos?Activo:true&limit=0')
@@ -224,8 +242,9 @@ export class LiquidacionRecibosComponent {
   }
 
   onFacultadChange(event: any) {
-    const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
-    this.proyectos = facultad.Opciones;
+    console.log(event.value);
+    const programas = this.proyectosPregrado.filter((item: any) => item.FacultadId == event.value);
+    this.proyectos = programas;
   }
 
   cargarPeriodo() {

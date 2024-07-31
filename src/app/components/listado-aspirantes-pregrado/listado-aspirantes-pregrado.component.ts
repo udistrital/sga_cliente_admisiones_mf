@@ -12,6 +12,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 
 interface Tile {
   color: string;
@@ -28,6 +29,7 @@ interface Tile {
   styleUrls: ['./listado-aspirantes-pregrado.component.scss']
 })
 export class ListadoAspirantesPregradoComponent {
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   
@@ -82,6 +84,7 @@ export class ListadoAspirantesPregradoComponent {
 
   inscripciones: any = [];
   inscritosData: any[] = [];
+  proyectosPregrado!: any[];
 
   inscripcionesSolicitadas: any = 0;
   inscripcionesAdmitidas: any = 0;
@@ -103,6 +106,7 @@ export class ListadoAspirantesPregradoComponent {
     private parametrosService: ParametrosService,
     private inscripcionService: InscripcionService,
     private sgamidService: SgaMidService,
+    private projectService: ProyectoAcademicoService,
     private popUpManager: PopUpManager
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -118,6 +122,7 @@ export class ListadoAspirantesPregradoComponent {
   async cargarSelects() {
     await this.cargarPeriodos();
     await this.cargarFacultades();
+    await this.cargarProyectosPregrado();
   }
 
   cargarFacultades() {
@@ -150,10 +155,28 @@ export class ListadoAspirantesPregradoComponent {
     });
   }
 
+  cargarProyectosPregrado() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get('proyecto_academico_institucion?query=Activo:true,NivelFormacionId:1&sortby=Id&order=asc&limit=0')
+        .subscribe((res: any) => {
+          this.proyectosPregrado = res;
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_admision.facultades_error'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
+          });
+    });
+  }
+
   onFacultadChange(event: any) {
     this.loading = true;
-    const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
-    this.proyectosCurriculares = facultad.Opciones;
+    // const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
+    // this.proyectosCurriculares = facultad.Opciones;
+    const programas = this.proyectosPregrado.filter((item: any) => item.FacultadId == event.value);
+    this.proyectosCurriculares = programas;
     this.loading = false;
   }
 
