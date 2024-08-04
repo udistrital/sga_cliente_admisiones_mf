@@ -14,6 +14,7 @@ import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service'
 })
 export class TiposCuposComponent {
 
+  checked = 0;
   displayedColumns = ["check", "Nombre", "Descripcion", "Codigo", "Estado", "Acciones"];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -45,6 +46,9 @@ export class TiposCuposComponent {
       });
   }
 
+  validaCheck(cupo: any) {
+
+  }
   onAction(event: any) {
     if (event.action == 'edit') {
 
@@ -75,16 +79,24 @@ export class TiposCuposComponent {
 
   onCheckboxChange(event: Event, cupo: any) {
     const inputElement = event.target as HTMLInputElement;
-    cupo.check = inputElement.checked;
+    console.log("hola");
+    
+    if (this.checked == 0) {
+      this.checked = 1;
+      cupo.check = inputElement.checked;
+    } else {
+      alert('Solo se puede seleccionar un tipo de cupo');
+      cupo.check = false;
+      inputElement.checked = false; // Desmarcar el checkbox en el DOM
+    }
   }
-
   onYesClick(): void {
     const dataResult: any[] = [];
     this.dataSource.data.forEach((element: any) => {
       if (element.check == true) {
         dataResult.push(element);
       }
-    });    
+    });
     console.log(dataResult)
     this.dialogRef.close({ result: dataResult });
   }
