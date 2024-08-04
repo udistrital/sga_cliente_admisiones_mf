@@ -1,0 +1,94 @@
+<mat-card>
+    <mat-card-content>
+        <div class="mt-20">
+            <legend>
+                &nbsp; Tipos Cupos
+            </legend>
+        </div>
+        <div>
+            <div>
+                <div>
+                    <button  mat-flat-button color="accent" type="button" class="mt-20"  (click)="CrearEditarTiposCupos()">
+                        <mat-icon>
+                            add
+                        </mat-icon>
+                    </button>
+                </div>
+                <table mat-table [dataSource]="dataSource">
+                    <ng-container matColumnDef="check">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.nombre' | translate }}</th>
+                        <td mat-cell *matCellDef="let cupo">
+                            <input  type="checkbox" [checked]="cupo.check" (change)="onCheckboxChange($event, cupo)" [disabled]="cupo.check" />
+                          </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Nombre">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.nombre' | translate }}</th>
+                        <td mat-cell *matCellDef="let cupo"> {{ cupo.Nombre }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Descripcion">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.descripcion' | translate }}</th>
+                        <td mat-cell *matCellDef="let cupo"> {{ cupo.Descripcion }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Codigo">
+                        <th mat-header-cell *matHeaderCellDef> Codigo Abreviacion</th>
+                        <td mat-cell *matCellDef="let cupo">
+                            <ng-container>
+                                {{ cupo.CodigoAbreviacion }}
+                            </ng-container>
+                        </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="Estado">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.estado' | translate }} </th>
+                        <td mat-cell *matCellDef="let cupo">
+                            <ng-container *ngIf="cupo.Activo">Activo</ng-container>
+                            <ng-container *ngIf="!cupo.Activo">Inactivo</ng-container>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Acciones">
+                        <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.acciones' | translate }} </th>
+                        <td mat-cell *matCellDef="let cupo; let i = index">
+                            <button mat-icon-button [matMenuTriggerFor]="menu"
+                                [matTooltip]="'GLOBAL.acciones' | translate" color="accent">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="
+                                      onAction({
+                                        action: 'edit',
+                                        data: cupo,
+                                        editable: true
+                                      })
+                                    ">
+                                    <mat-icon fontIcon="edit" color="accent"></mat-icon>
+                                    <span>Editar</span>
+                                </button>
+                                <button mat-menu-item (click)="onAction({ action: 'delete', data: cupo })" [disabled]="cupo.check">
+                                    <mat-icon fontIcon="delete" color="warn" ></mat-icon>
+                                    <span>Cambiar Estado</span>
+                                </button>
+
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let cupo; columns: displayedColumns;"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No se han encontrado tipos cupo</td>
+                    </tr>
+                </table>
+                <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+            </div>
+        </div>
+        <mat-card-content class="center-content">
+            <button mat-flat-button color="accent" type="button" title="Guardar" (click)="onYesClick()">
+                Guardar
+            </button>
+        </mat-card-content>
+    </mat-card-content>
+</mat-card>

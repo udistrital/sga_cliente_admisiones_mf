@@ -1,0 +1,87 @@
+<mat-card>
+
+
+    <mat-card-content class="mt-20">
+        <legend>
+            &nbsp; {{titulo}} tipo cupo
+        </legend>
+
+        <!-- select nombre del tipo cupo -->
+        <mat-card-content class="mt-20">
+            <mat-form-field class="form-item">
+                <mat-label>
+                    Nombre:
+                </mat-label>
+                <input type="text" matInput [formControl]="nombre" [value]="nombre.value" [disabled]="true">
+                <mat-error *ngIf="nombre.hasError('required')">
+                    Por favor, Ingresa el nombre del nuevo tipo cupo
+                </mat-error>
+            </mat-form-field>
+            <br /><br />
+        </mat-card-content>
+
+        <mat-card-content class="form-grid2">
+            <!-- select descripcion del tipo cupo -->
+            <mat-form-field class="form-item">
+                <mat-label>
+                    Descripcion:
+                </mat-label>
+                <input type="text" matInput [formControl]="descripcion" [value]="descripcion.value" [disabled]="true">
+                <mat-error *ngIf="descripcion.hasError('required')">
+                    Por favor, Ingresa el nombre del nuevo tipo cupo
+                </mat-error>
+            </mat-form-field>
+            <br /><br />
+        </mat-card-content>
+
+        <mat-card-content class="form-grid2">
+            <!-- select tipo del tipo cupo -->
+            <mat-form-field class="form-item">
+                <mat-label>
+                    Codigo de Abreviacion:
+                </mat-label>
+                <input type="text" matInput [formControl]="codigoAbreviacion" [value]="codigoAbreviacion.value" [disabled]="true">
+                <mat-error *ngIf="codigoAbreviacion.hasError('required')">
+                    Por favor, Ingresa el nombre del nuevo tipo cupo
+                </mat-error>
+            </mat-form-field>
+            <br /><br />
+        </mat-card-content>
+
+        <mat-card-content class="form-grid2">
+            <!-- select subtipo del tipo cupo -->
+            <mat-form-field class="form-item">
+                <mat-label>
+                    Numero Orden:
+                </mat-label>
+                <input type="number" matInput [formControl]="numeroOrden" [value]="numeroOrden.value" [disabled]="true">
+                <mat-error *ngIf="numeroOrden.hasError('required')">
+                    Por favor, Ingresa el nombre del nuevo tipo cupo
+                </mat-error>
+            </mat-form-field>
+            <br /><br />
+
+        </mat-card-content>
+
+        <mat-card-content>
+            <div>
+                <button>
+                    <mat-icon>
+                        attach_file
+                    </mat-icon>
+                </button>
+
+                <span>
+                    Adjuntar soporte documental
+                </span>
+            </div>
+            <div>
+                <button (click)="TipoCupoguardar()">
+                    Guardar
+                </button>
+
+            </div>
+        </mat-card-content>
+    </mat-card-content>
+
+</mat-card>

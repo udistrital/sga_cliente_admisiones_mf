@@ -6,7 +6,7 @@
                     &nbsp; {{ 'admision.cupos_proyectos' | translate }}
                 </legend>
 
-                <mat-card class="mt-20" [hidden]="show_profile">
+                <mat-card class="mt-20" >
                     <mat-card-content class="form-grid2">
                         <!-- select periodo -->
                         <mat-form-field class="form-item">
@@ -72,7 +72,7 @@
 
 
 
-                <crud-asignacion-cupo [info_proyectos]="this.proyectos_selected" [info_periodo]="this.periodo"
+                <crud-asignacion-cupo *ngIf="show_cupos" [info_proyectos]="this.proyectos_selected" [info_periodo]="this.periodo"
                     [info_nivel]="this.esPosgrado">
                 </crud-asignacion-cupo>
 

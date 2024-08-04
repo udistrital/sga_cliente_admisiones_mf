@@ -13,7 +13,7 @@ import { DefSuiteInscripProgramaComponent } from './components/suite-programa/de
 import { TransferenciaComponent } from './components/transferencia/transferencia/transferencia.component';
 import { DialogoDocumentosTransferenciasComponent } from './components/transferencia/dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
 import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
-
+import { CrudTipoCupoComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/crud-tipo-cupo/crud-tipo-cupo.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { EventEmitter, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -62,7 +62,7 @@ import { CampusMidService } from './services/campus_mid.service';
 import { ViewPropuestaGradoComponent } from './components/evalucion-documentos-inscritos/view-propuesta_grado/view-propuesta_grado.component';
 import { StoreModule } from '@ngrx/store';
 import { rootReducer } from './store/rootReducer';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ListService } from './store/services/list.service';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
@@ -118,6 +118,7 @@ import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/c
 import { ListaTipoCuposComponent } from './components/tipo-cupos/lista-tipo-cupos/lista-tipo-cupos.component';
 import { CreacionTipoCuposComponent } from './components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component';
 import { EventosService } from './services/eventos.service';
+import { TiposCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/tipos-cupos/tipos-cupos.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -127,6 +128,8 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
+    TiposCuposComponent,
+    CrudTipoCupoComponent,
     LiquidacionPregrado,
     DialogoCriteriosComponent,
     AdministradorCriteriosComponent,
@@ -212,6 +215,7 @@ export function createTranslateLoader(http: HttpClient) {
     CommonModule,
     BrowserModule,
     MatTabsModule,
+    MatTooltipModule,
     MatIconModule,
     MatStepperModule,
     MatStepperModule,

@@ -4,6 +4,12 @@
 
 }
 
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .boton-primary {
     border: solid 1px #03678f;
     border-radius: 5px;
@@ -16,4 +22,13 @@
     padding: 8px;
   }
 
-
+  .flex-container {
+    width: 100%;
+    display: flex;
+    gap: 10px; /* Ajusta el espacio entre los contenedores según sea necesario */
+    align-items: center; /* Alinea los elementos verticalmente al centro */
+  }
+  
+  .flex-container > div {
+    flex: 1; /* Hace que cada hijo tome el mismo espacio disponible */
+  }
