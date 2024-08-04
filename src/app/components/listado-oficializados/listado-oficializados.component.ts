@@ -5,8 +5,6 @@ import { OikosService } from 'src/app/services/oikos.service';
 import { SgaProyectoCurricularMidService } from 'src/app/services/sga-proyecto-curricular-mid.service';
 import { SgaCalendarioMidService } from 'src/app/services/sga_calendario_mid.service';
 import { TercerosService } from 'src/app/services/terceros.service';
-import { forkJoin, of } from 'rxjs';
-import { mergeMap, map, switchMap } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { EventoService } from 'src/app/services/evento.service';
 import { FormControl, Validators } from '@angular/forms';
@@ -65,7 +63,6 @@ export class ListadoOficializadosComponent {
     private inscripcionService: InscripcionService,
     private calendarioService: SgaCalendarioMidService,
     private oikosService: OikosService,
-    private sgaProyectoCurricularMidService: SgaProyectoCurricularMidService,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private sgaAdmisionesMidService: SgaAdmisionesMid,

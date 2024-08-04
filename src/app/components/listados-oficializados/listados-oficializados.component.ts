@@ -40,6 +40,7 @@ export class ListadosOficializadosComponent implements OnInit, AfterViewInit {
 
   loadData(): void {
     this.solicitudesAdmisiones.get('solicitud?query=EstadoTipoSolicitudId.TipoSolicitud.Id:40').subscribe(res => {
+      console.log(res);
       if (res !== null) {
         const data = <Array<any>><unknown>res;
         this.datos = data.map(item => ({
