@@ -93,6 +93,7 @@ export class EvalucionAspirantePregradoComponent {
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones.get('admision/facultad/inscritos')
         .subscribe((res: any) => {
+          console.log(res)
           if (res.Data) {
             this.facultades = res.Data;
             this.datasourceFacultades = new MatTableDataSource<any>(this.facultades);
@@ -115,8 +116,9 @@ export class EvalucionAspirantePregradoComponent {
 
   cargarProyectosPregrado() {
     return new Promise((resolve, reject) => {
-      this.oikosService.get('dependencia_tipo_dependencia?query=Activo:true,TipoDependenciaId:14&sortby=Id&order=asc&limit=0')
+      this.projectService.get('proyecto_academico_institucion?query=Activo:true,NivelFormacionId:1&sortby=Id&order=asc&limit=0')
         .subscribe((res: any) => {
+          console.log(res);
           this.proyectosPregrado = res;
           resolve(res)
         },
@@ -135,8 +137,10 @@ export class EvalucionAspirantePregradoComponent {
     this.viewVariables = false;
     this.viewSubcriterios = false;
     const proyectoAcademicoIds = new Set(data.ProyectosAcademicos.map((item: any) => item.ProyectoAcademicoId));
+    console.log(proyectoAcademicoIds)
     // Estos son los proyectos de la facultad
-    const proyectosFiltrados = this.proyectosPregrado.filter(item => proyectoAcademicoIds.has(item.DependenciaId.Id));
+    const proyectosFiltrados = this.proyectosPregrado.filter(item => proyectoAcademicoIds.has(item.Id));
+    console.log(proyectosFiltrados)
     if (proyectosFiltrados) {
       this.proyectosCurriculares = proyectosFiltrados;
       this.datasourceCurriculares = new MatTableDataSource<any>(this.proyectosCurriculares);

@@ -62,55 +62,24 @@
           </mat-card-header>
           <br><br>
           <mat-card-content>
-            <mat-grid-list cols="7" rowHeight="40px">
-              <!-- Elemento 1 -->
-              <mat-grid-tile colspan="7" rowspan="1" [style.background]="tiles[0].color" [style.color]="tiles[0].textColor">
+            <div class="contenedor-resumen">
+              <div class="titulo-resumen">
                 <h6>{{ 'listado_pregrado.resumen_estado_grid' | translate }}</h6>
-                
-              </mat-grid-tile>
-              
-              <!-- Elemento 2 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[1].color" [style.color]="tiles[1].textColor">
-                <p>{{ 'listado_pregrado.inscripcion_solicitada' | translate }}</p>
-                <p>{{ inscripcionesSolicitadas }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 3 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[2].color" [style.color]="tiles[2].textColor">
-                <p>{{ 'listado_pregrado.admitido' | translate }}</p>
-                <p>{{ inscripcionesAdmitidas }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 4 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[3].color" [style.color]="tiles[3].textColor">
-                <p>{{ 'listado_pregrado.opcionado' | translate }}</p>
-                <p>{{ inscripcionesOpcionadas }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 5 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[4].color" [style.color]="tiles[4].textColor">
-                <p>{{ 'listado_pregrado.no_admitido' | translate }}</p>
-                <p>{{ inscripcionesNoAdmitidas }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 6 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[5].color" [style.color]="tiles[5].textColor">
-                <p>{{ 'listado_pregrado.inscrito' | translate }}</p>
-                <p>{{ inscripcionesInscritas }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 7 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[6].color" [style.color]="tiles[6].textColor">
-                <p>{{ 'listado_pregrado.inscrito_ob' | translate }}</p>
-                <p>{{ inscripcionesInscritasObservacion }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 8 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[7].color" [style.color]="tiles[7].textColor">
-                <p>{{ 'listado_pregrado.total' | translate }}</p>
-                <p>{{ inscripcionesTotal }}</p>
-              </mat-grid-tile>
-            </mat-grid-list>
+              </div>
+              <ul>
+                <li>{{ 'listado_pregrado.inscripcion_solicitada' | translate }} {{ inscripcionesSolicitadas }}</li>
+                <li>{{ 'listado_pregrado.admitido' | translate }} {{ inscripcionesAdmitidas }}</li>
+                <li>{{ 'listado_pregrado.opcionado' | translate }} {{ inscripcionesOpcionadas }}</li>
+                <li>{{ 'listado_pregrado.no_admitido' | translate }} {{ inscripcionesNoAdmitidas }}</li>
+                <li>{{ 'listado_pregrado.inscrito' | translate }} {{ inscripcionesInscritas }}</li>
+                <li>{{ 'listado_pregrado.inscrito_ob' | translate }} {{ inscripcionesInscritasObservacion }}</li>
+                <li>{{ 'listado_pregrado.admitido_legalizado' | translate }} {{ inscripcionesAdmitidasLegalizadas }}</li>
+                <li>{{ 'listado_pregrado.admitido_observacion' | translate }} {{ inscripcionesAdmitidasObservacion }}</li>
+                <li>{{ 'listado_pregrado.matriculado' | translate }} {{ inscripcionesMatriculadas }}</li>
+                <li>{{ 'listado_pregrado.no_oficializado' | translate }} {{ inscripcionesNoOficializadas }}</li>
+                <li><strong>{{ 'listado_pregrado.total' | translate }} {{ inscripcionesTotal }}</strong></li>
+              </ul>
+            </div>
           </mat-card-content>
         </mat-card>
         <br><br>

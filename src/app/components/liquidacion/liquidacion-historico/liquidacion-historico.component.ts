@@ -40,6 +40,8 @@ export class LiquidacionHistoricoComponent {
   selectedProyecto! : any;
   selectedPeriodo! : any;
 
+  proyectosPregrado!: any[];
+
   constructor(
     private _formBuilder: FormBuilder, 
     private oikosService: OikosService,
@@ -62,6 +64,7 @@ export class LiquidacionHistoricoComponent {
     await this.cargarFacultades();
     await this.cargarPeriodos();
     await this.nivel_load();
+    await this.cargarProyectos();
     this.loading = false;
   }
 
@@ -98,9 +101,26 @@ export class LiquidacionHistoricoComponent {
     });
   }
 
+  cargarProyectos() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get('proyecto_academico_institucion?query=Activo:true&sortby=Id&order=asc&limit=0')
+        .subscribe((res: any) => {
+          console.log(res);
+          this.proyectosPregrado = res;
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_admision.facultades_error'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
+          });
+    });
+  }
+
   onFacultadChange(event: any) {
-    const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
-    this.proyectosCurriculares = facultad.Opciones;
+    const programas = this.proyectosPregrado.filter((item: any) => item.FacultadId == event.value && item.NivelFormacionId.Id == this.selectedLevel);
+    this.proyectosCurriculares = programas;
   }
 
   cargarPeriodos() {
@@ -167,7 +187,8 @@ export class LiquidacionHistoricoComponent {
 
   buscarInscripcionesAdmitidosLegalizados(proyecto: any, periodo: any) {
     return new Promise((resolve, reject) => {
-      this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:8&sortby=Id&order=asc&limit=0')
+      this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:8&sortby=Id&order=asc')
+      // this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:27,PeriodoId:40,EstadoInscripcionId.Id:8&sortby=Id&order=asc')
         .subscribe((res: any) => {
           resolve(res)
         },
