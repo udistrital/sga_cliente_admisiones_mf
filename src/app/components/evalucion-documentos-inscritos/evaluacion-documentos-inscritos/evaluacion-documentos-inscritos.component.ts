@@ -6,7 +6,6 @@ import { ParametrosService } from "src/app/services/parametros.service";
 import { ProyectoAcademicoService } from "src/app/services/proyecto_academico.service";
 import { InscripcionService } from "src/app/services/inscripcion.service";
 import { TercerosService } from "src/app/services/terceros.service";
-// import { LocalDataSource } from 'ng2-smart-table';
 import { DocumentoService } from "src/app/services/documento.service";
 import { NotificacionesMidService } from "src/app/services/notificaciones_mid.service";
 import { HttpErrorResponse } from "@angular/common/http";
@@ -50,7 +49,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   Campo1Control = new FormControl("", [Validators.required]);
   Campo2Control = new FormControl("", [Validators.required]);
   settings: any;
-  // dataSource: LocalDataSource;
   dataSourceColumn = [
     "credencial",
     "identificacion",
@@ -119,7 +117,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   ) {
     this.invitacion = new Invitacion();
     this.invitacionTemplate = new InvitacionTemplate();
-    // this.dataSource = new LocalDataSource();
     this.showProfile = true;
     this.loadData();
     this.createTable();
@@ -303,73 +300,68 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
         .get("proyecto_academico_institucion?limit=0")
         .subscribe(
           (response: any) => {
-            this.autenticationService.getRole().then(
-              (rol: any) => {
-                rol = ["ADMIN_SGA"];
-                let r = rol.find(
-                  (role: any) =>
-                    role == "ADMIN_SGA" ||
-                    role == "VICERRECTOR" ||
-                    role == "ASESOR_VICE"
-                ); // rol admin o vice
-                if (r) {
-                  this.proyectos = <any[]>(
-                    response.filter((proyecto: any) =>
-                      this.filtrarProyecto(proyecto)
-                    )
-                  );
+            this.autenticationService.getRole().then((rol: any) => {
+              rol = ["ADMIN_SGA"];
+              let r = rol.find(
+                (role: any) =>
+                  role == "ADMIN_SGA" ||
+                  role == "VICERRECTOR" ||
+                  role == "ASESOR_VICE"
+              ); // rol admin o vice
+              if (r) {
+                this.proyectos = <any[]>(
+                  response.filter((proyecto: any) =>
+                    this.filtrarProyecto(proyecto)
+                  )
+                );
 
-                  if (window.localStorage.getItem("IdProyecto")) {
-                    const idProyecto =
-                      window.localStorage.getItem("IdProyecto");
-                    const proyecto = this.proyectos.find(
-                      (p: any) => p.Id == idProyecto
-                    );
-                    if (proyecto) {
-                      this.proyectos_selected = proyecto.Id;
-                      this.loadInscritos();
-                    }
+                if (window.localStorage.getItem("IdProyecto")) {
+                  const idProyecto = window.localStorage.getItem("IdProyecto");
+                  const proyecto = this.proyectos.find(
+                    (p: any) => p.Id == idProyecto
+                  );
+                  if (proyecto) {
+                    this.proyectos_selected = proyecto.Id;
+                    this.loadInscritos();
                   }
-                  window.localStorage.removeItem("IdProyecto");
-                } else {
-                  const id_tercero = this.userService.getPersonaId();
-                  this.sgaMiAdmisiones
-                    .get(
-                      "admision/dependencia_vinculacion_tercero/" + id_tercero
-                    )
-                    .subscribe(
-                      (respDependencia: any) => {
-                        const dependencias = <Number[]>(
-                          respDependencia.Data.DependenciaId
-                        );
-                        this.proyectos = <any[]>(
-                          response.filter((proyecto: any) =>
-                            dependencias.includes(proyecto.Id)
-                          )
-                        );
-                        if (dependencias.length > 1) {
-                          this.popUpManager.showAlert(
-                            this.translate.instant("GLOBAL.info"),
-                            this.translate.instant(
-                              "admision.multiple_vinculacion"
-                            )
-                          ); //+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
-                          //this.proyectos.forEach(p => { p.Id = undefined })
-                        }
-                      },
-                      (error: any) => {
-                        this.popUpManager.showErrorAlert(
-                          this.translate.instant(
-                            "admision.no_vinculacion_no_rol"
-                          ) +
-                            ". " +
-                            this.translate.instant("GLOBAL.comunicar_OAS_error")
-                        );
-                      }
-                    );
                 }
+                window.localStorage.removeItem("IdProyecto");
+              } else {
+                const id_tercero = this.userService.getPersonaId();
+                this.sgaMiAdmisiones
+                  .get("admision/dependencia_vinculacion_tercero/" + id_tercero)
+                  .subscribe(
+                    (respDependencia: any) => {
+                      const dependencias = <Number[]>(
+                        respDependencia.Data.DependenciaId
+                      );
+                      this.proyectos = <any[]>(
+                        response.filter((proyecto: any) =>
+                          dependencias.includes(proyecto.Id)
+                        )
+                      );
+                      if (dependencias.length > 1) {
+                        this.popUpManager.showAlert(
+                          this.translate.instant("GLOBAL.info"),
+                          this.translate.instant(
+                            "admision.multiple_vinculacion"
+                          )
+                        ); //+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
+                        //this.proyectos.forEach(p => { p.Id = undefined })
+                      }
+                    },
+                    (error: any) => {
+                      this.popUpManager.showErrorAlert(
+                        this.translate.instant(
+                          "admision.no_vinculacion_no_rol"
+                        ) +
+                          ". " +
+                          this.translate.instant("GLOBAL.comunicar_OAS_error")
+                      );
+                    }
+                  );
               }
-            );
+            });
           },
           (error) => {
             this.popUpManager.showErrorToast(
@@ -382,7 +374,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
 
   loadInscritos() {
     if (this.selectMultipleNivel) {
-      console.log('Existe periodo multiple')
+      console.log("Existe periodo multiple");
       console.log(this.periodoMultiple);
       let selectPeriodo: any[] = this.periodoMultiple;
       this.Aspirantes = [];
@@ -400,7 +392,11 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
           .subscribe(
             (response: any) => {
               if (response.Success == true && response.Status == 200) {
+                response.Data.forEach((aspirante: any) => {
+                  aspirante.IdPeriodo = periodo;
+                });
                 this.Aspirantes.push(...response.Data);
+
                 if (i == selectPeriodo.length - 1) {
                   this.cantidad_inscritos = this.Aspirantes.filter(
                     (aspirante: any) => aspirante.Estado == "INSCRITO"
@@ -431,20 +427,12 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
             }
           );
       });
+      console.log("ASPIRANTES", this.Aspirantes);
     } else {
-      console.log('No existe periodo multiple')
+      console.log("No existe periodo multiple");
       this.loading = true;
       this.dataSource = new MatTableDataSource();
       this.Aspirantes = [];
-      console.log(
-        "admision/aspirantespor?id_periodo=" +
-          this.periodo.Id +
-          "&id_proyecto=" +
-          this.proyectos_selected +
-          "&tipo_lista=1"
-      );
-      console.log('Campo2Control',this.Campo2Control)
-      console.log('periodoMultiple',this.periodoMultiple)
       this.sgaMiAdmisiones
         .get(
           "admision/aspirantespor?id_periodo=" +
@@ -456,7 +444,11 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
         .subscribe(
           (response: any) => {
             if (response.Success == true && response.Status == 200) {
+              console.log("INSCRITOS", response.Data);
               this.Aspirantes = response.Data;
+              this.Aspirantes.forEach((aspirante: any) => {
+                aspirante.IdPeriodo = this.Campo2Control.value;
+              });
               this.cantidad_inscritos = this.Aspirantes.filter(
                 (aspirante: any) => aspirante.Estado == "INSCRITO"
               ).length;
@@ -540,6 +532,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   loadPerfil(event: any) {
+    console.log("load perfil", event);
     this.aspirante = event.data;
     this.tercerosService
       .get(
@@ -560,14 +553,10 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                     // (resp: any[]) => {
                     (resp: any = []) => {
                       this.inscripcionInfo = resp[0];
-                      console.log(
-                        "PERIODO ACTUAL REVISAR NO SETEA EL DEL SELECT, TOMO EL ULTIMO ACTIVO ._.",
-                        this.periodo
-                      );
                       this.evaluacionInscripcionService
                         .get(
                           "tags_por_dependencia?query=Activo:true,PeriodoId:" +
-                            this.periodo.Id +
+                            this.aspirante.IdPeriodo +
                             ",DependenciaId:" +
                             this.proyectos_selected +
                             ",TipoInscripcionId:" +
