@@ -15,17 +15,22 @@ import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service'
 export class TiposCuposComponent {
 
   checked = 0;
-  displayedColumns = ["check", "Nombre", "Descripcion", "Codigo", "Estado", "Acciones"];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  displayedColumns = ["check", "Nombre", "Descripcion", "Codigo", "Estado", "Acciones"];
+
+
 
   constructor(
-    public dialogRef: MatDialogRef<AsignacionCupoService>,
     private dialogService: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private parametroService: SgaParametrosService,
-
+    public dialogRef: MatDialogRef<AsignacionCupoService>,
   ) {
+    this.cargarDatosTiposCupos();
+  }
+
+  cargarDatosTiposCupos() {
     this.parametroService.get("parametro?query=TipoParametroId:87&limit=0")
       .subscribe((response: any) => {
         if (response.Status == '200' && response.Success == true && response.Data.length > 0) {
@@ -46,16 +51,21 @@ export class TiposCuposComponent {
       });
   }
 
-  validaCheck(cupo: any) {
-
-  }
   onAction(event: any) {
+    if (event.action == 'crear') {
+      this.dialogService.open(CrudTipoCupoComponent, {
+        width: '500px',
+      });
+    }
+
     if (event.action == 'edit') {
 
-      this.dialogService.open(CrudTipoCupoComponent, { data: event.data });
+      this.dialogService.open(CrudTipoCupoComponent, {
+        width: '500px',
+        data: event.data
+       });
 
     } else if (event.action == 'delete') {
-
       event.data.Activo = !event.data.Activo
       this.parametroService.put("parametro/", event.data).subscribe((response: any) => {
         if (response.Status == '200' && response.Success == true) {
@@ -64,14 +74,11 @@ export class TiposCuposComponent {
           alert('Error al Actualizar estado de registro');
         }
       });
-
     }
 
   }
 
-  CrearEditarTiposCupos() {
-    this.dialogService.open(CrudTipoCupoComponent);
-  }
+
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -80,7 +87,7 @@ export class TiposCuposComponent {
   onCheckboxChange(event: Event, cupo: any) {
     const inputElement = event.target as HTMLInputElement;
     console.log("hola");
-    
+
     if (this.checked == 0) {
       this.checked = 1;
       cupo.check = inputElement.checked;

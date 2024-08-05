@@ -36,21 +36,23 @@ export class CrudTipoCupoComponent {
   }
 
   TipoCupoguardar() {
+    const currentDate = new Date().toISOString().replace('T', ' ').replace('Z', ' +0000 +0000');
+    const data = {
+      Activo: true,
+      CodigoAbreviacion: this.codigoAbreviacion.value,
+      Descripcion: this.descripcion.value,
+      FechaCreacion: currentDate,
+      FechaModificacion:currentDate,
+      Nombre: this.nombre.value,
+      NumeroOrden: this.numeroOrden.value,
+      TipoParametroId: {
+        Id: 87
+      }
+    }
 
     if (this.nombre.valid && this.descripcion.valid && this.codigoAbreviacion.valid && this.numeroOrden.valid) {
       if(this.titulo == "Crear"){
-        const data = {
-          Activo: true,
-          CodigoAbreviacion: this.codigoAbreviacion.value,
-          Descripcion: this.descripcion.value,
-          FechaCreacion: "2024-03-18 19:43:04.628206 +0000 +0000",
-          FechaModificacion: "2024-03-18 19:43:04.628206 +0000 +0000",
-          Nombre: this.nombre.value,
-          NumeroOrden: this.numeroOrden.value,
-          TipoParametroId: {
-            Id: 87
-          }
-        }
+
   
         console.log(data);
         this.parametoService.post("parametro", data)
@@ -61,20 +63,7 @@ export class CrudTipoCupoComponent {
           });
       }
       
-      else{
-        const data = {
-          Activo: true,
-          CodigoAbreviacion: this.codigoAbreviacion.value,
-          Descripcion: this.descripcion.value,
-          FechaCreacion: "2024-03-18 19:43:04.628206 +0000 +0000",
-          FechaModificacion: "2024-03-18 19:43:04.628206 +0000 +0000",
-          Nombre: this.nombre.value,
-          NumeroOrden: this.numeroOrden.value,
-          TipoParametroId: {
-            Id: 87
-          }
-        }
-  
+      else{  
         console.log(data);
         this.parametoService.put("parametro/"+this.data.Id, data)
           .subscribe((response: any) => {
@@ -83,7 +72,6 @@ export class CrudTipoCupoComponent {
             }
           });
       }
-
     }
   }
 }

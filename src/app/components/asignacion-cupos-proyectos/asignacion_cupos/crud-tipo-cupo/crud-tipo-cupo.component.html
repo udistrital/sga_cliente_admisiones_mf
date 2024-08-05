@@ -3,18 +3,18 @@
 
     <mat-card-content class="mt-20">
         <legend>
-            &nbsp; {{titulo}} tipo cupo
+            &nbsp; {{titulo}} {{'GLOBAL.tipo_cupo' | translate}}
         </legend>
 
         <!-- select nombre del tipo cupo -->
         <mat-card-content class="mt-20">
-            <mat-form-field class="form-item">
+            <mat-form-field class="form-item" style="width: 100%;">
                 <mat-label>
-                    Nombre:
+                    {{'GLOBAL.nombre' | translate}}
                 </mat-label>
                 <input type="text" matInput [formControl]="nombre" [value]="nombre.value" [disabled]="true">
                 <mat-error *ngIf="nombre.hasError('required')">
-                    Por favor, Ingresa el nombre del nuevo tipo cupo
+                    {{'cupos.warn_nombre' | translate}}
                 </mat-error>
             </mat-form-field>
             <br /><br />
@@ -22,13 +22,13 @@
 
         <mat-card-content class="form-grid2">
             <!-- select descripcion del tipo cupo -->
-            <mat-form-field class="form-item">
+            <mat-form-field class="form-item" style="width: 100%;">
                 <mat-label>
-                    Descripcion:
+                    {{'GLOBAL.descripcion' | translate}}
                 </mat-label>
                 <input type="text" matInput [formControl]="descripcion" [value]="descripcion.value" [disabled]="true">
                 <mat-error *ngIf="descripcion.hasError('required')">
-                    Por favor, Ingresa el nombre del nuevo tipo cupo
+                    {{'cupos.warn_descripcion' | translate}}
                 </mat-error>
             </mat-form-field>
             <br /><br />
@@ -36,13 +36,14 @@
 
         <mat-card-content class="form-grid2">
             <!-- select tipo del tipo cupo -->
-            <mat-form-field class="form-item">
+            <mat-form-field class="form-item" style="width: 100%;">
                 <mat-label>
-                    Codigo de Abreviacion:
+                    {{'cupos.codigo_abreviacion' | translate}}
                 </mat-label>
-                <input type="text" matInput [formControl]="codigoAbreviacion" [value]="codigoAbreviacion.value" [disabled]="true">
+                <input type="text" matInput [formControl]="codigoAbreviacion" [value]="codigoAbreviacion.value"
+                    [disabled]="true">
                 <mat-error *ngIf="codigoAbreviacion.hasError('required')">
-                    Por favor, Ingresa el nombre del nuevo tipo cupo
+                    {{'cupos.warn_codigo_abreviacion' | translate}}
                 </mat-error>
             </mat-form-field>
             <br /><br />
@@ -50,13 +51,13 @@
 
         <mat-card-content class="form-grid2">
             <!-- select subtipo del tipo cupo -->
-            <mat-form-field class="form-item">
+            <mat-form-field class="form-item" style="width: 100%;">
                 <mat-label>
-                    Numero Orden:
+                    {{"cupos.numero_orden" | translate}}
                 </mat-label>
                 <input type="number" matInput [formControl]="numeroOrden" [value]="numeroOrden.value" [disabled]="true">
                 <mat-error *ngIf="numeroOrden.hasError('required')">
-                    Por favor, Ingresa el nombre del nuevo tipo cupo
+                    {{'cupos.warn_numero_orden' | translate}}
                 </mat-error>
             </mat-form-field>
             <br /><br />
@@ -65,21 +66,20 @@
 
         <mat-card-content>
             <div>
-                <button>
+                <button mat-flat-button color="accent" type="button">
                     <mat-icon>
                         attach_file
                     </mat-icon>
                 </button>
-
                 <span>
-                    Adjuntar soporte documental
+                    {{'cupos.sopiorte' | translate}}
                 </span>
             </div>
-            <div>
-                <button (click)="TipoCupoguardar()">
-                    Guardar
+            <br><br>
+            <div style="display: flex; justify-content: center;">
+                <button mat-flat-button color="accent" type="button" (click)="TipoCupoguardar()">
+                    {{'GLOBAL.guardar' | translate}}
                 </button>
-
             </div>
         </mat-card-content>
     </mat-card-content>
