@@ -296,7 +296,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   loadProyectos() {
-    // this.dataSource.load([]);
     this.dataSource = new MatTableDataSource();
     this.Aspirantes = [];
     if (!Number.isNaN(this.selectednivel)) {
@@ -305,7 +304,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
         .subscribe(
           (response: any) => {
             this.autenticationService.getRole().then(
-              // (rol: Array<String>) => {
               (rol: any) => {
                 rol = ["ADMIN_SGA"];
                 let r = rol.find(
@@ -384,6 +382,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
 
   loadInscritos() {
     if (this.selectMultipleNivel) {
+      console.log('Existe periodo multiple')
       console.log(this.periodoMultiple);
       let selectPeriodo: any[] = this.periodoMultiple;
       this.Aspirantes = [];
@@ -433,8 +432,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
           );
       });
     } else {
+      console.log('No existe periodo multiple')
       this.loading = true;
-      // this.dataSource.load([]);
       this.dataSource = new MatTableDataSource();
       this.Aspirantes = [];
       console.log(
@@ -444,10 +443,12 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
           this.proyectos_selected +
           "&tipo_lista=1"
       );
+      console.log('Campo2Control',this.Campo2Control)
+      console.log('periodoMultiple',this.periodoMultiple)
       this.sgaMiAdmisiones
         .get(
           "admision/aspirantespor?id_periodo=" +
-            this.periodo.Id +
+            this.Campo2Control.value +
             "&id_proyecto=" +
             this.proyectos_selected +
             "&tipo_lista=1"
