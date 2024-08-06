@@ -87,7 +87,7 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 {{ 'evaluacionPregrado.proyecto_curricular' | translate }}
               </th>
-              <td mat-cell *matCellDef="let row">{{ row.DependenciaId.Nombre }}</td>
+              <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
             </ng-container>
 
             <ng-container matColumnDef="estado">
@@ -95,8 +95,8 @@
                 {{ 'evaluacionPregrado.estado' | translate }}
               </th>
               <td mat-cell *matCellDef="let row">
-                <span *ngIf="row.DependenciaId.Activo == true">{{ 'GLOBAL.activo' | translate }}</span>
-                <span *ngIf="row.DependenciaId.Activo != true">{{ 'GLOBAL.inactivo' | translate }}</span>
+                <span *ngIf="row.Activo == true">{{ 'GLOBAL.activo' | translate }}</span>
+                <span *ngIf="row.Activo != true">{{ 'GLOBAL.inactivo' | translate }}</span>
               </td>
             </ng-container>
 
@@ -107,11 +107,11 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                  <button mat-menu-item (click)="consultarproyecto(row.DependenciaId.Id)">
+                  <button mat-menu-item (click)="consultarproyecto(row.Id)">
                     <mat-icon>search</mat-icon>
                     <span>{{ 'admision.enlistar' | translate }}</span>
                   </button>
-                  <button mat-menu-item (click)="filtrarAspirantesPuntajeMinimo(row.DependenciaId.Id)">
+                  <button mat-menu-item (click)="filtrarAspirantesPuntajeMinimo(row.Id)">
                     <mat-icon>filter_alt</mat-icon>
                     <span>{{ 'admision.filtrar-aspirantes' | translate }}</span>
                   </button>

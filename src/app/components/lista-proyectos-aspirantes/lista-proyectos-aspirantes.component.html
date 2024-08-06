@@ -22,12 +22,6 @@
                                 {{item.Nombre}}
                             </mat-option>
                         </mat-select>
-                        <!-- <mat-select [(ngModel)]="periodo" formControlName="periodoFormControl" (selectionChange)="cambiarPeriodo()">
-                            <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                            <mat-option *ngFor="let item of periodos" [value]="item">
-                                {{item.Nombre}}
-                            </mat-option>
-                        </mat-select> -->
                     </mat-form-field>
                 </div>
 
@@ -41,16 +35,6 @@
                                 {{item.Nombre}}
                             </mat-option>
                         </mat-select>
-                        <!-- <mat-select formControlName="nivelFormControl" [(ngModel)]="nivel"
-                            (selectionChange)="cargarProyectos()">
-                            <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                            <mat-option *ngFor="let item of niveles" [value]="item.Id">
-                                {{item.Nombre}}
-                            </mat-option>
-                        </mat-select> -->p
-                        <!-- <mat-error *ngIf="nivelFormControl.hasError('required')">{{ 'cupos.error_selec_nivel' |
-                            translate
-                            }}</mat-error> -->
                     </mat-form-field>
                 </div>
             </form>
@@ -75,24 +59,17 @@
                                 {{ 'admision.resumen_estados_inscripcion' | translate }}
                             </mat-card-header>
                             <mat-card-content class="card-content">
-                                <label>{{ 'admision.estado_inscrip_solicitada' | translate }}: <b>{{
-                                        proyecto.cantidad_inscrip_solicitada }}</b></label>
-                                <label>{{ 'admision.estado_admitido' | translate }}: <b>{{
-                                        proyecto.cantidad_admitidos
-                                        }}</b></label>
-                                <label>{{ 'admision.estado_opcionado' | translate }}: <b>{{
-                                        proyecto.cantidad_opcionados
-                                        }}</b></label>
-                                <label>{{ 'admision.estado_no_admitido' | translate }}: <b>{{
-                                        proyecto.cantidad_no_admitidos }}</b></label>
-                                <label>{{ 'admision.estado_inscrito' | translate }}: <b>{{
-                                        proyecto.cantidad_inscritos
-                                        }}</b></label>
-                                <label>{{ 'admision.estado_inscrito_observacion' | translate }}: <b>{{
-                                        proyecto.cantidad_inscritos_obs }}</b></label>
-                                <label>{{ 'admision.total_aspirantes' | translate }}: <b>{{
-                                        proyecto.cantidad_aspirantes
-                                        }}</b></label>
+                                <label>{{ 'admision.estado_inscrip_solicitada' | translate }}: <b>{{proyecto.cantidad_inscrip_solicitada }}</b></label>
+                                <label>{{ 'admision.estado_admitido' | translate }}: <b>{{proyecto.cantidad_admitidos}}</b></label>
+                                <label>{{ 'admision.estado_opcionado' | translate }}: <b>{{proyecto.cantidad_opcionados}}</b></label>
+                                <label>{{ 'admision.estado_no_admitido' | translate }}: <b>{{proyecto.cantidad_no_admitidos }}</b></label>
+                                <label>{{ 'admision.estado_inscrito' | translate }}: <b>{{proyecto.cantidad_inscritos}}</b></label>
+                                <label>{{ 'admision.estado_inscrito_observacion' | translate }}: <b>{{proyecto.cantidad_inscritos_obs }}</b></label>
+                                <label>{{ 'admision.estado_admitido_legalizado' | translate }}: <b>{{proyecto.cantidad_admitidos_leg}}</b></label>
+                                <label>{{ 'admision.estado_admitido_observacion' | translate }}: <b>{{proyecto.cantidad_admitidos_obs }}</b></label>
+                                <label>{{ 'admision.estado_matriculado' | translate }}: <b>{{proyecto.cantidad_matriculados}}</b></label>
+                                <label>{{ 'admision.estado_no_oficializado' | translate }}: <b>{{proyecto.cantidad_no_oficial }}</b></label>
+                                <label>{{ 'admision.total_aspirantes' | translate }}: <b>{{proyecto.cantidad_aspirantes}}</b></label>
                             </mat-card-content>
                         </mat-card>
 
