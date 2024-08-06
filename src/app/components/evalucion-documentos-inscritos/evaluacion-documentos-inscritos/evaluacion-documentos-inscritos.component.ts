@@ -92,6 +92,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
 
   periodoMultiple: any;
   listaPeriodos: any[] = [];
+  nivelEsDoctorado: boolean = false;
 
   constructor(
     private translate: TranslateService,
@@ -246,50 +247,52 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     const nivelDoctorado = this.nivel_load.find(
       (nivel: any) => nivel.Nombre === "Doctorado"
     );
-    const esDoctorado = nivelDoctorado.Id === nivelSeleccionado;
-    this.selectMultipleNivel = esDoctorado;
-    this.mostrarBoton = esDoctorado;
-    this.mostrarMensajeInicial = esDoctorado;
+    this.nivelEsDoctorado = nivelDoctorado.Id === nivelSeleccionado;
+    this.selectMultipleNivel = this.nivelEsDoctorado;
+    this.mostrarBoton = this.nivelEsDoctorado;
+    this.mostrarMensajeInicial = this.nivelEsDoctorado;
     this.loadProyectos();
   }
 
   consultarPeriodosDoctorado(idProyecto: number) {
-    this.calendarioMidService
-      .get(`calendario-proyecto/${idProyecto}`)
-      .subscribe(
-        (response: any) => {
-          const CalendarioId = response.Data.CalendarioId;
-          this.eventosService.get(`calendario/${CalendarioId}`).subscribe(
-            (response2: any) => {
-              const listaPeriodos: number[] = JSON.parse(
-                response2.MultiplePeriodoId
-              );
-              listaPeriodos.forEach((periodoId) => {
-                this.parametrosService
-                  .get(`periodo/${periodoId}`)
-                  .subscribe((response3: any) => {
-                    this.nombresPeriodos =
-                      this.nombresPeriodos + response3.Data.Nombre + ", ";
-                  });
-              });
-            },
-            (error: any) => {
-              this.popUpManager.showErrorAlert(
-                this.translate.instant("calendario.sin_calendario") +
-                  ". " +
-                  this.translate.instant("GLOBAL.comunicar_OAS_error")
-              );
-            }
-          );
-        },
-        (error: any) => {
-          this.popUpManager.showErrorAlert(
-            this.translate.instant("calendario.sin_calendario") +
-              ". " +
-              this.translate.instant("GLOBAL.comunicar_OAS_error")
-          );
-        }
-      );
+    if (this.nivelEsDoctorado) {
+      this.calendarioMidService
+        .get(`calendario-proyecto/${idProyecto}`)
+        .subscribe(
+          (response: any) => {
+            const CalendarioId = response.Data.CalendarioId;
+            this.eventosService.get(`calendario/${CalendarioId}`).subscribe(
+              (response2: any) => {
+                const listaPeriodos: number[] = JSON.parse(
+                  response2.MultiplePeriodoId
+                );
+                listaPeriodos.forEach((periodoId) => {
+                  this.parametrosService
+                    .get(`periodo/${periodoId}`)
+                    .subscribe((response3: any) => {
+                      this.nombresPeriodos =
+                        this.nombresPeriodos + response3.Data.Nombre + ", ";
+                    });
+                });
+              },
+              (error: any) => {
+                this.popUpManager.showErrorAlert(
+                  this.translate.instant("calendario.sin_calendario") +
+                    ". " +
+                    this.translate.instant("GLOBAL.comunicar_OAS_error")
+                );
+              }
+            );
+          },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(
+              this.translate.instant("calendario.sin_calendario") +
+                ". " +
+                this.translate.instant("GLOBAL.comunicar_OAS_error")
+            );
+          }
+        );
+    }
   }
 
   loadProyectos() {
