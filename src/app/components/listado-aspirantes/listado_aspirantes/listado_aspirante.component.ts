@@ -364,7 +364,6 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
     
     mostrartabla() {
         this.show_listado = true
-        // this.source_emphasys = new LocalDataSource();
         this.Aspirantes = [];
         this.inscritos = [];
         this.admitidos = [];
