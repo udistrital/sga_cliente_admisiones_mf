@@ -1,48 +1,71 @@
 <!-- <toaster-container [toasterconfig]="config"></toaster-container> -->
 <mat-card class="card">
   <mat-card-content>
-    <div class=col-12>
-      <fieldset [ngClass]="{'fieldseter':true}">
-        <legend>
-          &nbsp; {{ 'admision.listar_aspirantes' | translate }}
-        </legend>
+    <div class="col-12">
+      <fieldset [ngClass]="{ fieldseter: true }">
+        <legend>&nbsp; {{ "admision.listar_aspirantes" | translate }}</legend>
         <mat-card class="card">
           <mat-card-header class="d-block">
             <!-- select periodo -->
-            <mat-form-field style="width: 100%;">
-              <mat-label>{{ 'calendario.periodo' | translate }}:</mat-label>
-              <mat-select [(ngModel)]="periodo" (selectionChange)="selectPeriodo()">
-                <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+            <mat-form-field style="width: 100%">
+              <mat-label>{{ "calendario.periodo" | translate }}:</mat-label>
+              <mat-select
+                [(ngModel)]="periodo"
+                (selectionChange)="selectPeriodo()"
+              >
+                <mat-option
+                  >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
+                >
                 <mat-option *ngFor="let item of periodos" [value]="item">
-                  {{item.Nombre}}
+                  {{ item.Nombre }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
 
             <!-- select Nivel -->
-            <mat-form-field style="width: 100%;">
-              <mat-label>{{ 'GLOBAL.nivel' | translate }}:</mat-label>
-              <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel" (selectionChange)="loadProyectos()">
-                <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+            <mat-form-field style="width: 100%">
+              <mat-label>{{ "GLOBAL.nivel" | translate }}:</mat-label>
+              <mat-select
+                [formControl]="CampoControl"
+                [(ngModel)]="selectednivel"
+                (selectionChange)="loadProyectos()"
+              >
+                <mat-option
+                  >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
+                >
                 <mat-option *ngFor="let item of niveles" [value]="item.Id">
-                  {{item.Nombre}}
+                  {{ item.Nombre }}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="CampoControl.hasError('required')">{{ 'cupos.erro_selec_nivel' | translate
-                }}</mat-error>
+              <mat-error *ngIf="CampoControl.hasError('required')">{{
+                "cupos.erro_selec_nivel" | translate
+              }}</mat-error>
             </mat-form-field>
             <!-- select proyectos -->
-            <mat-form-field style="width: 100%;">
-              <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}:</mat-label>
-              <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_selected"
-                (selectionChange)="activar_button()" [disabled]='selectprograma'>
-                <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                <mat-option *ngFor="let item of proyectos" [value]="item" [disabled]="!item.Id">
-                  {{item.Nombre}}
+            <mat-form-field style="width: 100%">
+              <mat-label
+                >{{ "GLOBAL.proyecto_academico" | translate }}:</mat-label
+              >
+              <mat-select
+                [formControl]="Campo1Control"
+                [(ngModel)]="proyectos_selected"
+                (selectionChange)="activar_button()"
+                [disabled]="selectprograma"
+              >
+                <mat-option
+                  >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
+                >
+                <mat-option
+                  *ngFor="let item of proyectos"
+                  [value]="item"
+                  [disabled]="!item.Id"
+                >
+                  {{ item.Nombre }}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="Campo1Control.hasError('required')">{{ 'cupos.erro_selec_proyecto' | translate
-                }}</mat-error>
+              <mat-error *ngIf="Campo1Control.hasError('required')">{{
+                "cupos.erro_selec_proyecto" | translate
+              }}</mat-error>
             </mat-form-field>
           </mat-card-header>
         </mat-card>
@@ -53,34 +76,76 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card class="card-2" status="success" style="border: 1px solid var(--primary);" *ngIf="mostrarConteos">
+<mat-card
+  class="card-2"
+  status="success"
+  style="border: 1px solid var(--primary)"
+  *ngIf="mostrarConteos"
+>
   <mat-card-header class="card-header">
-    {{ 'admision.resumen_estados_inscripcion' | translate }}
+    {{ "admision.resumen_estados_inscripcion" | translate }}
   </mat-card-header>
   <mat-card-content class="card-content card-content">
-    <label>{{ 'admision.estado_inscrip_solicitada' | translate }}: <b>{{cantidad_inscrip_solicitada}}</b></label>
-    <label>{{ 'admision.estado_admitido' | translate }}: <b>{{cantidad_admitidos}}</b></label>
-    <label>{{ 'admision.estado_opcionado' | translate }}: <b>{{cantidad_opcionados}}</b></label>
-    <label>{{ 'admision.estado_no_admitido' | translate }}: <b>{{cantidad_no_admitidos}}</b></label>
-    <label>{{ 'admision.estado_inscrito' | translate }}: <b>{{cantidad_inscritos}}</b></label>
-    <label>{{ 'admision.estado_inscrito_observacion' | translate }}: <b>{{cantidad_inscritos_obs}}</b></label>
-    <label>{{ 'admision.total_aspirantes' | translate }}: <b>{{cantidad_aspirantes}}</b></label>
+    <label
+      >{{ "admision.estado_inscrip_solicitada" | translate }}:
+      <b>{{ cantidad_inscrip_solicitada }}</b></label
+    >
+    <label
+      >{{ "admision.estado_admitido" | translate }}:
+      <b>{{ cantidad_admitidos }}</b></label
+    >
+    <label
+      >{{ "admision.estado_opcionado" | translate }}:
+      <b>{{ cantidad_opcionados }}</b></label
+    >
+    <label
+      >{{ "admision.estado_no_admitido" | translate }}:
+      <b>{{ cantidad_no_admitidos }}</b></label
+    >
+    <label
+      >{{ "admision.estado_inscrito" | translate }}:
+      <b>{{ cantidad_inscritos }}</b></label
+    >
+    <label
+      >{{ "admision.estado_inscrito_observacion" | translate }}:
+      <b>{{ cantidad_inscritos_obs }}</b></label
+    >
+    <label
+      >{{ "admision.total_aspirantes" | translate }}:
+      <b>{{ cantidad_aspirantes }}</b></label
+    >
   </mat-card-content>
 </mat-card>
 
 <mat-card class="card-2" [hidden]="!show_listado" accent="info">
-  <mat-card-header class="d-flex justify-content-around align-items-center card-content-header" style="vertical-align: middle;">
-    <label>{{ 'cupos.cupos_proyecto' | translate }}: <b>{{cuposProyecto}}</b></label>
-    <label>{{ 'cupos.cupos_disponibles' | translate }} <b>{{(cuposProyecto - cuposAsignados )}}</b></label>
-    <button class="btn btn-primary  " style="margin-bottom: 10px;" (click)="admitirInscritos()"
-      *ngIf="(cuposProyecto - cuposAsignados ) > 0">
-      {{ 'GLOBAL.admitir' | translate }}
-      {{inscritos.length < (cuposProyecto - cuposAsignados )? inscritos.length: (cuposProyecto - cuposAsignados ) }}
-        {{ 'GLOBAL.aspirantes_inscritos' | translate }} </button>
+  <mat-card-header
+    class="d-flex justify-content-around align-items-center card-content-header"
+    style="vertical-align: middle"
+  >
+    <label
+      >{{ "cupos.cupos_proyecto" | translate }}:
+      <b>{{ cuposProyecto }}</b></label
+    >
+    <label
+      >{{ "cupos.cupos_disponibles" | translate }}
+      <b>{{ cuposProyecto - cuposAsignados }}</b></label
+    >
+    <button
+      class="btn btn-primary"
+      style="margin-bottom: 10px"
+      (click)="admitirInscritos()"
+      *ngIf="cuposProyecto - cuposAsignados > 0"
+    >
+      {{ "GLOBAL.admitir" | translate }}
+      {{
+        inscritos.length < cuposProyecto - cuposAsignados
+          ? inscritos.length
+          : cuposProyecto - cuposAsignados
+      }}
+      {{ "GLOBAL.aspirantes_inscritos" | translate }}
+    </button>
   </mat-card-header>
 </mat-card>
-
-
 
 <!-- <nb-card *ngIf="show_listado" accent="info"  [nbSpinner]="loading" nbSpinnerStatus="success" nbSpinnerSize="xxlarge"
 nbSpinnerMessage="{{ 'GLOBAL.cargando' | translate }}"> -->
@@ -93,81 +158,130 @@ nbSpinnerMessage="{{ 'GLOBAL.cargando' | translate }}"> -->
         </ng2-smart-table> -->
 
         <div class="table">
-          <table mat-table [dataSource]="source_emphasys" matSort class="full-width-table">
-
-
+          <table
+            mat-table
+            [dataSource]="source_emphasys"
+            matSort
+            class="full-width-table"
+          >
             <ng-container matColumnDef="#">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 2%;"># </th>
-              <td mat-cell *matCellDef="let row; let i = index">{{i+1}}</td>
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                style="width: 2%"
+              >
+                #
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">{{ i + 1 }}</td>
             </ng-container>
 
             <ng-container matColumnDef="numero_documento">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'GLOBAL.Documento' |
-                translate}} </th>
-              <td mat-cell *matCellDef="let row"> {{row.NumeroDocumento}} </td>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "GLOBAL.Documento" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let row">{{ row.NumeroDocumento }}</td>
             </ng-container>
 
             <ng-container matColumnDef="nombre_completo">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                {{'GLOBAL.Nombre' | translate}} </th>
+                {{ "GLOBAL.Nombre" | translate }}
+              </th>
 
-              <td mat-cell *matCellDef="let row"> {{row.NombreAspirante}} </td>
+              <td mat-cell *matCellDef="let row">{{ row.NombreAspirante }}</td>
             </ng-container>
 
             <ng-container matColumnDef="Telefono">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                {{'GLOBAL.telefono' | translate}} </th>
+                {{ "GLOBAL.telefono" | translate }}
+              </th>
 
-              <td mat-cell *matCellDef="let row"> {{row.Telefono}} </td>
+              <td mat-cell *matCellDef="let row">{{ row.Telefono }}</td>
             </ng-container>
             <ng-container matColumnDef="correoelectronico">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                {{'GLOBAL.correo_principal' | translate}} </th>
+                {{ "GLOBAL.correo_principal" | translate }}
+              </th>
 
-              <td mat-cell *matCellDef="let row"> {{row.Email}} </td>
+              <td mat-cell *matCellDef="let row">{{ row.Email }}</td>
             </ng-container>
             <ng-container matColumnDef="Puntaje">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                {{'GLOBAL.Puntaje' | translate}} </th>
+                {{ "GLOBAL.Puntaje" | translate }}
+              </th>
 
-              <td mat-cell *matCellDef="let row"> {{row.NotaFinal}} </td>
+              <td mat-cell *matCellDef="let row">{{ row.NotaFinal }}</td>
             </ng-container>
             <ng-container matColumnDef="tipo_de_inscripcion">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                {{'GLOBAL.TipoInscripcion' | translate}} </th>
+                {{ "GLOBAL.TipoInscripcion" | translate }}
+              </th>
 
-              <td mat-cell *matCellDef="let row"> {{row.TipoInscripcion}} </td>
+              <td mat-cell *matCellDef="let row">{{ row.TipoInscripcion }}</td>
             </ng-container>
             <ng-container matColumnDef="enfasis">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                {{'enfasis.enfasis' | translate}} </th>
+                {{ "enfasis.enfasis" | translate }}
+              </th>
 
-              <td mat-cell *matCellDef="let row"> {{row.Enfasis}} </td>
+              <td mat-cell *matCellDef="let row">{{ row.Enfasis }}</td>
             </ng-container>
 
             <ng-container matColumnDef="estado">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                {{'GLOBAL.Estado' | translate}} </th>
+                {{ "GLOBAL.Estado" | translate }}
+              </th>
 
               <td mat-cell *matCellDef="let row">
-                <p *ngIf="!row.mostrarBotones"> {{row.EstadoInscripcionId.Nombre}} </p>
-                <mat-form-field *ngIf="row.mostrarBotones && hasTransition(row.EstadoInscripcionId.Nombre)" style="width: 100%;">
-                  <mat-select [(value)]="row.NuevoEstadoInscripcionId" style="color: black;">
-                    <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                    <mat-option *ngFor="let estado of filtrarEstados(row.EstadoInscripcionId.Nombre)" [value]="estado.value">
-                      {{estado.title}}
+                <p *ngIf="!row.mostrarBotones">
+                  {{ row.EstadoInscripcionId.Nombre }}
+                </p>
+                <mat-form-field
+                  *ngIf="
+                    row.mostrarBotones &&
+                    hasTransition(row.EstadoInscripcionId.Nombre)
+                  "
+                  style="width: 100%"
+                >
+                  <mat-select
+                    [(value)]="row.NuevoEstadoInscripcionId"
+                    style="color: black"
+                  >
+                    <mat-option
+                      >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
+                    >
+                    <mat-option
+                      *ngFor="
+                        let estado of filtrarEstados(
+                          row.EstadoInscripcionId.Nombre
+                        )
+                      "
+                      [value]="estado.value"
+                    >
+                      {{ estado.title }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
-                <p *ngIf="row.mostrarBotones && !hasTransition(row.EstadoInscripcionId.Nombre)"> {{ 'inscripcion.no_permite_cambio' | translate:{ estado: row.EstadoInscripcionId.Nombre } }} </p>
+                <p
+                  *ngIf="
+                    row.mostrarBotones &&
+                    !hasTransition(row.EstadoInscripcionId.Nombre)
+                  "
+                >
+                  {{
+                    "inscripcion.no_permite_cambio"
+                      | translate : { estado: row.EstadoInscripcionId.Nombre }
+                  }}
+                </p>
               </td>
             </ng-container>
 
             <ng-container matColumnDef="estado_de_recibo">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                {{'inscripcion.estado_recibo' | translate}} </th>
+                {{ "inscripcion.estado_recibo" | translate }}
+              </th>
 
-              <td mat-cell *matCellDef="let row"> 
+              <td mat-cell *matCellDef="let row">
                 <div
                   class="status-indicator"
                   [ngClass]="{
@@ -175,15 +289,15 @@ nbSpinnerMessage="{{ 'GLOBAL.cargando' | translate }}"> -->
                     inactive: row.EstadoRecibo === 'Vencido'
                   }"
                 >
-                  {{ row.EstadoRecibo === 'Pago' ? "Pago" : "Vencido"}}
+                  {{ row.EstadoRecibo === "Pago" ? "Pago" : "Vencido" }}
                 </div>
-              
-            </ng-container>
-
-
+              </td></ng-container
+            >
 
             <ng-container matColumnDef="acciones">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Acciones
+              </th>
               <td mat-cell *matCellDef="let row">
                 <button
                   mat-icon-button
@@ -195,27 +309,33 @@ nbSpinnerMessage="{{ 'GLOBAL.cargando' | translate }}"> -->
                 <mat-menu #menu="matMenu">
                   <button
                     mat-menu-item
-                    (click)="onSaveConfirm({newData:row}); buttonedit(row)"
+                    (click)="onSaveConfirm({ newData: row }); buttonedit(row)"
                   >
                     <mat-icon fontIcon="edit" color="accent"></mat-icon>
-                    <span>{{
-                      "admision.tooltip_editar" | translate
-                    }}</span>
+                    <span>{{ "admision.tooltip_editar" | translate }}</span>
                   </button>
                 </mat-menu>
               </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="source_emphasysColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: source_emphasysColumns;"></tr>
-
+            <tr
+              mat-row
+              *matRowDef="let row; columns: source_emphasysColumns"
+            ></tr>
 
             <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="4">{{'calendario.sin_procesos' | translate}}</td>
+              <td class="mat-cell" colspan="4">
+                {{ "calendario.sin_procesos" | translate }}
+              </td>
             </tr>
           </table>
 
-          <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true">
+          <mat-paginator
+            #paginator
+            [pageSize]="6"
+            [showFirstLastButtons]="true"
+          >
           </mat-paginator>
         </div>
       </div>
