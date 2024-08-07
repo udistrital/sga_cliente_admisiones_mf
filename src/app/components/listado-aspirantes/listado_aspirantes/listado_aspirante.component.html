@@ -260,7 +260,7 @@
                 class="status-indicator"
                 [ngClass]="{
                   active: row.EstadoRecibo === 'Pago',
-                  inactive: row.EstadoRecibo === 'Vencido'
+                  inactive: row.EstadoRecibo !== 'Pago'
                 }"
               >
                 {{ row.EstadoRecibo === "Pago" ? "Pago" : "Vencido" }}
