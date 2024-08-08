@@ -319,10 +319,14 @@
             </td>
           </tr>
         </table>
-
-        <mat-paginator #paginator [pageSize]="5" [showFirstLastButtons]="true" [pageSizeOptions]="[5,10,25,50]">
-        </mat-paginator>
       </div>
+      <mat-paginator
+        #paginator
+        [pageSize]="5"
+        [showFirstLastButtons]="true"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+      >
+      </mat-paginator>
     </mat-card-content>
   </mat-card>
 </main>
