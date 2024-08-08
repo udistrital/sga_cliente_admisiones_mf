@@ -1,16 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { CheckboxAssistanceComponent } from './checkbox-assistance.component';
+import { CheckboxAssistanceComponent } from "./checkbox-assistance.component";
 
-describe('CheckboxAssistanceComponent', () => {
+describe("CheckboxAssistanceComponent", () => {
   let component: CheckboxAssistanceComponent;
   let fixture: ComponentFixture<CheckboxAssistanceComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CheckboxAssistanceComponent ]
-    })
-    .compileComponents();
+      declarations: [CheckboxAssistanceComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('CheckboxAssistanceComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
