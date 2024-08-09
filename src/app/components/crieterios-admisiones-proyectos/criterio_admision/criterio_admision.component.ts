@@ -22,6 +22,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { OikosService } from 'src/app/services/oikos.service';
 import { forEach } from 'lodash';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SubcriteriosDialogComponent } from '../subcriterios-dialog/subcriterios-dialog.component';
 
 @Component({
   selector: 'criterio-admision',
@@ -154,6 +156,7 @@ export class CriterioAdmisionComponent implements OnChanges {
     private autenticationService: ImplicitAutenticationService,
     private oikosService: OikosService,
     private builder: FormBuilder,
+    private dialog: MatDialog
   ) {
     this.translate = translate;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -233,6 +236,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   buttonedit(row: any): void {
     row.mostrarBotones = !row.mostrarBotones;
   }
+
   nivel_load() {
     this.projectService.get('nivel_formacion?limit=0').subscribe(
       // (response: NivelFormacion[]) => {
@@ -660,7 +664,6 @@ export class CriterioAdmisionComponent implements OnChanges {
         this.dataSubcriterios = [];
         this.dataSubcriterios.push({});
       }
-       //this.dataSourceSubcriterio = new MatTableDataSource<any>([]);
       const subcriterios = event.data.Subcriterios;
       if (subcriterios != undefined && subcriterios.length > 0) {
         this.dataSourceSubcriterio = new MatTableDataSource(this.dataSubcriterios)
@@ -743,7 +746,6 @@ export class CriterioAdmisionComponent implements OnChanges {
     if (this.porcentajeSubcriterioTotal != 100) {
       this.popUpManager.showErrorToast(this.translate.instant('admision.porcentajeIncompleto'));
     } else {
-
       this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:'
         + this.proyectos_selected + ',PeriodoId:' + this.periodo.Id + ',Activo:true&limit=0')
         .subscribe((res: any) => {
@@ -957,25 +959,26 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   private requisitoPut(requisitoPut: any) {
-    this.evaluacionService.put('requisito_programa_academico', requisitoPut)
-      .subscribe(res => {
-        const r = <any>res;
-        if (r !== null && r.Type !== 'error') {
-          this.popUpManager.showSuccessAlert(this.translate.instant('admision.registro_exito'));
-        } else {
-          this.popUpManager.showErrorToast(this.translate.instant('GLOBAL.error'));
-        }
-      },
-        (error: HttpErrorResponse) => {
-          Swal.fire({
-            icon: 'error',
-            title: error.status + '',
-            text: this.translate.instant('ERROR.' + error.status),
-            footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-              this.translate.instant('GLOBAL.info_estado'),
-            confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-          });
-        });
+    console.log('PUT -->', requisitoPut)
+    // this.evaluacionService.put('requisito_programa_academico', requisitoPut)
+    //   .subscribe(res => {
+    //     const r = <any>res;
+    //     if (r !== null && r.Type !== 'error') {
+    //       this.popUpManager.showSuccessAlert(this.translate.instant('admision.registro_exito'));
+    //     } else {
+    //       this.popUpManager.showErrorToast(this.translate.instant('GLOBAL.error'));
+    //     }
+    //   },
+    //     (error: HttpErrorResponse) => {
+    //       Swal.fire({
+    //         icon: 'error',
+    //         title: error.status + '',
+    //         text: this.translate.instant('ERROR.' + error.status),
+    //         footer: this.translate.instant('GLOBAL.actualizar') + '-' +
+    //           this.translate.instant('GLOBAL.info_estado'),
+    //         confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+    //       });
+    //     });
   }
 
   cargarRequisito(Id: number) {
@@ -1016,6 +1019,20 @@ export class CriterioAdmisionComponent implements OnChanges {
         },
       }
       resolve(data)
+    });
+  }
+
+  openSubcriteriosDialog(row: any): void {
+    console.log('subcriterios', row)
+    const dialogRef = this.dialog.open(SubcriteriosDialogComponent, {
+      width: '600px',
+      data: { subcriterios: row.Subcriterios, title: row.Criterio }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        row.Subcriterios = result;
+      }
     });
   }
 

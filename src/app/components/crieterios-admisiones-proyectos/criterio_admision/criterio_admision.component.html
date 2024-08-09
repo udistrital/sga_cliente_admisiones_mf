@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-content>
     <h2>{{ "admision.criterios_proyectos" | translate }}</h2>
-    <div [hidden]="show_profile || show_icfes">
+    <div *ngIf="!(show_profile || show_icfes)">
       <!-- select periodo -->
       <mat-form-field class="form-field">
         <mat-label>{{ "admision.aviso_periodo" | translate }}:</mat-label>
@@ -135,12 +135,17 @@
       <!-- Tag de criterios -->
       <div class="row">
         <div
-          style="display: flex; flex-wrap: wrap; gap:1em;"
+          style="display: flex; flex-wrap: wrap; gap: 1em"
           id="info_tipo"
           *ngIf="selectTipo == true"
         >
           <!-- CRITERIOS -->
-          <div [ngStyle]="{'min-width': '500px', 'width': mostrarSubcriterio ? '48%' : '100%'}">
+          <div
+            [ngStyle]="{
+              'min-width': '500px',
+              width: mostrarSubcriterio ? '48%' : '100%'
+            }"
+          >
             <h3>{{ "admision.criterios" | translate }}</h3>
             <div class="table" *ngIf="periodo && selectednivel && facultad">
               <table mat-table [dataSource]="dataSource" matSort>
@@ -188,6 +193,14 @@
                   </th>
                   <td mat-cell *matCellDef="let row">
                     <div class="separacion-acciones">
+                      <button
+                        mat-icon-button
+                        *ngIf="row.Subcriterios && row.Subcriterios.length > 0"
+                        (click)="openSubcriteriosDialog(row)"
+                        title="{{ 'admision.ver_subcriterios' | translate }}"
+                      >
+                        <mat-icon>manufacturing</mat-icon>
+                      </button>
                       <button
                         aria-hidden="false"
                         *ngIf="!row.mostrarBotones"
@@ -269,7 +282,7 @@
           </div>
 
           <!-- SUBCRITERIOS -->
-          <div *ngIf="mostrarSubcriterio" style="min-width: 500px; width: 48%;">
+          <!-- <div *ngIf="mostrarSubcriterio" style="min-width: 500px; width: 48%">
             <br />
             <h3>{{ "admision.subcriterios" | translate }}</h3>
 
@@ -359,7 +372,6 @@
                   *matRowDef="let row; columns: dataSourceColumns"
                 ></tr>
 
-                <!-- Row shown when there is no matching data. -->
                 <tr class="mat-row" *matNoDataRow>
                   <td class="mat-cell" colspan="4">
                     {{ "calendario.sin_procesos" | translate }}
@@ -385,7 +397,7 @@
                 {{ "admision.guardarSubcriterio" | translate }}
               </button>
             </div>
-          </div>
+          </div> -->
 
           <br />
         </div>
