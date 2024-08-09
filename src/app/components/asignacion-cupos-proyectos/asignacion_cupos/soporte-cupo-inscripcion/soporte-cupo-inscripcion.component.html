@@ -1,0 +1,34 @@
+<mat-card class="card">
+    <mat-card-content>
+        <div class="mt-20">
+            <legend>
+                &nbsp;<strong>Soporte Cupo Inscripción</strong>
+            </legend>
+        </div>
+        <mat-card class="mt-20">
+            <mat-card-content class="mt-20">
+                <mat-form-field class="form-item" style="width: 100%;">
+                    <mat-label>
+                       Comentario
+                    </mat-label>
+                    <input type="text" matInput [formControl]="comentario" [value]="comentario.value" [disabled]="true">
+                    <mat-error *ngIf="comentario.hasError('required')">
+                        por favor ingrese un comentario
+                    </mat-error>
+                </mat-form-field>
+                <div class="mt-20">
+                    <input  mat-flat-button color="accent"  type="file" accept=".pdf" (change)="onFileSelected($event)" />
+                </div>
+                <br>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card-content class="mt-20">
+            <div style="display: flex; justify-content: center;">
+                <button mat-flat-button color="accent" type="button" (click)="validarInputs()">
+                    {{'GLOBAL.guardar' | translate}}
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card-content>
+</mat-card>

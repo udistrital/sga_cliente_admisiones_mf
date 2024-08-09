@@ -119,6 +119,7 @@ import { ListaTipoCuposComponent } from './components/tipo-cupos/lista-tipo-cupo
 import { CreacionTipoCuposComponent } from './components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component';
 import { EventosService } from './services/eventos.service';
 import { TiposCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/tipos-cupos/tipos-cupos.component';
+import { SoporteCupoInscripcionComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/soporte-cupo-inscripcion/soporte-cupo-inscripcion.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -207,6 +208,7 @@ export function createTranslateLoader(http: HttpClient) {
     ListadoAspiranteComponent,
     TablaListadoAspirantesComponent,
     PreinscripcionProyectosCurricularesComponent,
+    SoporteCupoInscripcionComponent,
   ],
   imports: [
     CodificacionModule,
