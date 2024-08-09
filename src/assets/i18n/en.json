@@ -1640,7 +1640,8 @@
     "error_nieveles": "An error occurred while retrieving levels",
     "error_tipo_inscripcion": "An error occurred while retrieving registration types",
     "titulo_programa_sin_requisitos": "Academic program without requirements",
-    "programa_sin_requisitos": "No assessment requirements found for this academic program"
+    "programa_sin_requisitos": "No assessment requirements found for this academic program",
+    "ver_subcriterios" : "View subcriteria"
   },
 
   "oficializados": {
