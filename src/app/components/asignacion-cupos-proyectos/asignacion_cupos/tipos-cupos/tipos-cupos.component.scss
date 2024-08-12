@@ -1,0 +1,10 @@
+.center-content {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 100%; /* Asegura que el contenedor tome todo el espacio disponible */
+  }
+
+  .mt-20{
+    margin-top: 20px;
+  }

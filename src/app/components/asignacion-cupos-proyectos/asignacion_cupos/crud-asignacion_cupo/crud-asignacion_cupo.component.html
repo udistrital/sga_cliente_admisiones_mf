@@ -1,47 +1,51 @@
-<!-- <toaster-container [toasterconfig]="config"></toaster-container> -->
-
-<!--
- <ngx-dinamicform *ngIf="!show_posgrado"
-                 [normalform]="formAsigancionCupoPregrado"
-                 [modeloData]="info_info_persona"
-                 (result)="validarForm($event)"
-                 [clean]="clean">
-</ngx-dinamicform> 
- <ngx-dinamicform *ngIf="show_posgrado"
-                 [normalform]="formAsigancionCupoPosgrado"
-                 [modeloData]="info_info_persona" (result)="validarForm($event)"
-                 [clean]="clean">
-</ngx-dinamicform> 
--->
-
-
-<mat-card [hidden]="!show_posgrado">
-    <ngx-dinamicform *ngIf="show_posgrado" [normalform]="formAsigancionCupoPosgrado" [modeloData]="info_info_persona"
-        (result)="validarForm($event)" [clean]="clean">
-    </ngx-dinamicform>
-</mat-card>
-<mat-card [hidden]="show_posgrado">
+<mat-card class="mt-20">
     <mat-card-content>
-        <div class="container">
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="container">
-                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <div>
+            <div>
+                <div>
+                    <div class="flex-container">
+                        <div>
+                            <span>{{"cupos.cupo_admitidos" | translate}}:</span>
+                            <mat-form-field>
+                                <input matInput type="number" [(ngModel)]="cuposAdmitidos" [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <span>{{"cupos.cupo_opcionados" | translate}}:</span>
+                            <mat-form-field>
+                                <input matInput type="number" [(ngModel)]="cuposOpcionados" [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <button mat-flat-button color="accent" type="button" (click)="TiposCupos()">
+                                <mat-icon>
+                                    add
+                                </mat-icon>
+                            </button>
+                        </div>
+                    </div>
 
+                    <table mat-table [dataSource]=" dataSource">
 
-                        <ng-container matColumnDef="NombreInscripcion">
-                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.nombre_inscripcion' | translate }} </th>
-                            <td mat-cell *matCellDef="let cupo"> {{ cupo.NombreInscripcion }} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="Nombre">
-                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.nombre' | translate }}</th>
+                        <ng-container matColumnDef="nombre">
+                            <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.nombre" | translate}}</th>
                             <td mat-cell *matCellDef="let cupo"> {{ cupo.Nombre }} </td>
                         </ng-container>
 
-                        <ng-container matColumnDef="Activo">
-                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.estado' | translate }} </th>
+                        <ng-container matColumnDef="descripcion">
+                            <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.descripcion" | translate}}</th>
+                            <td mat-cell *matCellDef="let cupo"> {{ cupo.Descripcion }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tipo">
+                            <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.Tipo" | translate}} </th>
+                            <td mat-cell *matCellDef="let cupo">
+                                {{cupo.NombreInscripcion}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="estado">
+                            <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.Estado" | translate}} </th>
                             <td mat-cell *matCellDef="let cupo">
                                 <ng-container *ngIf="cupo.Activo">
                                     Activo
@@ -52,55 +56,81 @@
                             </td>
                         </ng-container>
 
-                        <ng-container matColumnDef="CuposHabilitados">
-                            <th mat-header-cell *matHeaderCellDef> {{ 'cupos.cupos_disponibles' | translate }} </th>
-                            <td mat-cell *matCellDef="let cupo"> {{ cupo.CuposHabilitados }} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="CuposOpcionados">
-                            <th mat-header-cell *matHeaderCellDef> {{ 'cupos.cupos_opcionados' | translate }} </th>
-                            <td mat-cell *matCellDef="let cupo"> {{ cupo.CuposOpcionados }} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="editar">
-                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.editar' | translate }} </th>
+                        <ng-container matColumnDef="cuposhabilitados">
+                            <th mat-header-cell *matHeaderCellDef>{{"cupos.cupos_habilitados" | translate}} </th>
                             <td mat-cell *matCellDef="let cupo; let i = index">
-                                <button mat-icon-button (click)="editarFila(cupo)">
-                                    <mat-icon aria-label="Editar">edit</mat-icon>
-                                </button>
+                                <mat-form-field>
+                                    <input matInput type="number" [(ngModel)]="cupo.CuposHabilitados">
+                                </mat-form-field>
                             </td>
                         </ng-container>
 
-                        <ng-container matColumnDef="eliminar">
-                            <th mat-header-cell *matHeaderCellDef> {{ 'GLOBAL.eliminar' | translate }} </th>
+                        <ng-container matColumnDef="cuposopcionados">
+                            <th mat-header-cell *matHeaderCellDef> {{"cupos.cupo_opcionados" | translate}} </th>
                             <td mat-cell *matCellDef="let cupo; let i = index">
-                                <button mat-icon-button (click)="eliminarFila(cupo)">
-                                    <mat-icon aria-label="Eliminar">delete</mat-icon>
+                                <mat-form-field>
+                                    <input matInput type="number" [(ngModel)]="cupo.CuposOpcionados">
+                                </mat-form-field>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="soporte">
+                            <th mat-header-cell *matHeaderCellDef> {{"cupos.cupo_opcionados" | translate}} </th>
+                            <td mat-cell *matCellDef="let cupo; let i = index">
+                                <ng-container *ngIf="cupo.Id">
+                                    <span>Cargado</span>
+                                </ng-container>
+                                <ng-container *ngIf="!cupo.Id">
+                                    <button mat-flat-button color="accent" type="button" (click)="
+                                    onAction({
+                                      action: 'soporte',
+                                      data: cupo,
+                                    })
+                                  ">
+                                        Cargar Soporte
+                                    </button>
+                                </ng-container>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                            <td mat-cell *matCellDef="let cupo; let i = index">
+                                <button mat-icon-button [matMenuTriggerFor]="menu"
+                                    [matTooltip]="'GLOBAL.acciones' | translate" color="accent">
+                                    <mat-icon>more_vert</mat-icon>
                                 </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item (click)="onAction({
+                                         action: 'eliminar', 
+                                         data: cupo 
+                                        })
+                                        ">
+                                        <mat-icon fontIcon="delete" color="warn"></mat-icon>
+                                        <span>{{"GLOBAL.eliminar" | translate}}</span>
+                                    </button>
+
+                                </mat-menu>
                             </td>
                         </ng-container>
 
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let cupo; columns: displayedColumns;"></tr>
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">{{"cupos.no_registros" | translate}}</td>
+                        </tr>
                     </table>
-
+                    <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
                 </div>
 
             </div>
         </div>
-        <div>
-            <button class="boton-primary" mat-button type="button" (click)="listarComentarios()">{{ 'GLOBAL.comentarios' | translate }}</button>
+        <div class="mt-20 center-content">
+            <button mat-flat-button color="accent" type="button" (click)="guardarCupos()">{{ 'GLOBAL.guardar' |
+                translate }}</button>
         </div>
 
-        <button class="boton-primary" mat-button type="button" (click)="createCupos()">{{ 'GLOBAL.guardar' | translate }}</button>
+
     </mat-card-content>
-</mat-card>
-<mat-card [hidden]="!show_editar">
-    <ngx-dinamicform *ngIf="!show_posgrado"
-                 [normalform]="formAsigancionCupoPregrado"
-                 [modeloData]="info_info_persona"
-                 (result)="validarForm($event)"
-                 [clean]="clean">
-    </ngx-dinamicform> 
 </mat-card>
