@@ -2,9 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table'; // Import the MatTableDataSource class
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { OikosService } from 'src/app/services/oikos.service';
-import { SgaProyectoCurricularMidService } from 'src/app/services/sga-proyecto-curricular-mid.service';
 import { SgaCalendarioMidService } from 'src/app/services/sga_calendario_mid.service';
-import { TercerosService } from 'src/app/services/terceros.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { EventoService } from 'src/app/services/evento.service';
 import { FormControl, Validators } from '@angular/forms';
@@ -15,6 +13,8 @@ import { TranslateService } from '@ngx-translate/core';
 import * as saveAs from 'file-saver';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { SolicitudesAdmisiones } from 'src/app/services/solicitudes_admisiones.service';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-listado-oficializados',
@@ -23,7 +23,11 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 })
 export class ListadoOficializadosComponent {
 
+  //tab
+  cambiotab: boolean = false;
+
   // *ngIf
+  
   viewProceso = false;
   viewOficializados = false;
   viewNoOficializados = false;
@@ -36,6 +40,16 @@ export class ListadoOficializadosComponent {
   //fehas activa
   cicloActual!: string;
   estado!: boolean;
+
+  //Peticiones 
+  datos: any[] = [];
+
+  //tabla de solicitudes
+ 
+  datasource = new MatTableDataSource<any>();
+  @ViewChild('paginator0') paginator!: MatPaginator;
+  display: string[] = ['proceso', 'fechas', 'estado', "gestion"];
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
 
   //Tabla de proceso de calendario y fechas
@@ -58,7 +72,6 @@ export class ListadoOficializadosComponent {
 
   constructor(
     private eventoService: EventoService,
-    private terceroService: TercerosService,
     private parametrosService: ParametrosService,
     private inscripcionService: InscripcionService,
     private calendarioService: SgaCalendarioMidService,
@@ -67,6 +80,7 @@ export class ListadoOficializadosComponent {
     private translate: TranslateService,
     private sgaAdmisionesMidService: SgaAdmisionesMid,
     private sgamidService: SgaMidService,
+    private solicitudesAdmisiones: SolicitudesAdmisiones,
   ) { }
 
   async ngOnInit() {
@@ -99,7 +113,39 @@ export class ListadoOficializadosComponent {
     });
   }
 
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1;
+    const year = date.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  loadData(): void {
+    this.solicitudesAdmisiones.get('solicitud?query=EstadoTipoSolicitudId.TipoSolicitud.Id:40').subscribe(res => {
+      console.log(res);
+      if (res !== null) {
+        const data = <Array<any>><unknown>res;
+        this.datos = data.map(item => ({
+          Proceso: item.EstadoTipoSolicitudId.TipoSolicitud.Nombre,
+          Fechas: this.formatDate(item.FechaRadicacion), 
+          Estado: item.EstadoTipoSolicitudId.EstadoId.Nombre,
+          Gestion: item 
+        }));
+        this.datos.sort((a, b) => new Date(b.Fechas).getTime() - new Date(a.Fechas).getTime()); // Ordenar por fecha descendente
+        this.datasource = new MatTableDataSource(this.datos);
+        this.datasource.paginator = this.paginator;
+        this.datasource.sort = this.sort;
+        console.log(this.datasource.data);
+      }
+    });
+  }
+
+
+
+
   async generarBusqueda() {
+    this.loadData();
     this.loading = true;
     const fechaActual = new Date();
     let actividades: any[] = [];
@@ -244,6 +290,7 @@ export class ListadoOficializadosComponent {
       this.popUpManager.showAlert(this.translate.instant('admision.titulo_aspirantes_no_encontrados'), this.translate.instant('admision.aspirantes_no_oficializados_no_encontrados'))
     }
 
+    this.viewProceso = false;
     this.viewOficializados = true;
     this.viewNoOficializados = true;
 
@@ -317,5 +364,18 @@ export class ListadoOficializadosComponent {
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: 'application/pdf' });
     saveAs(blob, 'ListadOficializados.pdf');
+  }
+
+
+  activetab(): void {
+    this.cambiotab = !this.cambiotab;
+  }
+  selectTab(event: any): void {
+    this.cambiotab = event.index !== 0;
+  }
+  regresar(): void {
+    this.viewOficializados  = false;
+    this.viewNoOficializados = false;
+    this.viewProceso = true;
   }
 }
