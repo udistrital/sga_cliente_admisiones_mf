@@ -591,7 +591,8 @@
         "item": "Item",
         "evaluar": "Evaluate",
         "especial": "Special",
-        "filtro": "Filter"
+        "filtro": "Filter",
+        "legalizacion": "Legalization"
     },
     "ERROR": {
         "general": "The request could not be satisfied",
