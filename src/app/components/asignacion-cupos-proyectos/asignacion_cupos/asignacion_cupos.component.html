@@ -3,7 +3,7 @@
     <h2>{{ "admision.cupos_proyectos" | translate }}</h2>
 
     <!-- SELECTS -->
-    <div [hidden]="show_profile" class="form-grid4 margin-y">
+    <div class="form-grid4 margin-y">
       <!-- select periodo -->
       <mat-form-field class="form-field form-col1">
         <mat-label>{{ "calendario.periodo" | translate }}:</mat-label>
@@ -86,16 +86,14 @@
 
     <!-- FORMULARIOS -->
     <!-- <div [hidden]="!show_cupos"> -->
-    <div [hidden]="show_cupos">
-      <div *ngIf="!preinscripcion">
-        <crud-asignacion-cupo
-         *ngIf="show_cupos"
-          [info_proyectos]="this.proyectos_selected"
-          [info_periodo]="this.periodo"
-          [info_nivel]="this.esPosgrado"
-        >
-        </crud-asignacion-cupo>
-      </div>
-    </div>
+    <!--Formularios------------------------------------------------------------->
+
+    <crud-asignacion-cupo
+      *ngIf="show_cupos"
+      [info_proyectos]="this.proyectos_selected"
+      [info_periodo]="this.periodo"
+      [info_nivel]="this.esPosgrado"
+    >
+    </crud-asignacion-cupo>
   </mat-card-content>
 </mat-card>
