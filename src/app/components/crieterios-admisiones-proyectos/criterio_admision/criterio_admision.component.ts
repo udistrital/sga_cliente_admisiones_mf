@@ -1,55 +1,68 @@
-import { async } from '@angular/core/testing';
-import { Criterio } from 'src/app/models/admision/criterio';
-import { Component, OnInit, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import { Input, Output, EventEmitter } from '@angular/core';
-import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import { UtilidadesService } from 'src/app/services/utilidades.service';
-import { UserService } from 'src/app/services/users.service';
-import { ParametrosService } from 'src/app/services/parametros.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Inscripcion } from '../../../models/inscripcion/inscripcion'
+import { async } from "@angular/core/testing";
+import { Criterio } from "src/app/models/admision/criterio";
+import {
+  Component,
+  OnInit,
+  OnChanges,
+  ViewChild,
+  ElementRef,
+} from "@angular/core";
+import { Input, Output, EventEmitter } from "@angular/core";
+import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
+import { UtilidadesService } from "src/app/services/utilidades.service";
+import { UserService } from "src/app/services/users.service";
+import { ParametrosService } from "src/app/services/parametros.service";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Inscripcion } from "../../../models/inscripcion/inscripcion";
 // @ts-ignore
-import Swal from 'sweetalert2/dist/sweetalert2';
-import { FormControl, Validators, FormGroup, FormBuilder, ReactiveFormsModule  } from '@angular/forms';
-import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
-import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
+import Swal from "sweetalert2/dist/sweetalert2";
+import {
+  FormControl,
+  Validators,
+  FormGroup,
+  FormBuilder,
+  ReactiveFormsModule,
+} from "@angular/forms";
+import { EvaluacionInscripcionService } from "src/app/services/evaluacion_inscripcion.service";
+import { ProyectoAcademicoService } from "src/app/services/proyecto_academico.service";
 // import { LocalDataSource } from 'ng2-smart-table';
-import { PopUpManager } from '../../../managers/popUpManager';
-import { NivelFormacion } from 'src/app/models/proyecto_academico/nivel_formacion';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
-import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { OikosService } from 'src/app/services/oikos.service';
-import { forEach } from 'lodash';
-import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
-import { MatDialog } from '@angular/material/dialog';
-import { SubcriteriosDialogComponent } from '../subcriterios-dialog/subcriterios-dialog.component';
+import { PopUpManager } from "../../../managers/popUpManager";
+import { NivelFormacion } from "src/app/models/proyecto_academico/nivel_formacion";
+import { SgaMidService } from "src/app/services/sga_mid.service";
+import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
+import { MatTableDataSource } from "@angular/material/table";
+import { OikosService } from "src/app/services/oikos.service";
+import { forEach } from "lodash";
+import { SgaAdmisionesMid } from "src/app/services/sga_admisiones_mid.service";
+import { MatDialog } from "@angular/material/dialog";
+import { SubcriteriosDialogComponent } from "../subcriterios-dialog/subcriterios-dialog.component";
 
 @Component({
-  selector: 'criterio-admision',
-  templateUrl: './criterio_admision.component.html',
-  styleUrls: ['./criterio_admision.component.scss'],
+  selector: "criterio-admision",
+  templateUrl: "./criterio_admision.component.html",
+  styleUrls: ["./criterio_admision.component.scss"],
 })
 export class CriterioAdmisionComponent implements OnChanges {
-
-
-
-  @ViewChild('inputRef') inputRef!: ElementRef;
-  @Input('criterios_select')
+  @ViewChild("inputRef") inputRef!: ElementRef;
+  @Input("criterios_select")
   set name(inscripcion_id: number) {
     this.inscripcion_id = inscripcion_id;
 
-    if (this.inscripcion_id === 0 || this.inscripcion_id.toString() === '0') {
+    if (this.inscripcion_id === 0 || this.inscripcion_id.toString() === "0") {
       this.selectedValue = undefined;
-      window.localStorage.setItem('programa', this.selectedValue);
+      window.localStorage.setItem("programa", this.selectedValue);
     }
-    if (this.inscripcion_id !== undefined && this.inscripcion_id !== 0 && this.inscripcion_id.toString() !== ''
-      && this.inscripcion_id.toString() !== '0') {
+    if (
+      this.inscripcion_id !== undefined &&
+      this.inscripcion_id !== 0 &&
+      this.inscripcion_id.toString() !== "" &&
+      this.inscripcion_id.toString() !== "0"
+    ) {
     }
   }
 
   @Output() eventChange = new EventEmitter();
-  @Output('result') result: EventEmitter<any> = new EventEmitter();
+  @Output("result") result: EventEmitter<any> = new EventEmitter();
 
   ofertarOpcion2!: FormGroup;
   ofertarOpcion3!: FormGroup;
@@ -124,11 +137,11 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   settings: any;
   settingsSubcriterio: any;
-  dataSourceColumns = ["criterio", "porentaje", "acciones"]
+  dataSourceColumns = ["criterio", "porentaje", "acciones"];
   dataSource!: MatTableDataSource<any>;
   dataSourceSubcriterio!: MatTableDataSource<any>;
-  porcentajeCriterioTable: boolean = false
-  porcentajeSubcriterioTable: boolean = false
+  porcentajeCriterioTable: boolean = false;
+  porcentajeSubcriterioTable: boolean = false;
   data: any[] = [];
   dataSubcriterios: any[] = [];
   porcentajeTotal: number = 0;
@@ -141,9 +154,9 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   numeroOpciones: any;
 
-  CampoControl = new FormControl('', [Validators.required]);
-  Campo1Control = new FormControl('', [Validators.required]);
-  Campo2Control = new FormControl('', [Validators.required]);
+  CampoControl = new FormControl("", [Validators.required]);
+  Campo1Control = new FormControl("", [Validators.required]);
+  Campo2Control = new FormControl("", [Validators.required]);
   constructor(
     private popUpManager: PopUpManager,
     private projectService: ProyectoAcademicoService,
@@ -152,27 +165,26 @@ export class CriterioAdmisionComponent implements OnChanges {
     private parametrosService: ParametrosService,
     private evaluacionService: EvaluacionInscripcionService,
     private admisiones: EvaluacionInscripcionService,
-    private sgaMidAdmisiones : SgaAdmisionesMid,
+    private sgaMidAdmisiones: SgaAdmisionesMid,
     private autenticationService: ImplicitAutenticationService,
     private oikosService: OikosService,
     private builder: FormBuilder,
     private dialog: MatDialog
   ) {
     this.translate = translate;
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-    });
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
     // this.dataSource = new LocalDataSource();
     this.ofertarOpcion2 = this.builder.group({
-      opcion:[false, Validators.required],
+      opcion: [false, Validators.required],
     });
     this.ofertarOpcion3 = this.builder.group({
-      opcion:[false, Validators.required],
+      opcion: [false, Validators.required],
     });
     this.total = true;
     this.data = [];
     this.porcentajeTotal = 0;
     this.porcentajeSubcriterioTotal = 0;
-    this.nivel_load()
+    this.nivel_load();
     this.loadData();
     this.loadCriterios();
     this.cargarFacultad();
@@ -180,28 +192,41 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   loadNumeroOpciones() {
-    console.log("loadNumeroOpciones", this.periodo.Id)
-    this.parametrosService.get('parametro?query=CodigoAbreviacion:OPREGRADO,Activo:true').subscribe(
-      (response: any) => {
-        console.log("loadNumeroOpciones1111111", response.Data[0].Id)
-        this.parametrosService.get('parametro_periodo?query=Activo:true,PeriodoId:' + this.periodo.Id + ',ParametroId:' + response.Data[0].Id).subscribe(
-          (response: any) => {
-            console.log("loadNumeroOpciones222222", response)
-            if (response.Data[0].Valor !== undefined && response.Data[0].Valor !== null) {
-              console.log("loadNumeroOpciones333333", response.Data[0].Valor)
-              const valorObj = JSON.parse(response.Data[0].Valor);
-              const valor = valorObj.Valor;
-              console.log('Valor extraído:', valor);
-              console.log('tipo', typeof valor);
-              this.numeroOpciones = parseInt(valor);
-              console.log('Valor extraído:', this.numeroOpciones);
-              this.generateCheckboxes(this.numeroOpciones - 1);
+    console.log("loadNumeroOpciones", this.periodo.Id);
+    this.parametrosService
+      .get("parametro?query=CodigoAbreviacion:OPREGRADO,Activo:true")
+      .subscribe((response: any) => {
+        console.log("loadNumeroOpciones1111111", response.Data[0].Id);
+        this.parametrosService
+          .get(
+            "parametro_periodo?query=Activo:true,PeriodoId:" +
+              this.periodo.Id +
+              ",ParametroId:" +
+              response.Data[0].Id
+          )
+          .subscribe(
+            (response: any) => {
+              console.log("loadNumeroOpciones222222", response);
+              if (
+                response.Data[0].Valor !== undefined &&
+                response.Data[0].Valor !== null
+              ) {
+                console.log("loadNumeroOpciones333333", response.Data[0].Valor);
+                const valorObj = JSON.parse(response.Data[0].Valor);
+                const valor = valorObj.Valor;
+                console.log("Valor extraído:", valor);
+                console.log("tipo", typeof valor);
+                this.numeroOpciones = parseInt(valor);
+                console.log("Valor extraído:", this.numeroOpciones);
+                this.generateCheckboxes(this.numeroOpciones - 1);
+              }
+            },
+            (error) => {
+              this.popUpManager.showErrorToast(
+                this.translate.instant("ERROR.general")
+              );
             }
-          },
-          error => {
-            this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-          },
-        );
+          );
       });
   }
 
@@ -213,10 +238,9 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   createCheckbox(): FormGroup {
     return this.builder.group({
-      opcion:[false, Validators.required],
+      opcion: [false, Validators.required],
     });
   }
-
 
   async loadData() {
     try {
@@ -225,10 +249,10 @@ export class CriterioAdmisionComponent implements OnChanges {
       await this.cargarPeriodo();
     } catch (error: any) {
       Swal.fire({
-        icon: 'error',
-        title: error.status + '',
-        text: this.translate.instant('inscripcion.error_cargar_informacion'),
-        confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+        icon: "error",
+        title: error.status + "",
+        text: this.translate.instant("inscripcion.error_cargar_informacion"),
+        confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
       });
     }
   }
@@ -238,38 +262,49 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   nivel_load() {
-    this.projectService.get('nivel_formacion?limit=0').subscribe(
+    this.projectService.get("nivel_formacion?limit=0").subscribe(
       // (response: NivelFormacion[]) => {
       (response: any) => {
-        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.Nombre == 'Pregrado' || nivel.Nombre == 'Posgrado')
+        this.niveles = response.filter(
+          (nivel: any) =>
+            (nivel.NivelFormacionPadreId === null &&
+              nivel.Nombre == "Pregrado") ||
+            nivel.Nombre == "Posgrado"
+        );
       },
-      error => {
-        this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-      },
+      (error) => {
+        this.popUpManager.showErrorToast(
+          this.translate.instant("ERROR.general")
+        );
+      }
     );
   }
 
-
-
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
-        .subscribe((res: any) => {
-          const r = <any>res;
-          if (res !== null && r.Status === '200') {
-            this.periodo = res.Data.find((p: any) => p.Activo);
-            window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
-            resolve(this.periodo);
-            const periodos = <any[]>res['Data'];
-            periodos.forEach((element: any) => {
-              this.periodos.push(element);
-            });
-            this.loadNumeroOpciones();
-          }
-        },
+      this.parametrosService
+        .get("periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .subscribe(
+          (res: any) => {
+            const r = <any>res;
+            if (res !== null && r.Status === "200") {
+              this.periodo = res.Data.find((p: any) => p.Activo);
+              window.localStorage.setItem(
+                "IdPeriodo",
+                String(this.periodo["Id"])
+              );
+              resolve(this.periodo);
+              const periodos = <any[]>res["Data"];
+              periodos.forEach((element: any) => {
+                this.periodos.push(element);
+              });
+              this.loadNumeroOpciones();
+            }
+          },
           (error: HttpErrorResponse) => {
             reject(error);
-          });
+          }
+        );
     });
   }
 
@@ -277,23 +312,28 @@ export class CriterioAdmisionComponent implements OnChanges {
     this.selectednivel = undefined;
     this.proyectos_selected = undefined;
     this.loadNumeroOpciones();
-
   }
 
   setPercentage_info(number: any, tab: string | number) {
     this.percentage_tab_info[tab] = (number * 100) / 2;
-    this.percentage_info = Math.round(UtilidadesService.getSumArray(this.percentage_tab_info));
+    this.percentage_info = Math.round(
+      UtilidadesService.getSumArray(this.percentage_tab_info)
+    );
     this.setPercentage_total();
   }
 
   setPercentage_acad(number: any, tab: any) {
     this.percentage_tab_acad[tab] = (number * 100) / 2;
-    this.percentage_acad = Math.round(UtilidadesService.getSumArray(this.percentage_tab_acad));
+    this.percentage_acad = Math.round(
+      UtilidadesService.getSumArray(this.percentage_tab_acad)
+    );
     this.setPercentage_total();
   }
   setPercentage_total() {
-    this.percentage_total = Math.round(UtilidadesService.getSumArray(this.percentage_tab_info)) / 2;
-    this.percentage_total += Math.round(UtilidadesService.getSumArray(this.percentage_tab_acad)) / 4;
+    this.percentage_total =
+      Math.round(UtilidadesService.getSumArray(this.percentage_tab_info)) / 2;
+    this.percentage_total +=
+      Math.round(UtilidadesService.getSumArray(this.percentage_tab_acad)) / 4;
     if (this.info_inscripcion !== undefined) {
       if (this.info_inscripcion.EstadoInscripcionId.Id > 1) {
         this.percentage_total = 100;
@@ -308,119 +348,141 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   limpiarDatos() {
     this.criterios.forEach((criterio: any) => {
-      criterio['Porcentaje'] = 0
+      criterio["Porcentaje"] = 0;
       criterio.Subcriterios.forEach((sub: any) => {
-        sub['Porcentaje'] = 0
+        sub["Porcentaje"] = 0;
       });
-    })
+    });
   }
 
   activeCriterios() {
     this.selectcriterio = false;
     this.criterio_selected = [];
-    this.limpiarDatos()
-    this.evaluacionService.get('requisito_programa_academico?query=Activo:true,ProgramaAcademicoId:' + this.proyectos_selected +
-      ',PeriodoId:' + this.periodo.Id).subscribe(response => {
-        const r = <any>response;
-        if (r[0].Id !== undefined && r[0] !== '{}' && r.Type !== 'error') {
-          r.forEach((element: any) => {
-            const criterio_aux: any = this.criterios.find((e: any) => e.Id === element.RequisitoId.Id)
-            const subcriterios_aux = JSON.parse(element.PorcentajeEspecifico).areas
-            criterio_aux['Porcentaje'] = element.PorcentajeGeneral
-            const ofertarOpcion_aux2 = element.OfertarOpcion2
-            const ofertarOpcion_aux3 = element.OfertarOpcion3
+    this.limpiarDatos();
+    this.evaluacionService
+      .get(
+        "requisito_programa_academico?query=Activo:true,ProgramaAcademicoId:" +
+          this.proyectos_selected +
+          ",PeriodoId:" +
+          this.periodo.Id
+      )
+      .subscribe(
+        (response) => {
+          const r = <any>response;
+          if (r[0].Id !== undefined && r[0] !== "{}" && r.Type !== "error") {
+            r.forEach((element: any) => {
+              const criterio_aux: any = this.criterios.find(
+                (e: any) => e.Id === element.RequisitoId.Id
+              );
+              const subcriterios_aux = JSON.parse(
+                element.PorcentajeEspecifico
+              ).areas;
+              criterio_aux["Porcentaje"] = element.PorcentajeGeneral;
+              const ofertarOpcion_aux2 = element.OfertarOpcion2;
+              const ofertarOpcion_aux3 = element.OfertarOpcion3;
 
-            if (element.PuntajeMinimoExamenEstado) {
-              const valorMinimo_aux = element.PuntajeMinimoExamenEstado
-              this.valorMinimo = valorMinimo_aux
-            }
-          
-            criterio_aux.Subcriterios.forEach((sub: any) => {
-              if (subcriterios_aux != undefined) {
-                subcriterios_aux.forEach((sub_aux: any) => {
-                  if (sub_aux.Id === sub.Id) {
-                    sub['Porcentaje'] = parseInt(sub_aux['Porcentaje'], 10)
-                  }
-                });
+              if (element.PuntajeMinimoExamenEstado) {
+                const valorMinimo_aux = element.PuntajeMinimoExamenEstado;
+                this.valorMinimo = valorMinimo_aux;
               }
-            });
-            this.criterio_selected.push(criterio_aux)
-            this.ofertarOpcion2.controls['opcion'].setValue(ofertarOpcion_aux2);
-            this.ofertarOpcion3.controls['opcion'].setValue(ofertarOpcion_aux3);
-            
-          });
 
-          this.Campo2Control = new FormControl(this.criterio_selected)
-          this.viewtab();
-        } else {
-          this.criterio_selected = []
-          this.ofertarOpcion2.controls['opcion'].setValue(false);
-          this.ofertarOpcion3.controls['opcion'].setValue(false);
-          this.valorMinimo = 0;
-          this.Campo2Control = new FormControl(this.criterio_selected)
-          // this.viewtab();
-          this.selectTipo = false
-        }
-      },
-        error => {
-          this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
+              criterio_aux.Subcriterios.forEach((sub: any) => {
+                if (subcriterios_aux != undefined) {
+                  subcriterios_aux.forEach((sub_aux: any) => {
+                    if (sub_aux.Id === sub.Id) {
+                      sub["Porcentaje"] = parseInt(sub_aux["Porcentaje"], 10);
+                    }
+                  });
+                }
+              });
+              this.criterio_selected.push(criterio_aux);
+              this.ofertarOpcion2.controls["opcion"].setValue(
+                ofertarOpcion_aux2
+              );
+              this.ofertarOpcion3.controls["opcion"].setValue(
+                ofertarOpcion_aux3
+              );
+            });
+
+            this.Campo2Control = new FormControl(this.criterio_selected);
+            this.viewtab();
+          } else {
+            this.criterio_selected = [];
+            this.ofertarOpcion2.controls["opcion"].setValue(false);
+            this.ofertarOpcion3.controls["opcion"].setValue(false);
+            this.valorMinimo = 0;
+            this.Campo2Control = new FormControl(this.criterio_selected);
+            // this.viewtab();
+            this.selectTipo = false;
+          }
         },
+        (error) => {
+          this.popUpManager.showErrorToast(
+            this.translate.instant("admision.error_cargar")
+          );
+        }
       );
 
     if (this.criterio_selected.length === 0) {
-      this.selectTipo = false
+      this.selectTipo = false;
     }
   }
 
   filtrarProyecto(proyecto: any) {
-    if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
-      return true
+    if (this.selectednivel === proyecto["NivelFormacionId"]["Id"]) {
+      return true;
     }
-    if (proyecto['NivelFormacionId']['NivelFormacionPadreId'] !== null) {
-      if (proyecto['NivelFormacionId']['NivelFormacionPadreId']['Id'] === this.selectednivel) {
-        return true
+    if (proyecto["NivelFormacionId"]["NivelFormacionPadreId"] !== null) {
+      if (
+        proyecto["NivelFormacionId"]["NivelFormacionPadreId"]["Id"] ===
+        this.selectednivel
+      ) {
+        return true;
       } else {
-        return false
+        return false;
       }
     } else {
-      return false
+      return false;
     }
   }
 
-  cargarFacultad(){
+  cargarFacultad() {
     return new Promise((resolve, reject) => {
-      this.oikosService.get('dependencia_tipo_dependencia/?query=Activo:true&limit=0')
-        .subscribe((response: any) => {
-          if (response != null && response.Status != '404' 
-              && Object.keys(response[0]).length > 0) {
-                for (let obj of response) {
-                  if (obj.TipoDependenciaId.Id == 2) {
-                    this.facultades.push(obj.DependenciaId);
-                  }
+      this.oikosService
+        .get("dependencia_tipo_dependencia/?query=Activo:true&limit=0")
+        .subscribe(
+          (response: any) => {
+            if (
+              response != null &&
+              response.Status != "404" &&
+              Object.keys(response[0]).length > 0
+            ) {
+              for (let obj of response) {
+                if (obj.TipoDependenciaId.Id == 2) {
+                  this.facultades.push(obj.DependenciaId);
                 }
-                resolve(this.facultades);
-          } else {
-            reject({Facultad: "Bad answer"});
+              }
+              resolve(this.facultades);
+            } else {
+              reject({ Facultad: "Bad answer" });
+            }
+          },
+          (error: HttpErrorResponse) => {
+            reject({ Facultad: error });
           }
-        },
-        (error: HttpErrorResponse) => {
-          reject({Facultad: error});
-        });
+        );
     });
-
   }
 
-  filtrarPorFacultades(selProyecto:any) {
+  filtrarPorFacultades(selProyecto: any) {
     if (this.proyectos && this.proyectos.length > 0) {
-      this.proyectosFilteredFacultad = this.proyectos.filter(
-        (proyect: any) => {
-          if (proyect.FacultadId == selProyecto) {
-            return true;
-          } else {
-            return false;
-          }
-        }      
-      );
+      this.proyectosFilteredFacultad = this.proyectos.filter((proyect: any) => {
+        if (proyect.FacultadId == selProyecto) {
+          return true;
+        } else {
+          return false;
+        }
+      });
     }
 
     // this.proyecto = undefined;
@@ -431,86 +493,124 @@ export class CriterioAdmisionComponent implements OnChanges {
     // window.localStorage.setItem('IdNivel', String(this.selectednivel.id));
     this.selectprograma = false;
     this.loading = true;
-    this.projectService.get('proyecto_academico_institucion?limit=0').subscribe(
+    this.projectService.get("proyecto_academico_institucion?limit=0").subscribe(
       (res: any) => {
         this.autenticationService.getRole().then(
           // (rol: Array <String>) => {
           (rol: any) => {
-            let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
+            let r = rol.find(
+              (role: any) =>
+                role == "ADMIN_SGA" ||
+                role == "VICERRECTOR" ||
+                role == "ASESOR_VICE"
+            ); // rol admin o vice
             if (r) {
-              this.proyectos = <any[]>res.filter(
-                (proyecto: any) => this.filtrarProyecto(proyecto),
+              this.proyectos = <any[]>(
+                res.filter((proyecto: any) => this.filtrarProyecto(proyecto))
               );
             } else {
               const id_tercero = this.userService.getPersonaId();
-              this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
-                (respDependencia: any) => {
-                  const dependencias = <Number[]>respDependencia.Data.DependenciaId;
-                  this.proyectos = <any[]>res.filter(
-                    (proyecto: any) => dependencias.includes(proyecto.Id)
-                  );
-                  if (dependencias.length > 1) {
-                    this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
-                    //this.proyectos.forEach(p => { p.Id = undefined })
+              this.sgaMidAdmisiones
+                .get("admision/dependencia_vinculacion_tercero/" + id_tercero)
+                .subscribe(
+                  (respDependencia: any) => {
+                    const dependencias = <Number[]>(
+                      respDependencia.Data.DependenciaId
+                    );
+                    this.proyectos = <any[]>(
+                      res.filter((proyecto: any) =>
+                        dependencias.includes(proyecto.Id)
+                      )
+                    );
+                    if (dependencias.length > 1) {
+                      this.popUpManager.showAlert(
+                        this.translate.instant("GLOBAL.info"),
+                        this.translate.instant("admision.multiple_vinculacion")
+                      ); //+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
+                      //this.proyectos.forEach(p => { p.Id = undefined })
+                    }
+                  },
+                  (error: any) => {
+                    this.popUpManager.showErrorAlert(
+                      this.translate.instant("admision.no_vinculacion_no_rol") +
+                        ". " +
+                        this.translate.instant("GLOBAL.comunicar_OAS_error")
+                    );
                   }
-                },
-                (error: any) => {
-                  this.popUpManager.showErrorAlert(this.translate.instant('admision.no_vinculacion_no_rol') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
-                }
-              );
+                );
             }
           }
         );
       },
       (error: HttpErrorResponse) => {
         Swal.fire({
-          icon: 'error',
-          title: error.status + '',
-          text: this.translate.instant('ERROR.' + error.status),
-          footer: this.translate.instant('GLOBAL.cargar') + '-' +
-            this.translate.instant('GLOBAL.programa_academico'),
-          confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+          icon: "error",
+          title: error.status + "",
+          text: this.translate.instant("ERROR." + error.status),
+          footer:
+            this.translate.instant("GLOBAL.cargar") +
+            "-" +
+            this.translate.instant("GLOBAL.programa_academico"),
+          confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
         });
-      });
+      }
+    );
   }
 
   loadCriterios() {
-    this.evaluacionService.get('requisito/?query=Activo:true&limit=0')
-      .subscribe((res: any) => {
-        const r = <any>res;
-        if (res !== null && r.Type !== 'error') {
-          this.criterios = <Criterio[]>res.filter((c: any) => c['RequisitoPadreId'] === null);
-          this.criterios.forEach((criterio: any) => {
-            criterio['Porcentaje'] = 0
-            this.admisiones.get('requisito?limit=0&query=Activo:true,RequisitoPadreId.Id:' + criterio.Id).subscribe(
-              (response: any) => {
-                if (response.length > 0 && Object.keys(response[0]).length > 0) {
-                  criterio.Subcriterios = <Criterio[]>response;
-                  criterio.Subcriterios.forEach((sub: any) => {
-                    sub['Porcentaje'] = 0
-                  });
-                } else {
-                  criterio.Subcriterios = [];
-                }
-              },
-              error => {
-                criterio.Subcriterios = [];
-                this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
-              },
+    this.evaluacionService
+      .get("requisito/?query=Activo:true&limit=0")
+      .subscribe(
+        (res: any) => {
+          const r = <any>res;
+          if (res !== null && r.Type !== "error") {
+            this.criterios = <Criterio[]>(
+              res.filter((c: any) => c["RequisitoPadreId"] === null)
             );
-          });
-        }
-      },
+            this.criterios.forEach((criterio: any) => {
+              criterio["Porcentaje"] = 0;
+              this.admisiones
+                .get(
+                  "requisito?limit=0&query=Activo:true,RequisitoPadreId.Id:" +
+                    criterio.Id
+                )
+                .subscribe(
+                  (response: any) => {
+                    if (
+                      response.length > 0 &&
+                      Object.keys(response[0]).length > 0
+                    ) {
+                      criterio.Subcriterios = <Criterio[]>response;
+                      criterio.Subcriterios.forEach((sub: any) => {
+                        sub["Porcentaje"] = 0;
+                      });
+                    } else {
+                      criterio.Subcriterios = [];
+                    }
+                  },
+                  (error) => {
+                    criterio.Subcriterios = [];
+                    this.popUpManager.showErrorToast(
+                      this.translate.instant("admision.error_cargar")
+                    );
+                  }
+                );
+            });
+          }
+        },
         (error: HttpErrorResponse) => {
           Swal.fire({
-            icon: 'error',
-            title: error.status + '',
-            text: this.translate.instant('ERROR.' + error.status),
-            footer: this.translate.instant('GLOBAL.cargar') + '-' +
-              this.translate.instant('GLOBAL.programa_academico'),
-            confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+            icon: "error",
+            title: error.status + "",
+            text: this.translate.instant("ERROR." + error.status),
+            footer:
+              this.translate.instant("GLOBAL.cargar") +
+              "-" +
+              this.translate.instant("GLOBAL.programa_academico"),
+            confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
           });
-        });
+        }
+      );
   }
 
   useLanguage(language: string) {
@@ -519,13 +619,13 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   perfil_editar(event: any): void {
     switch (event) {
-      case 'info_icfes':
+      case "info_icfes":
         this.show_icfes = true;
         break;
-      case 'info_entrevista':
+      case "info_entrevista":
         this.preinscripcion = true;
         break;
-      case 'info_entrevista':
+      case "info_entrevista":
         this.show_icfes = false;
         break;
       default:
@@ -534,37 +634,34 @@ export class CriterioAdmisionComponent implements OnChanges {
     }
   }
 
- 
-
-  ngOnChanges() {
-  }
+  ngOnChanges() {}
 
   viewtab() {
     if (this.criterio_selected.length === 0) {
-      this.Campo2Control = new FormControl(this.criterio_selected)
-      this.selectTipo = false
+      this.Campo2Control = new FormControl(this.criterio_selected);
+      this.selectTipo = false;
       this.criterioEsExamenEstado = false;
       this.valorMinimo = 0;
     } else {
       // Porcentaje: element.PorcentajeGeneral,
       this.criterio_selected.forEach((criterio: any) => {
-        if(criterio.ExamenEstado){
+        if (criterio.ExamenEstado) {
           this.validarExistenciaExamenEstado = true;
         }
-        criterio['Criterio'] = criterio.Nombre
-        criterio['Porcentaje'] = criterio.Porcentaje
+        criterio["Criterio"] = criterio.Nombre;
+        criterio["Porcentaje"] = criterio.Porcentaje;
         criterio.Subcriterios.forEach((subcriterio: any) => {
-          subcriterio['Porcentaje'] = subcriterio.Porcentaje
+          subcriterio["Porcentaje"] = subcriterio.Porcentaje;
         });
-      })
+      });
 
-      if(this.validarExistenciaExamenEstado){
+      if (this.validarExistenciaExamenEstado) {
         this.criterioEsExamenEstado = true;
-      }else{
+      } else {
         this.criterioEsExamenEstado = false;
       }
       this.validarExistenciaExamenEstado = false;
-      this.selectTipo = true
+      this.selectTipo = true;
       this.data = [];
       // this.dataSource = new LocalDataSource();
       for (let i = 0; i < this.criterio_selected.length; i++) {
@@ -596,20 +693,20 @@ export class CriterioAdmisionComponent implements OnChanges {
     });
 
     // this.dataSource.load(this.data);
-    this.dataSource = new MatTableDataSource(this.data)
+    this.dataSource = new MatTableDataSource(this.data);
     this.settings = {
       columns: {
         Criterio: {
-          title: this.translate.instant('admision.criterio'),
+          title: this.translate.instant("admision.criterio"),
           editable: false,
           filter: false,
-          width: '55%',
+          width: "55%",
           valuePrepareFunction: (value: any) => {
             return value;
           },
         },
         Porcentaje: {
-          title: this.translate.instant('admision.porcentaje'),
+          title: this.translate.instant("admision.porcentaje"),
           editable: true,
           filter: false,
           valuePrepareFunction: (value: any) => {
@@ -622,36 +719,39 @@ export class CriterioAdmisionComponent implements OnChanges {
         edit: true,
         add: false,
         delete: false,
-        position: 'right',
-        columnTitle: this.translate.instant('GLOBAL.acciones'),
-        width: '5%',
+        position: "right",
+        columnTitle: this.translate.instant("GLOBAL.acciones"),
+        width: "5%",
       },
       edit: {
         editButtonContent:
-          '<i class="nb-edit" title="' + this.translate.instant('admision.tooltip_editar') +
+          '<i class="nb-edit" title="' +
+          this.translate.instant("admision.tooltip_editar") +
           '"></i>',
         saveButtonContent:
-          '<i class="nb-checkmark" title="' + this.translate.instant('admision.tooltip_guargar') +
+          '<i class="nb-checkmark" title="' +
+          this.translate.instant("admision.tooltip_guargar") +
           '"></i>',
         cancelButtonContent:
-          '<i class="nb-close" title="' + this.translate.instant('admision.tooltip_cancelar') +
+          '<i class="nb-close" title="' +
+          this.translate.instant("admision.tooltip_cancelar") +
           '"></i>',
       },
-    }
+    };
   }
   devolverBotoneditarCriterio() {
-    this.porcentajeCriterioTable = false
-    this.devolverBotoneditarSubciterio()
+    this.porcentajeCriterioTable = false;
+    this.devolverBotoneditarSubciterio();
   }
   devolverBotoneditarSubciterio() {
-    this.porcentajeSubcriterioTable = false
+    this.porcentajeSubcriterioTable = false;
   }
   onEdit(event: any) {
-    this.porcentajeCriterioTable = true
+    this.porcentajeCriterioTable = true;
 
     this.requisitoId = undefined;
     this.mostrarSubcriterio = false;
-    if (event.data.Porcentaje == '') {
+    if (event.data.Porcentaje == "") {
       event.data.Porcentaje == 0;
     }
     this.calcularPorcentaje();
@@ -666,25 +766,26 @@ export class CriterioAdmisionComponent implements OnChanges {
       }
       const subcriterios = event.data.Subcriterios;
       if (subcriterios != undefined && subcriterios.length > 0) {
-        this.dataSourceSubcriterio = new MatTableDataSource(this.dataSubcriterios)
+        this.dataSourceSubcriterio = new MatTableDataSource(
+          this.dataSubcriterios
+        );
 
         this.settingsSubcriterio = {
           columns: {
             Criterio: {
-              title: this.translate.instant('admision.subCriterio'),
+              title: this.translate.instant("admision.subCriterio"),
               editable: false,
               filter: false,
-              width: '55%',
+              width: "55%",
               valuePrepareFunction: (value: any) => {
                 return value;
               },
             },
             Porcentaje: {
-              title: this.translate.instant('admision.porcentaje'),
+              title: this.translate.instant("admision.porcentaje"),
               editable: true,
               filter: false,
               valuePrepareFunction: (value: any) => {
-                this.calcularPorcentajeSubcriterio();
                 return value;
               },
             },
@@ -693,25 +794,25 @@ export class CriterioAdmisionComponent implements OnChanges {
             edit: true,
             add: false,
             delete: false,
-            position: 'right',
-            columnTitle: this.translate.instant('GLOBAL.acciones'),
-            width: '5%',
+            position: "right",
+            columnTitle: this.translate.instant("GLOBAL.acciones"),
+            width: "5%",
           },
           edit: {
             editButtonContent:
               '<i class="nb-edit" title="' +
-              this.translate.instant('admision.tooltip_editar') +
+              this.translate.instant("admision.tooltip_editar") +
               '"></i>',
             saveButtonContent:
               '<i class="nb-checkmark" title="' +
-              this.translate.instant('admision.tooltip_guargar') +
+              this.translate.instant("admision.tooltip_guargar") +
               '"></i>',
             cancelButtonContent:
               '<i class="nb-close" title="' +
-              this.translate.instant('admision.tooltip_cancelar') +
+              this.translate.instant("admision.tooltip_cancelar") +
               '"></i>',
           },
-        }
+        };
       } else {
         this.dataSubcriterios.push({});
       }
@@ -720,11 +821,10 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   onEditSubcriterio($event: any) {
-    this.porcentajeSubcriterioTable = true
-    if ($event.data.Porcentaje == '') {
+    this.porcentajeSubcriterioTable = true;
+    if ($event.data.Porcentaje == "") {
       $event.data.Porcentaje == 0;
     }
-    this.calcularPorcentajeSubcriterio();
   }
 
   calcularPorcentaje() {
@@ -734,179 +834,218 @@ export class CriterioAdmisionComponent implements OnChanges {
     }
   }
 
-  calcularPorcentajeSubcriterio() {
-    this.porcentajeSubcriterioTotal = 0;
-    for (let i = 0; i < this.dataSourceSubcriterio.data.length; i++) {
-      this.porcentajeSubcriterioTotal += +this.dataSourceSubcriterio.data[i].Porcentaje;
-    }
+  calcularPorcentajeTotalSubcriterio() {
+    this.porcentajeSubcriterioTotal = this.dataSubcriterios.reduce(
+      (acc, subcriterio) => acc + Number(subcriterio.Porcentaje),
+      0
+    );
   }
 
-  async guardarSubcriterio() {
-    this.calcularPorcentajeSubcriterio();
+  async guardarSubcriterio(criterio: Criterio) {
+    console.log('criterio', criterio)
+    console.log("GUARDAR SUBCRITERIO");
+    this.calcularPorcentajeTotalSubcriterio();
+    console.log("total subcriterio -->", this.porcentajeSubcriterioTotal);
     if (this.porcentajeSubcriterioTotal != 100) {
-      this.popUpManager.showErrorToast(this.translate.instant('admision.porcentajeIncompleto'));
+      this.popUpManager.showErrorToast(
+        this.translate.instant("admision.porcentajeIncompleto")
+      );
     } else {
-      this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:'
-        + this.proyectos_selected + ',PeriodoId:' + this.periodo.Id + ',Activo:true&limit=0')
-        .subscribe((res: any) => {
-          const r = <any>res;
-          if (res !== null && r.Type !== 'error') {
-            if (res.length >= 1) {
-              for (let j = 0; j < this.dataSource.data.length; j++) {
+      this.evaluacionService
+        .get(
+          "requisito_programa_academico?query=ProgramaAcademicoId:" +
+            this.proyectos_selected +
+            ",PeriodoId:" +
+            this.periodo.Id +
+            ",Activo:true&limit=0"
+        )
+        .subscribe(
+          (res: any) => {
+            const r = <any>res;
+            if (res !== null && r.Type !== "error") {
+              if (res.length >= 1) {
+                for (let j = 0; j < this.dataSource.data.length; j++) {
+                  for (let i = 0; i < res.length; i++) {
+                    console.log('id del criterio modificando',criterio.Id)
+                    console.log('res', res)
+                    if (criterio.Id == r[i].RequisitoId.Id) {
+                      const requisitoPut = r[i];
 
-                for (let i = 0; i < res.length; i++) {
-                  if (this.requisitoId == r[i].RequisitoId.Id) {
-                    const requisitoPut = r[i];
-                    
-                    const objectConcat = [{}];
-                    for (let i = 0; i < this.dataSubcriterios.length; i++) {
-              
-                      const object: any = {};
-                      object['Id'] = this.dataSubcriterios[i].Id
-                      object['Nombre'] = this.dataSubcriterios[i].Criterio
-                      object['Porcentaje'] = this.dataSubcriterios[i].Porcentaje;
-                      object['Abreviación'] = this.dataSubcriterios[i].CodigoAbreviacion;
+                      const objectConcat = [{}];
+                      for (let i = 0; i < this.dataSubcriterios.length; i++) {
+                        const object: any = {};
+                        object["Id"] = this.dataSubcriterios[i].Id;
+                        object["Nombre"] = this.dataSubcriterios[i].Criterio;
+                        object["Porcentaje"] =
+                          this.dataSubcriterios[i].Porcentaje;
+                        object["Abreviación"] =
+                          this.dataSubcriterios[i].CodigoAbreviacion;
 
-                      objectConcat[i] = object;
+                        objectConcat[i] = object;
+                      }
+                      this.areas = {};
+                      this.areas.areas = objectConcat;
+                      requisitoPut.PorcentajeEspecifico = JSON.stringify(
+                        this.areas
+                      );
+
+                      console.log("requisitoPut", requisitoPut);
+                      this.requisitoPut(requisitoPut);
+
+                      break;
                     }
-                    this.areas = {};
-                    this.areas.areas = objectConcat;
-                    requisitoPut.PorcentajeEspecifico = JSON.stringify(this.areas);
-
-                    this.requisitoPut(requisitoPut);
-
-                    break;
                   }
                 }
               }
             }
-          }
-        },
+          },
           (error: HttpErrorResponse) => {
             Swal.fire({
-              icon: 'error',
-              title: error.status + '',
-              text: this.translate.instant('ERROR.' + error.status),
-              footer: this.translate.instant('GLOBAL.cargar') + '-' +
-                this.translate.instant('GLOBAL.programa_academico'),
-              confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+              icon: "error",
+              title: error.status + "",
+              text: this.translate.instant("ERROR." + error.status),
+              footer:
+                this.translate.instant("GLOBAL.cargar") +
+                "-" +
+                this.translate.instant("GLOBAL.programa_academico"),
+              confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
             });
-          });
+          }
+        );
     }
   }
 
   async guardar() {
     this.calcularPorcentaje();
     if (this.porcentajeTotal != 100) {
-      this.popUpManager.showErrorToast(this.translate.instant('admision.porcentajeIncompleto'));
+      this.popUpManager.showErrorToast(
+        this.translate.instant("admision.porcentajeIncompleto")
+      );
     } else {
-
-      if (this.proyectos_selected){
-
-        this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:' +
-        this.proyectos_selected + ',PeriodoId:' + this.periodo.Id + '&limit=0')
-        .subscribe((res: any) => {
-          const r = <any>res;
-          if (res !== null && r.Type !== 'error') {
-            if (res.length > 1) {
-              for (let i = 0; i < r.length; i++) {
-                let contieneId = this.dataSource.data.some(objeto => objeto.Id === r[i].RequisitoId.Id);
-                if (!contieneId && r[i].Activo != false) {
-                  r[i].Activo = false
-                  var requisitoPut = r[i]
-                  this.requisitoPut(requisitoPut);
-                }
-              }
-              for (let j = 0; j < this.dataSource.data.length; j++) {
-                let existe = false;
-
-                for (let i = 0; i < r.length; i++) {
-                  if (this.dataSource.data[j].Id == r[i].RequisitoId.Id) {
-                    r[i].Activo = true
-                    var requisitoPut = r[i];
-                    requisitoPut.PorcentajeGeneral = +this.dataSource.data[j].Porcentaje;
-                    existe = true;
-                    break;
-                  }
-                }
-
-                if (!existe) {
-                  // post
-                  this.requisitoPost(j);
-                } else {
-                  // put
-                  this.requisitoPut(requisitoPut);
-                }
-
-              }
-            } else {
-
-              for (let i = 0; i < this.dataSource.data.length; i++) {
-                this.requisitoPost(i);
-              }
-            }
-          }
-        },
-          (error: HttpErrorResponse) => {
-            Swal.fire({
-              icon: 'error',
-              title: error.status + '',
-              text: this.translate.instant('ERROR.' + error.status),
-              footer: this.translate.instant('GLOBAL.cargar') + '-' +
-                this.translate.instant('GLOBAL.programa_academico'),
-              confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-            });
-          });
-
-      }else if (this.facultades && this.facultades.length > 0){
-        forEach(this.proyectosFilteredFacultad, (proyecto: any) => {
-          this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:' +
-          proyecto.Id + ',PeriodoId:' + this.periodo.Id + ',Activo:true&limit=0')
-          .subscribe((res: any) => {
-            this.proyectos_selected = proyecto.Id;
-            const r = <any>res;
-            if (res !== null && r.Type !== 'error') {
-              if (res.length > 1) {
-                for (let j = 0; j < this.dataSource.data.length; j++) {
-                  let existe = false;
-  
+      if (this.proyectos_selected) {
+        this.evaluacionService
+          .get(
+            "requisito_programa_academico?query=ProgramaAcademicoId:" +
+              this.proyectos_selected +
+              ",PeriodoId:" +
+              this.periodo.Id +
+              "&limit=0"
+          )
+          .subscribe(
+            (res: any) => {
+              const r = <any>res;
+              if (res !== null && r.Type !== "error") {
+                if (res.length > 1) {
                   for (let i = 0; i < r.length; i++) {
-                    if (this.dataSource.data[j].Id == r[i].RequisitoId.Id) {
+                    let contieneId = this.dataSource.data.some(
+                      (objeto) => objeto.Id === r[i].RequisitoId.Id
+                    );
+                    if (!contieneId && r[i].Activo != false) {
+                      r[i].Activo = false;
                       var requisitoPut = r[i];
-                      requisitoPut.PorcentajeGeneral = +this.dataSource.data[j].Porcentaje;
-                      existe = true;
-                      break;
+                      this.requisitoPut(requisitoPut);
                     }
                   }
-  
-                  if (!existe) {
-                    // post
-                    this.requisitoPost(j);
-                  } else {
-                    // put
-                    this.requisitoPut(requisitoPut);
+                  for (let j = 0; j < this.dataSource.data.length; j++) {
+                    let existe = false;
+
+                    for (let i = 0; i < r.length; i++) {
+                      if (this.dataSource.data[j].Id == r[i].RequisitoId.Id) {
+                        r[i].Activo = true;
+                        var requisitoPut = r[i];
+                        requisitoPut.PorcentajeGeneral =
+                          +this.dataSource.data[j].Porcentaje;
+                        existe = true;
+                        break;
+                      }
+                    }
+
+                    if (!existe) {
+                      // post
+                      this.requisitoPost(j);
+                    } else {
+                      // put
+                      this.requisitoPut(requisitoPut);
+                    }
                   }
-  
-                }
-              } else {
-  
-                for (let i = 0; i < this.dataSource.data.length; i++) {
-                  this.requisitoPost(i);
+                } else {
+                  for (let i = 0; i < this.dataSource.data.length; i++) {
+                    this.requisitoPost(i);
+                  }
                 }
               }
-            }
-          },
+            },
             (error: HttpErrorResponse) => {
               Swal.fire({
-                icon: 'error',
-                title: error.status + '',
-                text: this.translate.instant('ERROR.' + error.status),
-                footer: this.translate.instant('GLOBAL.cargar') + '-' +
-                  this.translate.instant('GLOBAL.programa_academico'),
-                confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+                icon: "error",
+                title: error.status + "",
+                text: this.translate.instant("ERROR." + error.status),
+                footer:
+                  this.translate.instant("GLOBAL.cargar") +
+                  "-" +
+                  this.translate.instant("GLOBAL.programa_academico"),
+                confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
               });
-            });
-        })
+            }
+          );
+      } else if (this.facultades && this.facultades.length > 0) {
+        forEach(this.proyectosFilteredFacultad, (proyecto: any) => {
+          this.evaluacionService
+            .get(
+              "requisito_programa_academico?query=ProgramaAcademicoId:" +
+                proyecto.Id +
+                ",PeriodoId:" +
+                this.periodo.Id +
+                ",Activo:true&limit=0"
+            )
+            .subscribe(
+              (res: any) => {
+                this.proyectos_selected = proyecto.Id;
+                const r = <any>res;
+                if (res !== null && r.Type !== "error") {
+                  if (res.length > 1) {
+                    for (let j = 0; j < this.dataSource.data.length; j++) {
+                      let existe = false;
+
+                      for (let i = 0; i < r.length; i++) {
+                        if (this.dataSource.data[j].Id == r[i].RequisitoId.Id) {
+                          var requisitoPut = r[i];
+                          requisitoPut.PorcentajeGeneral =
+                            +this.dataSource.data[j].Porcentaje;
+                          existe = true;
+                          break;
+                        }
+                      }
+
+                      if (!existe) {
+                        // post
+                        this.requisitoPost(j);
+                      } else {
+                        // put
+                        this.requisitoPut(requisitoPut);
+                      }
+                    }
+                  } else {
+                    for (let i = 0; i < this.dataSource.data.length; i++) {
+                      this.requisitoPost(i);
+                    }
+                  }
+                }
+              },
+              (error: HttpErrorResponse) => {
+                Swal.fire({
+                  icon: "error",
+                  title: error.status + "",
+                  text: this.translate.instant("ERROR." + error.status),
+                  footer:
+                    this.translate.instant("GLOBAL.cargar") +
+                    "-" +
+                    this.translate.instant("GLOBAL.programa_academico"),
+                  confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
+                });
+              }
+            );
+        });
       }
     }
   }
@@ -917,27 +1056,59 @@ export class CriterioAdmisionComponent implements OnChanges {
     requisitoPost.ProgramaAcademicoId = this.proyectos_selected;
     requisitoPost.PeriodoId = this.periodo.Id;
     requisitoPost.PorcentajeGeneral = +this.dataSource.data[i].Porcentaje;
-    requisitoPost.RequisitoId = { 'Id': this.dataSource.data[i].Id };
+    requisitoPost.RequisitoId = { Id: this.dataSource.data[i].Id };
     requisitoPost.Activo = true;
-    requisitoPost.PorcentajeEspecifico = '{}';
+    requisitoPost.PorcentajeEspecifico = "{}";
     requisitoPost.OfertarOpcion2 = this.ofertarOpcion2.value.opcion;
     requisitoPost.OfertarOpcion3 = this.ofertarOpcion3.value.opcion;
     requisitoPost.PuntajeMinimoExamenEstado = Number(this.valorMinimo);
 
-    console.log("guardar")
-    console.log(this.opciones)
+    console.log("guardar");
+    console.log(this.opciones);
     const objectConcat = [{}];
     for (let i = 0; i < this.opciones.length; i++) {
       const object: any = {};
-      object['Id'] = i + 1;
-      object['Opcion'] = this.opciones[i].value.opcion;
+      object["Id"] = i + 1;
+      object["Opcion"] = this.opciones[i].value.opcion;
       objectConcat[i] = object;
     }
-    console.log("guardar", objectConcat)
+    console.log("guardar", objectConcat);
 
     requisitoPost.Opcion = JSON.stringify(objectConcat);
 
-    this.evaluacionService.post('requisito_programa_academico', requisitoPost)
+    this.evaluacionService
+      .post("requisito_programa_academico", requisitoPost)
+      .subscribe(
+        (res) => {
+          const r = <any>res;
+          if (r !== null && r.Type !== "error") {
+            this.popUpManager.showSuccessAlert(
+              this.translate.instant("admision.registro_exito")
+            );
+          } else {
+            this.popUpManager.showErrorToast(
+              this.translate.instant("GLOBAL.error")
+            );
+          }
+        },
+        (error: HttpErrorResponse) => {
+          Swal.fire({
+            icon: "error",
+            title: error.status + "",
+            text: this.translate.instant("ERROR." + error.status),
+            footer:
+              this.translate.instant("GLOBAL.actualizar") +
+              "-" +
+              this.translate.instant("GLOBAL.info_estado"),
+            confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
+          });
+        }
+      );
+  }
+
+  private requisitoPut(requisitoPut: any) {
+    console.log("PUT -->", requisitoPut);
+    this.evaluacionService.put('requisito_programa_academico', requisitoPut)
       .subscribe(res => {
         const r = <any>res;
         if (r !== null && r.Type !== 'error') {
@@ -958,42 +1129,20 @@ export class CriterioAdmisionComponent implements OnChanges {
         });
   }
 
-  private requisitoPut(requisitoPut: any) {
-    console.log('PUT -->', requisitoPut)
-    // this.evaluacionService.put('requisito_programa_academico', requisitoPut)
-    //   .subscribe(res => {
-    //     const r = <any>res;
-    //     if (r !== null && r.Type !== 'error') {
-    //       this.popUpManager.showSuccessAlert(this.translate.instant('admision.registro_exito'));
-    //     } else {
-    //       this.popUpManager.showErrorToast(this.translate.instant('GLOBAL.error'));
-    //     }
-    //   },
-    //     (error: HttpErrorResponse) => {
-    //       Swal.fire({
-    //         icon: 'error',
-    //         title: error.status + '',
-    //         text: this.translate.instant('ERROR.' + error.status),
-    //         footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-    //           this.translate.instant('GLOBAL.info_estado'),
-    //         confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-    //       });
-    //     });
-  }
-
   cargarRequisito(Id: number) {
     return new Promise((resolve, reject) => {
-      this.evaluacionService.get('requisito/' + Id)
-        .subscribe(res => {
+      this.evaluacionService.get("requisito/" + Id).subscribe(
+        (res) => {
           const r = <any>res;
-          if (res !== null && r.Type !== 'error') {
+          if (res !== null && r.Type !== "error") {
             // this.requisitoPost.RequisitoId = res;
             resolve(res);
           }
         },
-          (error: HttpErrorResponse) => {
-            reject(error);
-          });
+        (error: HttpErrorResponse) => {
+          reject(error);
+        }
+      );
     });
   }
 
@@ -1002,38 +1151,41 @@ export class CriterioAdmisionComponent implements OnChanges {
       const data: any = this.data;
 
       data[0].Criterio = {
-        title: this.translate.instant('admision.criterio'),
+        title: this.translate.instant("admision.criterio"),
         editable: false,
         filter: false,
-        width: '55%',
+        width: "55%",
         valuePrepareFunction: (value: any) => {
           return value;
         },
-      }
+      };
       data[0].Porcentaje = {
-        title: this.translate.instant('admision.porcentaje'),
+        title: this.translate.instant("admision.porcentaje"),
         editable: true,
         filter: false,
         valuePrepareFunction: (value: any) => {
           return value;
         },
-      }
-      resolve(data)
+      };
+      resolve(data);
     });
   }
 
-  openSubcriteriosDialog(row: any): void {
-    console.log('subcriterios', row)
+  openSubcriteriosDialog(criterio: any): void {
+    console.log("subcriterios", criterio);
     const dialogRef = this.dialog.open(SubcriteriosDialogComponent, {
-      width: '600px',
-      data: { subcriterios: row.Subcriterios, title: row.Criterio }
+      width: "600px",
+      data: { subcriterios: criterio.Subcriterios, title: criterio.Criterio },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        row.Subcriterios = result;
+        console.log("The dialog was closed", result);
+        console.log("this.dataSubcriterios", this.dataSubcriterios);
+        criterio.Subcriterios = result;
+        this.dataSubcriterios = result;
+        this.guardarSubcriterio(criterio);
       }
     });
   }
-
 }

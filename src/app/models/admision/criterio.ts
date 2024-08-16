@@ -12,6 +12,5 @@ export class Criterio {
     FechaCreacion!: Date;
     FechaModificacion!: Date;
     RequisitoPadreId!: { Id: number };
- Subcriterios!: Criterio[];
-
+    Subcriterios!: Criterio[];
 }

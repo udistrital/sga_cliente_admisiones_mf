@@ -282,7 +282,7 @@
           </div>
 
           <!-- SUBCRITERIOS -->
-          <!-- <div *ngIf="mostrarSubcriterio" style="min-width: 500px; width: 48%">
+          <div *ngIf="mostrarSubcriterio" style="min-width: 500px; width: 48%">
             <br />
             <h3>{{ "admision.subcriterios" | translate }}</h3>
 
@@ -348,7 +348,7 @@
                         mat-icon-button
                         color="accent"
                         (click)="
-                          calcularPorcentajeSubcriterio(); buttonedit(row)
+                          buttonedit(row)
                         "
                       >
                         <mat-icon fontIcon="check"></mat-icon>
@@ -392,12 +392,11 @@
                 mat-flat-button
                 color="accent"
                 type="button"
-                (click)="guardarSubcriterio()"
               >
                 {{ "admision.guardarSubcriterio" | translate }}
               </button>
             </div>
-          </div> -->
+          </div>
 
           <br />
         </div>
