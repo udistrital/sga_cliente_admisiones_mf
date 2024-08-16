@@ -42,6 +42,8 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   facultad: any;
   facultades: any[] = [];
 
+  tipo_cupo: any;
+
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
@@ -285,6 +287,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
     sessionStorage.setItem('ProgramaAcademicoId', this.proyectos_selected)
     sessionStorage.setItem('PeriodoId', this.periodo.Id)
     sessionStorage.setItem('TipoInscripcionId', this.tipo_inscripcion_selected)
+    sessionStorage.setItem('TipoCupo', this.tipo_cupo)
   }
 
   openSelectDocumentoProyectoComponent() {
