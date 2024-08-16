@@ -547,42 +547,25 @@
     <br />
   </form>
 
-  <!-- Form  mini -->
-  <form class="form-horizontal" *ngSwitchCase="'mini'">
-    <h3>{{ normalform.titulo }}</h3>
-
-    <div class="row">
-      <div
-        *ngFor="let c of normalform.campos"
-        class="{{ c.claseGrid }}"
-        [ngSwitch]="c.etiqueta"
-      >
-        <div class="form-group">
-          <!-- input -->
-          <mat-form-field
-            *ngSwitchCase="'input'"
-            style="width: 100%"
-            class="form-group {{ c.ocultar ? 'no-mostrar' : '' }}"
-            floatLabel="always"
-            [hidden]="c.ocultar"
-          >
-            <mat-label>{{ c.label | translate }}:</mat-label>
-            <input
-              matInput
-              [(ngModel)]="c.valor"
-              (ngModelChange)="validCampo(c)"
-              [ngModelOptions]="{ standalone: true }"
-              type="{{ c.tipo }}"
-              id="{{ c.nombre }}"
-              [min]="c.min"
-              [max]="c.max"
-              [placeholder]="c.placeholder_i18n | translate"
-              [disabled]="c.deshabilitar"
-              pattern="{{ c.pattern }}"
-            />
-            <span matPrefix *ngIf="c.prefix">{{ c.prefix.value }}</span>
-            <mat-hint class="text-danger">{{ c.alerta }}</mat-hint>
-          </mat-form-field>
+    <!-- Form  mini -->
+    <form class="form-horizontal" *ngSwitchCase="'mini'">
+     
+            <legend align="{{normalform.alineacion_titulo}}">
+                <small>{{normalform.titulo}}</small>
+            </legend>
+            <div class="row">
+                <div *ngFor="let c of normalform.campos" class="{{c.claseGrid}}" [ngSwitch]="c.etiqueta">
+                    <div class=" form-group">
+                        <!-- input -->
+                        <mat-form-field *ngSwitchCase="'input'" style="width: 100%;" class="form-group {{ c.ocultar ? 'no-mostrar' : '' }}"
+                            floatLabel="always" [hidden]="c.ocultar">
+                            <mat-label>{{c.label | translate}}:</mat-label>
+                            <input matInput [(ngModel)]="c.valor" (ngModelChange)="validCampo(c)"
+                                [ngModelOptions]="{standalone: true}" type="{{c.tipo}}" id="{{c.nombre}}" [min]="c.min" [max]="c.max"
+                                [placeholder]="c.placeholder_i18n | translate" [disabled]="c.deshabilitar" pattern="{{c.pattern}}" />
+                            <span matPrefix *ngIf="c.prefix">{{c.prefix.value}}</span>
+                            <mat-hint class="text-danger">{{c.alerta}}</mat-hint>
+                        </mat-form-field>
 
           <!-- input confirmacion -->
           <mat-form-field
@@ -1029,6 +1012,8 @@
       </button>
     </div>
 
-    <!-- Botones de form con acción de botones -->
-  </form>
+
+
+        <!-- Botones de form con acción de botones -->
+    </form>
 </div>

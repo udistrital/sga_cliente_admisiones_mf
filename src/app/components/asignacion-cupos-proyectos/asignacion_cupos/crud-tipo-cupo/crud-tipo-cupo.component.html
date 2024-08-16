@@ -1,0 +1,87 @@
+<mat-card>
+
+
+    <mat-card-content class="mt-20">
+        <legend>
+            &nbsp; {{titulo}} {{'GLOBAL.tipo_cupo' | translate}}
+        </legend>
+
+        <!-- select nombre del tipo cupo -->
+        <mat-card-content class="mt-20">
+            <mat-form-field class="form-item" style="width: 100%;">
+                <mat-label>
+                    {{'GLOBAL.nombre' | translate}}
+                </mat-label>
+                <input type="text" matInput [formControl]="nombre" [value]="nombre.value" [disabled]="true">
+                <mat-error *ngIf="nombre.hasError('required')">
+                    {{'cupos.warn_nombre' | translate}}
+                </mat-error>
+            </mat-form-field>
+            <br /><br />
+        </mat-card-content>
+
+        <mat-card-content class="form-grid2">
+            <!-- select descripcion del tipo cupo -->
+            <mat-form-field class="form-item" style="width: 100%;">
+                <mat-label>
+                    {{'GLOBAL.descripcion' | translate}}
+                </mat-label>
+                <input type="text" matInput [formControl]="descripcion" [value]="descripcion.value" [disabled]="true">
+                <mat-error *ngIf="descripcion.hasError('required')">
+                    {{'cupos.warn_descripcion' | translate}}
+                </mat-error>
+            </mat-form-field>
+            <br /><br />
+        </mat-card-content>
+
+        <mat-card-content class="form-grid2">
+            <!-- select tipo del tipo cupo -->
+            <mat-form-field class="form-item" style="width: 100%;">
+                <mat-label>
+                    {{'cupos.codigo_abreviacion' | translate}}
+                </mat-label>
+                <input type="text" matInput [formControl]="codigoAbreviacion" [value]="codigoAbreviacion.value"
+                    [disabled]="true">
+                <mat-error *ngIf="codigoAbreviacion.hasError('required')">
+                    {{'cupos.warn_codigo_abreviacion' | translate}}
+                </mat-error>
+            </mat-form-field>
+            <br /><br />
+        </mat-card-content>
+
+        <mat-card-content class="form-grid2">
+            <!-- select subtipo del tipo cupo -->
+            <mat-form-field class="form-item" style="width: 100%;">
+                <mat-label>
+                    {{"cupos.numero_orden" | translate}}
+                </mat-label>
+                <input type="number" matInput [formControl]="numeroOrden" [value]="numeroOrden.value" [disabled]="true">
+                <mat-error *ngIf="numeroOrden.hasError('required')">
+                    {{'cupos.warn_numero_orden' | translate}}
+                </mat-error>
+            </mat-form-field>
+            <br /><br />
+
+        </mat-card-content>
+
+        <mat-card-content>
+            <div>
+                <button mat-flat-button color="accent" type="button">
+                    <mat-icon>
+                        attach_file
+                    </mat-icon>
+                </button>
+                <span>
+                    {{'cupos.sopiorte' | translate}}
+                </span>
+            </div>
+            <br><br>
+            <div style="display: flex; justify-content: center;">
+                <button mat-flat-button color="accent" type="button" (click)="TipoCupoguardar()">
+                    {{'GLOBAL.guardar' | translate}}
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card-content>
+
+</mat-card>

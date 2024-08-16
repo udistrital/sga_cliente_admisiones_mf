@@ -89,6 +89,7 @@
     <div [hidden]="show_cupos">
       <div *ngIf="!preinscripcion">
         <crud-asignacion-cupo
+         *ngIf="show_cupos"
           [info_proyectos]="this.proyectos_selected"
           [info_periodo]="this.periodo"
           [info_nivel]="this.esPosgrado"
