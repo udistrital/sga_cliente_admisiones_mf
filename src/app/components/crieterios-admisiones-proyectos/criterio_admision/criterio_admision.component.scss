@@ -1,0 +1,16 @@
+.container-criterios{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.success-text {
+    color: var(--success-base);
+  }
+  .error-text {
+    color: var(--danger-base);
+  }

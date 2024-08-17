@@ -1545,7 +1545,7 @@
     "nota": "NOTA",
     "aviso": "El puntaje para cada ítem a evaluar corresponde a un valor entre 0 y 100 puntos",
     "aviso_no_edicion": "Una vez asignados los ítems para el aspirante no será posible editarlos",
-    "aviso_sub": "Recuerde asignar los porcentajes por subcriterio al seleccionar el criterio en la tabla",
+    "aviso_sub": "Para asignar los porcentajes de los subcriterios, seleccione `Subcriterios` en la columna de acciones.",
     "criterio": "Criterio",
     "subCriterio": "SubCriterio",
     "porcentaje": "Porcentaje",

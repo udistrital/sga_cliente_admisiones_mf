@@ -1,12 +1,6 @@
 import { async } from "@angular/core/testing";
 import { Criterio } from "src/app/models/admision/criterio";
-import {
-  Component,
-  OnInit,
-  OnChanges,
-  ViewChild,
-  ElementRef,
-} from "@angular/core";
+import { Component, OnChanges } from "@angular/core";
 import { Input, Output, EventEmitter } from "@angular/core";
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 import { UtilidadesService } from "src/app/services/utilidades.service";
@@ -43,7 +37,6 @@ import { SubcriteriosDialogComponent } from "../subcriterios-dialog/subcriterios
   styleUrls: ["./criterio_admision.component.scss"],
 })
 export class CriterioAdmisionComponent implements OnChanges {
-  @ViewChild("inputRef") inputRef!: ElementRef;
   @Input("criterios_select")
   set name(inscripcion_id: number) {
     this.inscripcion_id = inscripcion_id;
@@ -114,7 +107,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   show_acad = false;
 
   info_persona!: boolean;
-  loading!: boolean;
+  loading: boolean = false;
   ultimo_select!: number;
   button_politica: boolean = true;
   programa_seleccionado: any;
@@ -139,15 +132,12 @@ export class CriterioAdmisionComponent implements OnChanges {
   settingsSubcriterio: any;
   dataSourceColumns = ["criterio", "porentaje", "acciones"];
   dataSource!: MatTableDataSource<any>;
-  dataSourceSubcriterio!: MatTableDataSource<any>;
   porcentajeCriterioTable: boolean = false;
   porcentajeSubcriterioTable: boolean = false;
   data: any[] = [];
   dataSubcriterios: any[] = [];
   porcentajeTotal: number = 0;
   porcentajeSubcriterioTotal: number = 0;
-  // requisitoPost: any;
-  mostrarSubcriterio: boolean = false;
   requisitoId!: number | undefined;
   areas: any;
   criteriosAreas: any;
@@ -490,9 +480,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   loadProyectos() {
-    // window.localStorage.setItem('IdNivel', String(this.selectednivel.id));
     this.selectprograma = false;
-    this.loading = true;
     this.projectService.get("proyecto_academico_institucion?limit=0").subscribe(
       (res: any) => {
         this.autenticationService.getRole().then(
@@ -642,8 +630,8 @@ export class CriterioAdmisionComponent implements OnChanges {
       this.selectTipo = false;
       this.criterioEsExamenEstado = false;
       this.valorMinimo = 0;
+      this.guardar({ confirm: false });
     } else {
-      // Porcentaje: element.PorcentajeGeneral,
       this.criterio_selected.forEach((criterio: any) => {
         if (criterio.ExamenEstado) {
           this.validarExistenciaExamenEstado = true;
@@ -668,7 +656,7 @@ export class CriterioAdmisionComponent implements OnChanges {
         this.createTable(this.criterio_selected[i]);
         this.selectTipoIcfes = true;
       }
-      this.calcularPorcentaje();
+      this.guardar({ confirm: false });
     }
   }
 
@@ -739,99 +727,21 @@ export class CriterioAdmisionComponent implements OnChanges {
       },
     };
   }
+
   devolverBotoneditarCriterio() {
     this.porcentajeCriterioTable = false;
     this.devolverBotoneditarSubciterio();
   }
+
   devolverBotoneditarSubciterio() {
     this.porcentajeSubcriterioTable = false;
   }
-  onEdit(event: any) {
-    this.porcentajeCriterioTable = true;
-
-    this.requisitoId = undefined;
-    this.mostrarSubcriterio = false;
-    if (event.data.Porcentaje == "") {
-      event.data.Porcentaje == 0;
-    }
-    this.calcularPorcentaje();
-    if (!event.isSelected) {
-      this.requisitoId = event.data.Id;
-      if (event.data.Subcriterios.length > 0) {
-        this.mostrarSubcriterio = true;
-        this.createSubCriterios(event.data.Subcriterios);
-      } else {
-        this.dataSubcriterios = [];
-        this.dataSubcriterios.push({});
-      }
-      const subcriterios = event.data.Subcriterios;
-      if (subcriterios != undefined && subcriterios.length > 0) {
-        this.dataSourceSubcriterio = new MatTableDataSource(
-          this.dataSubcriterios
-        );
-
-        this.settingsSubcriterio = {
-          columns: {
-            Criterio: {
-              title: this.translate.instant("admision.subCriterio"),
-              editable: false,
-              filter: false,
-              width: "55%",
-              valuePrepareFunction: (value: any) => {
-                return value;
-              },
-            },
-            Porcentaje: {
-              title: this.translate.instant("admision.porcentaje"),
-              editable: true,
-              filter: false,
-              valuePrepareFunction: (value: any) => {
-                return value;
-              },
-            },
-          },
-          actions: {
-            edit: true,
-            add: false,
-            delete: false,
-            position: "right",
-            columnTitle: this.translate.instant("GLOBAL.acciones"),
-            width: "5%",
-          },
-          edit: {
-            editButtonContent:
-              '<i class="nb-edit" title="' +
-              this.translate.instant("admision.tooltip_editar") +
-              '"></i>',
-            saveButtonContent:
-              '<i class="nb-checkmark" title="' +
-              this.translate.instant("admision.tooltip_guargar") +
-              '"></i>',
-            cancelButtonContent:
-              '<i class="nb-close" title="' +
-              this.translate.instant("admision.tooltip_cancelar") +
-              '"></i>',
-          },
-        };
-      } else {
-        this.dataSubcriterios.push({});
-      }
-      this.calcularPorcentaje();
-    }
-  }
-
-  onEditSubcriterio($event: any) {
-    this.porcentajeSubcriterioTable = true;
-    if ($event.data.Porcentaje == "") {
-      $event.data.Porcentaje == 0;
-    }
-  }
 
   calcularPorcentaje() {
-    this.porcentajeTotal = 0;
-    for (let i = 0; i < this.dataSource.data.length; i++) {
-      this.porcentajeTotal += +this.dataSource.data[i].Porcentaje;
-    }
+    return this.dataSource.data.reduce(
+      (acc, row) => Number(row.Porcentaje) + acc,
+      0
+    );
   }
 
   calcularPorcentajeTotalSubcriterio() {
@@ -842,7 +752,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   async guardarSubcriterio(criterio: Criterio) {
-    console.log('criterio', criterio)
+    console.log("criterio", criterio);
     console.log("GUARDAR SUBCRITERIO");
     this.calcularPorcentajeTotalSubcriterio();
     console.log("total subcriterio -->", this.porcentajeSubcriterioTotal);
@@ -866,8 +776,8 @@ export class CriterioAdmisionComponent implements OnChanges {
               if (res.length >= 1) {
                 for (let j = 0; j < this.dataSource.data.length; j++) {
                   for (let i = 0; i < res.length; i++) {
-                    console.log('id del criterio modificando',criterio.Id)
-                    console.log('res', res)
+                    console.log("id del criterio modificando", criterio.Id);
+                    console.log("res", res);
                     if (criterio.Id == r[i].RequisitoId.Id) {
                       const requisitoPut = r[i];
 
@@ -915,13 +825,15 @@ export class CriterioAdmisionComponent implements OnChanges {
     }
   }
 
-  async guardar() {
-    this.calcularPorcentaje();
-    if (this.porcentajeTotal != 100) {
-      this.popUpManager.showErrorToast(
-        this.translate.instant("admision.porcentajeIncompleto")
-      );
+  async guardar(settings: { confirm: boolean } = { confirm: true }) {
+    if (this.calcularPorcentaje() !== 100 && settings.confirm) {
+      if (settings.confirm) {
+        this.popUpManager.showErrorToast(
+          this.translate.instant("admision.porcentajeIncompleto")
+        );
+      }
     } else {
+      this.loading = true;
       if (this.proyectos_selected) {
         this.evaluacionService
           .get(
@@ -943,7 +855,7 @@ export class CriterioAdmisionComponent implements OnChanges {
                     if (!contieneId && r[i].Activo != false) {
                       r[i].Activo = false;
                       var requisitoPut = r[i];
-                      this.requisitoPut(requisitoPut);
+                      this.requisitoPut(requisitoPut, settings.confirm);
                     }
                   }
                   for (let j = 0; j < this.dataSource.data.length; j++) {
@@ -962,30 +874,30 @@ export class CriterioAdmisionComponent implements OnChanges {
 
                     if (!existe) {
                       // post
-                      this.requisitoPost(j);
+                      this.requisitoPost(j, settings.confirm);
                     } else {
                       // put
-                      this.requisitoPut(requisitoPut);
+                      this.requisitoPut(requisitoPut, settings.confirm);
                     }
                   }
                 } else {
                   for (let i = 0; i < this.dataSource.data.length; i++) {
-                    this.requisitoPost(i);
+                    this.requisitoPost(i, settings.confirm);
                   }
                 }
               }
+              this.loading = false;
             },
             (error: HttpErrorResponse) => {
-              Swal.fire({
-                icon: "error",
-                title: error.status + "",
-                text: this.translate.instant("ERROR." + error.status),
-                footer:
+              console.error(error);
+              if (settings.confirm) {
+                this.popUpManager.showErrorAlert(
                   this.translate.instant("GLOBAL.cargar") +
-                  "-" +
-                  this.translate.instant("GLOBAL.programa_academico"),
-                confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
-              });
+                    "-" +
+                    this.translate.instant("GLOBAL.programa_academico")
+                );
+              }
+              this.loading = false;
             }
           );
       } else if (this.facultades && this.facultades.length > 0) {
@@ -1019,30 +931,30 @@ export class CriterioAdmisionComponent implements OnChanges {
 
                       if (!existe) {
                         // post
-                        this.requisitoPost(j);
+                        this.requisitoPost(j, settings.confirm);
                       } else {
                         // put
-                        this.requisitoPut(requisitoPut);
+                        this.requisitoPut(requisitoPut, settings.confirm);
                       }
                     }
                   } else {
                     for (let i = 0; i < this.dataSource.data.length; i++) {
-                      this.requisitoPost(i);
+                      this.requisitoPost(i, settings.confirm);
                     }
                   }
                 }
+                this.loading = false;
               },
               (error: HttpErrorResponse) => {
-                Swal.fire({
-                  icon: "error",
-                  title: error.status + "",
-                  text: this.translate.instant("ERROR." + error.status),
-                  footer:
+                console.error(error);
+                if (settings.confirm) {
+                  this.popUpManager.showErrorAlert(
                     this.translate.instant("GLOBAL.cargar") +
-                    "-" +
-                    this.translate.instant("GLOBAL.programa_academico"),
-                  confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
-                });
+                      "-" +
+                      this.translate.instant("GLOBAL.programa_academico")
+                  );
+                }
+                this.loading = false;
               }
             );
         });
@@ -1050,7 +962,7 @@ export class CriterioAdmisionComponent implements OnChanges {
     }
   }
 
-  private requisitoPost(i: number) {
+  private requisitoPost(i: number, confirm: boolean = true) {
     const requisitoPost: any = {};
     requisitoPost.Id = 0;
     requisitoPost.ProgramaAcademicoId = this.proyectos_selected;
@@ -1082,51 +994,75 @@ export class CriterioAdmisionComponent implements OnChanges {
         (res) => {
           const r = <any>res;
           if (r !== null && r.Type !== "error") {
-            this.popUpManager.showSuccessAlert(
-              this.translate.instant("admision.registro_exito")
-            );
+            if (confirm) {
+              this.popUpManager.showSuccessAlert(
+                this.translate.instant("admision.registro_exito")
+              );
+            }
           } else {
-            this.popUpManager.showErrorToast(
-              this.translate.instant("GLOBAL.error")
-            );
+            if ( confirm ){
+              this.popUpManager.showErrorToast(
+                this.translate.instant("GLOBAL.error")
+              );
+            }
           }
         },
         (error: HttpErrorResponse) => {
-          Swal.fire({
-            icon: "error",
-            title: error.status + "",
-            text: this.translate.instant("ERROR." + error.status),
-            footer:
-              this.translate.instant("GLOBAL.actualizar") +
-              "-" +
-              this.translate.instant("GLOBAL.info_estado"),
-            confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
-          });
+          console.error(error);
+          if (confirm) {
+            Swal.fire({
+              icon: "error",
+              title: error.status + "",
+              text: this.translate.instant("ERROR." + error.status),
+              footer:
+                this.translate.instant("GLOBAL.actualizar") +
+                "-" +
+                this.translate.instant("GLOBAL.info_estado"),
+              confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
+            });
+          }
+          
         }
       );
   }
 
-  private requisitoPut(requisitoPut: any) {
+  private requisitoPut(requisitoPut: any, confirm: boolean = true) {
     console.log("PUT -->", requisitoPut);
-    this.evaluacionService.put('requisito_programa_academico', requisitoPut)
-      .subscribe(res => {
-        const r = <any>res;
-        if (r !== null && r.Type !== 'error') {
-          this.popUpManager.showSuccessAlert(this.translate.instant('admision.registro_exito'));
-        } else {
-          this.popUpManager.showErrorToast(this.translate.instant('GLOBAL.error'));
-        }
-      },
+    this.evaluacionService
+      .put("requisito_programa_academico", requisitoPut)
+      .subscribe(
+        (res) => {
+          const r = <any>res;
+          if (r !== null && r.Type !== "error") {
+            if (confirm) {
+              this.popUpManager.showSuccessAlert(
+                this.translate.instant("admision.registro_exito")
+              );
+            }
+          } else {
+            if (confirm) {
+              this.popUpManager.showErrorToast(
+                this.translate.instant("GLOBAL.error")
+              );
+            }
+          }
+        },
         (error: HttpErrorResponse) => {
-          Swal.fire({
-            icon: 'error',
-            title: error.status + '',
-            text: this.translate.instant('ERROR.' + error.status),
-            footer: this.translate.instant('GLOBAL.actualizar') + '-' +
-              this.translate.instant('GLOBAL.info_estado'),
-            confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
-          });
-        });
+          console.error(error);
+          if (confirm) {
+            Swal.fire({
+              icon: "error",
+              title: error.status + "",
+              text: this.translate.instant("ERROR." + error.status),
+              footer:
+                this.translate.instant("GLOBAL.actualizar") +
+                "-" +
+                this.translate.instant("GLOBAL.info_estado"),
+              confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
+            });
+          }
+        }
+      );
   }
 
   cargarRequisito(Id: number) {
