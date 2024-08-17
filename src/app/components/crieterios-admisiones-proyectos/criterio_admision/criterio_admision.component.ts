@@ -182,11 +182,9 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   loadNumeroOpciones() {
-    console.log("loadNumeroOpciones", this.periodo.Id);
     this.parametrosService
       .get("parametro?query=CodigoAbreviacion:OPREGRADO,Activo:true")
       .subscribe((response: any) => {
-        console.log("loadNumeroOpciones1111111", response.Data[0].Id);
         this.parametrosService
           .get(
             "parametro_periodo?query=Activo:true,PeriodoId:" +
@@ -196,18 +194,13 @@ export class CriterioAdmisionComponent implements OnChanges {
           )
           .subscribe(
             (response: any) => {
-              console.log("loadNumeroOpciones222222", response);
               if (
                 response.Data[0].Valor !== undefined &&
                 response.Data[0].Valor !== null
               ) {
-                console.log("loadNumeroOpciones333333", response.Data[0].Valor);
                 const valorObj = JSON.parse(response.Data[0].Valor);
                 const valor = valorObj.Valor;
-                console.log("Valor extraído:", valor);
-                console.log("tipo", typeof valor);
                 this.numeroOpciones = parseInt(valor);
-                console.log("Valor extraído:", this.numeroOpciones);
                 this.generateCheckboxes(this.numeroOpciones - 1);
               }
             },
@@ -752,10 +745,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   async guardarSubcriterio(criterio: Criterio) {
-    console.log("criterio", criterio);
-    console.log("GUARDAR SUBCRITERIO");
     this.calcularPorcentajeTotalSubcriterio();
-    console.log("total subcriterio -->", this.porcentajeSubcriterioTotal);
     if (this.porcentajeSubcriterioTotal != 100) {
       this.popUpManager.showErrorToast(
         this.translate.instant("admision.porcentajeIncompleto")
@@ -776,8 +766,6 @@ export class CriterioAdmisionComponent implements OnChanges {
               if (res.length >= 1) {
                 for (let j = 0; j < this.dataSource.data.length; j++) {
                   for (let i = 0; i < res.length; i++) {
-                    console.log("id del criterio modificando", criterio.Id);
-                    console.log("res", res);
                     if (criterio.Id == r[i].RequisitoId.Id) {
                       const requisitoPut = r[i];
 
@@ -799,7 +787,6 @@ export class CriterioAdmisionComponent implements OnChanges {
                         this.areas
                       );
 
-                      console.log("requisitoPut", requisitoPut);
                       this.requisitoPut(requisitoPut);
 
                       break;
@@ -975,8 +962,6 @@ export class CriterioAdmisionComponent implements OnChanges {
     requisitoPost.OfertarOpcion3 = this.ofertarOpcion3.value.opcion;
     requisitoPost.PuntajeMinimoExamenEstado = Number(this.valorMinimo);
 
-    console.log("guardar");
-    console.log(this.opciones);
     const objectConcat = [{}];
     for (let i = 0; i < this.opciones.length; i++) {
       const object: any = {};
@@ -984,7 +969,6 @@ export class CriterioAdmisionComponent implements OnChanges {
       object["Opcion"] = this.opciones[i].value.opcion;
       objectConcat[i] = object;
     }
-    console.log("guardar", objectConcat);
 
     requisitoPost.Opcion = JSON.stringify(objectConcat);
 
@@ -1027,7 +1011,6 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   private requisitoPut(requisitoPut: any, confirm: boolean = true) {
-    console.log("PUT -->", requisitoPut);
     this.evaluacionService
       .put("requisito_programa_academico", requisitoPut)
       .subscribe(
@@ -1108,7 +1091,6 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   openSubcriteriosDialog(criterio: any): void {
-    console.log("subcriterios", criterio);
     const dialogRef = this.dialog.open(SubcriteriosDialogComponent, {
       width: "600px",
       data: { subcriterios: criterio.Subcriterios, title: criterio.Criterio },
@@ -1116,8 +1098,6 @@ export class CriterioAdmisionComponent implements OnChanges {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log("The dialog was closed", result);
-        console.log("this.dataSubcriterios", this.dataSubcriterios);
         criterio.Subcriterios = result;
         this.dataSubcriterios = result;
         this.guardarSubcriterio(criterio);

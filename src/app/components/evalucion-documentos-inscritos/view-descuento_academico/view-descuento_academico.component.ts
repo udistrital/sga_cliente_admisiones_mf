@@ -109,7 +109,6 @@ export class ViewDescuentoAcademicoComponent implements OnInit {
       )
       .subscribe(
         (result: any) => {
-          console.log("Descuento academico", result);
           if (result !== null && result.Status === 200) {
             const data = <Array<SolicitudDescuento>>result.Data;
             const soportes = [];

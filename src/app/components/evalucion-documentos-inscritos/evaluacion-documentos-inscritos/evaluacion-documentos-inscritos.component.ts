@@ -207,7 +207,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
       (response: any) => {
         if (response !== null || response !== undefined) {
           this.nivel_load = <any>response;
-          console.log(this.nivel_load);
           if (window.localStorage.getItem("Nivel")) {
             this.selectednivel = this.nivel_load.find(
               (p: any) => p.Id == window.localStorage.getItem("Nivel")
@@ -377,8 +376,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
 
   loadInscritos() {
     if (this.selectMultipleNivel) {
-      console.log("Existe periodo multiple");
-      console.log(this.periodoMultiple);
       let selectPeriodo: any[] = this.periodoMultiple;
       this.Aspirantes = [];
       this.loading = true;
@@ -430,9 +427,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
             }
           );
       });
-      console.log("ASPIRANTES", this.Aspirantes);
     } else {
-      console.log("No existe periodo multiple");
       this.loading = true;
       this.dataSource = new MatTableDataSource();
       this.Aspirantes = [];
@@ -447,7 +442,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
         .subscribe(
           (response: any) => {
             if (response.Success == true && response.Status == 200) {
-              console.log("INSCRITOS", response.Data);
               this.Aspirantes = response.Data;
               this.Aspirantes.forEach((aspirante: any) => {
                 aspirante.IdPeriodo = this.Campo2Control.value;
@@ -535,7 +529,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   loadPerfil(event: any) {
-    console.log("load perfil", event);
     this.aspirante = event.data;
     this.tercerosService
       .get(

@@ -655,13 +655,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
         )
         .subscribe(
           (response: any) => {
-            console.log(response);
             if (response.success == true && response.status == 200) {
               this.Aspirantes = response.data;
               this.cantidad_aspirantes = this.Aspirantes.length;
 
               // Agrega claves con el nombre de las columnas a cada aspirante
-              console.log(this.datavalor);
               this.Aspirantes.forEach((aspirante: any) => {
                 this.datavalor.forEach((columna: any) => {
                   if (!aspirante.hasOwnProperty(columna)) {
@@ -695,13 +693,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   //Para terminar de revisar ma;ana
   // (response: any) => {
-  //   console.log(response)
   //   if (response.success == true && response.status == 200) {
   //     this.Aspirantes = response.data;
   //     this.cantidad_aspirantes = this.Aspirantes.length;
 
   //     // Agrega claves con el nombre de las columnas a cada aspirante
-  //     console.log(this.datavalor)
   //     this.Aspirantes.forEach((aspirante: any) => {
   //       this.nameColumns.forEach((columna: any) => {
   //         if (!aspirante.hasOwnProperty(columna)) {
@@ -724,7 +720,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
         )
         .subscribe(
           async (response: any) => {
-            console.log(response);
             if (response.status === 200) {
               const data = <Array<any>>response.data.areas;
               if (data !== undefined) {

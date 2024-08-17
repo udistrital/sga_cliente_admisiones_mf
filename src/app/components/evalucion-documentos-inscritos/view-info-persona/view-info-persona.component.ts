@@ -101,18 +101,14 @@ export class ViewInfoPersonaComponent implements OnInit {
   }
 
   public loadInfoPersona(): void {
-    console.log("PREVIA INFO PERSONA", this.info_info_persona)
     this.infoCarga.nCargas = 5;
     const id = this.info_persona_id ? this.info_persona_id : this.userService.getPersonaId();
-    console.log("ID PERSONA", id)
     if (id !== undefined && id !== 0 && id.toString() !== '') {
       this.terceroMidService.get('personas/' + id)
         .subscribe((res:any) => {
-          console.log("TerceroMidService --> ", res)
           const r = <any>res;
           if (r !== null && r.Success !== false) {
             this.info_info_persona = <InfoPersona>res.Data;
-            console.log("INFO PERSONA", this.info_info_persona)
             let nombreAspirante: string = this.info_info_persona.PrimerApellido + ' ' + this.info_info_persona.SegundoApellido + ' '
                                   + this.info_info_persona.PrimerNombre + ' ' + this.info_info_persona.SegundoNombre;
             let nombreCarpetaDocumental: string = sessionStorage.getItem('IdInscripcion') + ' ' + nombreAspirante;
@@ -121,7 +117,6 @@ export class ViewInfoPersonaComponent implements OnInit {
 
             this.terceroMidService.get('personas/' + this.info_persona_id + '/complementarios')
             .subscribe( (res:any) => {
-              console.log("info_persona",res)
               if (res !== null && res.Status !== 404) {
                 this.info_info_caracteristica = <InfoCaracteristica>res.Data;
 
@@ -129,7 +124,6 @@ export class ViewInfoPersonaComponent implements OnInit {
 
                 this.inscripcionesMidService.get('inscripciones/informacion-complementaria/tercero/' + this.info_persona_id)
                   .subscribe((resp:any) => {
-                    console.log("info_complementaria",resp)
                     if (resp.Status == 200) {
                       let rawDate = this.info_info_persona.FechaNacimiento.split('-')
                       this.fechaNacimiento = rawDate[2].slice(0,2)+"/"+rawDate[1]+"/"+rawDate[0];

@@ -187,7 +187,6 @@ export class ListadoAdmitidosComponent {
     this.viewCurriculares = false;
     this.viewAspirantesTables = false;
     const proyectoAcademicoIds = new Set(data.ProyectosAcademicos.map((item: any) => item.ProyectoAcademicoId));
-    console.log(proyectoAcademicoIds, this.proyectosPregrado)
     // Estos son los proyectos de la facultad
     const proyectosFiltrados = this.proyectosPregrado.filter(item => proyectoAcademicoIds.has(item.Id));
     if (proyectosFiltrados) {

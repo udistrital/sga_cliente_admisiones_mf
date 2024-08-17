@@ -72,7 +72,6 @@ export class ViewIdiomasComponent implements OnInit {
     this.idiomaService.get('conocimiento_idioma?query=Activo:true,TercerosId:' + this.persona_id +
       '&limit=0')
       .subscribe((res:any) => {
-        console.log("IDIOMAS", res);
         if (res !== null && JSON.stringify(res[0]) !== '{}') {
           const data = <Array<any>>res;
           this.info_idioma = data;

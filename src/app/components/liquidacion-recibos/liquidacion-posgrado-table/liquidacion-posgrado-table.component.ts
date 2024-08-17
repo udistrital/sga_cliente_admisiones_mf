@@ -280,7 +280,6 @@ export class LiquidacionPosgradoTableComponent {
       const url = `liquidacion?id_periodo=9&id_proyecto=32`;
       this.sgaAdmisiones.get(url).subscribe(
         (response: { Data: any; }) => {
-          console.log('Datos cargados:', response);
           const data = response.Data;
           this.admitidos = data;
           this.admitidos.forEach(row => {
@@ -366,7 +365,6 @@ export class LiquidacionPosgradoTableComponent {
       }
     });
 
-    console.log('Recibos por admitido:', recibosPorAdmitido);
     return recibosPorAdmitido;
   }
 
@@ -382,12 +380,9 @@ export class LiquidacionPosgradoTableComponent {
 
   descargar(row: any): void {
     const pdf = this.pdfs.find((pdf, index) => index === row.numeroFila);
-    console.log(row.cuotas);
     if (row.cuotas == 1) {
       if (pdf) {
         this.downloadPDF(pdf, `recibo_${row.numeroFila + 1}.pdf`);
-      } else {
-        console.log('No se encontró el PDF correspondiente a la fila');
       }
     }
   }

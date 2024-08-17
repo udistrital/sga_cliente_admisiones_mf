@@ -59,7 +59,6 @@ export class ListaTipoCuposComponent {
           },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('cupos.error_recuperar_tipos_cupo'));
-            console.log(error);
             reject([]);
           }
         );

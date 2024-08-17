@@ -242,7 +242,6 @@ export class LiquidacionRecibosComponent {
   }
 
   onFacultadChange(event: any) {
-    console.log(event.value);
     const programas = this.proyectosPregrado.filter((item: any) => item.FacultadId == event.value);
     this.proyectos = programas;
   }
@@ -620,7 +619,6 @@ export class LiquidacionRecibosComponent {
       };
       this.recibos.push(recibo);
     });
-    console.log(this.recibos)
     this.pdfs = [];
 
     const promesas = [];
@@ -637,7 +635,6 @@ export class LiquidacionRecibosComponent {
         .toPromise()
         .then((response: any) => {
           if (response.success && response.data) {
-            //console.log('Recibo generado', response.success);
             const byteArray = atob(response.data);
             const byteNumbers = new Array(byteArray.length);
             for (let j = 0; j < byteArray.length; j++) {
@@ -670,7 +667,6 @@ export class LiquidacionRecibosComponent {
 
     Promise.all(promesas)
       .then(() => {
-        console.log('Recibos generados');
         this.generados = true;
       })
       .catch((error) => {
@@ -679,9 +675,6 @@ export class LiquidacionRecibosComponent {
   }
 
   notificarGeneracionRecibos() {
-    console.log('Notificando generación de recibos...');
-    console.log('Notificaciones:', this.notificaciones);
-
     const today = new Date();
     const dia = String(today.getDate()).padStart(2, '0');
     const mes = String(today.getMonth() + 1).padStart(2, '0');
@@ -728,7 +721,7 @@ export class LiquidacionRecibosComponent {
         .subscribe(
           (response: any) => {
             if (response.success) {
-              console.log('Notificación enviada:', response.success);
+              console.info('Notificación enviada:', response.success);
             }
           },
           (error: HttpErrorResponse) => {

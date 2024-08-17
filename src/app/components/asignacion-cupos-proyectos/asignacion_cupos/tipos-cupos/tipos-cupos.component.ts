@@ -86,7 +86,6 @@ export class TiposCuposComponent {
 
   onCheckboxChange(event: Event, cupo: any) {
     const inputElement = event.target as HTMLInputElement;
-    console.log("hola");
 
     if (this.checked == 0) {
       this.checked = 1;
@@ -104,7 +103,6 @@ export class TiposCuposComponent {
         dataResult.push(element);
       }
     });
-    console.log(dataResult)
     this.dialogRef.close({ result: dataResult });
   }
 

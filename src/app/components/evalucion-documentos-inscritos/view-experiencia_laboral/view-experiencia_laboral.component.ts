@@ -88,7 +88,6 @@ export class ViewExperienciaLaboralComponent implements OnInit {
     this.info_experiencia_laboral = <any>[];
     this.inscripcionesMidService.get('experiencia-laboral/tercero?Id=' + this.persona_id).subscribe(
       (response: any) => {
-        console.log("EXPERIENCIA LABORAL", response)
         const soportes = [];
         let soportes1 = "";
         if (response.Status === 200 && response.Success === true) {
