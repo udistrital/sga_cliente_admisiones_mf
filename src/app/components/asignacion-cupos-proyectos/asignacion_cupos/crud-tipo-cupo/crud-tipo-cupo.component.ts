@@ -54,7 +54,6 @@ export class CrudTipoCupoComponent {
       if(this.titulo == "Crear"){
 
   
-        console.log(data);
         this.parametoService.post("parametro", data)
           .subscribe((response: any) => {
             if (response.Status == '201' && response.Success == true) {
@@ -64,7 +63,6 @@ export class CrudTipoCupoComponent {
       }
       
       else{  
-        console.log(data);
         this.parametoService.put("parametro/"+this.data.Id, data)
           .subscribe((response: any) => {
             if (response.Status == '200' && response.Success == true) {

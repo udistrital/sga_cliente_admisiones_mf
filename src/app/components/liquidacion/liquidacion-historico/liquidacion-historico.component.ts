@@ -105,7 +105,6 @@ export class LiquidacionHistoricoComponent {
     return new Promise((resolve, reject) => {
       this.projectService.get('proyecto_academico_institucion?query=Activo:true&sortby=Id&order=asc&limit=0')
         .subscribe((res: any) => {
-          console.log(res);
           this.proyectosPregrado = res;
           resolve(res)
         },

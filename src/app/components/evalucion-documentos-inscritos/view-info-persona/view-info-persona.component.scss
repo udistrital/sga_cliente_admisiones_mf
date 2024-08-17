@@ -18,7 +18,7 @@ table.rwd_auto {
 .table-responsive .subheader th {
   //border-bottom: black solid 1px;
   //border-top: black solid 1px;
-  background-color: #bdc2c8;
+  background-color: var(--color100);
   font-weight: normal;
   color: black;
 }
@@ -98,6 +98,3 @@ table.rwd_auto {
   }
 }
 
-i.nb-search {
-  font-size: 2rem;
-}

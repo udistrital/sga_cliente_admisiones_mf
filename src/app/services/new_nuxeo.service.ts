@@ -131,7 +131,6 @@ export class NewNuxeoService {
     }
 
     uploadFiles(files:any) {
-        console.log(files)
         const documentsSubject = new Subject<Documento[]>();
         const documents$ = documentsSubject.asObservable();
 

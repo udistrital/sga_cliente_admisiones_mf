@@ -82,48 +82,57 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { environment } from "src/environments/environment";
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { SpinnerUtilInterceptor, SpinnerUtilModule } from 'spinner-util';
-import { HttpClient } from '@angular/common/http';
-import { SgaAdmisionesMid } from './services/sga_admisiones_mid.service';
-import { FormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatRadioModule } from '@angular/material/radio';
-import {MatButtonModule} from '@angular/material/button';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { InscripcionMidService } from './services/sga_inscripcion_mid.service';
-import { TerceroMidService } from './services/sga_tercero_mid.service';
-import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
-import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
-import { LiquidacionPosgradoTableComponent } from './components/liquidacion-recibos/liquidacion-posgrado-table/liquidacion-posgrado-table.component';
-import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
-import { CrudListadosOficializadosComponent } from './components/crud-listados-oficializados/crud-listados-oficializados.component';
-import { ListadoOficializadosComponent } from './components/listado-oficializados/listado-oficializados.component';
-import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
-import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
-import { TablaListadoAspirantesComponent } from './components/listado-admitidos/tabla-listado-aspirantes/tabla-listado-aspirantes.component';
-import { SgaCalendarioMidService } from './services/sga_calendario_mid.service';
-import { EventoService } from './services/evento.service';
-import { SgaProyectoAcademicoService } from './services/sga_proyecto_academico.service';
-import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
-import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lista-tipo-inscripcion/lista-tipo-inscripcion.component';
-import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/creacion-tipo-inscipcion/creacion-tipo-inscipcion.component';
-import { ListaTipoCuposComponent } from './components/tipo-cupos/lista-tipo-cupos/lista-tipo-cupos.component';
-import { CreacionTipoCuposComponent } from './components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component';
-import { EventosService } from './services/eventos.service';
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { SpinnerUtilInterceptor, SpinnerUtilModule } from "spinner-util";
+import { HttpClient } from "@angular/common/http";
+import { SgaAdmisionesMid } from "./services/sga_admisiones_mid.service";
+import { FormsModule } from "@angular/forms";
+import { MatCardModule } from "@angular/material/card";
+import { MatInputModule } from "@angular/material/input";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatRadioModule } from "@angular/material/radio";
+import { MatButtonModule } from "@angular/material/button";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { InscripcionMidService } from "./services/sga_inscripcion_mid.service";
+import { TerceroMidService } from "./services/sga_tercero_mid.service";
+import { ListadoAspirantesPregradoComponent } from "./components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component";
+import { CargueSnpComponent } from "./components/cargue-snp/cargue-snp.component";
+import { MatGridListModule } from "@angular/material/grid-list";
+import { EvalucionAspirantePregradoComponent } from "./components/evalucion-aspirante-pregrado/evalucion-aspirante.component";
+import { LiquidacionPosgradoTableComponent } from "./components/liquidacion-recibos/liquidacion-posgrado-table/liquidacion-posgrado-table.component";
+import { ListadosOficializadosComponent } from "./components/listados-oficializados/listados-oficializados.component";
+import { CrudListadosOficializadosComponent } from "./components/crud-listados-oficializados/crud-listados-oficializados.component";
+import { ListadoOficializadosComponent } from "./components/listado-oficializados/listado-oficializados.component";
+import { ListadoAdmitidosComponent } from "./components/listado-admitidos/listado-admitidos/listado-admitidos.component";
+import { ListadoAspiranteComponent } from "./components/listado-aspirantes/listado_aspirantes/listado_aspirante.component";
+import { TablaListadoAspirantesComponent } from "./components/listado-admitidos/tabla-listado-aspirantes/tabla-listado-aspirantes.component";
+import { SgaCalendarioMidService } from "./services/sga_calendario_mid.service";
+import { EventoService } from "./services/evento.service";
+import { SgaProyectoAcademicoService } from "./services/sga_proyecto_academico.service";
+import { PreinscripcionProyectosCurricularesComponent } from "./components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component";
+import { ListaTipoInscripcionComponent } from "./components/tipo-inscripcion/lista-tipo-inscripcion/lista-tipo-inscripcion.component";
+import { CreacionTipoInscipcionComponent } from "./components/tipo-inscripcion/creacion-tipo-inscipcion/creacion-tipo-inscipcion.component";
+import { ListaTipoCuposComponent } from "./components/tipo-cupos/lista-tipo-cupos/lista-tipo-cupos.component";
+import { CreacionTipoCuposComponent } from "./components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component";
+import { EventosService } from "./services/eventos.service";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { CustomPaginatorIntl } from "./services/paginatorIntl.service";
+import { MatDividerModule } from "@angular/material/divider";
+import { SubcriteriosDialogComponent } from './components/crieterios-admisiones-proyectos/subcriterios-dialog/subcriterios-dialog.component';
 import { TiposCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/tipos-cupos/tipos-cupos.component';
 import { SoporteCupoInscripcionComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/soporte-cupo-inscripcion/soporte-cupo-inscripcion.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
+  return new TranslateHttpLoader(
+    http,
+    environment.apiUrl + "assets/i18n/",
+    ".json"
+  );
 }
 
 @NgModule({
@@ -162,7 +171,7 @@ export function createTranslateLoader(http: HttpClient) {
     ViewInfoPersonaComponent,
     DialogoCriteriosComponent,
     DialogoCriteriosComponent,
-    CriterioAdmisionComponent,    
+    CriterioAdmisionComponent,
     DialogoDocumentosComponent,
     DialogPreviewFileComponent,
     CrudAsignacionCupoComponent,
@@ -208,6 +217,7 @@ export function createTranslateLoader(http: HttpClient) {
     ListadoAspiranteComponent,
     TablaListadoAspirantesComponent,
     PreinscripcionProyectosCurricularesComponent,
+    SubcriteriosDialogComponent,
     SoporteCupoInscripcionComponent,
   ],
   imports: [
@@ -245,8 +255,11 @@ export function createTranslateLoader(http: HttpClient) {
     NgxExtendedPdfViewerModule,
     MatMenuModule,
     MatButtonModule,
+    MatToolbarModule,
     StoreModule.forRoot(rootReducer),
     HttpClientModule,
+    MatDividerModule,
+    MatTooltipModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -275,8 +288,8 @@ export function createTranslateLoader(http: HttpClient) {
     SgaCalendarioMidService,
     SgaProyectoAcademicoService,
     EventosService,
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }
   ],
   bootstrap: [AppComponent],
 })
-
-export class AppModule { }
+export class AppModule {}

@@ -1,0 +1,56 @@
+<h1 mat-dialog-title>
+  {{ "admision.subcriterios" | translate }} {{ "GLOBAL.of" | translate }}
+  {{ title }}
+</h1>
+<div mat-dialog-content>
+  <table mat-table [dataSource]="dataSourceSubCriterio" matSort>
+    <!-- Criterio Column -->
+    <ng-container matColumnDef="criterio">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ "admision.subCriterio" | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
+    </ng-container>
+
+    <!-- Porcentaje Column -->
+    <ng-container matColumnDef="porcentaje">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ "admision.porcentaje" | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-form-field>
+          <mat-label>{{ "admision.porcentaje" | translate }}</mat-label>
+          <input matInput type="number" [(ngModel)]="row.Porcentaje" />
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['criterio', 'porcentaje']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['criterio', 'porcentaje']"></tr>
+  </table>
+  <div style="text-align: right; margin: 0 auto">
+    <mat-label
+      >{{ "admision.total" | translate }}:
+      <span
+        [ngClass]="{
+          'success-text': calcularPorcentajeTotal() === 100,
+          'error-text': calcularPorcentajeTotal() !== 100
+        }"
+        >{{ calcularPorcentajeTotal() }} %</span
+      ></mat-label
+    >
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">
+    {{ "GLOBAL.cancelar" | translate }}
+  </button>
+  <button
+    mat-flat-button
+    color="accent"
+    (click)="onSave()"
+    [disabled]="calcularPorcentajeTotal() !== 100"
+  >
+    {{ "GLOBAL.guardar" | translate }}
+  </button>
+</div>

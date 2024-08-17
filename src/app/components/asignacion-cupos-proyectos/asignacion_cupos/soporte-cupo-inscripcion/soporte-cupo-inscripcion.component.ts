@@ -19,9 +19,7 @@ export class SoporteCupoInscripcionComponent {
   constructor(
     public dialogRef: MatDialogRef<AsignacionCupoService>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {
-    console.log(data)
-  }
+  ) {}
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];

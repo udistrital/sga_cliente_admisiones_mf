@@ -104,11 +104,11 @@ export class ViewInfoPersonaComponent implements OnInit {
     this.infoCarga.nCargas = 5;
     const id = this.info_persona_id ? this.info_persona_id : this.userService.getPersonaId();
     if (id !== undefined && id !== 0 && id.toString() !== '') {
-      this.terceroMidService.get('personas/consultar_persona/' + id)
+      this.terceroMidService.get('personas/' + id)
         .subscribe((res:any) => {
           const r = <any>res;
-          if (r !== null && r.Type !== 'error') {
-            this.info_info_persona = <InfoPersona>res;
+          if (r !== null && r.Success !== false) {
+            this.info_info_persona = <InfoPersona>res.Data;
             let nombreAspirante: string = this.info_info_persona.PrimerApellido + ' ' + this.info_info_persona.SegundoApellido + ' '
                                   + this.info_info_persona.PrimerNombre + ' ' + this.info_info_persona.SegundoNombre;
             let nombreCarpetaDocumental: string = sessionStorage.getItem('IdInscripcion') + ' ' + nombreAspirante;
@@ -117,17 +117,17 @@ export class ViewInfoPersonaComponent implements OnInit {
 
             this.terceroMidService.get('personas/' + this.info_persona_id + '/complementarios')
             .subscribe( (res:any) => {
-              if (res !== null && res.Response.Code !== '404') {
-                this.info_info_caracteristica = <InfoCaracteristica>res.Response.Body[0].Data;
+              if (res !== null && res.Status !== 404) {
+                this.info_info_caracteristica = <InfoCaracteristica>res.Data;
 
                 //this.lugarOrigen = this.info_info_caracteristica.Lugar["Lugar"].CIUDAD.Nombre + ", " + this.info_info_caracteristica.Lugar["Lugar"].DEPARTAMENTO.Nombre
 
                 this.inscripcionesMidService.get('inscripciones/informacion-complementaria/tercero/' + this.info_persona_id)
                   .subscribe((resp:any) => {
-                    if (resp.Response.Code == "200") {
+                    if (resp.Status == 200) {
                       let rawDate = this.info_info_persona.FechaNacimiento.split('-')
                       this.fechaNacimiento = rawDate[2].slice(0,2)+"/"+rawDate[1]+"/"+rawDate[0];
-                      let info = resp.Response.Body[0];
+                      let info = resp.Data;
                       this.correo = info.Correo;
                       this.direccion = info.DireccionResidencia;
                       this.telefono = info.Telefono;

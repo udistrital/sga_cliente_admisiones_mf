@@ -48,7 +48,7 @@ export class DialogoCriteriosComponent implements OnInit {
         Descripcion: this.data.oldCriterio.Descripcion,
         CodigoAbreviacion: this.data.oldCriterio.CodigoAbreviacion,
         Asistencia: this.data.oldCriterio.Asistencia,
-        ExamenEstado: this.data.oldCriterio.ExamenEstado,
+        ExamenEstado: this.data.oldCriterio.ExamenEstado ? this.data.oldCriterio.ExamenEstado : false,
       });
       this.examenEstadoForm.setValue({
         Saber11: this.data.oldCriterio.Subcriterios.find((subcriterio: any) => subcriterio.Nombre === 'Saber11') !== undefined,

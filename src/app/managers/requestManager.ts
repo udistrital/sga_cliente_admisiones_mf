@@ -46,7 +46,6 @@ export class RequestManager {
    * @returns Observable<any>
    */
   get(endpoint: any) {
-
     return this.http.get<any>(`${this.path}${endpoint}`, this.httpOptions).pipe(
       map(
         (res) => {

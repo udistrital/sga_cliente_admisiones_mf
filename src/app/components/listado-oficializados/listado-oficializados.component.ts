@@ -123,7 +123,6 @@ export class ListadoOficializadosComponent {
 
   loadData(): void {
     this.solicitudesAdmisiones.get('solicitud?query=EstadoTipoSolicitudId.TipoSolicitud.Id:40').subscribe(res => {
-      console.log(res);
       if (res !== null) {
         const data = <Array<any>><unknown>res;
         this.datos = data.map(item => ({
@@ -136,7 +135,6 @@ export class ListadoOficializadosComponent {
         this.datasource = new MatTableDataSource(this.datos);
         this.datasource.paginator = this.paginator;
         this.datasource.sort = this.sort;
-        console.log(this.datasource.data);
       }
     });
   }
