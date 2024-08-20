@@ -210,9 +210,8 @@
             <button mat-raised-button class="boton-primary">
               {{ "oficializados.descargar" | translate }}
             </button>
-            <button mat-raised-button class="boton-download">
-              {{ "oficializados.liberar_cupos" | translate }}
-            </button>
+            <button mat-raised-button class="boton-download" 
+            (click)="liberarCupos(periodoId)">{{ "oficializados.liberar_cupos" | translate }}</button>
           </div>
         </mat-tab>
       </mat-tab-group>
