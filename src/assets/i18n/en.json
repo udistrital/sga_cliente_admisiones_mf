@@ -1921,7 +1921,11 @@
     "tooltip_crear": "Create new registration type",
     "tooltip_editar": "Edit registration type",
     "tooltip_cancelar": "Cancel",
-    "tooltip_guargar": "Save"
+    "tooltip_guargar": "Save",
+    "tooltip_activar": "Activate registration type",
+    "seguro_activar_tipo_inscripcion": "Are you sure to activate this registration type?",
+    "habilitar": "Enable",
+    "deshabilitar": "Disable"
   },
   "formacion_academica": {
     "no_data": "There are no registered data on academic training",
