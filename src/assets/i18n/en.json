@@ -1712,7 +1712,8 @@
         "eliminar_tipos_cupo": "Delete quota type",
         "descripcion_eliminar_tipos_cupo": "Are you sure about continuing with the elimination of the quota type?",
         "eliminacion_tipos_cupo_exito": "Successful removal of quota type",
-        "eliminacion_tipos_cupo_fallo": "An error occurred trying to delete the quota type"
+        "eliminacion_tipos_cupo_fallo": "An error occurred trying to delete the quota type",
+        "cupos_disponibles_label": "Available places"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Are you sure to disable this calendar?",

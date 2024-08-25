@@ -83,7 +83,7 @@ export class CrudListadosOficializadosComponent implements OnInit {
       "periodoId": periodoId
     }
     return new Promise((resolve, reject) => {
-      this.sgaInscripcionMid.put('actualizar-cupos-admitidos-opcionados', body).subscribe((res: any) => {
+      this.sgaInscripcionMid.put('inscripciones/actualizar-cupos-admitidos-opcionados', body).subscribe((res: any) => {
         console.log(res);
         this.popUpManager.showSuccessAlert(this.translate.instant('inscripcion.cupos_liberados_exito'));
         resolve(res);

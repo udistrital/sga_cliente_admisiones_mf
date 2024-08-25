@@ -1760,7 +1760,8 @@
         "warn_nombre": "Por favor digite el nombre del tipo de cupo",
         "warn_descripcion": "Por favor, Ingresa la descripcion del tipo de cupo",
         "warn_codigo_abreviacion": "Por favor, Ingresa el codigo de abreviacion del tipo de cupo",
-        "warn_numero_orden": "Por favor, Ingresa el numero de orden del tipo de cupo"
+        "warn_numero_orden": "Por favor, Ingresa el numero de orden del tipo de cupo",
+        "cupos_disponibles_label": "Cupos disponibles"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Está seguro de inhabilitar este calendario?",

@@ -17,6 +17,12 @@
                             </mat-form-field>
                         </div>
                         <div>
+                            <span>{{"cupos.cupos_disponibles_label" | translate}}:</span>
+                            <mat-form-field>
+                                <input matInput type="number" [(ngModel)]="cuposDisponibles" [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div>
                             <button mat-flat-button color="accent" type="button" (click)="TiposCupos()">
                                 <mat-icon>
                                     add
@@ -25,103 +31,114 @@
                         </div>
                     </div>
 
-                    <table mat-table [dataSource]=" dataSource">
+                    <div class="contenedor-tabla">
+                        <table mat-table [dataSource]=" dataSource">
 
-                        <ng-container matColumnDef="nombre">
-                            <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.nombre" | translate}}</th>
-                            <td mat-cell *matCellDef="let cupo"> {{ cupo.Nombre }} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="descripcion">
-                            <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.descripcion" | translate}}</th>
-                            <td mat-cell *matCellDef="let cupo"> {{ cupo.Descripcion }} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="tipo">
-                            <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.Tipo" | translate}} </th>
-                            <td mat-cell *matCellDef="let cupo">
-                                {{cupo.NombreInscripcion}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="estado">
-                            <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.Estado" | translate}} </th>
-                            <td mat-cell *matCellDef="let cupo">
-                                <ng-container *ngIf="cupo.Activo">
-                                    Activo
-                                </ng-container>
-                                <ng-container *ngIf="!cupo.Activo">
-                                    Inactivo
-                                </ng-container>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="cuposhabilitados">
-                            <th mat-header-cell *matHeaderCellDef>{{"cupos.cupos_habilitados" | translate}} </th>
-                            <td mat-cell *matCellDef="let cupo; let i = index">
-                                <mat-form-field>
-                                    <input matInput type="number" [(ngModel)]="cupo.CuposHabilitados">
-                                </mat-form-field>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="cuposopcionados">
-                            <th mat-header-cell *matHeaderCellDef> {{"cupos.cupo_opcionados" | translate}} </th>
-                            <td mat-cell *matCellDef="let cupo; let i = index">
-                                <mat-form-field>
-                                    <input matInput type="number" [(ngModel)]="cupo.CuposOpcionados">
-                                </mat-form-field>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="soporte">
-                            <th mat-header-cell *matHeaderCellDef> {{"cupos.cupo_opcionados" | translate}} </th>
-                            <td mat-cell *matCellDef="let cupo; let i = index">
-                                <ng-container *ngIf="cupo.Id">
-                                    <span>Cargado</span>
-                                </ng-container>
-                                <ng-container *ngIf="!cupo.Id">
-                                    <button mat-flat-button color="accent" type="button" (click)="
-                                    onAction({
-                                      action: 'soporte',
-                                      data: cupo,
-                                    })
-                                  ">
-                                        Cargar Soporte
-                                    </button>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="acciones">
-                            <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                            <td mat-cell *matCellDef="let cupo; let i = index">
-                                <button mat-icon-button [matMenuTriggerFor]="menu"
-                                    [matTooltip]="'GLOBAL.acciones' | translate" color="accent">
-                                    <mat-icon>more_vert</mat-icon>
-                                </button>
-                                <mat-menu #menu="matMenu">
-                                    <button mat-menu-item (click)="onAction({
-                                         action: 'eliminar', 
-                                         data: cupo 
+                            <ng-container matColumnDef="nombre">
+                                <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.nombre" | translate}}</th>
+                                <td mat-cell *matCellDef="let cupo"> {{ cupo.Nombre }} </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="descripcion">
+                                <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.descripcion" | translate}}</th>
+                                <td mat-cell *matCellDef="let cupo"> {{ cupo.Descripcion }} </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="tipo">
+                                <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.Tipo" | translate}} </th>
+                                <td mat-cell *matCellDef="let cupo">
+                                    {{cupo.NombreInscripcion}}
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="estado">
+                                <th mat-header-cell *matHeaderCellDef> {{"GLOBAL.Estado" | translate}} </th>
+                                <td mat-cell *matCellDef="let cupo">
+                                    <ng-container *ngIf="cupo.Activo">
+                                        Activo
+                                    </ng-container>
+                                    <ng-container *ngIf="!cupo.Activo">
+                                        Inactivo
+                                    </ng-container>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="cuposhabilitados">
+                                <th mat-header-cell *matHeaderCellDef>{{"cupos.cupos_habilitados" | translate}} </th>
+                                <td mat-cell *matCellDef="let cupo; let i = index">
+                                    <mat-form-field>
+                                        <input matInput type="number" [(ngModel)]="cupo.CuposHabilitados">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="cuposopcionados">
+                                <th mat-header-cell *matHeaderCellDef> {{"cupos.cupo_opcionados" | translate}} </th>
+                                <td mat-cell *matCellDef="let cupo; let i = index">
+                                    <mat-form-field>
+                                        <input matInput type="number" [(ngModel)]="cupo.CuposOpcionados">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="cuposDisponibles">
+                                <th mat-header-cell *matHeaderCellDef> {{"cupos.cupos_disponibles_label" | translate}} </th>
+                                <td mat-cell *matCellDef="let cupo; let i = index">
+                                    <mat-form-field>
+                                        <input matInput type="number" [(ngModel)]="cupo.CuposDisponibles">
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="soporte">
+                                <th mat-header-cell *matHeaderCellDef> {{"cupos.cupo_opcionados" | translate}} </th>
+                                <td mat-cell *matCellDef="let cupo; let i = index">
+                                    <ng-container *ngIf="cupo.Id">
+                                        <span>Cargado</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="!cupo.Id">
+                                        <button mat-flat-button color="accent" type="button" (click)="
+                                        onAction({
+                                          action: 'soporte',
+                                          data: cupo,
                                         })
-                                        ">
-                                        <mat-icon fontIcon="delete" color="warn"></mat-icon>
-                                        <span>{{"GLOBAL.eliminar" | translate}}</span>
+                                      ">
+                                            Cargar Soporte
+                                        </button>
+                                    </ng-container>
+                                </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="acciones">
+                                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                                <td mat-cell *matCellDef="let cupo; let i = index">
+                                    <button mat-icon-button [matMenuTriggerFor]="menu"
+                                        [matTooltip]="'GLOBAL.acciones' | translate" color="accent">
+                                        <mat-icon>more_vert</mat-icon>
                                     </button>
-
-                                </mat-menu>
-                            </td>
-                        </ng-container>
-
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let cupo; columns: displayedColumns;"></tr>
-                        <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell" colspan="4">{{"cupos.no_registros" | translate}}</td>
-                        </tr>
-                    </table>
-                    <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+                                    <mat-menu #menu="matMenu">
+                                        <button mat-menu-item (click)="onAction({
+                                             action: 'eliminar', 
+                                             data: cupo 
+                                            })
+                                            ">
+                                            <mat-icon fontIcon="delete" color="warn"></mat-icon>
+                                            <span>{{"GLOBAL.eliminar" | translate}}</span>
+                                        </button>
+    
+                                    </mat-menu>
+                                </td>
+                            </ng-container>
+    
+    
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let cupo; columns: displayedColumns;"></tr>
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="4">{{"cupos.no_registros" | translate}}</td>
+                            </tr>
+                        </table>
+                        <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
+                    </div>
                 </div>
 
             </div>

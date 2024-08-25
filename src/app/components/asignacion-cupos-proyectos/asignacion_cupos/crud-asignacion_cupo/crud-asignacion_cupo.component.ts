@@ -24,10 +24,11 @@ export class CrudAsignacionCupoComponent implements OnInit {
   cupo: any;
   cuposAdmitidos: number = 0;
   cuposOpcionados: number = 0;
+  cuposDisponibles: number = 0;
   base64String!: string;
   errorMessage!: string;
   dataSource = new MatTableDataSource<any>();
-  displayedColumns: string[] = ['nombre', 'descripcion', 'estado', 'tipo', 'cuposhabilitados', "cuposopcionados", "soporte", 'acciones'];
+  displayedColumns: string[] = ['nombre', 'descripcion', 'estado', 'tipo', 'cuposhabilitados', "cuposopcionados", "cuposDisponibles", "soporte", 'acciones'];
 
   @Input() info_periodo: any;
   @Input() info_proyectos: any;
@@ -46,11 +47,12 @@ export class CrudAsignacionCupoComponent implements OnInit {
   ) { }
 
   obtenerCupos() {
-    this.http.get<any>(`${environment.INSCRIPCION_MID_SERVICE}/cupos/`).subscribe(
+    this.http.get<any>(`${environment.INSCRIPCION_MID_SERVICE}cupos/`).subscribe(
       (response) => {
         response.Data.forEach((element: any) => {
           this.cuposAdmitidos = this.cuposAdmitidos + element.CuposHabilitados
           this.cuposOpcionados = this.cuposOpcionados + element.CuposOpcionados
+          this.cuposDisponibles = this.cuposDisponibles + element.CuposDisponibles
         });
         this.dataSource = new MatTableDataSource(response.Data)
         this.dataSource.paginator = this.paginator;
@@ -122,6 +124,7 @@ export class CrudAsignacionCupoComponent implements OnInit {
       CupoId: cupo.CupoId,
       CuposHabilitados: cupo.CuposHabilitados,
       CuposOpcionados: cupo.CuposOpcionados,
+      cuposDisponibles: cupo.cuposDisponibles,
       NombreInscripcion: cupo.NombreInscripcion,
       Nombre: cupo.Nombre,
       PeriodoId: cupo.PeriodoId,
@@ -184,7 +187,7 @@ export class CrudAsignacionCupoComponent implements OnInit {
           return;
         }
 
-        if (element.CuposOpcionados == undefined || element.CuposHabilitados == undefined || element.cuposOpcionados == 0 || element.cuposHabilitados == 0) {
+        if (element.CuposOpcionados == undefined || element.CuposHabilitados == undefined || element.CuposDisponibles == undefined || element.cuposOpcionados == 0 || element.cuposHabilitados == 0 || element.CuposDisponibles == 0) {
           Validar = false;
           alert("Asignar cantidad de cupos habilitados y opcionados");
           return;
