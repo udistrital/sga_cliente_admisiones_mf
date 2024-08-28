@@ -5,11 +5,7 @@
       <!-- select periodo -->
       <mat-form-field class="form-field">
         <mat-label>{{ "admision.aviso_periodo" | translate }}:</mat-label>
-        <mat-select
-          [(ngModel)]="periodo"
-          [disabled]="false"
-          (selectionChange)="selectPeriodo()"
-        >
+        <mat-select [(ngModel)]="periodo" [disabled]="false" (selectionChange)="selectPeriodo()">
           <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
           <mat-option *ngFor="let item of periodos" [value]="item">
             {{ item.Nombre }}
@@ -20,11 +16,7 @@
       <!-- select Nivel -->
       <mat-form-field class="form-field">
         <mat-label>{{ "admision.aviso_nivel" | translate }}:</mat-label>
-        <mat-select
-          [formControl]="CampoControl"
-          [(ngModel)]="selectednivel"
-          (selectionChange)="loadProyectos()"
-        >
+        <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel" (selectionChange)="loadProyectos()">
           <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
           <mat-option *ngFor="let item of niveles" [value]="item.Id">
             {{ item.Nombre }}
@@ -38,10 +30,7 @@
       <!-- select Facultad -->
       <mat-form-field class="form-field">
         <mat-label>{{ "admision.seleccion_facultad" | translate }}</mat-label>
-        <mat-select
-          [(ngModel)]="facultad"
-          (selectionChange)="filtrarPorFacultades(facultad)"
-        >
+        <mat-select [(ngModel)]="facultad" (selectionChange)="filtrarPorFacultades(facultad)">
           <mat-option>
             {{ "GLOBAL.seleccionar" | translate }}
           </mat-option>
@@ -54,18 +43,37 @@
       <!-- select proyectos -->
       <mat-form-field class="form-field">
         <mat-label>{{ "admision.aviso_proyecto" | translate }}:</mat-label>
-        <mat-select
-          [formControl]="Campo1Control"
-          [(ngModel)]="proyectos_selected"
-          (selectionChange)="activeCriterios()"
-        >
+        <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_selected">
           <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
-          <mat-option
-            *ngFor="let project of proyectosFilteredFacultad"
-            [value]="project.Id"
-            [disabled]="!project.Id"
-            >{{ project.Nombre }}</mat-option
-          >
+          <mat-option *ngFor="let project of proyectosFilteredFacultad" [value]="project.Id" [disabled]="!project.Id">{{
+            project.Nombre }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="Campo1Control.hasError('required')">
+          colocar el error
+        </mat-error>
+      </mat-form-field>
+
+      <!-- select tipo de cupo -->
+      <mat-form-field class="form-field">
+        <mat-label>Seleccionar tipo cupo:</mat-label>
+        <mat-select [formControl]="Campo3Control" [(ngModel)]="tipo_cupo_selected">
+          <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+          <mat-option *ngFor="let cupos of tipoCupoFiltered" [value]="cupos.Id" [disabled]="!cupos.Id">{{
+            cupos.Nombre }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="Campo1Control.hasError('required')">
+          colocar el error
+        </mat-error>
+      </mat-form-field>
+      
+      <!-- select tipo inscripcion -->
+      <mat-form-field class="form-field">
+        <mat-label>Seleccionar tipo inscripcion:</mat-label>
+        <mat-select [formControl]="Campo4Control" [(ngModel)]="tipo_inscripcion_selected"
+          (selectionChange)="activeCriterios()">
+          <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+          <mat-option *ngFor="let tipo_inscripcion of tiposInscripcionFiltered" [value]="tipo_inscripcion.Id" [disabled]="!tipo_inscripcion.Id">{{
+            tipo_inscripcion.Nombre }}</mat-option>
         </mat-select>
         <mat-error *ngIf="Campo1Control.hasError('required')">
           {{ "admision.erro_selec_proyecto" | translate }}
@@ -75,13 +83,8 @@
       <!-- select criterios -->
       <mat-form-field class="form-field">
         <mat-label>{{ "admision.aviso_criterios" | translate }}:</mat-label>
-        <mat-select
-          [formControl]="Campo2Control"
-          [(ngModel)]="criterio_selected"
-          (selectionChange)="viewtab()"
-          [disabled]="selectcriterio || loading"
-          multiple
-        >
+        <mat-select [formControl]="Campo2Control" [(ngModel)]="criterio_selected" (selectionChange)="viewtab()"
+          [disabled]="selectcriterio || loading" multiple>
           <mat-option *ngFor="let item of criterios" [value]="item">
             {{ item.Nombre }}
           </mat-option>
@@ -99,10 +102,8 @@
             <div class="row my-2">
               <div class="col-12">
                 <mat-checkbox formControlName="opcion">
-                  <mat-label
-                    >{{ "admision.ofertar_opcion" | translate }}
-                    {{ i + 2 }} ?</mat-label
-                  >
+                  <mat-label>{{ "admision.ofertar_opcion" | translate }}
+                    {{ i + 2 }} ?</mat-label>
                 </mat-checkbox>
               </div>
             </div>
@@ -116,12 +117,7 @@
 
         <mat-form-field class="form-field">
           <mat-label>{{ "admision.valor_minimo" | translate }}</mat-label>
-          <input
-            matInput
-            [(ngModel)]="valorMinimo"
-            required
-            pattern="^[1-9][0-9]*$"
-          />
+          <input matInput [(ngModel)]="valorMinimo" required pattern="^[1-9][0-9]*$" />
           <mat-error *ngIf="Campo2Control.hasError('required')">
             {{ "admision.erro_selec_criterio" | translate }}
           </mat-error>
@@ -135,10 +131,7 @@
       <!-- Tag de criterios -->
 
       <!-- CRITERIOS -->
-      <div
-        *ngIf="periodo && selectednivel && facultad && selectTipo == true"
-        class="container-criterios"
-      >
+      <div *ngIf="periodo && selectednivel && facultad && selectTipo == true" class="container-criterios">
         <h3>{{ "admision.criterios" | translate }}</h3>
         <div class="alert warning" align="center">
           <label class="fondo_aviso">
@@ -149,24 +142,14 @@
         <div class="table">
           <table mat-table [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="criterio">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header
-                style="width: 45%"
-              >
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 45%">
                 {{ "admision.criterio" | translate }}
               </th>
               <td mat-cell *matCellDef="let row">{{ row.Criterio }}</td>
             </ng-container>
 
             <ng-container matColumnDef="porentaje">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header
-                style="width: 30%"
-              >
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 30%">
                 {{ "admision.porcentaje" | translate }}
               </th>
               <td mat-cell *matCellDef="let row">
@@ -183,19 +166,14 @@
               </th>
               <td mat-cell *matCellDef="let row">
                 <div class="separacion-acciones">
-                  <button
-                    mat-flat-button
-                    color="accent"
-                    *ngIf="row.Subcriterios && row.Subcriterios.length > 0"
-                    (click)="openSubcriteriosDialog(row)"
-                    title="{{ 'admision.ver_subcriterios' | translate }}"
-                  >
+                  <button mat-flat-button color="accent" *ngIf="row.Subcriterios && row.Subcriterios.length > 0"
+                    (click)="openSubcriteriosDialog(row)" title="{{ 'admision.ver_subcriterios' | translate }}">
                     <mat-icon>settings</mat-icon>
                     <span>{{ "admision.subcriterios" | translate }}</span>
                   </button>
                 </div>
-              </td></ng-container
-            >
+              </td>
+            </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="dataSourceColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: dataSourceColumns"></tr>
@@ -211,26 +189,16 @@
         <br />
 
         <div style="text-align: center; margin: 0 auto">
-          <mat-label
-            >{{ "admision.total" | translate }}:
-            <span
-              [ngClass]="{
+          <mat-label>{{ "admision.total" | translate }}:
+            <span [ngClass]="{
                 'success-text': calcularPorcentaje() === 100,
                 'error-text': calcularPorcentaje() !== 100
-              }"
-              >{{ calcularPorcentaje() }} %</span
-            ></mat-label
-          >
+              }">{{ calcularPorcentaje() }} %</span></mat-label>
         </div>
         <br />
         <div style="text-align: center; margin: 0 auto">
-          <button
-            mat-flat-button
-            color="accent"
-            type="button"
-            (click)="guardar()"
-            [disabled]="calcularPorcentaje() !== 100"
-          >
+          <button mat-flat-button color="accent" type="button" (click)="guardar()"
+            [disabled]="calcularPorcentaje() !== 100">
             {{ "GLOBAL.guardar" | translate }}
           </button>
         </div>
