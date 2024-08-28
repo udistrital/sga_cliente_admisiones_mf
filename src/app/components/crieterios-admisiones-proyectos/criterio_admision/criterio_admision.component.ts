@@ -394,9 +394,9 @@ export class CriterioAdmisionComponent implements OnChanges {
         this.proyectos_selected +
         ",PeriodoId:" +
         this.periodo.Id +
-        ",TiposDeCupos:" +
+        ",TipoCupoId:" +
         this.tipo_cupo_selected +
-        ",TiposDeInscripcion:" +
+        ",TipoInscripcionId:" +
         this.tipo_inscripcion_selected 
       )
       .subscribe(
@@ -1011,8 +1011,8 @@ export class CriterioAdmisionComponent implements OnChanges {
     requisitoPost.OfertarOpcion2 = this.ofertarOpcion2.value.opcion;
     requisitoPost.OfertarOpcion3 = this.ofertarOpcion3.value.opcion;
     requisitoPost.PuntajeMinimoExamenEstado = Number(this.valorMinimo);
-    requisitoPost.TiposDeCupos = this.tipo_cupo_selected
-    requisitoPost.TiposDeInscripcion = this.tipo_inscripcion_selected
+    requisitoPost.TipoCupoId = this.tipo_cupo_selected
+    requisitoPost.TipoInscripcionId = this.tipo_inscripcion_selected
 
 
     const objectConcat = [{}];

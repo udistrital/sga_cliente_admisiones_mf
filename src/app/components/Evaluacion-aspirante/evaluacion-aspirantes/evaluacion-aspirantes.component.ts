@@ -22,6 +22,8 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { CalendarioMidService } from "src/app/services/calendario_mid.service";
 import { EventosService } from "src/app/services/eventos.service";
+import { InscripcionService } from "src/app/services/inscripcion.service";
+import { SgaParametrosService } from "src/app/services/sga_parametros.service";
 
 @Component({
   selector: "evaluacion-aspirantes",
@@ -104,6 +106,10 @@ export class EvaluacionAspirantesComponent implements OnInit {
   selectedValue: any;
   selectedTipo: any;
   proyectos_selected!: any;
+  tipo_inscripcion_selected!: any;
+  tipo_cupo_selected!: any;
+  tiposInscripcionFiltered!: any[];
+  tipoCupoFiltered!: any[];
   criterio_selected!: any[];
   showTab: any;
   tag_view_posg!: boolean;
@@ -134,10 +140,14 @@ export class EvaluacionAspirantesComponent implements OnInit {
   CampoControl = new FormControl("", [Validators.required]);
   Campo1Control = new FormControl("", [Validators.required]);
   Campo2Control = new FormControl("", [Validators.required]);
+  Campo3Control = new FormControl("", [Validators.required]);
+  Campo4Control = new FormControl("", [Validators.required]);
 
   constructor(
     private translate: TranslateService,
     private userService: UserService,
+    private inscripcionService: InscripcionService,
+    private parametroService: SgaParametrosService,
     private parametrosService: ParametrosService,
     private projectService: ProyectoAcademicoService,
     private evaluacionService: EvaluacionInscripcionService,
@@ -149,7 +159,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private autenticationService: ImplicitAutenticationService
   ) {
     this.translate = translate;
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => { });
     this.total = true;
     this.save = true;
     this.notas = false;
@@ -165,11 +175,46 @@ export class EvaluacionAspirantesComponent implements OnInit {
     await this.loadCriterios();
   }
 
+
+  loadTipoInscripcion() {
+    this.inscripcionService.get("tipo_inscripcion?limit=0").subscribe(
+      (response: any) => {
+        if (response !== undefined && response !== null) {
+          this.tiposInscripcionFiltered = response
+        }
+      },
+      (error) => {
+        this.popUpManager.showErrorToast(
+          this.translate.instant("ERROR.general")
+        );
+      }
+    );
+  }
+
+  loadTipoCupo() {
+    this.parametroService.get("parametro?query=TipoParametroId:87&limit=0").subscribe(
+      (response: any) => {
+        console.log(response)
+        if (response.Status == '200' && response.Success == true && response.Data.length > 0) {
+          this.tipoCupoFiltered = response.Data
+          console.log(response.Data)
+        }
+      },
+      (error) => {
+        this.popUpManager.showErrorToast(
+          this.translate.instant("ERROR.general" + error.ERROR)
+        );
+      }
+    );
+  }
+
   async loadData() {
     try {
       this.info_persona_id = this.userService.getId();
       await this.cargarPeriodo();
       await this.loadLevel();
+      await this.loadTipoInscripcion();
+      await this.loadTipoCupo();
     } catch (error: any) {
       Swal.fire({
         icon: "error",
@@ -311,8 +356,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
             (error: any) => {
               this.popUpManager.showErrorAlert(
                 this.translate.instant("calendario.sin_calendario") +
-                  ". " +
-                  this.translate.instant("GLOBAL.comunicar_OAS_error")
+                ". " +
+                this.translate.instant("GLOBAL.comunicar_OAS_error")
               );
             }
           );
@@ -320,8 +365,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
         (error: any) => {
           this.popUpManager.showErrorAlert(
             this.translate.instant("calendario.sin_calendario") +
-              ". " +
-              this.translate.instant("GLOBAL.comunicar_OAS_error")
+            ". " +
+            this.translate.instant("GLOBAL.comunicar_OAS_error")
           );
         }
       );
@@ -388,8 +433,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
                         this.translate.instant(
                           "admision.no_vinculacion_no_rol"
                         ) +
-                          ". " +
-                          this.translate.instant("GLOBAL.comunicar_OAS_error")
+                        ". " +
+                        this.translate.instant("GLOBAL.comunicar_OAS_error")
                       );
                     }
                   );
@@ -410,9 +455,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.evaluacionService
       .get(
         "requisito_programa_academico?query=ProgramaAcademicoId:" +
-          this.proyectos_selected +
-          ",PeriodoId:" +
-          this.periodo.Id
+        this.proyectos_selected +
+        ",PeriodoId:" +
+        this.periodo.Id
       )
       .subscribe(
         (response: any) => {
@@ -648,10 +693,10 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.sgaMidAdmisiones
         .get(
           "admision/aspirantespor?id_periodo=" +
-            this.periodo.Id +
-            "&id_proyecto=" +
-            this.proyectos_selected +
-            "&tipo_lista=2"
+          this.periodo.Id +
+          "&id_proyecto=" +
+          this.proyectos_selected +
+          "&tipo_lista=2"
         )
         .subscribe(
           (response: any) => {
@@ -712,11 +757,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.sgaMidAdmisiones
         .get(
           "admision/evaluacion/" +
-            this.proyectos_selected +
-            "/" +
-            this.periodo.Id +
-            "/" +
-            IdCriterio
+          this.proyectos_selected +
+          "/" +
+          this.periodo.Id +
+          "/" +
+          IdCriterio
         )
         .subscribe(
           async (response: any) => {
@@ -907,7 +952,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngOnChanges() {
     this.columnas = [];
@@ -923,11 +968,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.evaluacionService
         .get(
           "requisito_programa_academico?query=ProgramaAcademicoId:" +
-            this.proyectos_selected +
-            ",PeriodoId:" +
-            this.periodo.Id +
-            ",RequisitoId:" +
-            IdCriterio
+          this.proyectos_selected +
+          ",PeriodoId:" +
+          this.periodo.Id +
+          ",RequisitoId:" +
+          IdCriterio
         )
         .subscribe(
           (Res: any) => {
