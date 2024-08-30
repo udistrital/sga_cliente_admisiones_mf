@@ -92,8 +92,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
   show_acad = false;
   Aspirantes: any;
 
-  notas: boolean;
-  save: boolean;
+  notas!: boolean;
+  save!: boolean;
   asistencia!: boolean;
   info_persona!: boolean;
   loading!: boolean;
@@ -150,14 +150,15 @@ export class EvaluacionAspirantesComponent implements OnInit {
   ) {
     this.translate = translate;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
+  }
+
+  async ngOnInit() {
     this.total = true;
     this.save = true;
     this.notas = false;
     this.showTab = true;
-    this.loadData();
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.createTable();
-    });
+    await this.loadData();
+    await this.createTable();
   }
 
   async activateTab() {
@@ -230,27 +231,33 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.Campo1Control.setValue("");
   }
 
-  loadLevel() {
-    this.projectService.get("nivel_formacion?limit=0").subscribe(
-      (response: any) => {
-        if (response !== null || response !== undefined) {
-          this.nivel_load = <any>response;
-          if (window.localStorage.getItem("Nivel")) {
-            this.selectednivel = this.nivel_load.find(
-              (p: any) => p.Id == window.localStorage.getItem("Nivel")
-            ).Id;
-            this.loadProyectos();
-            window.localStorage.removeItem("Nivel");
+  async loadLevel() {
+    const nivel: any = await this.recuperarNivelFormacion();
+    this.nivel_load = nivel;
+    if (window.localStorage.getItem("Nivel")) {
+      this.selectednivel = this.nivel_load.find(
+        (p: any) => p.Id == window.localStorage.getItem("Nivel")
+      ).Id;
+      await this.loadProyectos();
+      window.localStorage.removeItem("Nivel");
+    }
+  }
+
+  recuperarNivelFormacion() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get("nivel_formacion?limit=0")
+        .subscribe((response: any) => {
+          if (response !== null || response !== undefined) {
+            resolve(response);
           }
-        }
-      },
-      (error) => {
-        this.popUpManager.showErrorToast(
-          this.translate.instant("ERROR.general")
-        );
-        this.loading = false;
-      }
-    );
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('ERROR.general'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
+          });
+    });
   }
 
   filtrarProyecto(proyecto: any) {
@@ -271,7 +278,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     }
   }
 
-  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+  async cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
     const nivelDoctorado = this.nivel_load.find(
       (nivel: any) => nivel.Nombre === "Doctorado"
     );
@@ -285,7 +292,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.mostrarBoton = false;
       this.mostrarMensajeInicial = false;
     }
-    this.loadProyectos();
+    await this.loadProyectos();
   }
 
   consultarPeriodosDoctorado(idProyecto: number) {
@@ -327,149 +334,134 @@ export class EvaluacionAspirantesComponent implements OnInit {
       );
   }
 
-  loadProyectos() {
+  async loadProyectos() {
     this.notas = false;
     this.selectprograma = false;
     this.criterio_selected = [];
     if (!Number.isNaN(this.selectednivel)) {
-      this.projectService
-        .get("proyecto_academico_institucion?limit=0")
-        .subscribe(
-          (response: any) => {
-            this.autenticationService.getRole().then((rol: any) => {
-              let r = rol.find(
-                (role: any) =>
-                  role == "ADMIN_SGA" ||
-                  role == "VICERRECTOR" ||
-                  role == "ASESOR_VICE"
-              ); // rol admin o vice
-              if (r) {
-                this.proyectos = <any[]>(
-                  response.filter((proyecto: any) =>
-                    this.filtrarProyecto(proyecto)
-                  )
-                );
-                if (window.localStorage.getItem("IdProyecto")) {
-                  const idProyecto = window.localStorage.getItem("IdProyecto");
-                  const proyecto = this.proyectos.find(
-                    (p: any) => p.Id == idProyecto
-                  );
-                  if (proyecto) {
-                    this.proyectos_selected = proyecto.Id;
-                    this.loadCriterios();
-                  }
-                }
-                window.localStorage.removeItem("IdProyecto");
-              } else {
-                const id_tercero = this.userService.getPersonaId();
-                this.sgaMidAdmisiones
-                  .get("admision/dependencia_vinculacion_tercero/" + id_tercero)
-                  .subscribe(
-                    (respDependencia: any) => {
-                      const dependencias = <Number[]>(
-                        respDependencia.Data.DependenciaId
-                      );
-                      this.proyectos = <any[]>(
-                        response.filter((proyecto: any) =>
-                          dependencias.includes(proyecto.Id)
-                        )
-                      );
-                      if (dependencias.length > 1) {
-                        this.popUpManager.showAlert(
-                          this.translate.instant("GLOBAL.info"),
-                          this.translate.instant(
-                            "admision.multiple_vinculacion"
-                          )
-                        );
-                      }
-                    },
-                    (error: any) => {
-                      this.popUpManager.showErrorAlert(
-                        this.translate.instant(
-                          "admision.no_vinculacion_no_rol"
-                        ) +
-                          ". " +
-                          this.translate.instant("GLOBAL.comunicar_OAS_error")
-                      );
-                    }
-                  );
-              }
-            });
-          },
-          (error) => {
-            this.popUpManager.showErrorToast(
-              this.translate.instant("ERROR.general")
-            );
-            this.loading = false;
+      const proyectoAcademico: any = await this.recuperarProyectoAcademicoInstitucion();
+      const rol: any = await this.autenticationService.getRole()
+      let r = rol.find((role: any) => role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE");
+      if (r) {
+        this.proyectos = <any[]>(proyectoAcademico.filter((proyecto: any) => this.filtrarProyecto(proyecto)));
+        if (window.localStorage.getItem("IdProyecto")) {
+          const idProyecto = window.localStorage.getItem("IdProyecto");
+          const proyecto = this.proyectos.find((p: any) => p.Id == idProyecto);
+          if (proyecto) {
+            this.proyectos_selected = proyecto.Id;
+            await this.loadCriterios();
           }
-        );
+        }
+        window.localStorage.removeItem("IdProyecto");
+      } else {
+        const id_tercero = await this.userService.getPersonaId();
+        const dependencia: any = await this.recuperarDependenciaVinculacionTercero(id_tercero);
+        console.log(dependencia);
+        const dependencias = <Number[]>(dependencia.Data.DependenciaId);
+        this.proyectos = <any[]>(proyectoAcademico.filter((proyecto: any) => dependencias.includes(proyecto.Id)));
+        if (dependencias.length > 1) {
+          this.popUpManager.showAlert(this.translate.instant("GLOBAL.info"), this.translate.instant("admision.multiple_vinculacion"));
+        }
+      }
     }
   }
 
-  loadCriterios() {
-    this.evaluacionService
-      .get(
-        "requisito_programa_academico?query=ProgramaAcademicoId:" +
-          this.proyectos_selected +
-          ",PeriodoId:" +
-          this.periodo.Id
-      )
-      .subscribe(
-        (response: any) => {
-          if (response[0].Id !== undefined && response[0] !== "{}") {
-            this.criterios = <any>response;
-            this.criterios = this.criterios.filter(
-              (e: any) => e.PorcentajeGeneral !== 0
-            );
-
-            this.btnCalculo = false;
-            this.selectcriterio = false;
-            this.notas = false;
-            this.criterio_selected = [];
-            this.criterios.forEach(async (element: any) => {
-              await this.criterio_selected.push(element.RequisitoId);
-            });
-            this.viewtab();
-          } else {
-            const Criterios = [];
-            Criterios[0] = {
-              RequisitoId: {
-                Id: 0,
-                Nombre: "",
-              },
-            };
-            this.criterios = <any>Criterios;
-            this.criterio_selected = [];
-            this.notas = false;
-            this.popUpManager.showToast(
-              "info",
-              this.translate.instant("admision.no_criterio")
-            );
-            // this.popUpManager.showToast('info', this.translate.instant('admision.no_criterio'), this.translate.instant('GLOBAL.info'));
+  recuperarProyectoAcademicoInstitucion() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get("proyecto_academico_institucion?limit=0")
+        .subscribe((response: any) => {
+          if (response !== null || response !== undefined) {
+            resolve(response);
           }
         },
-        (error) => {
-          this.popUpManager.showErrorToast(
-            this.translate.instant("admision.error_cargar")
-          );
-        }
-      );
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('ERROR.general'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
+          });
+    });
+  }
+
+  recuperarDependenciaVinculacionTercero(id_tercero: any) {
+    return new Promise((resolve, reject) => {
+      this.sgaMidAdmisiones.get("admision/dependencia_vinculacion_tercero/" + id_tercero)
+        .subscribe((response: any) => {
+          console.log(response);
+          resolve(response);
+        },
+          (error: any) => {
+            if (error.Message.Data === "vinculacion is empty: [map[]]") {
+              resolve([]);
+              this.loading = false;
+            } else {
+              console.error(error);
+              this.popUpManager.showErrorAlert(this.translate.instant("admision.no_vinculacion_no_rol") + ". " + this.translate.instant("GLOBAL.comunicar_OAS_error"));
+              this.loading = false;
+              reject([]);
+            }
+          });
+    });
+  }
+
+  async loadCriterios() {
+    const requisitoPrograma: any = await this.recuperarRequisitoProgramaAcademico(this.proyectos_selected, this.periodo.Id);
+    if (requisitoPrograma[0].Id !== undefined && requisitoPrograma[0] !== "{}") {
+      this.criterios = <any>requisitoPrograma;
+      this.criterios = this.criterios.filter((e: any) => e.PorcentajeGeneral !== 0);
+      this.btnCalculo = false;
+      this.selectcriterio = false;
+      this.notas = false;
+      this.criterio_selected = [];
+    
+      for (const element of this.criterios) {
+        this.criterio_selected.push(element.RequisitoId);
+      }
+
+      this.viewtab();
+    } else {
+      const Criterios = [];
+      Criterios[0] = {
+        RequisitoId: {
+          Id: 0,
+          Nombre: "",
+        },
+      };
+      this.criterios = <any>Criterios;
+      this.criterio_selected = [];
+      this.notas = false;
+      this.popUpManager.showToast("info", this.translate.instant("admision.no_criterio"));
+    }
+  }
+
+  recuperarRequisitoProgramaAcademico(programaId: any, periodoId: any) {
+    return new Promise((resolve, reject) => {
+      this.evaluacionService.get("requisito_programa_academico?query=ProgramaAcademicoId:" + programaId + ",PeriodoId:" + periodoId)
+        .subscribe((response: any) => {
+          resolve(response);
+        },
+          (error: any) => {
+            console.error(error);
+            this.popUpManager.showErrorToast(this.translate.instant("admision.error_cargar"));
+            this.loading = false;
+            reject([]);
+          });
+    });
   }
 
   async createTable() {
-    return new Promise(async (resolve, reject) => {
-      const IdCriterio = sessionStorage.getItem("tipo_criterio");
-      const data: any = await this.loadColumn(IdCriterio);
-      const keys = Object.keys(data!);
-      const titles = keys.map((key) => data[key].title);
-      const width = keys.map((key) => data[key].width);
+    const IdCriterio = sessionStorage.getItem("tipo_criterio");
+    console.log(IdCriterio);
+    const data: any = await this.loadColumn(IdCriterio);
+    const keys = Object.keys(data!);
+    const titles = keys.map((key) => data[key].title);
+    const width = keys.map((key) => data[key].width);
 
-      this.columnas = titles;
-      this.widhtColumns = width;
-      this.dataSourceColumn = titles;
-      this.dataSourceColumn.push("acciones");
-      resolve(this.settings);
-    });
+    this.columnas = titles;
+    this.widhtColumns = width;
+    this.dataSourceColumn = titles;
+    this.dataSourceColumn.push("acciones");
+    return this.settings;
   }
 
   useLanguage(language: string) {
@@ -691,21 +683,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
     });
   }
 
-  //Para terminar de revisar ma;ana
-  // (response: any) => {
-  //   if (response.success == true && response.status == 200) {
-  //     this.Aspirantes = response.data;
-  //     this.cantidad_aspirantes = this.Aspirantes.length;
-
-  //     // Agrega claves con el nombre de las columnas a cada aspirante
-  //     this.Aspirantes.forEach((aspirante: any) => {
-  //       this.nameColumns.forEach((columna: any) => {
-  //         if (!aspirante.hasOwnProperty(columna)) {
-  //           aspirante[columna] = "" ;
-  //         }
-  //       });
-  //     });
-
   async loadInfo(IdCriterio: number) {
     this.datavalor = [];
     return new Promise((resolve, reject) => {
@@ -805,109 +782,114 @@ export class EvaluacionAspirantesComponent implements OnInit {
     }
   }
 
-  loadColumn(IdCriterio: any) {
+  async loadColumn(IdCriterio: any) {
     this.nameColumns = [];
-    return new Promise((resolve, reject) => {
-      this.evaluacionService
-        .get("requisito?query=RequisitoPadreId:" + IdCriterio + "&limit=0")
-        .subscribe(
-          (response: any) => {
-            for (let i = 0; i < response.length; i++) {
-              this.nameColumns.push(response[i].Nombre);
+    const requisitoPrincipal: any = await this.recuperarRequisitoByPadre(IdCriterio);
+    for (let i = 0; i < requisitoPrincipal.length; i++) {
+      this.nameColumns.push(requisitoPrincipal[i].Nombre);
+    }
+    const requisitoSecundario: any = await this.recuperarRequisito(IdCriterio);
+    const data: any = {};
+    let porcentaje: any;
+
+    // Columna de aspirantes
+    data.Aspirantes = {
+      title: this.translate.instant("admision.aspirante"),
+      editable: false,
+      filter: false,
+      sort: true,
+      sortDirection: "asc",
+      width: "55%",
+      valuePrepareFunction: (value: any) => {
+        return value;
+      },
+    };
+
+    // Columna de asistencia si lo requiere
+    if (requisitoSecundario.Asistencia === true) {
+      data.Asistencia = {
+        title: this.translate.instant("admision.asistencia"),
+        editable: true,
+        filter: false,
+        width: "4%",
+        type: "custom",
+        renderComponent: CheckboxAssistanceComponent,
+        onComponentInitFunction: (instance: any) => {
+          instance.save.subscribe((data: any) => {
+            // sessionStorage.setItem('EstadoInscripcion', data);
+            this.asistencia = data;
+            if (data === "") {
+              this.asistencia = false;
             }
-            this.evaluacionService.get("requisito/" + IdCriterio).subscribe(
-              async (res: any) => {
-                const data: any = {};
-                let porcentaje: any;
+          });
+        },
+      };
+    }
 
-                // Columna de aspirantes
-                data.Aspirantes = {
-                  title: this.translate.instant("admision.aspirante"),
-                  editable: false,
-                  filter: false,
-                  sort: true,
-                  sortDirection: "asc",
-                  width: "55%",
-                  valuePrepareFunction: (value: any) => {
-                    return value;
-                  },
-                };
+    if (requisitoPrincipal.length > 0) {
+      const idPrograma = sessionStorage.getItem("IdProyecto");
+      const programaBuscar = this.proyectos_selected ? this.proyectos_selected : idPrograma;
+      console.log(this.proyectos_selected, idPrograma)
+      porcentaje = await this.getPercentageSub(programaBuscar, this.periodo.Id, IdCriterio);
 
-                // Columna de asistencia si lo requiere
-                if (res.Asistencia === true) {
-                  data.Asistencia = {
-                    title: this.translate.instant("admision.asistencia"),
-                    editable: true,
-                    filter: false,
-                    width: "4%",
-                    type: "custom",
-                    renderComponent: CheckboxAssistanceComponent,
-                    onComponentInitFunction: (instance: any) => {
-                      instance.save.subscribe((data: any) => {
-                        // sessionStorage.setItem('EstadoInscripcion', data);
-                        this.asistencia = data;
-                        if (data === "") {
-                          this.asistencia = false;
-                        }
-                      });
-                    },
-                  };
-                }
-
-                if (response.length > 0) {
-                  porcentaje = await this.getPercentageSub(IdCriterio);
-
-                  for (const key in porcentaje.areas) {
-                    if (porcentaje.areas[key]["Porcentaje"] === 0) {
-                      break;
-                    }
-                    for (const key2 in porcentaje.areas[key]) {
-                      for (let i = 0; i < response.length; i++) {
-                        if (porcentaje.areas[key][key2] == response[i].Nombre) {
-                          this.columnas.push(response[i].Nombre);
-                          data[response[i].Nombre] = {
-                            title:
-                              response[i].Nombre +
-                              " (" +
-                              porcentaje.areas[key].Porcentaje +
-                              "%)",
-                            editable: true,
-                            filter: false,
-                            valuePrepareFunction: (value: any) => {
-                              return value;
-                            },
-                          };
-                          break;
-                        }
-                      }
-                    }
-                  }
-                } else {
-                  this.popUpManager.showInfoToast(
-                    this.translate.instant("admision.no_data")
-                  );
-                }
-                resolve(data);
-              },
-              (error) => {
-                this.popUpManager.showErrorToast(
-                  this.translate.instant("admision.error_cargar")
-                );
-                reject(error);
-              }
-            );
-          },
-          (error) => {
-            this.popUpManager.showErrorToast(
-              this.translate.instant("admision.error_cargar")
-            );
-            reject(error);
+      for (const key in porcentaje.areas) {
+        if (porcentaje.areas[key]["Porcentaje"] === 0) {
+          break;
+        }
+        for (const key2 in porcentaje.areas[key]) {
+          for (let i = 0; i < requisitoPrincipal.length; i++) {
+            if (porcentaje.areas[key][key2] == requisitoPrincipal[i].Nombre) {
+              this.columnas.push(requisitoPrincipal[i].Nombre);
+              data[requisitoPrincipal[i].Nombre] = {
+                title: requisitoPrincipal[i].Nombre + " (" + porcentaje.areas[key].Porcentaje + "%)",
+                editable: true,
+                filter: false,
+                valuePrepareFunction: (value: any) => {
+                  return value;
+                },
+              };
+              break;
+            }
           }
-        );
+        }
+      }
+    } else {
+      this.popUpManager.showInfoToast(this.translate.instant("admision.no_data"));
+    }
+
+    return data;
+  }
+
+  recuperarRequisitoByPadre(idCriterio: any) {
+    console.log(idCriterio);
+    return new Promise((resolve, reject) => {
+      this.evaluacionService.get("requisito?query=RequisitoPadreId:" + idCriterio + "&limit=0")
+        .subscribe((response: any) => {
+          resolve(response);
+        },
+          (error: any) => {
+            console.error(error);
+            this.popUpManager.showErrorToast(this.translate.instant("admision.error_cargar"));
+            this.loading = false;
+            reject(error);
+          });
     });
   }
 
-  ngOnInit() {}
+  recuperarRequisito(idCriterio: any) {
+    return new Promise((resolve, reject) => {
+      this.evaluacionService.get("requisito/" + idCriterio)
+        .subscribe((response: any) => {
+          resolve(response);
+        },
+          (error: any) => {
+            console.error(error);
+            this.popUpManager.showErrorToast(this.translate.instant("admision.error_cargar"));
+            this.loading = false;
+            reject(error);
+          });
+    });
+  }
 
   ngOnChanges() {
     this.columnas = [];
@@ -918,17 +900,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
     }
   }
 
-  getPercentageSub(IdCriterio: any) {
+  getPercentageSub(programaId: any, periodoId: any, IdCriterio: any) {
     return new Promise((resolve, reject) => {
-      this.evaluacionService
-        .get(
-          "requisito_programa_academico?query=ProgramaAcademicoId:" +
-            this.proyectos_selected +
-            ",PeriodoId:" +
-            this.periodo.Id +
-            ",RequisitoId:" +
-            IdCriterio
-        )
+      this.evaluacionService.get("requisito_programa_academico?query=ProgramaAcademicoId:" + programaId + ",PeriodoId:" + periodoId + ",RequisitoId:" + IdCriterio)
         .subscribe(
           (Res: any) => {
             const porcentaje = JSON.parse(Res[0].PorcentajeEspecifico);
