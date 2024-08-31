@@ -387,19 +387,13 @@ export class EvaluacionAspirantesComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones.get("admision/dependencia_vinculacion_tercero/" + id_tercero)
         .subscribe((response: any) => {
-          console.log(response);
           resolve(response);
         },
           (error: any) => {
-            if (error.Message.Data === "vinculacion is empty: [map[]]") {
-              resolve([]);
-              this.loading = false;
-            } else {
-              console.error(error);
-              this.popUpManager.showErrorAlert(this.translate.instant("admision.no_vinculacion_no_rol") + ". " + this.translate.instant("GLOBAL.comunicar_OAS_error"));
-              this.loading = false;
-              reject([]);
-            }
+            console.error(error);
+            this.popUpManager.showErrorAlert(this.translate.instant("admision.no_vinculacion_no_rol") + ". " + this.translate.instant("GLOBAL.comunicar_OAS_error"));
+            this.loading = false;
+            reject([]);
           });
     });
   }
@@ -627,7 +621,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.tipo_criterio.ProgramaAcademico = proyecto;
     this.tipo_criterio.Nombre = event.Nombre;
     sessionStorage.setItem("tipo_criterio", String(event.Id));
-    await this.ngOnChanges();
+    this.ngOnChanges();
     await this.createTable();
     this.showTab = false;
     await this.loadAspirantes().catch((e) => (this.loading = false));
@@ -637,16 +631,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   async loadAspirantes() {
     return new Promise((resolve, reject) => {
-      this.sgaMidAdmisiones
-        .get(
-          "admision/aspirantespor?id_periodo=" +
-            this.periodo.Id +
-            "&id_proyecto=" +
-            this.proyectos_selected +
-            "&tipo_lista=2"
-        )
-        .subscribe(
-          (response: any) => {
+      this.sgaMidAdmisiones.get("admision/aspirantespor?id_periodo=" + this.periodo.Id + "&id_proyecto=" + this.proyectos_selected + "&tipo_lista=2")
+        .subscribe((response: any) => {
             if (response.success == true && response.status == 200) {
               this.Aspirantes = response.data;
               this.cantidad_aspirantes = this.Aspirantes.length;
