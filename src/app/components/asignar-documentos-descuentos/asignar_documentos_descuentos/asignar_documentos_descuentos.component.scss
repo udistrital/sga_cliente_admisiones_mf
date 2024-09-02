@@ -1,5 +1,4 @@
-
-.mat-expansion-panel-body{
+.mat-expansion-panel-body {
   overflow: auto;
 }
 
@@ -30,24 +29,25 @@
   font-size: 1.6rem;
 }
 
-.body_criterios{
+.body_criterios {
   font-size: 16px;
   padding: 16px;
 }
 
-.aviso_criterio{
+.aviso_criterio {
   text-align: center;
 }
 
-.fondo_aviso{
+.fondo_aviso {
   background-color: rgb(254, 243, 205);
   padding: 10px;
   color: rgb(163, 139, 76);
   font-size: 14px;
 }
 
-.mat-button, .mat-raised-button {
-  background-color:rgb(0, 162, 255);
+.mat-button,
+.mat-raised-button {
+  background-color: rgb(0, 162, 255);
   color: #fff;
 }
 
@@ -57,17 +57,15 @@
   color: #ffffff !important;
 }
 
-
 :host ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
   background-color: transparent !important;
 }
-:host ::ng-deep  .mat-mdc-form-field-focus-overlay {
+:host ::ng-deep .mat-mdc-form-field-focus-overlay {
   background-color: transparent !important;
 }
 
-.folder-icon{
+.folder-icon {
   font-size: 150px;
-width: 100%;
-height: 100%;
+  width: 100%;
+  height: 100%;
 }
-
