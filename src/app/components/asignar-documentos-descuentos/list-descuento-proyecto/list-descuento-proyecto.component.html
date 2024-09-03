@@ -1,54 +1,156 @@
-<fieldset *ngIf="!cambiotab">
-  <legend style="display: flex; justify-content: space-between">
-    <small> {{ "documento_proyecto.documento" | translate }}</small>
-    <button
-      class="btn btn-danger btn-icon input-group-text btn-tn"
-      (click)="close()"
-    >
-      X
+<div *ngIf="!cambiotab">
+  <header class="header">
+    <h2>{{ "documento_proyecto.documento" | translate }}</h2>
+    <button mat-icon-button color="warn" (click)="close()">
+      <mat-icon>close</mat-icon>
     </button>
-  </legend>
-
-  <div>
-    
-
-    <!-- <ng2-smart-table
-      [settings]="settings"
-      [source]="source"
-      (delete)="onDelete($event)"
-      (rowSelect)="itemselec($event)"
-      (edit)="onEdit($event)"
-      (create)="onCreate($event)"
-    >
-    </ng2-smart-table> -->
-
-    <br *ngIf="asDialog" />
+  </header>
+  <main>
+    <!-- CREAR NUEVO -->
     <button
-      style="margin-top: 10px"
+      class="margin-y"
+      mat-flat-button
+      color="accent"
+      type="button"
+      (click)="onCreate()"
+    >
+      <mat-icon>add</mat-icon> {{ "GLOBAL.crear" | translate }}
+    </button>
+
+    <!-- BUSCADOR DE LA TABLA -->
+    <mat-form-field appearance="outline" class="form-field">
+      <input
+        matInput
+        placeholder="{{ 'GLOBAL.buscar' | translate }}"
+        (keyup)="applyFilter($event)"
+        #input
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="table">
+      <table mat-table [dataSource]="dataTableDescuentos" matSort>
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "GLOBAL.acciones" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="separacion-acciones">
+              <button
+                aria-hidden="false"
+                mat-icon-button
+                title="{{ 'admision.tooltip_editar' | translate }}"
+                class="table-button"
+                (click)="onEdit({ data: row })"
+                color="accent"
+              >
+                <mat-icon fontIcon="edit"></mat-icon>
+              </button>
+
+              <button
+                color="warn"
+                mat-icon-button
+                aria-hidden="false"
+                title="{{ 'admision.tooltip_eliminar' | translate }}"
+                (click)="onDelete({ data: row })"
+                class="table-button icon"
+              >
+                <mat-icon fontIcon="delete"></mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "GLOBAL.nombre" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
+        </ng-container>
+        <ng-container matColumnDef="descripcion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "GLOBAL.descripcion" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.Descripcion }}</td>
+        </ng-container>
+        <ng-container matColumnDef="codigo_abreviacion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "cupos.codigo_abreviacion" | translate }}
+          </th>
+
+          <td mat-cell *matCellDef="let row">{{ row.CodigoAbreviacion }}</td>
+        </ng-container>
+        <ng-container matColumnDef="activo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "GLOBAL.activo" | translate }}
+          </th>
+
+          <td mat-cell *matCellDef="let row">{{ row.Activo }}</td>
+        </ng-container>
+        <ng-container matColumnDef="numero_orden">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "GLOBAL.numero_orden" | translate }}
+          </th>
+
+          <td mat-cell *matCellDef="let row">{{ row.NumeroOrden }}</td>
+        </ng-container>
+        <ng-container matColumnDef="general">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "GLOBAL.general" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.General }}</td>
+        </ng-container>
+        <ng-container matColumnDef="concepto_academico_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ "GLOBAL.concepto_academico_id" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.ConceptoAcademicoId }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnsTableDescuentos"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnsTableDescuentos"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="columnsTableDescuentos.length">
+            {{ "calendario.sin_procesos" | translate }}
+          </td>
+        </tr>
+      </table>
+      <mat-paginator
+        [pageSizeOptions]="PAGINATOR_OPTIONS"
+        showFirstLastButtons
+        [pageSize]="PAGINATOR_OPTIONS[0]"
+      >
+      </mat-paginator>
+    </div>
+
+    <br />
+
+    <button
+      class="margin-y"
+      mat-flat-button
+      color="warn"
       *ngIf="asDialog"
       (click)="dismissDialog()"
-      class="btn btn-info btn-sm"
     >
-      <i class="nb-arrow-dropleft"></i> {{ "GLOBAL.cerrar" | translate }}
+      <mat-icon>close</mat-icon> {{ "GLOBAL.cerrar" | translate }}
+    </button>
+  </main>
+</div>
+<div *ngIf="cambiotab">
+  <ngx-crud-descuento-proyecto
+    [descuento_id]="uid"
+    (eventChange)="onChange($event)"
+  >
+  </ngx-crud-descuento-proyecto>
+
+  <br />
+  <div class="container-buttons">
+    <button mat-flat-button color="primary" (click)="activetab()">
+      <i class="nb-arrow-dropleft"></i> {{ "GLOBAL.regresar" | translate }}
+    </button>
+
+    <button mat-flat-button color="warn" (click)="close()">
+      {{ "GLOBAL.cerrar" | translate }} <mat-icon>close</mat-icon>
     </button>
   </div>
-</fieldset>
-
-<!-- <ngx-crud-descuento-proyecto
-  *ngIf="cambiotab"
-  [descuento_id]="uid"
-  (eventChange)="onChange($event)"
->
-</ngx-crud-descuento-proyecto> -->
-
-<div style="display: flex; justify-content: space-between; padding: 0 1rem">
-  <button *ngIf="cambiotab" (click)="activetab()" class="btn btn-info btn-sm">
-    <i class="nb-arrow-dropleft"></i> {{ "GLOBAL.regresar" | translate }}
-  </button>
-
-  <button *ngIf="cambiotab" (click)="close()" class="btn btn-info btn-sm">
-    {{ "GLOBAL.cerrar" | translate }} <i class="nb-arrow-dropright"></i>
-  </button>
 </div>
-
-<br />

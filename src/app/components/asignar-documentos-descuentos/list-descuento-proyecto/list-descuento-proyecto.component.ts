@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  AfterViewInit,
+} from "@angular/core";
 import { PopUpManager } from "../../../managers/popUpManager";
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 // @ts-ignore
@@ -7,115 +15,61 @@ import { MatDialogRef } from "@angular/material/dialog";
 import { DescuentoAcademicoService } from "src/app/services/descuento_academico.service";
 import { TipoDescuento } from "src/app/models/descuento/tipo_descuento";
 import { MatTableDataSource } from "@angular/material/table";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
 
 @Component({
   selector: "ngx-list-descuento-proyecto",
   templateUrl: "./list-descuento-proyecto.component.html",
   styleUrls: ["./list-descuento-proyecto.component.scss"],
 })
-export class ListDescuentoProyectoComponent implements OnInit {
+export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
+  @Input() asDialog!: boolean;
+  @Output() retorno = new EventEmitter<boolean>();
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  PAGINATOR_OPTIONS: number[] = [3, 6, 9];
   uid!: number;
   cambiotab: boolean = false;
-  // config: ToasterConfig;
-  settings: any;
   loading: boolean;
   info_desc_programa!: TipoDescuento;
 
   descuentos: any = [];
   administrar_descuentos: boolean = true;
-  source: MatTableDataSource<any> = new MatTableDataSource();
+  dataTableDescuentos: MatTableDataSource<any> = new MatTableDataSource();
+  columnsTableDescuentos: string[] = [
+    "acciones",
+    "nombre",
+    "descripcion",
+    "codigo_abreviacion",
+    "activo",
+    "numero_orden",
+    "general",
+    "concepto_academico_id",
+  ];
 
   constructor(
     private translate: TranslateService,
     private descuentoService: DescuentoAcademicoService,
     private dialogRef: MatDialogRef<ListDescuentoProyectoComponent>,
     private popUpManager: PopUpManager
-  ) 
-  {
+  ) {
     this.loading = true;
-    this.cargarCampos();
-    this.loadData();
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.cargarCampos();
-    });
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
   }
 
-  @Input() asDialog!: boolean;
+  ngOnInit() {
+    this.loadData();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataTableDescuentos.paginator = this.paginator;
+    this.dataTableDescuentos.sort = this.sort;
+  }
+
   dismissDialog() {
     this.dialogRef.close();
-  }
-
-  @Output() retorno = new EventEmitter<boolean>();
-
-  cargarCampos() {
-    this.settings = {
-      add: {
-        addButtonContent: '<i class="nb-plus"></i>',
-        createButtonContent: '<i class="nb-checkmark"></i>',
-        cancelButtonContent: '<i class="nb-close"></i>',
-      },
-      edit: {
-        editButtonContent: '<i class="nb-edit"></i>',
-        saveButtonContent: '<i class="nb-checkmark"></i>',
-        cancelButtonContent: '<i class="nb-close"></i>',
-      },
-      delete: {
-        deleteButtonContent: '<i class="nb-trash"></i>',
-        confirmDelete: true,
-      },
-      mode: "external",
-      columns: {
-        Nombre: {
-          title: this.translate.instant("GLOBAL.nombre"),
-          // type: 'string;',
-          valuePrepareFunction: (value: any) => {
-            return value;
-          },
-        },
-        Descripcion: {
-          title: this.translate.instant("GLOBAL.descripcion"),
-          // type: 'string;',
-          valuePrepareFunction: (value: any) => {
-            return value;
-          },
-        },
-        CodigoAbreviacion: {
-          title: this.translate.instant("GLOBAL.codigo_abreviacion"),
-          // type: 'string;',
-          valuePrepareFunction: (value: any) => {
-            return value;
-          },
-        },
-        Activo: {
-          title: this.translate.instant("GLOBAL.activo"),
-          // type: 'boolean;',
-          valuePrepareFunction: (value: any) => {
-            return value;
-          },
-        },
-        NumeroOrden: {
-          title: this.translate.instant("GLOBAL.numero_orden"),
-          // type: 'number;',
-          valuePrepareFunction: (value: any) => {
-            return value;
-          },
-        },
-        General: {
-          title: this.translate.instant("GLOBAL.general"),
-          // type: 'boolean;',
-          valuePrepareFunction: (value: any) => {
-            return value;
-          },
-        },
-        ConceptoAcademicoId: {
-          title: this.translate.instant("GLOBAL.concepto_academico_id"),
-          // type: 'number;',
-          valuePrepareFunction: (value: any) => {
-            return value;
-          },
-        },
-      },
-    };
   }
 
   useLanguage(language: string) {
@@ -125,7 +79,7 @@ export class ListDescuentoProyectoComponent implements OnInit {
   loadData(): void {
     this.descuentos = [];
     this.loading = true;
-    this.descuentoService.get("tipo_descuento?limit=0").subscribe(
+    this.descuentoService.get("tipo_descuento?limit=0&query=Activo:true").subscribe(
       (response: any) => {
         response.forEach((descuento: any) => {
           this.loading = true;
@@ -143,7 +97,7 @@ export class ListDescuentoProyectoComponent implements OnInit {
           }
 
           this.descuentos.push(descuento);
-          this.source = new MatTableDataSource(this.descuentos);
+          this.dataTableDescuentos.data = this.descuentos;
           this.loading = false;
         });
       },
@@ -155,8 +109,6 @@ export class ListDescuentoProyectoComponent implements OnInit {
     );
   }
 
-  ngOnInit() {}
-
   itemselec(event: any) {}
 
   onEdit(event: any): void {
@@ -165,6 +117,7 @@ export class ListDescuentoProyectoComponent implements OnInit {
   }
 
   onDelete(event: any): void {
+    console.log("ELIMINADO", event)
     const opt: any = {
       title: this.translate.instant("GLOBAL.eliminar"),
       text: this.translate.instant(
@@ -179,9 +132,12 @@ export class ListDescuentoProyectoComponent implements OnInit {
       if (willDelete.value) {
         this.info_desc_programa = <TipoDescuento>event.data;
         this.info_desc_programa.Activo = false;
+        const general = this.info_desc_programa.General
+        this.info_desc_programa.General = general === "Sí" ? true : false;
+        console.log(this.info_desc_programa)
 
         this.descuentoService
-          .put("tipo_descuento/", this.info_desc_programa)
+          .put("tipo_descuento", this.info_desc_programa)
           .subscribe(
             (res: any) => {
               if (res.Type !== "error") {
@@ -203,9 +159,7 @@ export class ListDescuentoProyectoComponent implements OnInit {
                   }
                 });
               } else {
-                this.showToast(
-                  "error",
-                  this.translate.instant("GLOBAL.error"),
+                this.popUpManager.showErrorToast(
                   this.translate.instant(
                     "descuento_academico.descuento_no_eliminado"
                   )
@@ -213,9 +167,7 @@ export class ListDescuentoProyectoComponent implements OnInit {
               }
             },
             () => {
-              this.showToast(
-                "error",
-                this.translate.instant("GLOBAL.error"),
+              this.popUpManager.showErrorToast(
                 this.translate.instant(
                   "descuento_academico.descuento_no_eliminado"
                 )
@@ -226,7 +178,7 @@ export class ListDescuentoProyectoComponent implements OnInit {
     });
   }
 
-  onCreate(event: any): void {
+  onCreate(event: any = null): void {
     this.uid = 0;
     this.activetab();
   }
@@ -259,24 +211,13 @@ export class ListDescuentoProyectoComponent implements OnInit {
     }
   }
 
-  private showToast(type: string, title: string, body: string) {
-    // this.config = new ToasterConfig({
-    //   // 'toast-top-full-width', 'toast-bottom-full-width', 'toast-top-left', 'toast-top-center'
-    //   positionClass: 'toast-top-center',
-    //   timeout: 5000,  // ms
-    //   newestOnTop: true,
-    //   tapToDismiss: false, // hide on click
-    //   preventDuplicates: true,
-    //   animation: 'slideDown', // 'fade', 'flyLeft', 'flyRight', 'slideDown', 'slideUp'
-    //   limit: 5,
-    // });
-    // const toast: Toast = {
-    //   type: type, // 'default', 'info', 'success', 'warning', 'error'
-    //   title: title,
-    //   body: body,
-    //   showCloseButton: true,
-    //   bodyOutputType: BodyOutputType.TrustedHtml,
-    // };
-    // this.toasterService.popAsync(toast);
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+
+    this.dataTableDescuentos.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataTableDescuentos.paginator) {
+      this.dataTableDescuentos.paginator.firstPage();
+    }
   }
 }
