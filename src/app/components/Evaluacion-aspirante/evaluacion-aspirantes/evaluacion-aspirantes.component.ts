@@ -170,6 +170,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     });
   }
 
+
   async activateTab() {
     this.showTab = true;
     await this.loadCriterios();
@@ -194,10 +195,10 @@ export class EvaluacionAspirantesComponent implements OnInit {
   loadTipoCupo() {
     this.parametroService.get("parametro?query=TipoParametroId:87&limit=0").subscribe(
       (response: any) => {
-        console.log(response)
+
         if (response.Status == '200' && response.Success == true && response.Data.length > 0) {
           this.tipoCupoFiltered = response.Data
-          console.log(response.Data)
+
         }
       },
       (error) => {
@@ -321,6 +322,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       (nivel: any) => nivel.Nombre === "Doctorado"
     );
     if (nivelDoctorado) {
+      this.consultarPeriodosDoctorado(this.proyectos_selected)
       const esDoctorado = nivelDoctorado.Id === nivelSeleccionado;
       this.selectMultipleNivel = esDoctorado;
       this.mostrarBoton = esDoctorado;
@@ -330,6 +332,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.mostrarBoton = false;
       this.mostrarMensajeInicial = false;
     }
+    this.consultarPeriodosDoctorado(this.proyectos_selected);
     this.loadProyectos();
   }
 
@@ -341,6 +344,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
           const CalendarioId = response.Data.CalendarioId;
           this.eventosService.get(`calendario/${CalendarioId}`).subscribe(
             (response2: any) => {
+
               const listaPeriodos: number[] = JSON.parse(
                 response2.MultiplePeriodoId
               );
@@ -348,10 +352,19 @@ export class EvaluacionAspirantesComponent implements OnInit {
                 this.parametrosService
                   .get(`periodo/${periodoId}`)
                   .subscribe((response3: any) => {
+
                     this.nombresPeriodos =
                       this.nombresPeriodos + response3.Data.Nombre + ", ";
                   });
-              });
+              },
+                (error: any) => {
+                  this.popUpManager.showErrorAlert(
+                    this.translate.instant("error") +
+                    ". " +
+                    this.translate.instant(error)
+                  );
+                }
+              );
             },
             (error: any) => {
               this.popUpManager.showErrorAlert(
@@ -381,6 +394,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
         .get("proyecto_academico_institucion?limit=0")
         .subscribe(
           (response: any) => {
+            console.log(response)
             this.autenticationService.getRole().then((rol: any) => {
               let r = rol.find(
                 (role: any) =>
@@ -457,7 +471,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
         "requisito_programa_academico?query=ProgramaAcademicoId:" +
         this.proyectos_selected +
         ",PeriodoId:" +
-        this.periodo.Id
+        this.periodo.Id +
+        ",TipoCupoId:" +
+        this.tipo_cupo_selected +
+        ",TipoInscripcionId:" +
+        this.tipo_inscripcion_selected
       )
       .subscribe(
         (response: any) => {
@@ -467,6 +485,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
               (e: any) => e.PorcentajeGeneral !== 0
             );
 
+            //this.proyectos_selected == 8 && this.consultarPeriodosDoctorado(this.proyectos_selected);
             this.btnCalculo = false;
             this.selectcriterio = false;
             this.notas = false;
@@ -492,6 +511,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
             );
             // this.popUpManager.showToast('info', this.translate.instant('admision.no_criterio'), this.translate.instant('GLOBAL.info'));
           }
+          this.createTable();
         },
         (error) => {
           this.popUpManager.showErrorToast(
@@ -509,11 +529,14 @@ export class EvaluacionAspirantesComponent implements OnInit {
       const titles = keys.map((key) => data[key].title);
       const width = keys.map((key) => data[key].width);
 
+
+
       this.columnas = titles;
       this.widhtColumns = width;
       this.dataSourceColumn = titles;
       this.dataSourceColumn.push("acciones");
       resolve(this.settings);
+
     });
   }
 
@@ -696,7 +719,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
           this.periodo.Id +
           "&id_proyecto=" +
           this.proyectos_selected +
-          "&tipo_lista=2"
+          "&tipo_lista=2" +
+          "&tipo_cupo=" +
+          this.tipo_cupo_selected +
+          "&tipo_inscripcion=" +
+          this.tipo_inscripcion_selected
         )
         .subscribe(
           (response: any) => {
@@ -857,11 +884,13 @@ export class EvaluacionAspirantesComponent implements OnInit {
         .get("requisito?query=RequisitoPadreId:" + IdCriterio + "&limit=0")
         .subscribe(
           (response: any) => {
+
             for (let i = 0; i < response.length; i++) {
               this.nameColumns.push(response[i].Nombre);
             }
             this.evaluacionService.get("requisito/" + IdCriterio).subscribe(
               async (res: any) => {
+
                 const data: any = {};
                 let porcentaje: any;
 
@@ -874,6 +903,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                   sortDirection: "asc",
                   width: "55%",
                   valuePrepareFunction: (value: any) => {
+
                     return value;
                   },
                 };
@@ -901,12 +931,15 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
                 if (response.length > 0) {
                   porcentaje = await this.getPercentageSub(IdCriterio);
+                  console.log(porcentaje)
 
                   for (const key in porcentaje.areas) {
                     if (porcentaje.areas[key]["Porcentaje"] === 0) {
                       break;
                     }
+
                     for (const key2 in porcentaje.areas[key]) {
+                      console.log(key2)
                       for (let i = 0; i < response.length; i++) {
                         if (porcentaje.areas[key][key2] == response[i].Nombre) {
                           this.columnas.push(response[i].Nombre);
@@ -924,6 +957,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                           };
                           break;
                         }
+                        console.log(this.columnas)
                       }
                     }
                   }
@@ -972,7 +1006,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
           ",PeriodoId:" +
           this.periodo.Id +
           ",RequisitoId:" +
-          IdCriterio
+          IdCriterio +
+          ",TipoCupoId:" +
+          this.tipo_cupo_selected +
+          ",TipoInscripcionId:" +
+          this.tipo_inscripcion_selected
         )
         .subscribe(
           (Res: any) => {

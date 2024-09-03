@@ -49,7 +49,7 @@
             project.Nombre }}</mat-option>
         </mat-select>
         <mat-error *ngIf="Campo1Control.hasError('required')">
-          colocar el error
+          {{ "admision.erro_selec_proyecto" | translate }}
         </mat-error>
       </mat-form-field>
 
@@ -62,7 +62,7 @@
             cupos.Nombre }}</mat-option>
         </mat-select>
         <mat-error *ngIf="Campo1Control.hasError('required')">
-          colocar el error
+          {{ "admision.erro_selec_proyecto" | translate }}
         </mat-error>
       </mat-form-field>
       
