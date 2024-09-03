@@ -1,21 +1,17 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-// import { LocalDataSource } from 'ng2-smart-table';
-// import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
-import { PopUpManager } from '../../../managers/popUpManager';
-import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { PopUpManager } from "../../../managers/popUpManager";
+import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 // @ts-ignore
-import Swal from 'sweetalert2/dist/sweetalert2';
-// import 'style-loader!angular2-toaster/toaster.css';
-// import { NbDialogRef } from '@nebular/theme';
-import { MatDialogRef } from '@angular/material/dialog';
-import { DescuentoAcademicoService } from 'src/app/services/descuento_academico.service';
-import { TipoDescuento } from 'src/app/models/descuento/tipo_descuento';
-import { MatTableDataSource } from '@angular/material/table';
+import Swal from "sweetalert2/dist/sweetalert2";
+import { MatDialogRef } from "@angular/material/dialog";
+import { DescuentoAcademicoService } from "src/app/services/descuento_academico.service";
+import { TipoDescuento } from "src/app/models/descuento/tipo_descuento";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
-  selector: 'ngx-list-descuento-proyecto',
-  templateUrl: './list-descuento-proyecto.component.html',
-  styleUrls: ['./list-descuento-proyecto.component.scss'],
+  selector: "ngx-list-descuento-proyecto",
+  templateUrl: "./list-descuento-proyecto.component.html",
+  styleUrls: ["./list-descuento-proyecto.component.scss"],
 })
 export class ListDescuentoProyectoComponent implements OnInit {
   uid!: number;
@@ -25,16 +21,17 @@ export class ListDescuentoProyectoComponent implements OnInit {
   loading: boolean;
   info_desc_programa!: TipoDescuento;
 
-  descuentos:any = [];
+  descuentos: any = [];
   administrar_descuentos: boolean = true;
   source: MatTableDataSource<any> = new MatTableDataSource();
 
-  constructor(private translate: TranslateService,
+  constructor(
+    private translate: TranslateService,
     private descuentoService: DescuentoAcademicoService,
     private dialogRef: MatDialogRef<ListDescuentoProyectoComponent>,
-    private popUpManager: PopUpManager,
-    // private toasterService: ToasterService
-    ) {
+    private popUpManager: PopUpManager
+  ) 
+  {
     this.loading = true;
     this.cargarCampos();
     this.loadData();
@@ -66,54 +63,54 @@ export class ListDescuentoProyectoComponent implements OnInit {
         deleteButtonContent: '<i class="nb-trash"></i>',
         confirmDelete: true,
       },
-      mode: 'external',
+      mode: "external",
       columns: {
         Nombre: {
-          title: this.translate.instant('GLOBAL.nombre'),
+          title: this.translate.instant("GLOBAL.nombre"),
           // type: 'string;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
         },
         Descripcion: {
-          title: this.translate.instant('GLOBAL.descripcion'),
+          title: this.translate.instant("GLOBAL.descripcion"),
           // type: 'string;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
         },
         CodigoAbreviacion: {
-          title: this.translate.instant('GLOBAL.codigo_abreviacion'),
+          title: this.translate.instant("GLOBAL.codigo_abreviacion"),
           // type: 'string;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
         },
         Activo: {
-          title: this.translate.instant('GLOBAL.activo'),
+          title: this.translate.instant("GLOBAL.activo"),
           // type: 'boolean;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
         },
         NumeroOrden: {
-          title: this.translate.instant('GLOBAL.numero_orden'),
+          title: this.translate.instant("GLOBAL.numero_orden"),
           // type: 'number;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
         },
         General: {
-          title: this.translate.instant('GLOBAL.general'),
+          title: this.translate.instant("GLOBAL.general"),
           // type: 'boolean;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
         },
         ConceptoAcademicoId: {
-          title: this.translate.instant('GLOBAL.concepto_academico_id'),
+          title: this.translate.instant("GLOBAL.concepto_academico_id"),
           // type: 'number;',
-          valuePrepareFunction: (value:any) => {
+          valuePrepareFunction: (value: any) => {
             return value;
           },
         },
@@ -128,21 +125,21 @@ export class ListDescuentoProyectoComponent implements OnInit {
   loadData(): void {
     this.descuentos = [];
     this.loading = true;
-    this.descuentoService.get('tipo_descuento?limit=0').subscribe(
-      (response:any) => {
-        response.forEach((descuento:any) => {
+    this.descuentoService.get("tipo_descuento?limit=0").subscribe(
+      (response: any) => {
+        response.forEach((descuento: any) => {
           this.loading = true;
 
           if (descuento.Activo) {
-            descuento.Activo = 'Sí'
+            descuento.Activo = "Sí";
           } else {
-            descuento.Activo = 'No'
+            descuento.Activo = "No";
           }
 
           if (descuento.General) {
-            descuento.General = 'Sí'
+            descuento.General = "Sí";
           } else {
-            descuento.General = 'No'
+            descuento.General = "No";
           }
 
           this.descuentos.push(descuento);
@@ -150,71 +147,86 @@ export class ListDescuentoProyectoComponent implements OnInit {
           this.loading = false;
         });
       },
-      error => {
-        this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-      },
+      (error) => {
+        this.popUpManager.showErrorToast(
+          this.translate.instant("ERROR.general")
+        );
+      }
     );
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  itemselec(event:any) {
+  itemselec(event: any) {}
 
-  }
-
-  onEdit(event:any): void {
+  onEdit(event: any): void {
     this.uid = event.data.Id;
     this.activetab();
   }
 
-  onDelete(event:any): void {
-
+  onDelete(event: any): void {
     const opt: any = {
-      title: this.translate.instant('GLOBAL.eliminar'),
-      text: this.translate.instant('descuento_academico.seguro_continuar_eliminar_descuento'),
-      icon: 'warning',
+      title: this.translate.instant("GLOBAL.eliminar"),
+      text: this.translate.instant(
+        "descuento_academico.seguro_continuar_eliminar_descuento"
+      ),
+      icon: "warning",
       buttons: true,
       dangerMode: true,
       showCancelButton: true,
     };
-    Swal.fire(opt)
-      .then((willDelete:any) => {
-        if (willDelete.value) {
-          this.info_desc_programa = <TipoDescuento>event.data;
-          this.info_desc_programa.Activo = false;
+    Swal.fire(opt).then((willDelete: any) => {
+      if (willDelete.value) {
+        this.info_desc_programa = <TipoDescuento>event.data;
+        this.info_desc_programa.Activo = false;
 
-          this.descuentoService.put('tipo_descuento/', this.info_desc_programa)
-            .subscribe((res: any) => {
-              if (res.Type !== 'error') {
-
+        this.descuentoService
+          .put("tipo_descuento/", this.info_desc_programa)
+          .subscribe(
+            (res: any) => {
+              if (res.Type !== "error") {
                 const opt1: any = {
-                  title: this.translate.instant('GLOBAL.eliminar'),
-                  text: this.translate.instant('descuento_academico.descuento_eliminado'),
-                  icon: 'success',
+                  title: this.translate.instant("GLOBAL.eliminar"),
+                  text: this.translate.instant(
+                    "descuento_academico.descuento_eliminado"
+                  ),
+                  icon: "success",
                   buttons: true,
                   dangerMode: true,
                   showCancelButton: true,
                 };
 
-                Swal.fire(opt1).then((willCreate:any) => {
+                Swal.fire(opt1).then((willCreate: any) => {
                   if (willCreate.value) {
                     this.loadData();
                     this.activetabFather();
                   }
                 });
-
               } else {
-                this.showToast('error', this.translate.instant('GLOBAL.error'), this.translate.instant('descuento_academico.descuento_no_eliminado'));
+                this.showToast(
+                  "error",
+                  this.translate.instant("GLOBAL.error"),
+                  this.translate.instant(
+                    "descuento_academico.descuento_no_eliminado"
+                  )
+                );
               }
-            }, () => {
-              this.showToast('error', this.translate.instant('GLOBAL.error'), this.translate.instant('descuento_academico.descuento_no_eliminado'));
-            });
-        }
-      });
+            },
+            () => {
+              this.showToast(
+                "error",
+                this.translate.instant("GLOBAL.error"),
+                this.translate.instant(
+                  "descuento_academico.descuento_no_eliminado"
+                )
+              );
+            }
+          );
+      }
+    });
   }
 
-  onCreate(event:any): void {
+  onCreate(event: any): void {
     this.uid = 0;
     this.activetab();
   }
@@ -232,15 +244,15 @@ export class ListDescuentoProyectoComponent implements OnInit {
     this.retorno.emit(!this.cambiotab);
   }
 
-  selectTab(event:any): void {
-    if (event.tabTitle === this.translate.instant('GLOBAL.lista')) {
+  selectTab(event: any): void {
+    if (event.tabTitle === this.translate.instant("GLOBAL.lista")) {
       this.cambiotab = false;
     } else {
       this.cambiotab = true;
     }
   }
 
-  onChange(event:any) {
+  onChange(event: any) {
     if (event) {
       this.loadData();
       this.activetab();
@@ -267,5 +279,4 @@ export class ListDescuentoProyectoComponent implements OnInit {
     // };
     // this.toasterService.popAsync(toast);
   }
-
 }

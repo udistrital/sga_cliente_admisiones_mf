@@ -1,62 +1,60 @@
-<div class="col-md-12 col-lg-12">
-  <mat-card style="overflow: hidden scroll;
-                  max-width: 95vw; display: block;
-                  max-height: 80vh;" >
+<mat-card *ngIf="!administrar_descuentos">
+  <mat-card-content>
+    <header class="header">
+      <h2 class="margin-y">{{ "documento_proyecto.documento" | translate }}</h2>
+      <button mat-icon-button color="warn" (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+    <main>
+      <p>
+        <b>{{ "descuento_academico.seleccione_descuentos" | translate }}</b>
+      </p>
+      <mat-form-field class="form-field">
+        <mat-label>{{
+          "descuento_academico.descuento_proyecto" | translate
+        }}</mat-label>
 
-    <fieldset *ngIf="!administrar_descuentos" [ngClass]="{'fieldseter': true}">
+        <mat-select
+          [formControl]="Campo2Control"
+          (selectionChange)="onCreateDescuento($event)"
+        >
+          <mat-option>--</mat-option>
+          <mat-option *ngFor="let descuento of descuentos" [value]="descuento">
+            {{ descuento.Nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="Campo2Control.hasError('required')">{{
+          "descuento_academico.erro_selec_descuento" | translate
+        }}</mat-error>
+      </mat-form-field>
+      <p class="margin-y">
+        <b>{{ "descuento_academico.descuentos_seleccionados" | translate }}</b>
+      </p>
 
-      <legend style="display: flex;justify-content: space-between;">
-          <small>  &nbsp; {{ 'documento_proyecto.documento' | translate }}</small>
-            <button class="btn btn-danger btn-icon input-group-text btn-tn"
-                    (click)="close();">X
-            </button>
-      </legend>
+      <button
+        mat-flat-button
+        (click)="openListDescuentoComponent()"
+        type="submit"
+        color="accent"
+      >
+        {{ "descuento_academico.administrar_descuento" | translate }}
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        *ngIf="boton_retornar"
+        (click)="activetab()"
+        color="primary"
+      >
+        <mat-icon></mat-icon> {{ "GLOBAL.regresar" | translate }}
+      </button>
+    </main>
+  </mat-card-content>
+</mat-card>
 
-      <mat-card style="width: 70vw; display: grid;">
-
-        {{ 'descuento_academico.seleccione_descuentos' | translate }}
-
-        <br>
-        <mat-form-field style="width: 50%;justify-self: center;">
-          <mat-label>{{ 'descuento_academico.descuento_proyecto' | translate }}</mat-label>
-
-          <mat-select [formControl]="Campo2Control" (selectionChange)="onCreateDescuento($event)">
-            <mat-option>--</mat-option>
-            <mat-option *ngFor="let descuento of descuentos" [value]="descuento">
-                      {{descuento.Nombre}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="Campo2Control.hasError('required')">{{ 'descuento_academico.erro_selec_descuento' | translate }}</mat-error>
-        </mat-form-field>
-
-        <br/>
-
-        {{ 'descuento_academico.descuentos_seleccionados' | translate }}
-
-        <br>
-        <div class="row">
-          <div class="col-12">
-          </div>
-        </div>
-
-        <br/>
-        <button mat-button (click)="openListDescuentoComponent()" type="submit"
-                nbButton status="success">{{ 'descuento_academico.administrar_descuento' | translate }}
-        </button>
-
-      </mat-card>
-    </fieldset>
-
-<!-- <ngx-list-descuento-proyecto *ngIf="administrar_descuentos"
-
-                              (retorno)="retorno($event)">
-  </ngx-list-descuento-proyecto> -->
-
-  <button *ngIf="boton_retornar" (click)="activetab()" class="btn btn-info btn-sm">
-    <i class="nb-arrow-dropleft"></i>  {{ 'GLOBAL.regresar' | translate }}
-  </button>
-
-  </mat-card>
-
-
-</div>
+<!-- <ngx-list-descuento-proyecto
+  *ngIf="administrar_descuentos"
+  (retorno)="retorno($event)"
+>
+</ngx-list-descuento-proyecto> -->

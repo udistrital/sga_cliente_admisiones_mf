@@ -3,6 +3,7 @@ import { DocProgramaObligatorioComponent } from './components/asignar-documentos
 import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
 import { SelectDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/select-documento-proyecto/select-documento-proyecto.component';
 import { ListDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/list-documento-proyecto/list-documento-proyecto.component';
+import { ListDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/list-descuento-proyecto/list-descuento-proyecto.component';
 import { CrudDocumentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-documento-proyecto/crud-documento-proyecto.component';
 import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
 import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
@@ -178,6 +179,7 @@ export function createTranslateLoader(http: HttpClient) {
     ViewPropuestaGradoComponent,
     EvaluacionAspirantesComponent,
     ListDocumentoProyectoComponent,
+    ListDescuentoProyectoComponent,
     CrudDocumentoProyectoComponent,
     ViewDocumentoProgramaComponent,
     ViewExperienciaLaboralComponent,
