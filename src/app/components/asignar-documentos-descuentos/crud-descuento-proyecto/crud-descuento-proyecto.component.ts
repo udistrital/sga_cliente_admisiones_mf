@@ -172,7 +172,6 @@ export class CrudDescuentoProyectoComponent implements OnInit {
         if (descuentoProyecto.General == "") {
           this.info_desc_programa.General = false;
         }
-        console.log(this.info_desc_programa);
 
         this.descuentoService
           .post("tipo_descuento/", this.info_desc_programa)

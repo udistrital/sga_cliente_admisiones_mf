@@ -117,7 +117,6 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   }
 
   onDelete(event: any): void {
-    console.log("ELIMINADO", event)
     const opt: any = {
       title: this.translate.instant("GLOBAL.eliminar"),
       text: this.translate.instant(
@@ -134,7 +133,6 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
         this.info_desc_programa.Activo = false;
         const general = this.info_desc_programa.General
         this.info_desc_programa.General = general === "Sí" ? true : false;
-        console.log(this.info_desc_programa)
 
         this.descuentoService
           .put("tipo_descuento", this.info_desc_programa)
