@@ -1,5 +1,5 @@
-<mat-card *ngIf="!administrar_descuentos">
-  <mat-card-content>
+<mat-card>
+  <mat-card-content *ngIf="!administrar_descuentos">
     <header class="header">
       <h2 class="margin-y">{{ "documento_proyecto.documento" | translate }}</h2>
       <button mat-icon-button color="warn" (click)="close()">
@@ -7,30 +7,92 @@
       </button>
     </header>
     <main>
-      <p>
-        <b>{{ "descuento_academico.seleccione_descuentos" | translate }}</b>
-      </p>
-      <mat-form-field class="form-field">
-        <mat-label>{{
-          "descuento_academico.descuento_proyecto" | translate
-        }}</mat-label>
+      <section>
+        <p>
+          <b>{{ "descuento_academico.seleccione_descuentos" | translate }}</b>
+        </p>
+        <mat-form-field class="form-field">
+          <mat-label>{{
+            "descuento_academico.descuento_proyecto" | translate
+          }}</mat-label>
 
-        <mat-select
-          [formControl]="Campo2Control"
-          (selectionChange)="onCreateDescuento($event)"
-        >
-          <mat-option>--</mat-option>
-          <mat-option *ngFor="let descuento of descuentos" [value]="descuento">
-            {{ descuento.Nombre }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="Campo2Control.hasError('required')">{{
-          "descuento_academico.erro_selec_descuento" | translate
-        }}</mat-error>
-      </mat-form-field>
-      <p class="margin-y">
-        <b>{{ "descuento_academico.descuentos_seleccionados" | translate }}</b>
-      </p>
+          <mat-select
+            [formControl]="Campo2Control"
+            (selectionChange)="onCreateDescuento($event)"
+          >
+            <mat-option>--</mat-option>
+            <mat-option
+              *ngFor="let descuento of descuentos"
+              [value]="descuento"
+            >
+              {{ descuento.Nombre }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="Campo2Control.hasError('required')">{{
+            "descuento_academico.erro_selec_descuento" | translate
+          }}</mat-error>
+        </mat-form-field>
+      </section>
+
+      <section class="margin-y">
+        <p>
+          <b>{{
+            "descuento_academico.descuentos_seleccionados" | translate
+          }}</b>
+        </p>
+
+        <!-- BUSCADOR -->
+        <mat-form-field appearance="outline" class="form-field">
+          <input
+            matInput
+            placeholder="{{ 'GLOBAL.buscar' | translate }}"
+            (keyup)="applyFilter($event)"
+            #input
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <!-- TABLA -->
+
+        <div class="table">
+          <table mat-table [dataSource]="source" matSort>
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "GLOBAL.nombre" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element">{{ element.Nombre }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="porcentaje">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "GLOBAL.porcentaje" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.PorcentajeDescuento }} %
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="eliminar">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "GLOBAL.eliminar" | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="onDeleteDescuento(element)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="sourceColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: sourceColumns"></tr>
+          </table>
+          <mat-paginator
+            [pageSizeOptions]="[2, 5, 10]"
+            showFirstLastButtons
+          ></mat-paginator>
+        </div>
+      </section>
 
       <button
         mat-flat-button
@@ -51,10 +113,18 @@
       </button>
     </main>
   </mat-card-content>
+  <mat-card-content *ngIf="administrar_descuentos">
+    <h1>Buenas</h1>
+    <ngx-list-descuento-proyecto (retorno)="retorno($event)">
+    </ngx-list-descuento-proyecto>
+    <button
+      *ngIf="boton_retornar"
+      mat-flat-button
+      color="primary"
+      (click)="activetab()"
+    >
+      <mat-icon fontIcon="arrow_back"></mat-icon>
+      {{ "GLOBAL.regresar" | translate }}
+    </button>
+  </mat-card-content>
 </mat-card>
-
-<!-- <ngx-list-descuento-proyecto
-  *ngIf="administrar_descuentos"
-  (retorno)="retorno($event)"
->
-</ngx-list-descuento-proyecto> -->
