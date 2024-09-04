@@ -1324,7 +1324,8 @@
     "ya_existe_registro": "You already have information loaded for this field",
     "informar_estado_inscrito_obs": "Applicant, your enrollment is conditioned by observations in the attached documentation, please go to Registration Details to review and correct the information not approved. If you do not, you cannot continue with the process.",
     "info_boton_cambio_inscrito": "Do not forget to press the button \"Confirm edition of documents with observations\" to return to the ENROLLED status, this is enabled when you have edited all the not approved documents.",
-    "no_permite_cambio": "The status '{{estado}}' does not allow changes."
+    "no_permite_cambio": "The status '{{estado}}' does not allow changes.",
+    "examen_estado": "State exam"
   },
   "reingreso": {
     "reingreso_no_registrado": "Re-entry request not created",

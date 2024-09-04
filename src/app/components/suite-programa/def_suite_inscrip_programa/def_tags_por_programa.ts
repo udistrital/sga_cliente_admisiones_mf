@@ -35,4 +35,8 @@ export const TAGS_INSCRIPCION_PROGRAMA = {
       selected: true,
       required: true,
     },
+    examen_estado: {
+      selected: false,
+      required: false,
+    },
   }
