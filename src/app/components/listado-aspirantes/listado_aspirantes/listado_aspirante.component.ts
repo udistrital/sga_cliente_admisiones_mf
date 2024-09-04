@@ -195,7 +195,8 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.projectService.get('nivel_formacion?limit=0').subscribe(
             //   (response: NivelFormacion[]) => {
             (response: any) => {
-                this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.Nombre === 'Posgrado')
+                console.log(response)
+                this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.Nombre === 'Posgrado' || nivel.Nombre === 'Pregrado');
             },
             error => {
                 this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
@@ -205,7 +206,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
 
     cargarCantidadCupos() {
         // this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + Number(this.proyectos_selected.Id) + ',PeriodoId:' + Number(this.periodo.Id) + '&limit=1').subscribe(
-            this.inscripcionService.get('cupo_inscripcion/?query=ProgramaAcademicoId:' + Number(this.proyectos_selected.Id) + ',PeriodoId:' + Number(this.periodo.Id) + '&limit=1').subscribe(
+            this.inscripcionService.get('cupo_inscripcion/?ProgramaAcademicoId=:' + Number(this.proyectos_selected.Id) + '&periodoId' + Number(this.periodo.Id) + '&limit=1').subscribe(
             (response: any) => {
                 if (response !== null && response !== undefined && response[0].Id !== undefined) {
                     this.cuposProyecto = response[0].CuposHabilitados;
@@ -369,11 +370,11 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
         this.admitidos = [];
 
         this.loading = true;
-        this.sgaMidAdmisioens.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3')
+        this.sgaMidAdmisioens.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected.Id + '&tipo_lista=3' + '&tipo_cupo=1' + '&tipo_inscripcion=1' )
             .subscribe(
                 (response: any) => {
-                    if (response.Success == true  && response.Status == 200) {
-                        this.Aspirantes = response.Data;
+                    if (response.success == true  && response.status == 200) {
+                        this.Aspirantes = response.data;
                         this.admitidos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'ADMITIDO'));
                         this.inscritos = this.Aspirantes.filter((inscripcion: any) => (inscripcion.EstadoInscripcionId.Nombre === 'INSCRITO'));
                         this.cuposAsignados = this.admitidos.length;
@@ -387,6 +388,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
 
                         // this.source_emphasys.load(this.Aspirantes);
                         this.source_emphasys = new MatTableDataSource(this.Aspirantes)
+                        console.log(this.Aspirantes)
                         setTimeout(() => {
                             this.source_emphasys.paginator = this.paginator;
                             this.source_emphasys.sort = this.sort;
