@@ -39,4 +39,8 @@ export const TAGS_INSCRIPCION_PROGRAMA = {
       selected: false,
       required: false,
     },
+    datos_acudiente: {
+      selected: false,
+      required: false,
+    },
   }

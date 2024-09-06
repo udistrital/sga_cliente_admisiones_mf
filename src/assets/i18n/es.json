@@ -1356,7 +1356,8 @@
     "informar_estado_inscrito_obs": "Aspirante, su inscripción se encuentra condicionada por observaciones en documentación adjunta, por favor diríjase a Detalle de inscripción para revisar y corregir la información no aprobada. Si no lo hace no puede continuar con el proceso.",
     "info_boton_cambio_inscrito": "No olvide presionar el botón \"Confirmar edición de documentos con observaciones\" para volver al estado INSCRITO, este se habilita cuando haya editado todos los documentos no aprobados.",
     "no_permite_cambio": "El estado '{{estado}}' no admite cambios",
-    "examen_estado": "Examen de estado"
+    "examen_estado": "Examen de estado",
+    "datos_acudiente": "Datos acudientes/familia"
   },
   "reingreso": {
     "reingreso_no_registrado": "Solicitud de reingreso no registrada",

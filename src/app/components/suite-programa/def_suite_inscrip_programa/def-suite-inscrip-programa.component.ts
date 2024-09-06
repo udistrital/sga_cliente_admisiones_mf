@@ -262,6 +262,14 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
             if (Object.keys(response.Data[0]).length > 0) {
               this.nuevaSuite = false;
               this.tagsObject = JSON.parse(response.Data[0].ListaTags);
+              const tagsCompletos: any = {...TAGS_INSCRIPCION_PROGRAMA};
+
+              for (const key in tagsCompletos) {
+                if (!this.tagsObject.hasOwnProperty(key)) {
+                    this.tagsObject[key] = tagsCompletos[key];
+                }
+              }
+              
               this.respuestaTagsOriginal = response.Data[0];
               this.loading = false;
             } else {
@@ -323,6 +331,10 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
       case 'examen_estado':
         this.tagsObject.examen_estado.selected = !this.tagsObject.examen_estado.selected;
         this.tagsObject.examen_estado.required = this.tagsObject.examen_estado.selected;
+        break;
+      case 'datos_acudiente':
+        this.tagsObject.datos_acudiente.selected = !this.tagsObject.datos_acudiente.selected;
+        this.tagsObject.datos_acudiente.required = this.tagsObject.datos_acudiente.selected;
         break;
     
       default:
