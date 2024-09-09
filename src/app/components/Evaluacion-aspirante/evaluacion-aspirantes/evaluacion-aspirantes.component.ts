@@ -13,7 +13,12 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { TipoCriterio } from "../../../models/admision/tipo_criterio";
 // @ts-ignore
 import Swal from "sweetalert2/dist/sweetalert2";
-import { FormControl, Validators } from "@angular/forms";
+import {
+  FormControl,
+  Validators,
+  FormBuilder,
+  FormGroup,
+} from "@angular/forms";
 import { PopUpManager } from "../../../managers/popUpManager";
 import { CheckboxAssistanceComponent } from "./checkbox-assistance/checkbox-assistance.component";
 import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
@@ -135,6 +140,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
   Campo1Control = new FormControl("", [Validators.required]);
   Campo2Control = new FormControl("", [Validators.required]);
 
+  formGroupTable!: FormGroup;
+  tableReady = false;
+  
   constructor(
     private translate: TranslateService,
     private userService: UserService,
@@ -145,7 +153,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private popUpManager: PopUpManager,
     private calendarioMidService: CalendarioMidService,
     private eventosService: EventosService,
-
+    private formBuilder: FormBuilder,
     private autenticationService: ImplicitAutenticationService
   ) {
     this.translate = translate;
@@ -293,20 +301,27 @@ export class EvaluacionAspirantesComponent implements OnInit {
       .get(`calendario-proyecto/${idProyecto}`)
       .subscribe(
         (response: any) => {
+          console.log("RESPONDE", response);
           const CalendarioId = response.Data.CalendarioId;
           this.eventosService.get(`calendario/${CalendarioId}`).subscribe(
             (response2: any) => {
-              const listaPeriodos: number[] = JSON.parse(
-                response2.MultiplePeriodoId
-              );
-              listaPeriodos.forEach((periodoId) => {
-                this.parametrosService
-                  .get(`periodo/${periodoId}`)
-                  .subscribe((response3: any) => {
-                    this.nombresPeriodos =
-                      this.nombresPeriodos + response3.Data.Nombre + ", ";
-                  });
-              });
+              console.log("RESPONDE2", response2);
+              if (
+                response2.MultiplePeriodoId !== null &&
+                response2.MultiplePeriodoId !== ""
+              ) {
+                const listaPeriodos: number[] = JSON.parse(
+                  response2.MultiplePeriodoId
+                );
+                listaPeriodos.forEach((periodoId) => {
+                  this.parametrosService
+                    .get(`periodo/${periodoId}`)
+                    .subscribe((response3: any) => {
+                      this.nombresPeriodos =
+                        this.nombresPeriodos + response3.Data.Nombre + ", ";
+                    });
+                });
+              }
             },
             (error: any) => {
               this.popUpManager.showErrorAlert(
@@ -407,6 +422,13 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   loadCriterios() {
+    console.log(
+      "URL -->",
+      "requisito_programa_academico?query=ProgramaAcademicoId:" +
+        this.proyectos_selected +
+        ",PeriodoId:" +
+        this.periodo.Id
+    );
     this.evaluacionService
       .get(
         "requisito_programa_academico?query=ProgramaAcademicoId:" +
@@ -416,6 +438,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       )
       .subscribe(
         (response: any) => {
+          console.log("CRITERIOS", response);
           if (response[0].Id !== undefined && response[0] !== "{}") {
             this.criterios = <any>response;
             this.criterios = this.criterios.filter(
@@ -456,20 +479,32 @@ export class EvaluacionAspirantesComponent implements OnInit {
       );
   }
 
+  //AQUI VOY 1
   async createTable() {
-    return new Promise(async (resolve, reject) => {
-      const IdCriterio = sessionStorage.getItem("tipo_criterio");
-      const data: any = await this.loadColumn(IdCriterio);
-      const keys = Object.keys(data!);
-      const titles = keys.map((key) => data[key].title);
-      const width = keys.map((key) => data[key].width);
+    const IdCriterio = sessionStorage.getItem("tipo_criterio");
+    const data: any = await this.loadColumn(IdCriterio);
 
-      this.columnas = titles;
-      this.widhtColumns = width;
-      this.dataSourceColumn = titles;
-      this.dataSourceColumn.push("acciones");
-      resolve(this.settings);
+    const keys = Object.keys(data!);
+    const titles = keys.map((key) => data[key].title);
+    const width = keys.map((key) => data[key].width);
+
+    this.columnas = titles;
+    this.widhtColumns = width;
+
+    // Crear controles dinámicos para columnas editables
+    keys.forEach((key) => {
+      if (data[key].editable) {
+        // Añadir un control con el nombre de la columna
+        this.formGroupTable.addControl(key, new FormControl(""));
+        console.log(`FormControl ${key} creado`);
+      }
     });
+
+    console.log("FormGroup:", this.formGroupTable);
+
+    // Ahora puedes configurar `dataSource` y columnas
+    this.dataSourceColumn = titles;
+    this.dataSourceColumn.push("acciones");
   }
 
   useLanguage(language: string) {
@@ -477,7 +512,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   onEditConfirm(event: any) {
-    this.guardarEvaluacion(event.newData);
+    console.log(this.formGroupTable.value);
+    console.log(event.newData);
+    // this.guardarEvaluacion(event.newData);
   }
 
   devolverdatasourceButtonsTable() {
@@ -622,6 +659,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   async perfil_editar(event: any) {
+    this.tableReady = false;
+    console.log("perfil_editar", event);
     this.loading = true;
     this.save = true;
     this.tipo_criterio = new TipoCriterio();
@@ -641,9 +680,18 @@ export class EvaluacionAspirantesComponent implements OnInit {
     await this.loadAspirantes().catch((e) => (this.loading = false));
     await this.loadInfo(event.Id);
     this.loading = false;
+    this.tableReady = true;
   }
 
   async loadAspirantes() {
+    console.log(
+      "URL -->",
+      "admision/aspirantespor?id_periodo=" +
+        this.periodo.Id +
+        "&id_proyecto=" +
+        this.proyectos_selected +
+        "&tipo_lista=2"
+    );
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones
         .get(
@@ -655,8 +703,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
         )
         .subscribe(
           (response: any) => {
-            if (response.success == true && response.status == 200) {
-              this.Aspirantes = response.data;
+            console.log("ASPIRANTES", response);
+            if (response.Success == true && response.Status == 200) {
+              this.Aspirantes = response.Data;
               this.cantidad_aspirantes = this.Aspirantes.length;
 
               // Agrega claves con el nombre de las columnas a cada aspirante
@@ -720,8 +769,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
         )
         .subscribe(
           async (response: any) => {
-            if (response.status === 200) {
-              const data = <Array<any>>response.data.areas;
+            console.log("INFO", response);
+            if (response.Status === 200) {
+              const data = <Array<any>>response.Data.areas;
               if (data !== undefined) {
                 await data.forEach(async (asistente) => {
                   if (asistente["Asistencia"] === "") {
@@ -768,7 +818,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
               this.save = false;
               this.verificarEvaluacion();
               resolve(data);
-            } else if (response.status === 404) {
+            } else if (response.Status === 404) {
               this.Aspirantes.forEach((aspirante: any) => {
                 this.columnas.forEach((columna: any) => {
                   aspirante[columna] = "";
@@ -812,11 +862,13 @@ export class EvaluacionAspirantesComponent implements OnInit {
         .get("requisito?query=RequisitoPadreId:" + IdCriterio + "&limit=0")
         .subscribe(
           (response: any) => {
+            console.log("RESPONSEEEEEEEEEEEEEE", response);
             for (let i = 0; i < response.length; i++) {
               this.nameColumns.push(response[i].Nombre);
             }
             this.evaluacionService.get("requisito/" + IdCriterio).subscribe(
               async (res: any) => {
+                console.log("RESSSES", res);
                 const data: any = {};
                 let porcentaje: any;
 
@@ -862,8 +914,10 @@ export class EvaluacionAspirantesComponent implements OnInit {
                       break;
                     }
                     for (const key2 in porcentaje.areas[key]) {
+                      console.log("KEY2", key2);
                       for (let i = 0; i < response.length; i++) {
-                        if (porcentaje.areas[key][key2] == response[i].Nombre) {
+                        // console.log(porcentaje.areas[key][key2], " === ", response[i]);
+                        if (porcentaje.areas[key][key2] == response[i].Id) {
                           this.columnas.push(response[i].Nombre);
                           data[response[i].Nombre] = {
                             title:
@@ -874,6 +928,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
                             editable: true,
                             filter: false,
                             valuePrepareFunction: (value: any) => {
+                              console.log("VALUE", value);
                               return value;
                             },
                           };
@@ -907,7 +962,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.formGroupTable = this.formBuilder.group({});
+  }
 
   ngOnChanges() {
     this.columnas = [];
