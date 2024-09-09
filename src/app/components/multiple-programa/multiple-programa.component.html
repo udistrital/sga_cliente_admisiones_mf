@@ -1,0 +1,98 @@
+<main>
+    <!-- FORMULARIO DE BUSQUEDA -->
+    <mat-card>
+        <mat-card-content>
+            <h2>{{ "admision.listar_aspirantes" | translate }}</h2>
+            <section class="form-grid2 mt-20">
+                <!-- select periodo -->
+                <mat-form-field class="form-col1 form-field">
+                    <mat-label>
+                        {{ "calendario.periodo" | translate }}:
+                    </mat-label>
+                    <mat-select [(ngModel)]="periodo_selected" (selectionChange)="selectPeriodo()">
+                        <mat-option>
+                            --{{ "GLOBAL.seleccionar" | translate }}--
+                        </mat-option>
+                        <mat-option *ngFor="let item of periodos" [value]="item.Id">
+                            {{ item.Nombre }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- select tipo inscripcion -->
+                <mat-form-field class="form-field">
+                    <mat-label>
+                        {{ 'admision.tipo_inscripcion' | translate }}:
+                    </mat-label>
+                    <mat-select [formControl]="Campo1Control" [(ngModel)]="tipo_inscripcion_selected">
+                        <mat-option>
+                            --{{ "GLOBAL.seleccionar" | translate }}--
+                        </mat-option>
+                        <mat-option *ngFor="let tipo_inscripcion of tiposInscripcion" [value]="tipo_inscripcion.Id"
+                            [disabled]="!tipo_inscripcion.Id">{{
+                            tipo_inscripcion.Nombre }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="Campo1Control.hasError('required')">
+                        {{ "admision.erro_selec_proyecto" | translate }}
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- select proyectos Origen -->
+                <mat-form-field class="form-col1 form-field">
+                    <mat-label>
+                        {{ "GLOBAL.proyecto_academico" | translate }}:
+                    </mat-label>
+                    <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_origen_selected"
+                        [disabled]="selectprograma">
+                        <mat-option>
+                            --{{ "GLOBAL.seleccionar" | translate }}--
+                        </mat-option>
+                        <mat-option *ngFor="let item of proyectos" [value]="item.Id" [disabled]="!item.Id">
+                            {{ item.Nombre }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="Campo1Control.hasError('required')">{{
+                        "cupos.erro_selec_proyecto" | translate
+                        }}</mat-error>
+                </mat-form-field>
+
+                <!-- select proyectos Destino -->
+                <mat-form-field class="form-col1 form-field">
+                    <mat-label>
+                        {{ "GLOBAL.proyecto_academico" | translate }}:
+                    </mat-label>
+                    <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_destino_selected"
+                        [disabled]="selectprograma">
+                        <mat-option>
+                            --{{ "GLOBAL.seleccionar" | translate }}--
+                        </mat-option>
+                        <mat-option *ngFor="let item of proyectos" [value]="item.Id" [disabled]="!item.Id">
+                            {{ item.Nombre }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="Campo1Control.hasError('required')">{{
+                        "cupos.erro_selec_proyecto" | translate
+                        }}</mat-error>
+                </mat-form-field>
+            </section>
+
+            <section class="mt-20 ">
+                <div>
+                    <button mat-flat-button color="accent" type="button">
+                        <mat-icon>
+                            attach_file
+                        </mat-icon>
+                    </button>
+                    <br>
+                    <span>
+                        {{'cupos.sopiorte' | translate}}
+                    </span>
+                </div>
+            </section>
+            <section class="mt-20 center-content">
+                <button mat-flat-button color="accent" (click)="guardarConfiguracionMultiplePrograma()" >
+                    {{ "GLOBAL.guardar" | translate }}
+                </button>
+            </section>
+        </mat-card-content>
+    </mat-card>

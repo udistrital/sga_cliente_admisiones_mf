@@ -34,7 +34,7 @@
 
         <!-- select tipo inscripcion -->
         <mat-form-field class="form-field">
-          <mat-label>Seleccionar tipo inscripcion:</mat-label>
+          <mat-label>{{ 'admision.tipo_inscripcion' | translate }}:</mat-label>
           <mat-select [formControl]="Campo3Control" [(ngModel)]="tipo_inscripcion_selected">
             <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
             <mat-option *ngFor="let tipo_inscripcion of tiposInscripcionFiltered" [value]="tipo_inscripcion.Id"

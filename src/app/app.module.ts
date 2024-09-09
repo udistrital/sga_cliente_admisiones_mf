@@ -125,6 +125,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { SubcriteriosDialogComponent } from './components/crieterios-admisiones-proyectos/subcriterios-dialog/subcriterios-dialog.component';
 import { TiposCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/tipos-cupos/tipos-cupos.component';
 import { SoporteCupoInscripcionComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/soporte-cupo-inscripcion/soporte-cupo-inscripcion.component';
+import { MultipleProgramaComponent } from './components/multiple-programa/multiple-programa.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -219,6 +220,7 @@ export function createTranslateLoader(http: HttpClient) {
     PreinscripcionProyectosCurricularesComponent,
     SubcriteriosDialogComponent,
     SoporteCupoInscripcionComponent,
+    MultipleProgramaComponent,
   ],
   imports: [
     CodificacionModule,

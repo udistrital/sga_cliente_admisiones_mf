@@ -7,7 +7,7 @@ import { AdministradorCriteriosComponent } from './components/administrar-criter
 import { AsignacionCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/asignacion_cupos.component';
 import { CriterioAdmisionComponent } from './components/crieterios-admisiones-proyectos/criterio_admision/criterio_admision.component';
 import { EvaluacionDocumentosInscritosComponent } from './components/evalucion-documentos-inscritos/evaluacion-documentos-inscritos/evaluacion-documentos-inscritos.component';
-import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component'; 
+import { EvaluacionAspirantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/evaluacion-aspirantes.component';
 import { ListadoAspiranteComponent } from './components/listado-aspirantes/listado_aspirantes/listado_aspirante.component';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
@@ -34,132 +34,139 @@ import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lis
 import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/creacion-tipo-inscipcion/creacion-tipo-inscipcion.component';
 import { ListaTipoCuposComponent } from './components/tipo-cupos/lista-tipo-cupos/lista-tipo-cupos.component';
 import { CreacionTipoCuposComponent } from './components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component';
+import { MultipleProgramaComponent } from './components/multiple-programa/multiple-programa.component';
 
 const routes: Routes = [
   {
     path: "codificacion", // cambiar la ruta del modulo
-    loadChildren: () => import ('./components/codificacion-module/codificacion.module').then(m => m.CodificacionModule),
+    loadChildren: () => import('./components/codificacion-module/codificacion.module').then(m => m.CodificacionModule),
   },
   {
-    path:"administrar-criterios", 
+    path: "administrar-criterios",
     component: AdministradorCriteriosComponent
   },
   {
-    path:"criterios", 
+    path: "criterios",
     component: CriterioAdmisionComponent
   },
   {
-    path:"asignacion-cupos", 
+    path: "asignacion-cupos",
     component: AsignacionCuposComponent
   },
   {
-    path:"asignacion-cupos/comentarios-cupos", 
+    path: "asignacion-cupos/comentarios-cupos",
     component: ComentariosCuposComponent
   },
   {
-    path:"evaluacion-documentos-inscritos", 
+    path: "evaluacion-documentos-inscritos",
     component: EvaluacionDocumentosInscritosComponent
   },
   {
-    path:"administracion-cuenta", 
+    path: "administracion-cuenta",
     component: AdministracionCuentaBancariaComponent
   },
   {
-   path:"evaluacion-aspirantes", 
+    path: "evaluacion-aspirantes",
     component: EvaluacionAspirantesComponent
   },
-    {
-    path:"evaluacion-aspirantes-pregrado", 
+  {
+    path: "evaluacion-aspirantes-pregrado",
     component: EvalucionAspirantePregradoComponent
   },
   {
-    path:"listado-aspirantes", 
+    path: "listado-aspirantes",
     component: ListadoAspiranteComponent
   },
   {
-    path:"lista-proyectos-aspirantes", 
+    path: "lista-proyectos-aspirantes",
     component: ListaProyectosAspirantesComponent
   },
   {
-    path:"asignar-descuento-documento", 
+    path: "asignar-descuento-documento",
     component: AsignarDocumentosDescuentosComponent
   },
   {
-    path:"transferencias/:process", 
+    path: "transferencias/:process",
     component: TransferenciaComponent,
   },
   {
-    path:"solicitud-transferencia/:id/:process", 
+    path: "solicitud-transferencia/:id/:process",
     component: SolicitudTransferenciaComponent,
   },
   {
-    path:"suite-programa", 
+    path: "suite-programa",
     component: DefSuiteInscripProgramaComponent,
   },
   {
-    path:"liquidacion-recibos-posgrado", 
+    path: "liquidacion-recibos-posgrado",
     component: LiquidacionRecibosComponent,
   },
   {
-    path:"liquidacion-recibos-pregrado", 
+    path: "liquidacion-recibos-pregrado",
     component: LiquidacionPregrado,
   },
   {
-    path:"liquidacion-historico", 
+    path: "liquidacion-historico",
     component: LiquidacionHistoricoComponent,
   },
-    {path:"reportes-inscritos", 
+  {
+    path: "reportes-inscritos",
     component: RepotesInscripcionesComponent,
   },
   {
-    path:"listado-pregrado", 
+    path: "listado-pregrado",
     component: ListadoAspirantesPregradoComponent,
   },
   {
-    path:"snp", 
+    path: "snp",
     component: CargueSnpComponent,
   },
   {
-    path:"listados-oficializados", 
+    path: "listados-oficializados",
     component: ListadosOficializadosComponent
   },
   {
-    path:"listado-oficializados", 
+    path: "listado-oficializados",
     component: ListadoOficializadosComponent,
   },
   {
-    path:"listado-admitidos", 
+    path: "listado-admitidos",
     component: ListadoAdmitidosComponent,
   },
   {
-    path:"inscripcion-proyectos-curriculares", 
+    path: "inscripcion-proyectos-curriculares",
     component: PreinscripcionProyectosCurricularesComponent,
   },
   {
-    path:"lista-tipo-inscripcion", 
+    path: "lista-tipo-inscripcion",
     component: ListaTipoInscripcionComponent,
   },
   {
-    path:"crear-tipo-inscripcion", 
+    path: "crear-tipo-inscripcion",
     component: CreacionTipoInscipcionComponent,
   },
   {
-    path:"lista-tipo-cupos", 
+    path: "lista-tipo-cupos",
     component: ListaTipoCuposComponent,
   },
   {
-    path:"crear-tipo-cupos", 
+    path: "crear-tipo-cupos",
     component: CreacionTipoCuposComponent,
+  },
+  {
+
+    path: "multiple-programa",
+    component: MultipleProgramaComponent,
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [ 
+  providers: [
     provideRouter(routes),
     { provide: APP_BASE_HREF, useValue: '/admisiones/' },
     getSingleSpaExtraProviders(),
-    provideHttpClient(withFetch()) ]
+    provideHttpClient(withFetch())]
 })
 export class AppRoutingModule { }

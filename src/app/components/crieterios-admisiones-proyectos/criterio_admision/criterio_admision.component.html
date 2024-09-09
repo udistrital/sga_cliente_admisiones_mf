@@ -68,7 +68,7 @@
       
       <!-- select tipo inscripcion -->
       <mat-form-field class="form-field">
-        <mat-label>Seleccionar tipo inscripcion:</mat-label>
+        <mat-label>{{ 'admision.tipo_inscripcion' | translate }}:</mat-label>
         <mat-select [formControl]="Campo4Control" [(ngModel)]="tipo_inscripcion_selected"
           (selectionChange)="activeCriterios()">
           <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
