@@ -18,6 +18,7 @@
   width: 13.5rem;
   height: 14.5rem;
   transition: background-color 1s;
+  margin: auto;
 }
 
 .exp-card:hover {
@@ -44,10 +45,13 @@
 
 .aviso_criterio {
   text-align: center;
+  background-color: rgb(254, 243, 205);
+  padding: 10px 0;
+  margin: 0 15px;
+  border-radius: 5px;
 }
 
 .fondo_aviso {
-  background-color: rgb(254, 243, 205);
   padding: 10px;
   color: rgb(163, 139, 76);
   font-size: 14px;
@@ -118,4 +122,8 @@ th {
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+.tags {
+  text-align: center;
 }

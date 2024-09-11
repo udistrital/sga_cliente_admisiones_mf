@@ -235,7 +235,7 @@
                   <td mat-cell *matCellDef="let element">
                     <span *ngIf='element[column] != ""'>{{ element[column] }}</span>
                     <span *ngIf='element[column] == ""'> <button class="boton-primary"
-                        (click)="ModuloevaluarAspirante()">{{ 'evaluacionPregrado.evaluar_criterio' | translate
+                        (click)="ModuloevaluarAspirante(column)">{{ 'evaluacionPregrado.evaluar_criterio' | translate
                         }}</button>
                     </span>
                   </td>
