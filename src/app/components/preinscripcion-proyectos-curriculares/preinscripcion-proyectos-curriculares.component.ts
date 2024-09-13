@@ -76,7 +76,6 @@ export class PreinscripcionProyectosCurricularesComponent {
     await this.setearInfoPersona();
     await this.consultarDocumento();
     await this.informacioComplementaria();
-    console.log("1")
     this.loading = false;
   }
 
@@ -85,7 +84,6 @@ export class PreinscripcionProyectosCurricularesComponent {
     this.detallePreinscripcion = false;
     this.mostrarPreinscripcion = true;
     await this.setearInfoPersona();
-    console.log("2")
     this.loading = false;
   }
 
@@ -119,7 +117,6 @@ export class PreinscripcionProyectosCurricularesComponent {
               resolve(res);
             } else {
               this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-              console.log("3")
               this.loading = false;
               reject(false);  
             }
@@ -127,7 +124,6 @@ export class PreinscripcionProyectosCurricularesComponent {
           (error: any) => {
             console.error(error);
             this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-            console.log("4")
             this.loading = false;
             reject(false);
           }
@@ -204,7 +200,6 @@ export class PreinscripcionProyectosCurricularesComponent {
               resolve(res);
             } else {
               this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-              console.log("5")
               this.loading = false;
               reject(false);  
             }
@@ -212,7 +207,6 @@ export class PreinscripcionProyectosCurricularesComponent {
           (error: any) => {
             console.error(error);
             this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-            console.log("6")
             this.loading = false;
             reject(false);
           }
@@ -248,7 +242,6 @@ export class PreinscripcionProyectosCurricularesComponent {
             resolve(res);
           } else {
             this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-            console.log("7")
             this.loading = false;
             reject(false);
           }
@@ -256,7 +249,6 @@ export class PreinscripcionProyectosCurricularesComponent {
         (error: any) => {
           console.error(error);
           this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-          console.log("8")
           this.loading = false;
           reject(false);
         }
@@ -268,12 +260,10 @@ export class PreinscripcionProyectosCurricularesComponent {
     return new Promise((resolve, reject) => {
       this.inscripcionService.get(`inscripcion?query=Id:${id}&sortby=Id&order=asc&limit=0`).subscribe(
         (res: any) => {
-          console.log(res);
           if (res != null || res != undefined || res.length != 0) {
             resolve(res);
           } else {
             this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-            console.log("9")
             this.loading = false;
             resolve(false);
           }
@@ -281,7 +271,6 @@ export class PreinscripcionProyectosCurricularesComponent {
         (error: any) => {
           console.error(error);
           this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-          console.log("10")
           this.loading = false;
           reject(false);
         }
@@ -297,7 +286,6 @@ export class PreinscripcionProyectosCurricularesComponent {
             resolve(res);
           } else {
             this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-            console.log("11")
             this.loading = false;
             resolve(false);
           }
@@ -305,7 +293,6 @@ export class PreinscripcionProyectosCurricularesComponent {
         (error: any) => {
           console.error(error);
           this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-          console.log("12")
           this.loading = false;
           reject(false);
         }
@@ -317,12 +304,10 @@ export class PreinscripcionProyectosCurricularesComponent {
     return new Promise((resolve, reject) => {
       this.parametrosService.get(`periodo/?query=Id:${IdPeriodo}`).subscribe(
         (res: any) => {
-          console.log(res);
           if (res.Status == "200") {
             resolve(res);
           } else {
             this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-            console.log("13")
             this.loading = false;
             reject(false);
           }
@@ -330,7 +315,6 @@ export class PreinscripcionProyectosCurricularesComponent {
         (error: any) => {
           console.error(error);
           this.popUpManager.showErrorAlert(this.translate.instant('Global.error'));
-          console.log("14")
           this.loading = false;
           reject(false);
         }
@@ -365,8 +349,6 @@ export class PreinscripcionProyectosCurricularesComponent {
     this.periodo = periodo.Data[0]["Nombre"] ? periodo.Data[0]["Nombre"] : 'No especificado';
     this.nivel = inscripcion[0].ProyectoAcademico.NivelFormacionId.Nombre;
     this.tipoInscripcion = inscripcion[0].TipoInscripcionId.Nombre;
-
-    console.log("15")
     this.loading = false;
     return true;
   }
@@ -381,7 +363,6 @@ export class PreinscripcionProyectosCurricularesComponent {
   }
 
   irPantallaLegalizacion(data: any) {
-    console.log(data);
     const url = `/inscripcion/legalizacion-matricula-aspirante/${data.PersonaId}/${data.PeriodoId}/${data.ProgramaAcademicoId}`;
     navigateToUrl(url);
   }
