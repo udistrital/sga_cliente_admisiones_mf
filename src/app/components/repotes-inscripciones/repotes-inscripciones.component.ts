@@ -101,7 +101,6 @@ export class RepotesInscripcionesComponent {
   }
 
   caragarTipoInscripcion() {
-    console.log("Llama")
     this.sgaInscripcionService.get(`tipo_inscripcion?query=Activo:true&limit=0&sortby=Nombre&order=asc`).subscribe(
       (Response: any) => {
         this.tiposInscripcion = Response

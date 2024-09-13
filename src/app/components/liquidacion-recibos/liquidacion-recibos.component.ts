@@ -276,7 +276,6 @@ export class LiquidacionRecibosComponent {
       const url = `liquidacion?id_periodo=9&id_proyecto=32`;
       this.sgaAdmisiones.get(url).subscribe(
         (response: { Data: any; }) => {
-          console.log('Datos cargados:', response);
           const data = response.Data;
           this.admitidos = data;
           this.admitidos.forEach(row => {
@@ -690,7 +689,6 @@ export class LiquidacionRecibosComponent {
           }
 
     });
-    console.log(this.recibos)
 
     this.pdfs = [];
 
@@ -708,7 +706,6 @@ export class LiquidacionRecibosComponent {
         .toPromise()
         .then((response: any) => {
           if (response.success && response.data) {
-            //console.log('Recibo generado', response.success);
             const byteArray = atob(response.data);
             const byteNumbers = new Array(byteArray.length);
             for (let j = 0; j < byteArray.length; j++) {
@@ -740,7 +737,6 @@ export class LiquidacionRecibosComponent {
 
     Promise.all(promesas)
       .then(() => {
-        console.log('Recibos generados');
         this.generados = true;
       })
       .catch((error) => {
@@ -774,7 +770,6 @@ export class LiquidacionRecibosComponent {
       }
     });
 
-    console.log('Recibos por admitido:', recibosPorAdmitido);
     return recibosPorAdmitido;
   }
 
@@ -787,8 +782,6 @@ export class LiquidacionRecibosComponent {
   }
 
   notificarGeneracionRecibos() {
-    console.log('Notificando generación de recibos...');
-    console.log('Notificaciones:', this.notificaciones);
 
     const today = new Date();
     const dia = String(today.getDate()).padStart(2, '0');
@@ -850,7 +843,7 @@ export class LiquidacionRecibosComponent {
         .subscribe(
           (response: any) => {
             if (response.Success) {
-              console.log('Notificación enviada:', response.Success);
+              console.info('Notificación enviada:', response.Success);
             }
           },
           (error: HttpErrorResponse) => {
@@ -863,7 +856,6 @@ export class LiquidacionRecibosComponent {
 
   descargarPDFs(): void {
 
-    console.log('Descargando PDFs...' + this.pdfs.length)
     const zip = new JSZip();
     this.pdfs.forEach((pdf: File) => {
       zip.file(pdf.name, pdf);
@@ -877,12 +869,9 @@ export class LiquidacionRecibosComponent {
 
   descargar(row: any): void {
     const pdf = this.pdfs.find((pdf, index) => index === row.numeroFila);
-    console.log(row.cuotas);
     if (row.cuotas == 1) {
       if (pdf) {
         this.downloadPDF(pdf, `recibo_${row.numeroFila + 1}.pdf`);
-      } else {
-        console.log('No se encontró el PDF correspondiente a la fila');
       }
     }
   }

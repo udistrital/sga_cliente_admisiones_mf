@@ -93,7 +93,6 @@ export class EvalucionAspirantePregradoComponent {
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones.get('admision/facultad/inscritos')
         .subscribe((res: any) => {
-          console.log(res)
           if (res.Data) {
             this.facultades = res.Data;
             this.datasourceFacultades = new MatTableDataSource<any>(this.facultades);
@@ -118,7 +117,6 @@ export class EvalucionAspirantePregradoComponent {
     return new Promise((resolve, reject) => {
       this.projectService.get('proyecto_academico_institucion?query=Activo:true,NivelFormacionId:1&sortby=Id&order=asc&limit=0')
         .subscribe((res: any) => {
-          console.log(res);
           this.proyectosPregrado = res;
           resolve(res)
         },
@@ -137,10 +135,8 @@ export class EvalucionAspirantePregradoComponent {
     this.viewVariables = false;
     this.viewSubcriterios = false;
     const proyectoAcademicoIds = new Set(data.ProyectosAcademicos.map((item: any) => item.ProyectoAcademicoId));
-    console.log(proyectoAcademicoIds)
     // Estos son los proyectos de la facultad
     const proyectosFiltrados = this.proyectosPregrado.filter(item => proyectoAcademicoIds.has(item.Id));
-    console.log(proyectosFiltrados)
     if (proyectosFiltrados) {
       this.proyectosCurriculares = proyectosFiltrados;
       this.datasourceCurriculares = new MatTableDataSource<any>(this.proyectosCurriculares);
@@ -175,17 +171,21 @@ export class EvalucionAspirantePregradoComponent {
   }
 
   loadLevel() {
-    this.projectService.get('nivel_formacion?limit=0').subscribe(
-      (response: any) => {
-        if (response !== null || response !== undefined) {
-          this.nivel_load = <any>response;
-        }
-      },
-      error => {
-        this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-        this.loading = false;
-      },
-    );
+    return new Promise((resolve, reject) => {
+      this.projectService.get('nivel_formacion?limit=0')
+        .subscribe((response: any) => {
+          if (response !== null || response !== undefined) {
+            this.nivel_load = <any>response;
+            resolve(response);
+          }
+        },
+          (error: HttpErrorResponse) => {
+            console.error(error);
+            this.loading = false;
+            this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+            reject(error);
+          });
+    });
   }
 
   async filtrarAspirantesPuntajeMinimo(id: number) {
@@ -197,7 +197,6 @@ export class EvalucionAspirantePregradoComponent {
   }
 
   async realizarBusquedaPuntajeMinimo() {
-    console.log(this.periodo, this.selectedcurricular)
     const body = {
       proyecto: this.selectedcurricular + "",
       periodo: this.periodo + ""
@@ -209,7 +208,6 @@ export class EvalucionAspirantePregradoComponent {
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones.put(`admision/puntaje-minimo`, body)
         .subscribe((res: any) => {
-          console.log(res);
           this.viewVariablesPuntajeMinimo = false;
           this.popUpManager.showAlert(this.translate.instant('admision.actualizacion_aspirantes_puntaje_minimo'), this.translate.instant('admision.exito_actualizar_aspirantes'))
           resolve(res)
@@ -227,6 +225,7 @@ export class EvalucionAspirantePregradoComponent {
     this.loading = true;
     this.viewVariables = false;
     this.viewSubcriterios = false;
+    window.sessionStorage.setItem('IdProyecto', String(Id));
     window.localStorage.setItem('IdProyecto', String(Id));
     this.viewVariables = true;
     this.selectedcurricular = Id
@@ -235,25 +234,41 @@ export class EvalucionAspirantePregradoComponent {
     this.loading = false;
   }
 
-  loadCriterios() {
+  async loadCriterios() {
     this.loading = true;
-    this.EvalaucionInscripcionServices.get('requisito_programa_academico?query=Activo:true,ProgramaAcademicoId:' + this.selectedcurricular + ',PeriodoId:' + this.periodo + '&sortby=Id&order=asc&limit=0')
-    .subscribe((res: any) => {
-      if (res !== null || res !== undefined && res.status == 200) {
-        this.requisitosActuales = res;
+    const requisito: any = await this.recuperarRequisitoProgramaAcademico(this.selectedcurricular, this.periodo);
+    this.requisitosActuales = requisito;
 
-        this.selectcriterio = false;
-        this.criterio_selected = [];
-        this.selectCriterio = [];
-        this.requisitosActuales.forEach(async (element: any) => {
-          if(this.requisitosActuales != "ICFES"){
-            await this.selectCriterio.push(element.RequisitoId);
-          }
-           
-        });
+    this.selectcriterio = false;
+    this.criterio_selected = [];
+    this.selectCriterio = [];
+    
+    for (const element of this.requisitosActuales) {
+      if (this.requisitosActuales != "ICFES") {
+        this.selectCriterio.push(element.RequisitoId);
       }
-      this.loading = false;
-    })
+    }
+    this.loading = false;
+  }
+
+  recuperarRequisitoProgramaAcademico(programaId: any, periodoId: any) {
+    return new Promise((resolve, reject) => {
+      this.EvalaucionInscripcionServices.get('requisito_programa_academico?query=Activo:true,ProgramaAcademicoId:' + programaId + ',PeriodoId:' + periodoId + '&sortby=Id&order=asc&limit=0')
+        .subscribe((res: any) => {
+          if (res !== null || res !== undefined && res.status == 200) {
+            resolve(res);
+          } else {
+            this.loading = false;
+            reject(false);
+          } 
+        },
+          (error: HttpErrorResponse) => {
+            console.error(error);
+            this.loading = false;
+            this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+            reject(error);
+          });
+    });
   }
 
   async realizarBusqueda() {
@@ -293,6 +308,7 @@ export class EvalucionAspirantePregradoComponent {
     return data;
   }
 
+  //TODO: AÑADIR ESTADO DE INSCRIPCIÓN A ESTA PETICIÓN PARA QUE SE MUESTREN LOS INSCRITOS
   recuperarInscripciones(programaId: any, periodoId: any) {
     return new Promise((resolve, reject) => {
       this.InscripcionService.get(`inscripcion?query=Activo:true,ProgramaAcademicoId:${programaId},PeriodoId:${periodoId}&sortby=Id&order=asc&limit=0`)
@@ -325,7 +341,10 @@ export class EvalucionAspirantePregradoComponent {
     this.router.navigate(['evaluacion-documentos-inscritos']);
   }
 
-  ModuloevaluarAspirante() {
+  ModuloevaluarAspirante(data: any) {
+    const criterio: any = this.requisitosActuales.find((item: any) => item.RequisitoId.Nombre === data)
+    //console.log(data, this.requisitosActuales, criterio);
+    window.sessionStorage.setItem('tipo_criterio', criterio.RequisitoId.Id.toString());
     window.localStorage.setItem('IdPeriodoSelected', this.periodo);
     window.localStorage.setItem('Nivel', "1");
     this.router.navigate(['evaluacion-aspirantes']);

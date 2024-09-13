@@ -349,7 +349,7 @@ export class PerfilComponent implements OnInit {
       if (this.showErrors || this.en_revision) {
         if (actualTag != "inscripcion") {
           if (this.SuiteTags[actualTag].required) {
-            this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.fallo_carga_mensaje'));
+            this.popUpManager.showErrorAlert(actualTag + " - " + this.translate.instant('inscripcion.fallo_carga_mensaje'));
           }
         } else {
           this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.fallo_carga_mensaje'));

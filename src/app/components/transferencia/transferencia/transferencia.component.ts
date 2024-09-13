@@ -1,25 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
-//import { LocalDataSource } from 'ng2-smart-table';
-import { CustomizeButtonComponent } from '../customize-button/customize-button.component';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { FORM_TRANSFERENCIA_INTERNA } from 'src/app/models/transferencia/forms-transferencia';
 import { ActivatedRoute, Router } from "@angular/router";
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { PopUpManager } from '../../../managers/popUpManager';
-import { TransferenciaInterna } from 'src/app/models/transferencia/transferencia_interna';
 import { InfoPersona } from 'src/app/models/informacion/info_persona';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as momentTimezone from 'moment-timezone';
-import * as moment from 'moment';
-import { environment } from '../../../../environments/environment';
 import { UserService } from 'src/app/services/users.service';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { Periodo } from 'src/app/models/periodo/periodo';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
-import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { DialogoDocumentosTransferenciasComponent } from '../dialogo-documentos-transferencias/dialogo-documentos-transferencias.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
