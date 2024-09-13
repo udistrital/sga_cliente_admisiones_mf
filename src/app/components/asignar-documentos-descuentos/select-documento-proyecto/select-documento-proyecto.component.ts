@@ -128,6 +128,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
             documentoNuevo.PeriodoId = parseInt(sessionStorage.getItem('PeriodoId')!, 10);
             documentoNuevo.ProgramaId = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!, 10);
             documentoNuevo.TipoInscripcionId = parseInt(sessionStorage.getItem('TipoInscripcionId')!, 10);
+            documentoNuevo.TipoCupo = parseInt(sessionStorage.getItem('TipoCupo')!,10)
             documentoNuevo.Obligatorio = true;
 
             content = Swal.getHtmlContainer();
@@ -207,6 +208,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
           documentoModificado.PeriodoId = parseInt(sessionStorage.getItem('PeriodoId')!, 10);
           documentoModificado.ProgramaId = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!, 10);
           documentoModificado.TipoInscripcionId = parseInt(sessionStorage.getItem('TipoInscripcionId')!, 10);
+          documentoModificado.TipoCupo = parseInt(sessionStorage.getItem('TipoCupo')!,10)
           documentoModificado.Obligatorio = event.data.Obligatorio;
 
           this.inscripcionService.put('documento_programa', documentoModificado).subscribe((res: any) => {
@@ -257,6 +259,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
         documentoModificado.PeriodoId = parseInt(sessionStorage.getItem('PeriodoId')!, 10);
         documentoModificado.ProgramaId = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!, 10);
         documentoModificado.TipoInscripcionId = parseInt(sessionStorage.getItem('TipoInscripcionId')!, 10);
+        documentoModificado.TipoCupo = parseInt(sessionStorage.getItem('TipoCupo')!,10)
         documentoModificado.Obligatorio = documento.value;
         this.inscripcionService.put('documento_programa', documentoModificado).subscribe((response:any) => {
           if (response.Type !== 'error') {
