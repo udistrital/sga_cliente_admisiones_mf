@@ -2,11 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table'; // Import the MatTableDataSource class
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { OikosService } from 'src/app/services/oikos.service';
-import { SgaProyectoCurricularMidService } from 'src/app/services/sga-proyecto-curricular-mid.service';
 import { SgaCalendarioMidService } from 'src/app/services/sga_calendario_mid.service';
-import { TercerosService } from 'src/app/services/terceros.service';
-import { forkJoin, of } from 'rxjs';
-import { mergeMap, map, switchMap } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { EventoService } from 'src/app/services/evento.service';
 import { FormControl, Validators } from '@angular/forms';
@@ -17,6 +13,8 @@ import { TranslateService } from '@ngx-translate/core';
 import * as saveAs from 'file-saver';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { SolicitudesAdmisiones } from 'src/app/services/solicitudes_admisiones.service';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-listado-oficializados',
@@ -25,7 +23,11 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 })
 export class ListadoOficializadosComponent {
 
+  //tab
+  cambiotab: boolean = false;
+
   // *ngIf
+  
   viewProceso = false;
   viewOficializados = false;
   viewNoOficializados = false;
@@ -38,6 +40,16 @@ export class ListadoOficializadosComponent {
   //fehas activa
   cicloActual!: string;
   estado!: boolean;
+
+  //Peticiones 
+  datos: any[] = [];
+
+  //tabla de solicitudes
+ 
+  datasource = new MatTableDataSource<any>();
+  @ViewChild('paginator0') paginator!: MatPaginator;
+  display: string[] = ['proceso', 'fechas', 'estado', "gestion"];
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
 
   //Tabla de proceso de calendario y fechas
@@ -58,18 +70,22 @@ export class ListadoOficializadosComponent {
 
   loading!: boolean;
 
+  tipoCupos: any = [];
+  tipoCupo!: any;
+  mostrarSelectorCupos= true
+  tipoCupoControl = new FormControl('', [Validators.required]);
+
   constructor(
     private eventoService: EventoService,
-    private terceroService: TercerosService,
     private parametrosService: ParametrosService,
     private inscripcionService: InscripcionService,
     private calendarioService: SgaCalendarioMidService,
     private oikosService: OikosService,
-    private sgaProyectoCurricularMidService: SgaProyectoCurricularMidService,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private sgaAdmisionesMidService: SgaAdmisionesMid,
     private sgamidService: SgaMidService,
+    private solicitudesAdmisiones: SolicitudesAdmisiones,
   ) { }
 
   async ngOnInit() {
@@ -94,6 +110,18 @@ export class ListadoOficializadosComponent {
             });
             
             this.periodo = localStorage.getItem('IdPeriodo')
+
+            this.cargarTipoCuposPorPeriodo(this.periodo).then((tipoCupos) => {
+              setTimeout(() => {
+                  this.tipoCupos = tipoCupos;
+
+                  if (Object.keys(this.tipoCupos[0]).length === 0) {
+                      this.mostrarSelectorCupos = false
+                  }
+              }, 0);
+            }).catch((error) => {
+                console.error("Error al cargar los cupos", error);
+            });
           }
         },
           (error: HttpErrorResponse) => {
@@ -102,7 +130,37 @@ export class ListadoOficializadosComponent {
     });
   }
 
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1;
+    const year = date.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  loadData(): void {
+    this.solicitudesAdmisiones.get('solicitud?query=EstadoTipoSolicitudId.TipoSolicitud.Id:40').subscribe(res => {
+      if (res !== null) {
+        const data = <Array<any>><unknown>res;
+        this.datos = data.map(item => ({
+          Proceso: item.EstadoTipoSolicitudId.TipoSolicitud.Nombre,
+          Fechas: this.formatDate(item.FechaRadicacion), 
+          Estado: item.EstadoTipoSolicitudId.EstadoId.Nombre,
+          Gestion: item 
+        }));
+        this.datos.sort((a, b) => new Date(b.Fechas).getTime() - new Date(a.Fechas).getTime()); // Ordenar por fecha descendente
+        this.datasource = new MatTableDataSource(this.datos);
+        this.datasource.paginator = this.paginator;
+        this.datasource.sort = this.sort;
+      }
+    });
+  }
+
+
+
+
   async generarBusqueda() {
+    this.loadData();
     this.loading = true;
     const fechaActual = new Date();
     let actividades: any[] = [];
@@ -112,7 +170,7 @@ export class ListadoOficializadosComponent {
         const res: any = await this.consultarCalendarioAcademico(evento.Id);
         const data = res.Data[0].proceso
         for (const item of data) {
-          if (item.Proceso == "Proceso admitidos" || item.Proceso == "Proceso opcionados") {
+          // if (item.Proceso == "Proceso admitidos" || item.Proceso == "Proceso opcionados") {
             actividades = actividades.concat(item.Actividades);
             item.Actividades.forEach((actividad: any) => {
               const fechaInicio = new Date(actividad.FechaInicio);
@@ -121,7 +179,7 @@ export class ListadoOficializadosComponent {
                 this.cicloActual = actividad.Descripcion
               }
             });
-          }
+          // }
         }
 
         if (actividades.length > 0) {
@@ -191,10 +249,10 @@ export class ListadoOficializadosComponent {
     for (const facultad of facultades) {
       const proyectos = facultad.Opciones
       for (const proyecto of proyectos) {
-        const inscripcionesMatriculadas: any = await this.recuperarInscripciones(11, this.periodo, proyecto.Id)
-        if (Object.keys(inscripcionesMatriculadas[0]).length != 0) {
+        const inscripcionesMatriculadas: any = await this.recuperarInscripciones(11, this.periodo, proyecto.Id, this.tipoCupo)
+        // if (Object.keys(inscripcionesMatriculadas[0]).length != 0) {
           for (const inscripcion of inscripcionesMatriculadas) {
-            const persona: any = await this.consultarTercero(inscripcion.PersonaId)
+            const persona: any = await this.consultarTercero(59846)
             const itemBody = {
               facultad: facultad.Nombre,
               proyecto: proyecto.Nombre,
@@ -209,9 +267,9 @@ export class ListadoOficializadosComponent {
             }
             aspirantesOficializados.push(itemBody)
           }
-        }
+        // }
 
-        const inscripcionesNoOficializadas: any = await this.recuperarInscripciones(12, this.periodo, proyecto.Id)
+        const inscripcionesNoOficializadas: any = await this.recuperarInscripciones(12, this.periodo, proyecto.Id, this.tipoCupo)
         if (Object.keys(inscripcionesNoOficializadas[0]).length != 0) {
           for (const inscripcion of inscripcionesNoOficializadas) {
             const persona: any = await this.consultarTercero(inscripcion.PersonaId)
@@ -247,6 +305,7 @@ export class ListadoOficializadosComponent {
       this.popUpManager.showAlert(this.translate.instant('admision.titulo_aspirantes_no_encontrados'), this.translate.instant('admision.aspirantes_no_oficializados_no_encontrados'))
     }
 
+    this.viewProceso = false;
     this.viewOficializados = true;
     this.viewNoOficializados = true;
 
@@ -268,19 +327,52 @@ export class ListadoOficializadosComponent {
     });
   }
 
-  recuperarInscripciones(idEstadoFormacion: any, periodo: any, programa: any) {
+  cargarTipoCuposPorPeriodo(idPeriodo: any) {
+    // idPeriodo = 39
     return new Promise((resolve, reject) => {
-      this.inscripcionService.get(`inscripcion?query=Activo:true,EstadoInscripcionId.Id:${idEstadoFormacion},PeriodoId:${periodo},ProgramaAcademicoId:${programa}&sortby=Id&order=asc&limit=0`)
+      // this.parametrosService.get(`parametro_periodo?limit=0&query=ParametroId.TipoParametroId.CodigoAbreviacion:T,PeriodoId.Id:${idPeriodo}`)
+      this.parametrosService.get(`parametro_periodo?limit=0&query=ParametroId.TipoParametroId.CodigoAbreviacion:TIP_CUP,PeriodoId.Id:${idPeriodo}`)
         .subscribe((res: any) => {
-          resolve(res)
+          resolve(res.Data)
         },
           (error: any) => {
             console.error(error);
             this.loading = false;
-            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
             reject(false);
           });
     });
+  }
+
+  recuperarInscripciones(idEstadoFormacion: any, periodo: any, programa: any, tipoCupo: any) {
+    if(tipoCupo === undefined){
+      return new Promise((resolve, reject) => {
+        this.inscripcionService.get(`inscripcion?query=Activo:true,EstadoInscripcionId.Id:${idEstadoFormacion},PeriodoId:${periodo},ProgramaAcademicoId:${programa}&sortby=Id&order=asc&limit=0`)
+          .subscribe((res: any) => {
+            resolve(res)
+          },
+            (error: any) => {
+              console.error(error);
+              this.loading = false;
+              this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+              reject(false);
+            });
+      });
+
+    } else {
+      return new Promise((resolve, reject) => {
+        this.inscripcionService.get(`inscripcion?query=Activo:true,EstadoInscripcionId.Id:${idEstadoFormacion},PeriodoId:${periodo},ProgramaAcademicoId:${programa},TipoCupo:${tipoCupo}&sortby=Id&order=asc&limit=0`)
+          .subscribe((res: any) => {
+            resolve(res)
+          },
+            (error: any) => {
+              console.error(error);
+              this.loading = false;
+              this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+              reject(false);
+            });
+      });
+    }
   }
 
   consultarTercero(personaId: any) {
@@ -320,5 +412,18 @@ export class ListadoOficializadosComponent {
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: 'application/pdf' });
     saveAs(blob, 'ListadOficializados.pdf');
+  }
+
+
+  activetab(): void {
+    this.cambiotab = !this.cambiotab;
+  }
+  selectTab(event: any): void {
+    this.cambiotab = event.index !== 0;
+  }
+  regresar(): void {
+    this.viewOficializados  = false;
+    this.viewNoOficializados = false;
+    this.viewProceso = true;
   }
 }

@@ -5,7 +5,8 @@ import { PropuestaGrado } from 'src/app/models/inscripcion/propuesta_grado';
 import { DocumentoService } from 'src/app/services/documento.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { CIDCService } from 'src/app/services/cidc.service';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UtilidadesService } from 'src/app/services/utilidades.service';

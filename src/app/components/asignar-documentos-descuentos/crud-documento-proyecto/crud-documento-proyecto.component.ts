@@ -3,7 +3,8 @@ import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.se
 import { FORM_DOCUMENTO_PROYECTO } from './form-documento-proyecto'
 // import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 // import 'style-loader!angular2-toaster/toaster.css';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { TipoDocumentoPrograma } from 'src/app/models/documento/tipo_documento_programa';
@@ -91,7 +92,7 @@ export class CrudDocumentoProyectoComponent implements OnInit {
       showCancelButton: true,
     };
     Swal.fire(opt)
-      .then((willDelete) => {
+      .then((willDelete:any) => {
         if (willDelete.value) {
           this.info_doc_programa = <TipoDocumentoPrograma>documentoProyecto;
           if (documentoProyecto.Activo == "") {
@@ -124,7 +125,7 @@ export class CrudDocumentoProyectoComponent implements OnInit {
       showCancelButton: true,
     };
     Swal.fire(opt)
-      .then((willDelete) => {
+      .then((willDelete:any) => {
         if (willDelete.value) {
           this.info_doc_programa = <TipoDocumentoPrograma>documentoProyecto;
           if (documentoProyecto.Activo == "") {

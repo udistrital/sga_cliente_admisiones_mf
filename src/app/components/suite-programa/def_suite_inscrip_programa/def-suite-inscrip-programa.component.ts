@@ -262,6 +262,14 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
             if (Object.keys(response.Data[0]).length > 0) {
               this.nuevaSuite = false;
               this.tagsObject = JSON.parse(response.Data[0].ListaTags);
+              const tagsCompletos: any = {...TAGS_INSCRIPCION_PROGRAMA};
+
+              for (const key in tagsCompletos) {
+                if (!this.tagsObject.hasOwnProperty(key)) {
+                    this.tagsObject[key] = tagsCompletos[key];
+                }
+              }
+              
               this.respuestaTagsOriginal = response.Data[0];
               this.loading = false;
             } else {
@@ -320,13 +328,21 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
         this.tagsObject.perfil.selected = !this.tagsObject.perfil.selected;
         this.tagsObject.perfil.required = this.tagsObject.perfil.selected;
         break;
+      case 'examen_estado':
+        this.tagsObject.examen_estado.selected = !this.tagsObject.examen_estado.selected;
+        this.tagsObject.examen_estado.required = this.tagsObject.examen_estado.selected;
+        break;
+      case 'datos_acudiente':
+        this.tagsObject.datos_acudiente.selected = !this.tagsObject.datos_acudiente.selected;
+        this.tagsObject.datos_acudiente.required = this.tagsObject.datos_acudiente.selected;
+        break;
     
       default:
         break;
     }
   }
 
-  guardar() {
+  async guardar() {
     if (this.periodo && this.nivel && this.facultad && this.proyecto && this.tipoInscrip) {
       if (this.nuevaSuite) {
         let postData = {
@@ -336,61 +352,79 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
           PeriodoId: this.periodo,
           TipoInscripcionId: this.tipoInscrip,
         };
-        this.postTags(postData);
+        await this.postTags(postData);
       } else {
         let putData = {...this.respuestaTagsOriginal};
         putData.ListaTags = JSON.stringify(this.tagsObject);
-        this.putTags(putData);
+        await this.putTags(putData);
       }
     }
   }
 
-  postTags(dataJson:any) {
+  async postTags(dataJson:any) {
     this.popUpManager.showConfirmAlert(this.translate.instant('admision.guardar_suite_inscripción'), this.translate.instant('admision.definicion_suite_inscripcion_programa'))
-      .then((Accion) => {
+      .then(async (Accion) => {
         if (Accion.value) {
           this.loading = true;
-          this.evaluacionInscripcionService.post('tags_por_dependencia', dataJson)
-            .subscribe((response: any) => {
-              if (response != null && response.Status == '201') {
-                this.loading = false;
-                this.tagsObject = JSON.parse(response.Data.ListaTags);
-                this.popUpManager.showSuccessAlert(this.translate.instant('admision.guardado_existoso_suite'));
-              } else {
-                this.loading = false;
-                this.popUpManager.showErrorAlert(this.translate.instant('admision.fallo_guardado_suite'));
-              }
-            },
-            (error: HttpErrorResponse) => {
-              this.loading = false;
-              this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-            });
+          await this.crearTags(dataJson); 
         }
       })
   }
 
+  crearTags(dataJson: any) {
+    return new Promise((resolve, reject) => {
+      this.evaluacionInscripcionService.post('tags_por_dependencia', dataJson)
+        .subscribe((response: any) => {
+          if (response != null && response.Status == '201') {
+            this.loading = false;
+            this.tagsObject = JSON.parse(response.Data.ListaTags);
+            this.popUpManager.showSuccessAlert(this.translate.instant('admision.guardado_existoso_suite'));
+            resolve(response);
+          } else {
+            this.loading = false;
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.fallo_guardado_suite'));
+            reject(false);
+          }
+        },
+          (error: HttpErrorResponse) => {
+            this.loading = false;
+            this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+            reject(error);
+          });
+    });
+  }
+
   putTags(dataJson:any) {
     this.popUpManager.showConfirmAlert(this.translate.instant('admision.cambios_suite_inscripción'), this.translate.instant('admision.definicion_suite_inscripcion_programa'))
-      .then((Accion) => {
+      .then(async (Accion) => {
         if (Accion.value) {
           this.loading = true;
-          this.evaluacionInscripcionService.put('tags_por_dependencia', dataJson)
-            .subscribe((response: any) => {
-              if (response != null && response.Status == '200') {
-                this.loading = false;
-                this.tagsObject = JSON.parse(response.Data.ListaTags);
-                this.popUpManager.showSuccessAlert(this.translate.instant('admision.guardado_existoso_suite'));
-              } else {
-                this.loading = false;
-                this.popUpManager.showErrorAlert(this.translate.instant('admision.fallo_guardado_suite'));
-              }
-            },
-            (error: HttpErrorResponse) => {
-              this.loading = false;
-              this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-            });
+          await this.actualizarTags(dataJson);
         }
       })
+  }
+
+  actualizarTags(dataJson: any) {
+    return new Promise((resolve, reject) => {
+      this.evaluacionInscripcionService.put('tags_por_dependencia', dataJson)
+        .subscribe((response: any) => {
+          if (response != null && response.Status == '200') {
+            this.loading = false;
+            this.tagsObject = JSON.parse(response.Data.ListaTags);
+            this.popUpManager.showSuccessAlert(this.translate.instant('admision.guardado_existoso_suite'));
+            resolve(response);
+          } else {
+            this.loading = false;
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.fallo_guardado_suite'));
+            reject(false);
+          }
+        },
+          (error: HttpErrorResponse) => {
+            this.loading = false;
+            this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+            reject(error);
+          });
+    });
   }
 
 }

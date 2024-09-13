@@ -3,16 +3,14 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { FORM_SOLICITUD_TRANSFERENCIA, FORM_RESPUESTA_SOLICITUD } from '../../../models/transferencia/forms-transferencia';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UserService } from 'src/app/services/users.service';
  import * as moment from 'moment';
-import { TransferenciaInternaReintegro } from 'src/app/models/inscripcion/transferencia_reintegro';
 import { HttpErrorResponse } from '@angular/common/http';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 

@@ -4,7 +4,8 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { ZipManagerService } from 'src/utils/zip-manager.service';
@@ -84,8 +85,8 @@ export class ViewFormacionAcademicaComponent implements OnInit {
   loadData(): void {
     this.inscripcionesMidService.get('academico/formacion/?Id=' + this.persona_id)
       .subscribe((response:any) => {
-        if (response !== null && response.Response.Code === '200' && (Object.keys(response.Response.Body[0]).length > 0)) {
-          const data = <Array<any>>response.Response.Body[0];
+        if (response !== null && response.Status === 200 && (Object.keys(response.Data).length > 0)) {
+          const data = <Array<any>>response.Data;
           this.infoCarga.nCargas = data.length;
           const dataInfo = <Array<any>>[];
           data.forEach(element => {
@@ -98,7 +99,7 @@ export class ViewFormacionAcademicaComponent implements OnInit {
             if (Number(element.Documento) > 0) {
               this.documentoService.get('documento/'+element.Documento)
                 .subscribe((resp: any) => {
-                    if(resp.Status && (resp.Status == "400" || resp.Status == "404")) {
+                    if(resp.Status && (resp.Status == 400 || resp.Status == 404)) {
                       this.infoFalla();
                     } else {
                       //element.Documento = response[0]["Documento"]; 

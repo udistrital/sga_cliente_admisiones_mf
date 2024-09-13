@@ -31,7 +31,6 @@ export class CodificacionService {
 
   getAdmitidos(periodoId: number, proyectoId: number, periodoValor: string, codigoProyecto: string, nivel: string | undefined) {
     this.requestManager.setPath("SGA_ADMISIONES_MID");
-    console.log(nivel)
     return this.requestManager.get(
       `codificacion/admitidos/?id_periodo=${periodoId}&id_proyecto=${proyectoId}&valor_periodo=${periodoValor}&codigo_proyecto=${codigoProyecto}&nivel_academico=${nivel}`
     );

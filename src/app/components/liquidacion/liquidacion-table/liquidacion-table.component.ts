@@ -344,7 +344,7 @@ export class LiquidacionTableComponent implements OnInit{
       const response = await this.sgamidService.get('persona/consultar_persona/' + personaId).toPromise();
       return response;
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return []; 
     }
   }
@@ -354,7 +354,6 @@ export class LiquidacionTableComponent implements OnInit{
       //this.loading = true;
       this.inscripcionMidService.get('legalizacion/informacion-legalizacion/' + personaId)
         .subscribe((res: any) => {
-          console.log(res)
           resolve(res.Data);
         },
           (error: any) => {

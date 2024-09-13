@@ -83,7 +83,6 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
   cargarNiveles() {
     this.subscripcion.add(this.projectService.get('nivel_formacion?limit=0').subscribe(
       (response: any) => {
-        console.log(response)
         this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && (nivel.Id === 1 || nivel.Id === 2))
       },
       error => {
@@ -96,7 +95,6 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
 
   async generarBusqueda() {
     this.loading = true;
-    console.log(this.nivel)
     const res = await this.cargarProyectos();
     if (res) {
       this.cargarInformacionEnPanelesExpansivos()
@@ -107,7 +105,6 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
   cargarProyectos() {
     return new Promise((resolve, reject) => {
       this.subscripcion.add(this.admisionesMid.get("admision/aspirantes-de-proyectos-activos?id-nivel=" + this.nivel + "&id-periodo=" + this.periodo.Id + "&tipo-lista=3").subscribe((res: any) => {
-        console.log(res);
         if (res.Success && res.Data != null) {
           this.proyectosActivosConListaAspirantes = res.Data;
           resolve(true)
@@ -165,7 +162,6 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
 
   calcularRecuentosInscripciones(): void {
     let proyectos: any[] = this.proyectosActivosConListaAspirantes;
-    console.log(proyectos)
     proyectos.forEach((proyecto: any) => {
       let aspirantes = proyecto.Aspirantes;
 
@@ -188,7 +184,6 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
 
   cargarCuposParaProyectos() {
     if (this.proyectosActivosConListaAspirantes != null) {
-      console.log(this.proyectosActivosConListaAspirantes)
       this.proyectosActivosConListaAspirantes.forEach((proyecto: any) => {
         this.cargarCantidadCupos(proyecto);
       });
@@ -202,7 +197,6 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
     // this.subscripcion.add(this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
       this.subscripcion.add(this.inscripcionService.get('cupo_inscripcion/?query=ProgramaAcademicoId :' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
       (response: any) => {
-        console.log(response)
         if (response !== null && response !== undefined && response[0].Id !== undefined) {
           proyecto.cuposProyecto = response[0].CuposHabilitados;
         } else {

@@ -121,7 +121,7 @@ export class ImplicitAutenticationService {
                     this.clearUrl();
                     localStorage.setItem('user', btoa(JSON.stringify({ ...{ user: payload }, ...{ userService: res } })));
                     this.userSubject.next({ ...{ user: payload }, ...{ userService: res } });
-                }, (error) => (console.log(error))
+                }, (error) => (console.error(error))
                 );
             this.httpOptions = {
                 headers: new HttpHeaders({
@@ -282,7 +282,7 @@ export class ImplicitAutenticationService {
             } else {
                 const timerDelay = expiresIn > this.timeLogoutBefore ? expiresIn - this.timeLogoutBefore : this.timeLogoutBefore;
                 if (!isNaN(expiresIn)) {
-                    console.log(`%cFecha expiración: %c${new Date(expires)}`, 'color: blue', 'color: green');
+                    console.info(`%cFecha expiración: %c${new Date(expires)}`, 'color: blue', 'color: green');
                     of(null).pipe(delay(timerDelay - this.timeLogoutBefore)).subscribe((data) => {
                         this.logout('logout-auto');
                     });

@@ -67,6 +67,11 @@ export class ListadoAdmitidosComponent {
   selectcriterio: boolean = true;
   proyectosPregrado!: any[];
 
+  tipoCupos: any = [];
+  tipoCupo!: any;
+  mostrarSelectorCupos= true
+  tipoCupoControl = new FormControl('', [Validators.required]);
+
   constructor(
 
     private popUpManager: PopUpManager,
@@ -98,6 +103,18 @@ export class ListadoAdmitidosComponent {
             this.periodos = res.Data;
             window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
             resolve(this.periodo);
+            console.log(this.periodo)
+            this.cargarTipoCuposPorPeriodo(this.periodo.Id).then((tipoCupos) => {
+              setTimeout(() => {
+                  this.tipoCupos = tipoCupos;
+
+                  if (Object.keys(this.tipoCupos[0]).length === 0) {
+                      this.mostrarSelectorCupos = false
+                  }
+              }, 0);
+            }).catch((error) => {
+                console.error("Error al cargar los cupos", error);
+            });
           } else {
             this.loading = false;
             reject(false);
@@ -187,7 +204,6 @@ export class ListadoAdmitidosComponent {
     this.viewCurriculares = false;
     this.viewAspirantesTables = false;
     const proyectoAcademicoIds = new Set(data.ProyectosAcademicos.map((item: any) => item.ProyectoAcademicoId));
-    console.log(proyectoAcademicoIds, this.proyectosPregrado)
     // Estos son los proyectos de la facultad
     const proyectosFiltrados = this.proyectosPregrado.filter(item => proyectoAcademicoIds.has(item.Id));
     if (proyectosFiltrados) {
@@ -276,6 +292,23 @@ export class ListadoAdmitidosComponent {
     } else {
       this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
     }
+  }
+
+  cargarTipoCuposPorPeriodo(idPeriodo: any) {
+    // idPeriodo = 39
+    return new Promise((resolve, reject) => {
+      // this.parametrosService.get(`parametro_periodo?limit=0&query=ParametroId.TipoParametroId.CodigoAbreviacion:T,PeriodoId.Id:${idPeriodo}`)
+      this.parametrosService.get(`parametro_periodo?limit=0&query=ParametroId.TipoParametroId.CodigoAbreviacion:TIP_CUP,PeriodoId.Id:${idPeriodo}`)
+        .subscribe((res: any) => {
+          resolve(res.Data)
+        },
+          (error: any) => {
+            console.error(error);
+            this.loading = false;
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
+            reject(false);
+          });
+    });
   }
 
   descargarListadoOficializados(estadoFormacion: number) {

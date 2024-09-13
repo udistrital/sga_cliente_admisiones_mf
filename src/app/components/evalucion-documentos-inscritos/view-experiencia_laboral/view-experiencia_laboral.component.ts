@@ -3,7 +3,8 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
@@ -89,8 +90,8 @@ export class ViewExperienciaLaboralComponent implements OnInit {
       (response: any) => {
         const soportes = [];
         let soportes1 = "";
-        if (response.Data.Code === '200') {
-          this.data = <Array<any>>response.Data.Body[1];
+        if (response.Status === 200 && response.Success === true) {
+          this.data = <Array<any>>response.Data;
           this.infoCarga.nCargas = this.data.length;
           this.info_experiencia_laboral = this.data;
           for (let i = 0; i < this.info_experiencia_laboral.length; i++) {

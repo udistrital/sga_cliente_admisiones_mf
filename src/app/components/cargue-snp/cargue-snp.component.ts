@@ -140,7 +140,6 @@ export class CargueSnpComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -155,7 +154,6 @@ export class CargueSnpComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.periodo_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -257,7 +255,6 @@ export class CargueSnpComponent {
           (error: any) => {
             this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -272,7 +269,6 @@ export class CargueSnpComponent {
           (error: any) => {
             this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -286,7 +282,6 @@ export class CargueSnpComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -301,7 +296,6 @@ export class CargueSnpComponent {
           (error: any) => {
             this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.tercero_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -331,7 +325,6 @@ export class CargueSnpComponent {
           (error: any) => {
             this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.detalle_evaluacion_error'));
-            console.log("ERROR:", error);
             reject([]);
           });
     });
@@ -412,7 +405,6 @@ export class CargueSnpComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.creacion_detalle_evaluacion_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -429,7 +421,6 @@ export class CargueSnpComponent {
               resolve([])
             } else {
               this.popUpManager.showErrorAlert(this.translate.instant("admision.detalle_evaluacion_error"));
-              console.log(error);
               reject([]);
             }
             this.loading = false;

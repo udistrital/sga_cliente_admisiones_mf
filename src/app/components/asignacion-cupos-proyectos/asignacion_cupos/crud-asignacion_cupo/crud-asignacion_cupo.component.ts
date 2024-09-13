@@ -15,9 +15,9 @@ import { __awaiter } from 'tslib';
 
 
 @Component({
-  selector: 'crud-asignacion-cupo',
-  templateUrl: './crud-asignacion_cupo.component.html',
-  styleUrls: ['./crud-asignacion_cupo.component.scss'],
+  selector: "crud-asignacion-cupo",
+  templateUrl: "./crud-asignacion_cupo.component.html",
+  styleUrls: ["./crud-asignacion_cupo.component.scss"],
 })
 export class CrudAsignacionCupoComponent implements OnInit {
 
@@ -58,7 +58,7 @@ export class CrudAsignacionCupoComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
       },
       (error) => {
-        console.error('Error al obtener los cupos:', error);
+        console.error("Error al obtener los cupos:", error);
       }
     );
   }
@@ -118,7 +118,6 @@ export class CrudAsignacionCupoComponent implements OnInit {
 
 
   EliminarCupo(cupo: any) {
-    console.log(cupo)
     const data = {
       Activo: !cupo.Activo,
       CupoId: cupo.CupoId,
@@ -166,9 +165,7 @@ export class CrudAsignacionCupoComponent implements OnInit {
         })
       }
       this.newNuxeoService.uploadFiles(file).subscribe((response: any) => {
-        console.log(response)
         if (response[0].Status == "200") {
-          console.log(response[0].res.Enlace)
           //element.Enlace = response[0].res.Enlace
           this.dataSource.data[index].Enlace = response[0].res.Enlace
         }
@@ -196,13 +193,11 @@ export class CrudAsignacionCupoComponent implements OnInit {
     });
     if (Validar) {
       await this.guardarDocumento();
-      console.log(this.dataSource.data)
       setTimeout(() => {
         this.inscripcionMidService.post('cupos', this.dataSource.data).subscribe(
           (response: any) => {
             if (response.Status == 200) {
               alert("Guardado con exito");
-              console.log(response);
               this.dataSource.data = [];
               this.obtenerCupos();
             }

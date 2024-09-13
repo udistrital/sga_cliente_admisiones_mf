@@ -139,6 +139,8 @@ export class ListadosOficializadosComponent implements OnInit, AfterViewInit {
     this.cambiotab = event.tabTitle !== this.translate.instant('GLOBAL.lista');
   }
 
+  
+
   onChange(event: any) {
     if (event) {
       this.cambiotab = !this.cambiotab;
