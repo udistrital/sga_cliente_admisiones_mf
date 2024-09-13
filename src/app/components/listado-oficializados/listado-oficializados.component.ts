@@ -70,6 +70,11 @@ export class ListadoOficializadosComponent {
 
   loading!: boolean;
 
+  tipoCupos: any = [];
+  tipoCupo!: any;
+  mostrarSelectorCupos= true
+  tipoCupoControl = new FormControl('', [Validators.required]);
+
   constructor(
     private eventoService: EventoService,
     private parametrosService: ParametrosService,
@@ -105,6 +110,18 @@ export class ListadoOficializadosComponent {
             });
             
             this.periodo = localStorage.getItem('IdPeriodo')
+
+            this.cargarTipoCuposPorPeriodo(this.periodo).then((tipoCupos) => {
+              setTimeout(() => {
+                  this.tipoCupos = tipoCupos;
+
+                  if (Object.keys(this.tipoCupos[0]).length === 0) {
+                      this.mostrarSelectorCupos = false
+                  }
+              }, 0);
+            }).catch((error) => {
+                console.error("Error al cargar los cupos", error);
+            });
           }
         },
           (error: HttpErrorResponse) => {
@@ -153,7 +170,7 @@ export class ListadoOficializadosComponent {
         const res: any = await this.consultarCalendarioAcademico(evento.Id);
         const data = res.Data[0].proceso
         for (const item of data) {
-          if (item.Proceso == "Proceso admitidos" || item.Proceso == "Proceso opcionados") {
+          // if (item.Proceso == "Proceso admitidos" || item.Proceso == "Proceso opcionados") {
             actividades = actividades.concat(item.Actividades);
             item.Actividades.forEach((actividad: any) => {
               const fechaInicio = new Date(actividad.FechaInicio);
@@ -162,7 +179,7 @@ export class ListadoOficializadosComponent {
                 this.cicloActual = actividad.Descripcion
               }
             });
-          }
+          // }
         }
 
         if (actividades.length > 0) {
@@ -232,10 +249,10 @@ export class ListadoOficializadosComponent {
     for (const facultad of facultades) {
       const proyectos = facultad.Opciones
       for (const proyecto of proyectos) {
-        const inscripcionesMatriculadas: any = await this.recuperarInscripciones(11, this.periodo, proyecto.Id)
-        if (Object.keys(inscripcionesMatriculadas[0]).length != 0) {
+        const inscripcionesMatriculadas: any = await this.recuperarInscripciones(11, this.periodo, proyecto.Id, this.tipoCupo)
+        // if (Object.keys(inscripcionesMatriculadas[0]).length != 0) {
           for (const inscripcion of inscripcionesMatriculadas) {
-            const persona: any = await this.consultarTercero(inscripcion.PersonaId)
+            const persona: any = await this.consultarTercero(59846)
             const itemBody = {
               facultad: facultad.Nombre,
               proyecto: proyecto.Nombre,
@@ -250,9 +267,9 @@ export class ListadoOficializadosComponent {
             }
             aspirantesOficializados.push(itemBody)
           }
-        }
+        // }
 
-        const inscripcionesNoOficializadas: any = await this.recuperarInscripciones(12, this.periodo, proyecto.Id)
+        const inscripcionesNoOficializadas: any = await this.recuperarInscripciones(12, this.periodo, proyecto.Id, this.tipoCupo)
         if (Object.keys(inscripcionesNoOficializadas[0]).length != 0) {
           for (const inscripcion of inscripcionesNoOficializadas) {
             const persona: any = await this.consultarTercero(inscripcion.PersonaId)
@@ -310,19 +327,52 @@ export class ListadoOficializadosComponent {
     });
   }
 
-  recuperarInscripciones(idEstadoFormacion: any, periodo: any, programa: any) {
+  cargarTipoCuposPorPeriodo(idPeriodo: any) {
+    // idPeriodo = 39
     return new Promise((resolve, reject) => {
-      this.inscripcionService.get(`inscripcion?query=Activo:true,EstadoInscripcionId.Id:${idEstadoFormacion},PeriodoId:${periodo},ProgramaAcademicoId:${programa}&sortby=Id&order=asc&limit=0`)
+      // this.parametrosService.get(`parametro_periodo?limit=0&query=ParametroId.TipoParametroId.CodigoAbreviacion:T,PeriodoId.Id:${idPeriodo}`)
+      this.parametrosService.get(`parametro_periodo?limit=0&query=ParametroId.TipoParametroId.CodigoAbreviacion:TIP_CUP,PeriodoId.Id:${idPeriodo}`)
         .subscribe((res: any) => {
-          resolve(res)
+          resolve(res.Data)
         },
           (error: any) => {
             console.error(error);
             this.loading = false;
-            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
             reject(false);
           });
     });
+  }
+
+  recuperarInscripciones(idEstadoFormacion: any, periodo: any, programa: any, tipoCupo: any) {
+    if(tipoCupo === undefined){
+      return new Promise((resolve, reject) => {
+        this.inscripcionService.get(`inscripcion?query=Activo:true,EstadoInscripcionId.Id:${idEstadoFormacion},PeriodoId:${periodo},ProgramaAcademicoId:${programa}&sortby=Id&order=asc&limit=0`)
+          .subscribe((res: any) => {
+            resolve(res)
+          },
+            (error: any) => {
+              console.error(error);
+              this.loading = false;
+              this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+              reject(false);
+            });
+      });
+
+    } else {
+      return new Promise((resolve, reject) => {
+        this.inscripcionService.get(`inscripcion?query=Activo:true,EstadoInscripcionId.Id:${idEstadoFormacion},PeriodoId:${periodo},ProgramaAcademicoId:${programa},TipoCupo:${tipoCupo}&sortby=Id&order=asc&limit=0`)
+          .subscribe((res: any) => {
+            resolve(res)
+          },
+            (error: any) => {
+              console.error(error);
+              this.loading = false;
+              this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+              reject(false);
+            });
+      });
+    }
   }
 
   consultarTercero(personaId: any) {
