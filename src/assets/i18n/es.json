@@ -622,7 +622,8 @@
         "tipo_inscripcion": "Seleccione el tipo de inscripción",
         "filtro": "Filtro",
         "especial": "Especial",
-        "legalizacion": "Legalización"
+        "legalizacion": "Legalización",
+        "cargado": "Cargado"
     },
     "ERROR": {
         "general": "La solicitud no pudo ser cumplida",

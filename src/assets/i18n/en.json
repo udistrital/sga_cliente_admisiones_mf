@@ -592,7 +592,8 @@
         "evaluar": "Evaluate",
         "especial": "Special",
         "filtro": "Filter",
-        "legalizacion": "Legalization"
+        "legalizacion": "Legalization",
+        "cargado": "Loaded"
     },
     "ERROR": {
         "general": "The request could not be satisfied",
