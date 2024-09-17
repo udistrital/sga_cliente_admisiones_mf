@@ -18,6 +18,7 @@ import {
   Validators,
   FormBuilder,
   FormGroup,
+  FormArray,
 } from "@angular/forms";
 import { PopUpManager } from "../../../managers/popUpManager";
 import { CheckboxAssistanceComponent } from "./checkbox-assistance/checkbox-assistance.component";
@@ -74,20 +75,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
   SelectedTipoBool: boolean = true;
   info_inscripcion: any;
 
-  percentage_info: number = 0;
-  percentage_acad: number = 0;
-  percentage_expe: number = 0;
-  percentage_proy: number = 0;
-  percentage_prod: number = 0;
-  percentage_desc: number = 0;
-  percentage_docu: number = 0;
-  percentage_total: number = 0;
-
-  total: boolean = false;
-
-  percentage_tab_info = [];
-  percentage_tab_expe = [];
-  percentage_tab_acad = [];
   proyectos: any;
   criterios: any;
   periodos: any = [];
@@ -120,13 +107,10 @@ export class EvaluacionAspirantesComponent implements OnInit {
   nivel_load: any;
   selectednivel: any;
   tipo_criterio!: TipoCriterio;
-  dataSourceColumn: any = [];
-  nameColumns: string[] = [];
-  dataSource!: MatTableDataSource<any>;
   datavalor: any = [];
   datasourceButtonsTable: boolean = false;
   settings: any;
-  columnas: any;
+
   widhtColumns: any;
   criterio = [];
   cantidad_aspirantes: number = 0;
@@ -140,9 +124,17 @@ export class EvaluacionAspirantesComponent implements OnInit {
   Campo1Control = new FormControl("", [Validators.required]);
   Campo2Control = new FormControl("", [Validators.required]);
 
+  dataSourceTable = new MatTableDataSource<any>([]);
+  columnsTable: [] | any = [];
+  titlesTable: [] | any = [];
+  columns: [] | any = [];
+
   formGroupTable!: FormGroup;
   tableReady = false;
-  
+  dataColumsTable: {} | any = {};
+
+  criterioEnEdicion: {} | any = {};
+
   constructor(
     private translate: TranslateService,
     private userService: UserService,
@@ -156,9 +148,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private formBuilder: FormBuilder,
     private autenticationService: ImplicitAutenticationService
   ) {
+    this.dataSourceTable = new MatTableDataSource<any>([]);
     this.translate = translate;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
-    this.total = true;
     this.save = true;
     this.notas = false;
     this.showTab = true;
@@ -222,10 +214,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
           }
         );
     });
-  }
-
-  buttonedit(row: any): void {
-    row.mostrarBotones = !row.mostrarBotones;
   }
 
   selectPeriodo() {
@@ -301,11 +289,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
       .get(`calendario-proyecto/${idProyecto}`)
       .subscribe(
         (response: any) => {
-          console.log("RESPONDE", response);
           const CalendarioId = response.Data.CalendarioId;
           this.eventosService.get(`calendario/${CalendarioId}`).subscribe(
             (response2: any) => {
-              console.log("RESPONDE2", response2);
               if (
                 response2.MultiplePeriodoId !== null &&
                 response2.MultiplePeriodoId !== ""
@@ -422,13 +408,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   loadCriterios() {
-    console.log(
-      "URL -->",
-      "requisito_programa_academico?query=ProgramaAcademicoId:" +
-        this.proyectos_selected +
-        ",PeriodoId:" +
-        this.periodo.Id
-    );
     this.evaluacionService
       .get(
         "requisito_programa_academico?query=ProgramaAcademicoId:" +
@@ -438,12 +417,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
       )
       .subscribe(
         (response: any) => {
-          console.log("CRITERIOS", response);
           if (response[0].Id !== undefined && response[0] !== "{}") {
             this.criterios = <any>response;
             this.criterios = this.criterios.filter(
               (e: any) => e.PorcentajeGeneral !== 0
             );
+            console.log(this.criterios);
 
             this.btnCalculo = false;
             this.selectcriterio = false;
@@ -479,137 +458,201 @@ export class EvaluacionAspirantesComponent implements OnInit {
       );
   }
 
-  //AQUI VOY 1
   async createTable() {
+    await this.loadAspirantes().catch((e) => (this.loading = false));
     const IdCriterio = sessionStorage.getItem("tipo_criterio");
-    const data: any = await this.loadColumn(IdCriterio);
+    this.dataColumsTable = await this.loadColumn(IdCriterio);
 
-    const keys = Object.keys(data!);
-    const titles = keys.map((key) => data[key].title);
-    const width = keys.map((key) => data[key].width);
+    this.titlesTable = Object.keys(this.dataColumsTable!); // [columna1, columna2, ...]
+    const titles = this.titlesTable.map(
+      (key: string) => this.dataColumsTable[key].title
+    ); // [columna1 (40%), columna2 (39%), ...]
+    const width = this.titlesTable.map(
+      (key: string) => this.dataColumsTable[key].width
+    );
 
-    this.columnas = titles;
+    this.columnsTable = titles;
     this.widhtColumns = width;
 
-    // Crear controles dinámicos para columnas editables
-    keys.forEach((key) => {
-      if (data[key].editable) {
-        // Añadir un control con el nombre de la columna
-        this.formGroupTable.addControl(key, new FormControl(""));
-        console.log(`FormControl ${key} creado`);
-      }
+    // Crear FormArray para las filas
+    const formArray = this.formBuilder.array([]); // FormArray para contener FormGroups
+
+    // Crear un FormGroup dinámico para cada fila basada en las columnas
+    this.dataSourceTable.data.forEach((rowData: any) => {
+      const rowGroup = this.formBuilder.group({}); // Crear un FormGroup para cada fila
+
+      this.titlesTable.forEach((key: string) => {
+        if (this.dataColumsTable[key].editable) {
+          // console.log("AGREGANDO CONTROL A ", key);
+          // Agregar controles dinámicos al FormGroup basado en las columnas
+          switch (key) {
+            case "Asistencia":
+              rowGroup.addControl(
+                key,
+                new FormControl(rowData[key] || false, Validators.required)
+              );
+              break;
+            default:
+              rowGroup.addControl(
+                key,
+                new FormControl(rowData[key] || 0, [
+                  Validators.required,
+                  Validators.min(0),
+                  Validators.max(100),
+                ])
+              );
+              break;
+          }
+        }
+      });
+
+      this.columns = this.titlesTable.map((key: string) => {
+        return {
+          key: key,
+          title: this.dataColumsTable[key].title,
+        };
+      });
+
+      // Agregar la columna 'acciones'
+      this.columns.push({
+        key: "acciones",
+        title: "acciones",
+      });
+
+      // Añadir cada FormGroup al FormArray
+      formArray.push(rowGroup as any); // Aquí debe asegurarse que `rowGroup` es un `FormGroup`
     });
 
-    console.log("FormGroup:", this.formGroupTable);
+    // Asignar el FormArray al FormGroup general
+    this.formGroupTable.setControl("rows", formArray);
 
-    // Ahora puedes configurar `dataSource` y columnas
-    this.dataSourceColumn = titles;
-    this.dataSourceColumn.push("acciones");
+    // Agregar columna de acciones
+    this.columnsTable.push("acciones");
+
+    // Establecer el paginador y el ordenamiento
+    setTimeout(() => {
+      this.dataSourceTable.paginator = this.paginator;
+      this.dataSourceTable.sort = this.sort;
+    }, 300);
   }
 
   useLanguage(language: string) {
     this.translate.use(language);
   }
 
-  onEditConfirm(event: any) {
-    console.log(this.formGroupTable.value);
-    console.log(event.newData);
-    // this.guardarEvaluacion(event.newData);
+  get rows(): FormArray {
+    return this.formGroupTable.get("rows") as FormArray;
+  }
+
+  onEditConfirm(rowIndex: number, row: any): void {
+    if (row.tieneEvaluacion) {
+      this.popUpManager
+        .showConfirmAlert(
+          "info",
+          this.translate.instant("admision.no_editar_evaluacion")
+        )
+        .then((confirmacion) => {
+          if (!confirmacion.isConfirmed) {
+            return;
+          }
+        });
+    }
+    const rowFormGroup = this.rows.at(rowIndex) as FormGroup;
+    if (rowFormGroup.invalid) {
+      const mensajeAlerta = `Por favor, complete los campos requeridos en la fila ${
+        rowIndex + 1
+      }
+      antes de guardar los cambios.
+      Recuerde que los campos de porcentaje deben ser números entre 0 y 100.`;
+      this.popUpManager.showAlert("error", mensajeAlerta);
+      return;
+    }
+    const rowValues = rowFormGroup.value;
+    console.log("rowValues", rowValues);
+    console.log("row", row);
+
+    // Crear el objeto de datos para el aspirante
+    const aspiranteData: any = {
+      Aspirantes: row.Aspirantes,
+      Id: row.Id,
+      Asistencia: rowValues.Asistencia,
+      subcriterios: [],
+    };
+
+    Object.keys(rowValues).forEach((key) => {
+      const columnDef = this.dataColumsTable[key];
+      const value = rowValues[key];
+      console.log("key", key);
+      if (columnDef) {
+        if (key === "Asistencia") {
+          aspiranteData.Asistencia = value === "true" || value === true;
+        } else if (key === "Aspirantes") {
+          // No es necesario asignar, ya lo tenemos en row.Aspirantes
+        } else if (key === "acciones") {
+          // No hacemos nada
+        } else if (key === "Puntuacion") {
+          aspiranteData.puntaje =
+            typeof value === "number" ? String(value) : value;
+        } else {
+          // Es un subcriterio
+          const criterioId = columnDef.criterioId || null;
+          aspiranteData.subcriterios.push({
+            titulo: key,
+            puntaje: typeof value === "number" ? String(value) : value,
+            criterioId: criterioId,
+          });
+        }
+      }
+    });
+
+    // Preparar el objeto Evaluacion para enviar al backend
+    const Evaluacion: any = {
+      Aspirantes: [aspiranteData],
+      PeriodoId: this.periodo.Id,
+      ProgramaId: this.proyectos_selected,
+      CriterioId: sessionStorage.getItem("tipo_criterio"),
+    };
+
+    console.log("GUARDAR", Evaluacion);
+
+    // Llamar a guardarEvaluacion con el objeto Evaluacion
+    this.guardarEvaluacion(Evaluacion);
   }
 
   devolverdatasourceButtonsTable() {
     this.datasourceButtonsTable = !this.datasourceButtonsTable;
   }
 
-  async guardarEvaluacion(datos: any) {
+  async guardarEvaluacion(Evaluacion: any) {
     return new Promise((resolve, reject) => {
-      const Evaluacion: any = {};
-      // Evaluacion.Aspirantes = this.Aspirantes;
-      // await this.dataSource.getElements().then(datos => Evaluacion.Aspirantes = datos)
-      // Evaluacion.Aspirantes = this.dataSource.data;
-      Evaluacion.Aspirantes = [datos];
-      Evaluacion.PeriodoId = this.periodo.Id;
-      Evaluacion.ProgramaId = this.proyectos_selected;
-      Evaluacion.CriterioId = sessionStorage.getItem("tipo_criterio");
-      const aux = Evaluacion.Aspirantes;
-      // Bandera para campos vacios
-      let vacio = false;
-      // Bandera para solo numeros/rango 0-100
-      let numero = false;
-      const regex = /^[0-9]*$/;
-      for (let i = 0; i < aux.length; i++) {
-        if (
-          aux[i]["Asistencia"] === "s" ||
-          aux[i]["Asistencia"] === "si" ||
-          aux[i]["Asistencia"] === "sí" ||
-          aux[i]["Asistencia"] === "S" ||
-          aux[i]["Asistencia"] === "SI" ||
-          aux[i]["Asistencia"] === "SÍ" ||
-          aux[i]["Asistencia"] === "true" ||
-          aux[i]["Asistencia"] === "True" ||
-          aux[i]["Asistencia"] === "TRUE"
-        ) {
-          aux[i]["Asistencia"] = true;
-        } else {
-          aux[i]["Asistencia"] = "";
-        }
-        for (let j = 0; j < this.columnas.length; j++) {
-          if (
-            aux[i][this.columnas[j]] === undefined ||
-            aux[i][this.columnas[j]] === ""
-          ) {
-            vacio = true;
-            break;
-          } else {
-            if (regex.test(aux[i][this.columnas[j]]) === true) {
-              const auxNumero = parseInt(aux[i][this.columnas[j]], 10);
-              if (auxNumero >= 0 && auxNumero <= 100) {
-              } else {
-                numero = true;
-                break;
+      // Puedes eliminar las validaciones adicionales si ya las haces en el formulario
+      this.sgaMidAdmisiones.post("admision/evaluacion", Evaluacion).subscribe(
+        (response: any) => {
+          if (response.Status === 200) {
+            this.criterio_selected.forEach((criterio) => {
+              if (criterio.Id === Evaluacion.CriterioId) {
+                criterio["evaluado"] = true;
               }
-            } else {
-              numero = false;
-              break;
-            }
-          }
-        }
-      }
-
-      // Validaciones
-      if (vacio === true) {
-        this.popUpManager.showToast(this.translate.instant("admision.vacio"));
-      } else if (numero === true) {
-        this.popUpManager.showToast(this.translate.instant("admision.numero"));
-      } else {
-        this.sgaMidAdmisiones.post("admision/evaluacion", Evaluacion).subscribe(
-          (response: any) => {
-            if (response.status === 200) {
-              this.criterio_selected.forEach((criterio) => {
-                if (criterio.Id === Evaluacion.CriterioId) {
-                  criterio["evaluado"] = true;
-                }
-              });
-              this.loadInfo(parseInt(Evaluacion.CriterioId, 10));
-              resolve("");
-              this.popUpManager.showToast(
-                this.translate.instant("admision.registro_exito")
-              );
-            } else {
-              reject();
-              this.popUpManager.showErrorToast(
-                this.translate.instant("admision.registro_error")
-              );
-            }
-          },
-          (error) => {
+            });
+            this.loadInfo(parseInt(Evaluacion.CriterioId, 10));
+            resolve("");
+            this.popUpManager.showToast(
+              this.translate.instant("admision.registro_exito")
+            );
+          } else {
             reject();
             this.popUpManager.showErrorToast(
-              this.translate.instant("admision.error_cargar")
+              this.translate.instant("admision.registro_error")
             );
           }
-        );
-      }
+        },
+        (error) => {
+          reject();
+          this.popUpManager.showErrorToast(
+            this.translate.instant("admision.error_cargar")
+          );
+        }
+      );
     });
   }
 
@@ -620,29 +663,30 @@ export class EvaluacionAspirantesComponent implements OnInit {
     Evaluacion.IdPrograma = this.proyectos_selected;
     this.ngOnChanges();
     await this.loadAspirantes();
-    await this.loadInfo(this.criterios[0].RequisitoId.Id);
     for (let i = 0; i < this.Aspirantes.length; i++) {
       Evaluacion.IdPersona[i] = { Id: this.Aspirantes[i].Id };
     }
+    
+    console.log("Evaluacion", Evaluacion);
 
-    this.sgaMidAdmisiones.put("admision/calcular_nota", Evaluacion).subscribe(
-      (response: any) => {
-        if (response.status === 200) {
-          this.popUpManager.showSuccessAlert(
-            this.translate.instant("admision.calculo_exito")
-          );
-        } else {
-          this.popUpManager.showErrorToast(
-            this.translate.instant("admision.calculo_error")
-          );
-        }
-      },
-      (error) => {
-        this.popUpManager.showErrorToast(
-          this.translate.instant("admision.error_cargar")
-        );
-      }
-    );
+    // this.sgaMidAdmisiones.put("admision/calcular_nota", Evaluacion).subscribe(
+    //   (response: any) => {
+    //     if (response.status === 200) {
+    //       this.popUpManager.showSuccessAlert(
+    //         this.translate.instant("admision.calculo_exito")
+    //       );
+    //     } else {
+    //       this.popUpManager.showErrorToast(
+    //         this.translate.instant("admision.calculo_error")
+    //       );
+    //     }
+    //   },
+    //   (error) => {
+    //     this.popUpManager.showErrorToast(
+    //       this.translate.instant("admision.error_cargar")
+    //     );
+    //   }
+    // );
   }
 
   verificarEvaluacion() {
@@ -660,7 +704,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   async perfil_editar(event: any) {
     this.tableReady = false;
-    console.log("perfil_editar", event);
     this.loading = true;
     this.save = true;
     this.tipo_criterio = new TipoCriterio();
@@ -677,21 +720,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
     await this.ngOnChanges();
     await this.createTable();
     this.showTab = false;
-    await this.loadAspirantes().catch((e) => (this.loading = false));
     await this.loadInfo(event.Id);
     this.loading = false;
     this.tableReady = true;
   }
 
   async loadAspirantes() {
-    console.log(
-      "URL -->",
-      "admision/aspirantespor?id_periodo=" +
-        this.periodo.Id +
-        "&id_proyecto=" +
-        this.proyectos_selected +
-        "&tipo_lista=2"
-    );
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones
         .get(
@@ -703,7 +737,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
         )
         .subscribe(
           (response: any) => {
-            console.log("ASPIRANTES", response);
             if (response.Success == true && response.Status == 200) {
               this.Aspirantes = response.Data;
               this.cantidad_aspirantes = this.Aspirantes.length;
@@ -718,11 +751,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
               });
 
               setTimeout(() => {
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
+                this.dataSourceTable.paginator = this.paginator;
+                this.dataSourceTable.sort = this.sort;
               }, 300);
 
-              this.dataSource = new MatTableDataSource(this.Aspirantes);
+              this.dataSourceTable.data = this.Aspirantes;
 
               resolve(this.Aspirantes);
             }
@@ -740,21 +773,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
     });
   }
 
-  //Para terminar de revisar ma;ana
-  // (response: any) => {
-  //   if (response.success == true && response.status == 200) {
-  //     this.Aspirantes = response.data;
-  //     this.cantidad_aspirantes = this.Aspirantes.length;
-
-  //     // Agrega claves con el nombre de las columnas a cada aspirante
-  //     this.Aspirantes.forEach((aspirante: any) => {
-  //       this.nameColumns.forEach((columna: any) => {
-  //         if (!aspirante.hasOwnProperty(columna)) {
-  //           aspirante[columna] = "" ;
-  //         }
-  //       });
-  //     });
-
   async loadInfo(IdCriterio: number) {
     this.datavalor = [];
     return new Promise((resolve, reject) => {
@@ -769,72 +787,65 @@ export class EvaluacionAspirantesComponent implements OnInit {
         )
         .subscribe(
           async (response: any) => {
-            console.log("INFO", response);
             if (response.Status === 200) {
-              const data = <Array<any>>response.Data.areas;
-              if (data !== undefined) {
-                await data.forEach(async (asistente) => {
-                  if (asistente["Asistencia"] === "") {
-                    asistente["Asistencia"] = false;
-                  }
-                  this.Aspirantes.forEach((aspirante: any) => {
-                    if (asistente.Aspirantes === aspirante.Aspirantes) {
-                      for (const columna in asistente) {
-                        aspirante[columna] = asistente[columna];
+              const data = <Array<any>>response.Data;
+              console.log("data", data);
+              if (data !== null) {
+                // Inicializar la propiedad tieneEvaluacion para cada aspirante
+                this.Aspirantes.forEach((aspirante: any) => {
+                  aspirante.tieneEvaluacion = false;
+                });
+
+                // Iterar sobre cada evaluación
+                data.forEach((evaluacionData) => {
+                  console.log("aspirantes", this.Aspirantes);
+                  // Encontrar el índice del aspirante en this.Aspirantes
+                  const aspirantIndex = this.Aspirantes.findIndex(
+                    (aspirante: any) =>
+                      aspirante.Id === evaluacionData.tercero_id
+                  );
+                  if (aspirantIndex !== -1) {
+                    // Obtener el FormGroup correspondiente a la fila
+                    const rowFormGroup = this.rows.at(
+                      aspirantIndex
+                    ) as FormGroup;
+
+                    // Establecer Asistencia
+                    if (rowFormGroup.contains("Asistencia")) {
+                      rowFormGroup
+                        .get("Asistencia")
+                        ?.setValue(evaluacionData.asistencia);
+                    }
+
+                    // Establecer valores de evaluación
+                    evaluacionData.evaluacion.forEach((evalItem: any) => {
+                      const titulo = evalItem.Titulo;
+                      const puntaje = evalItem.Puntaje;
+
+                      // Verificar si el FormControl existe y establecer el valor
+                      if (rowFormGroup.contains(titulo)) {
+                        rowFormGroup.get(titulo)?.setValue(puntaje);
                       }
-                    }
-                  });
-                  //  [this, this.dataSource.load(this.Aspirantes)]
-                  const valor = Object.keys(this.Aspirantes[0]);
-                  const arreglo = valor.filter((elemento) => elemento !== "Id");
-                  this.datavalor = arreglo;
-                  this.dataSource = new MatTableDataSource(this.Aspirantes);
+                    });
+
+                    // Marcar que el aspirante tiene evaluación
+                    this.Aspirantes[aspirantIndex].tieneEvaluacion = true;
+                  }
                 });
 
-                this.Aspirantes.forEach((item: any) => {
-                  this.datavalor.forEach((column: any) => {
-                    if (!item.hasOwnProperty(column)) {
-                      item[column] = "";
-                    }
-                  });
-                });
-
-                const tieneAsistencia = this.columnas.some(
-                  (item: any) => item === "Asistencia"
-                );
-                if (tieneAsistencia) {
-                } else {
-                  this.Aspirantes.forEach((item: any, index: any) => {
-                    delete this.Aspirantes[index].Asistencia;
-                  });
-                }
-                const valor = Object.keys(this.Aspirantes[0]);
-                const arreglo = valor.filter((elemento) => elemento !== "Id");
-                this.datavalor = arreglo;
-                this.dataSource = new MatTableDataSource(this.Aspirantes);
+                resolve(data);
               } else {
                 this.btnCalculo = true;
+                resolve(null);
               }
               this.save = false;
               this.verificarEvaluacion();
-              resolve(data);
             } else if (response.Status === 404) {
-              this.Aspirantes.forEach((aspirante: any) => {
-                this.columnas.forEach((columna: any) => {
-                  aspirante[columna] = "";
-                  if (columna === "Asistencia") {
-                    aspirante[columna] = false;
-                  }
-                });
-              });
-              this.dataSource = new MatTableDataSource(this.Aspirantes);
-              this.btnCalculo = true;
               resolve(response);
             } else {
               this.popUpManager.showErrorToast(
                 this.translate.instant("admision.error")
               );
-              this.dataSource = new MatTableDataSource<any>([]);
               resolve("error");
             }
           },
@@ -856,19 +867,20 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   loadColumn(IdCriterio: any) {
-    this.nameColumns = [];
+    const nameColumns = [];
     return new Promise((resolve, reject) => {
       this.evaluacionService
         .get("requisito?query=RequisitoPadreId:" + IdCriterio + "&limit=0")
         .subscribe(
           (response: any) => {
-            console.log("RESPONSEEEEEEEEEEEEEE", response);
             for (let i = 0; i < response.length; i++) {
-              this.nameColumns.push(response[i].Nombre);
+              nameColumns.push(response[i].Nombre);
             }
             this.evaluacionService.get("requisito/" + IdCriterio).subscribe(
               async (res: any) => {
-                console.log("RESSSES", res);
+                this.criterioEnEdicion = await this.getDatosDelCriterio(
+                  IdCriterio
+                );
                 const data: any = {};
                 let porcentaje: any;
 
@@ -906,19 +918,19 @@ export class EvaluacionAspirantesComponent implements OnInit {
                   };
                 }
 
-                if (response.length > 0) {
-                  porcentaje = await this.getPercentageSub(IdCriterio);
+                if (response.length > 1) {
+                  porcentaje = await JSON.parse(
+                    this.criterioEnEdicion.PorcentajeEspecifico
+                  );
 
                   for (const key in porcentaje.areas) {
                     if (porcentaje.areas[key]["Porcentaje"] === 0) {
                       break;
                     }
                     for (const key2 in porcentaje.areas[key]) {
-                      console.log("KEY2", key2);
                       for (let i = 0; i < response.length; i++) {
-                        // console.log(porcentaje.areas[key][key2], " === ", response[i]);
                         if (porcentaje.areas[key][key2] == response[i].Id) {
-                          this.columnas.push(response[i].Nombre);
+                          this.columnsTable.push(response[i].Nombre);
                           data[response[i].Nombre] = {
                             title:
                               response[i].Nombre +
@@ -927,8 +939,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
                               "%)",
                             editable: true,
                             filter: false,
+                            criterioId: response[i].Id,
                             valuePrepareFunction: (value: any) => {
-                              console.log("VALUE", value);
                               return value;
                             },
                           };
@@ -938,9 +950,17 @@ export class EvaluacionAspirantesComponent implements OnInit {
                     }
                   }
                 } else {
-                  this.popUpManager.showInfoToast(
-                    this.translate.instant("admision.no_data")
-                  );
+                  this.columnsTable.push("Puntuacion");
+                  data.Puntuacion = {
+                    title: "Puntaje",
+                    editable: true,
+                    type: "number",
+                    filter: false,
+                    width: "35%",
+                    valuePrepareFunction: (value: any) => {
+                      return value;
+                    },
+                  };
                 }
                 resolve(data);
               },
@@ -967,8 +987,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   ngOnChanges() {
-    this.columnas = [];
-    this.dataSource = new MatTableDataSource<any>([]);
+    this.columnsTable = [];
+    this.dataSourceTable.data = [];
     this.Aspirantes = [];
     for (let i = 0; i < this.Aspirantes.length; i++) {
       this.Aspirantes[i].Asistencia = false;
@@ -1001,6 +1021,31 @@ export class EvaluacionAspirantesComponent implements OnInit {
     });
   }
 
+  getDatosDelCriterio(IdCriterio: any) {
+    return new Promise((resolve, reject) => {
+      this.evaluacionService
+        .get(
+          "requisito_programa_academico?query=ProgramaAcademicoId:" +
+            this.proyectos_selected +
+            ",PeriodoId:" +
+            this.periodo.Id +
+            ",RequisitoId:" +
+            IdCriterio
+        )
+        .subscribe(
+          (Res: any) => {
+            resolve(Res[0]);
+          },
+          (error) => {
+            this.popUpManager.showErrorToast(
+              this.translate.instant("admision.error_cargar")
+            );
+            reject(error);
+          }
+        );
+    });
+  }
+
   ajustarTitulo(titulo: string) {
     if (titulo === titulo.toUpperCase()) {
       return titulo;
@@ -1015,5 +1060,25 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.notas = true;
       this.verificarEvaluacion();
     }
+  }
+
+  findKeyByTitle(data: any, titleToFind: string): string | undefined {
+    for (const key in data) {
+      if (data[key].title === titleToFind) {
+        return key;
+      }
+    }
+    return undefined; // Retorna undefined si no se encuentra la clave
+  }
+
+  findIdByTitle(data: any, titleToFind: string): any {
+    for (const key in data) {
+      if (data[key].title === titleToFind) {
+        if (data[key].criterioId) {
+          return data[key].criterioId;
+        }
+      }
+    }
+    return undefined; // Retorna undefined si no se encuentra la clave
   }
 }
