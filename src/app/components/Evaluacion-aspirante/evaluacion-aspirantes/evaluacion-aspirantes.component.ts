@@ -666,27 +666,25 @@ export class EvaluacionAspirantesComponent implements OnInit {
     for (let i = 0; i < this.Aspirantes.length; i++) {
       Evaluacion.IdPersona[i] = { Id: this.Aspirantes[i].Id };
     }
-    
-    console.log("Evaluacion", Evaluacion);
 
-    // this.sgaMidAdmisiones.put("admision/calcular_nota", Evaluacion).subscribe(
-    //   (response: any) => {
-    //     if (response.status === 200) {
-    //       this.popUpManager.showSuccessAlert(
-    //         this.translate.instant("admision.calculo_exito")
-    //       );
-    //     } else {
-    //       this.popUpManager.showErrorToast(
-    //         this.translate.instant("admision.calculo_error")
-    //       );
-    //     }
-    //   },
-    //   (error) => {
-    //     this.popUpManager.showErrorToast(
-    //       this.translate.instant("admision.error_cargar")
-    //     );
-    //   }
-    // );
+    this.sgaMidAdmisiones.put("admision/calcular_nota", Evaluacion).subscribe(
+      (response: any) => {
+        if (response.Status === 200) {
+          this.popUpManager.showSuccessAlert(
+            this.translate.instant("admision.calculo_exito")
+          );
+        } else {
+          this.popUpManager.showErrorToast(
+            this.translate.instant("admision.calculo_error")
+          );
+        }
+      },
+      (error) => {
+        this.popUpManager.showErrorToast(
+          this.translate.instant("admision.error_cargar")
+        );
+      }
+    );
   }
 
   verificarEvaluacion() {
