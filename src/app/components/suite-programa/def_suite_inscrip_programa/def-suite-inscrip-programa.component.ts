@@ -332,6 +332,10 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
         this.tagsObject.examen_estado.selected = !this.tagsObject.examen_estado.selected;
         this.tagsObject.examen_estado.required = this.tagsObject.examen_estado.selected;
         break;
+      case 'informacion_academica':
+        this.tagsObject.informacion_academica.selected = !this.tagsObject.informacion_academica.selected;
+        this.tagsObject.informacion_academica.required = this.tagsObject.informacion_academica.selected;
+        break;
       case 'datos_acudiente':
         this.tagsObject.datos_acudiente.selected = !this.tagsObject.datos_acudiente.selected;
         this.tagsObject.datos_acudiente.required = this.tagsObject.datos_acudiente.selected;
