@@ -7,6 +7,9 @@ import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service'
 import { OikosService } from 'src/app/services/oikos.service';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
+import { NivelFormacion } from 'src/app/models/proyecto_academico/nivel_formacion';
+
 
 @Component({
   selector: 'app-liquidacion-historico',
@@ -14,44 +17,30 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
   styleUrls: ['./liquidacion-historico.component.scss']
 })
 export class LiquidacionHistoricoComponent {
-
-  // proyectos=[
-  //   { "Id": 1, "Nombre": "Proyecto 1" },
-  //   { "Id": 2, "Nombre": "Proyecto 2" },
-  //   { "Id": 3, "Nombre": "Proyecto 3" },
-  // ]
-
-  // nivel_load =[
-  //   { "Id": 1, "Nombre": "Nivel 1" },
-  //   { "Id": 2, "Nombre": "Nivel 2" },
-  //   { "Id": 3, "Nombre": "Nivel 3" }
-  // ]
-
-  // periodos=[
-  //   { "Nombre": "Periodo 1" },
-  //   { "Nombre": "Periodo 2" },
-  //   { "Nombre": "Periodo 3" }
-  // ]
-
   datosTabla: any;
-  tablahistorico:boolean=true
 
+  nivelControl = new FormControl('', [Validators.required]);
   proyectoControl = new FormControl('', [Validators.required]);
   facultadControl = new FormControl('', [Validators.required]);
   periodoControl = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
   Campo4Control = new FormControl('', [Validators.required]);
-  // firstFormGroup = this._formBuilder.group({
-  //   validatorProyecto: ['', Validators.required],
-  //   validatorPeriodo: ['', Validators.required],
-  //   validatorFacultad: ['', Validators.required],
-  // });
 
   facultades!: any[]
   proyectosCurriculares!: any[]
   periodos!: any[]
   loading: boolean = false;
   inscripciones: any = [];
+
+  niveles: NivelFormacion[] = [];
+  selectedLevel: any;
+  tablaHistorico! : boolean;
+  initialized = false;
+
+  selectedProyecto! : any;
+  selectedPeriodo! : any;
+
+  proyectosPregrado!: any[];
 
   constructor(
     private _formBuilder: FormBuilder, 
@@ -62,6 +51,7 @@ export class LiquidacionHistoricoComponent {
     private inscripcionService: InscripcionService,
     private sgamidService: SgaMidService,
     private inscripcionMidService: InscripcionMidService,
+    private projectService: ProyectoAcademicoService,
   )
   {}
 
@@ -73,28 +63,63 @@ export class LiquidacionHistoricoComponent {
     this.loading = true;
     await this.cargarFacultades();
     await this.cargarPeriodos();
+    await this.nivel_load();
+    await this.cargarProyectos();
     this.loading = false;
   }
+
+  async nivel_load() {
+      this.projectService.get('nivel_formacion?query=Activo:true').subscribe(
+        (response: any) => {
+          for (let i = 0; i < response.length; i++) {
+            if (response[i].Id === 1 || response[i].Id === 2) {
+              this.niveles.push(response[i]);
+            }
+          }
+        },
+        error => {
+          console.error(error);
+          this.loading = false;
+          this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+        },
+      );
+    }
 
   cargarFacultades() {
     return new Promise((resolve, reject) => {
       this.oikosService.get('dependencia_padre/FacultadesConProyectos?Activo:true&limit=0')
         .subscribe((res: any) => {
           this.facultades = res;
-          console.log(this.facultades);
           resolve(res)
         },
           (error: any) => {
+            this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
-            console.log(error);
+            console.error(error);
+            reject([]);
+          });
+    });
+  }
+
+  cargarProyectos() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get('proyecto_academico_institucion?query=Activo:true&sortby=Id&order=asc&limit=0')
+        .subscribe((res: any) => {
+          this.proyectosPregrado = res;
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_admision.facultades_error'));
+            this.loading = false;
+            console.error(error);
             reject([]);
           });
     });
   }
 
   onFacultadChange(event: any) {
-    const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
-    this.proyectosCurriculares = facultad.Opciones;
+    const programas = this.proyectosPregrado.filter((item: any) => item.FacultadId == event.value && item.NivelFormacionId.Id == this.selectedLevel);
+    this.proyectosCurriculares = programas;
   }
 
   cargarPeriodos() {
@@ -102,12 +127,12 @@ export class LiquidacionHistoricoComponent {
       this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           this.periodos = res.Data;
-          console.log(this.periodos);
           resolve(res)
         },
           (error: any) => {
+            this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.periodo_error'));
-            console.log(error);
+            console.error(error);
             reject([]);
           });
     });
@@ -115,78 +140,93 @@ export class LiquidacionHistoricoComponent {
 
   async realizarBusqueda() {
     this.loading = true;
+    this.initialized = true;
     const proyecto = this.proyectoControl.value;
     const periodo = this.periodoControl.value;
 
-    this.inscripciones = await this.buscarInscripcionesAdmitidosLegalizados(proyecto, periodo)
-    console.log("INSCRIPCIONES", this.inscripciones)
+    if (this.selectedLevel === 1) {
+      this.tablaHistorico = true;
+      this.inscripciones = await this.buscarInscripciones(proyecto, periodo);
 
-    // this.datosTabla["inscripciones"] = this.inscripciones
-    // this.datosTabla["editando"] = true
+      this.datosTabla = {
+        "inscripciones": this.inscripciones,
+        "visible": true
+      }
+      this.loading = false;
 
-    this.datosTabla = {
-      "inscripciones": this.inscripciones,
-      "visible": true
+
+    } else {
+      this.tablaHistorico = false;
+      this.datosTabla = {
+        "proyecto": this.proyectosCurriculares,
+        "periodo": this.selectedPeriodo,
+        "visible": true
+      }
+      this.loading = false;
     }
-    this.loading = false;
-    // for (const inscripcion of this.inscripciones) {
-    //   const persona: any = await this.consultarTercero(inscripcion.PersonaId);
-    //   if (Array.isArray(persona) && persona.length === 0) {
-    //     continue;
-    //   }
-    //   const infoLegalizacion = await this.getLegalizacionMatricula(persona.Id)
-    //   if (infoLegalizacion == "No existe legalizacion") {
-    //     continue;
-    //   }
-    //   console.log("INSCRIP:", inscripcion, persona, infoLegalizacion);
 
-    //   const valorLiquidacion = {
-    //     "codigo": 1000,
-    //     "documento": persona.NumeroIdentificacion,
-    //     "nombres": persona.PrimerNombre + "" + persona.SegundoNombre,
-    //     "apellidos": persona.PrimerApellido + "" + persona.SegundoApellido,
-    //   }
-    // }
+    
+  }
+
+  async buscarInscripciones(proyecto: any, periodo: any) {
+    const inscripcionesLegalizadas: any = await this.buscarInscripcionesAdmitidosLegalizados(proyecto, periodo);
+    const inscripcionesMatriculadas: any = await this.buscarInscripcionesMatriculados(proyecto, periodo);
+    const inscripcionesNoLegalizadas: any = await this.buscarInscripcionesNoLegalizados(proyecto, periodo);
+
+    const legalizados = Object.keys(inscripcionesLegalizadas[0]).length === 0 
+      ? Object.keys(inscripcionesMatriculadas[0]).length === 0 ? [] : inscripcionesMatriculadas
+      : Object.keys(inscripcionesMatriculadas[0]).length === 0 ? inscripcionesLegalizadas : inscripcionesLegalizadas.concat(inscripcionesMatriculadas)
+
+    const inscripciones = legalizados.length === 0
+      ? Object.keys(inscripcionesNoLegalizadas[0]).length === 0 ? [] : inscripcionesNoLegalizadas
+      : Object.keys(inscripcionesNoLegalizadas[0]).length === 0 ? legalizados : legalizados.concat(inscripcionesNoLegalizadas)
+
+    return inscripciones;
   }
 
   buscarInscripcionesAdmitidosLegalizados(proyecto: any, periodo: any) {
     return new Promise((resolve, reject) => {
       this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:8&sortby=Id&order=asc')
+      // this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:27,PeriodoId:40,EstadoInscripcionId.Id:8&sortby=Id&order=asc')
         .subscribe((res: any) => {
           resolve(res)
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
+            console.error(error);
+            this.loading = false;
             reject([]);
           });
     });
   }
 
-  // async consultarTercero(personaId: any): Promise<any | []> {
-  //   try {
-  //     const response = await this.sgamidService.get('persona/consultar_persona/' + personaId).toPromise();
-  //     return response;
-  //   } catch (error) {
-  //     // this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.tercero_error'));
-  //     console.log(error);
-  //     return []; // Return an empty array to indicate an error
-  //   }
-  // }
+  buscarInscripcionesMatriculados(proyecto: any, periodo: any) {
+    return new Promise((resolve, reject) => {
+      this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:11&sortby=Id&order=asc&limit=0')
+        .subscribe((res: any) => {
+          resolve(res)
+        },
+          (error: any) => {
+            this.loading = false;
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+            console.error(error);
+            reject([]);
+          });
+    });
+  }
 
-  // async getLegalizacionMatricula(personaId: any) {
-  //   return new Promise((resolve, reject) => {
-  //     //this.loading = true;
-  //     this.inscripcionMidService.get('legalizacion/informacion-legalizacion/' + personaId)
-  //       .subscribe((res: any) => {
-  //         resolve(res.data);
-  //       },
-  //         (error: any) => {
-  //           this.popUpManager.showErrorAlert(
-  //             this.translate.instant('admision.legalizacion_error')
-  //           );
-  //         });
-  //   });
-  // }
-
+  buscarInscripcionesNoLegalizados(proyecto: any, periodo: any) {
+    return new Promise((resolve, reject) => {
+      this.inscripcionService.get('inscripcion?query=ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:12&sortby=Id&order=asc&limit=0')
+        .subscribe((res: any) => {
+          resolve(res)
+        },
+          (error: any) => {
+            this.loading = false;
+            this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
+            console.error(error);
+            reject([]);
+          });
+    });
+  }
 }

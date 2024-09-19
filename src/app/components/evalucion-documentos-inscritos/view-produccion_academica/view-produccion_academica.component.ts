@@ -6,13 +6,15 @@ import { UserService } from 'src/app/services/users.service';
 import { DocumentoService } from 'src/app/services/documento.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { ProduccionAcademicaPost } from 'src/app/models/produccion_academica/produccion_academica';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { ZipManagerService } from 'src/utils/zip-manager.service';
 import { PopUpManager } from '../../../managers/popUpManager';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 @Component({
   selector: 'ngx-view-produccion-academica',
   templateUrl: './view-produccion_academica.component.html',
@@ -58,8 +60,7 @@ export class ViewProduccionAcademicaComponent implements OnInit {
 
   constructor(private translate: TranslateService,
     private documentoService: DocumentoService,
-
-    private sgaMidService: SgaMidService,
+    private inscripcionesMidService: InscripcionMidService,
     private sanitization: DomSanitizer,
     private users: UserService,
     private newNuxeoService: NewNuxeoService,
@@ -86,11 +87,11 @@ export class ViewProduccionAcademicaComponent implements OnInit {
   }
 
   loadData(): void {
-    this.sgaMidService.get('produccion_academica/pr_academica/' + this.persona_id)
+    this.inscripcionesMidService.get('academico/produccion/' + this.persona_id)
       .subscribe((res: any) => {
         if (res !== null) {
-          if (res.Response.Code === '200') {
-            this.info_produccion_academica = <Array<ProduccionAcademicaPost>>res.Response.Body[0];
+          if (res.Status === 200 && res.Data !== null) {
+            this.info_produccion_academica = <Array<ProduccionAcademicaPost>>res.Data;
             this.infoCarga.nCargas = this.info_produccion_academica.length;
             this.info_produccion_academica.forEach((produccion:any) => {
               produccion["VerSoportes"] = false;

@@ -1,56 +1,61 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Input, Output, EventEmitter } from '@angular/core';
-import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import { UserService } from 'src/app/services/users.service';
-import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
-import { ParametrosService } from 'src/app/services/parametros.service';
-import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
-import { Inscripcion } from 'src/app/models/inscripcion/inscripcion';
-import { TercerosService } from 'src/app/services/terceros.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
-import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { TipoCriterio } from '../../../models/admision/tipo_criterio';
-import Swal from 'sweetalert2';
-import { FormControl, Validators } from '@angular/forms';
-import { PopUpManager } from '../../../managers/popUpManager';
-import { CheckboxAssistanceComponent } from './checkbox-assistance/checkbox-assistance.component'; 
-import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { Input, Output, EventEmitter } from "@angular/core";
+import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
+import { UserService } from "src/app/services/users.service";
+import { ProyectoAcademicoService } from "src/app/services/proyecto_academico.service";
+import { ParametrosService } from "src/app/services/parametros.service";
+import { EvaluacionInscripcionService } from "src/app/services/evaluacion_inscripcion.service";
+import { Inscripcion } from "src/app/models/inscripcion/inscripcion";
+import { TercerosService } from "src/app/services/terceros.service";
+import { SgaMidService } from "src/app/services/sga_mid.service";
+import { SgaAdmisionesMid } from "src/app/services/sga_admisiones_mid.service";
+import { HttpErrorResponse } from "@angular/common/http";
+import { TipoCriterio } from "../../../models/admision/tipo_criterio";
+// @ts-ignore
+import Swal from "sweetalert2/dist/sweetalert2";
+import { FormControl, Validators } from "@angular/forms";
+import { PopUpManager } from "../../../managers/popUpManager";
+import { CheckboxAssistanceComponent } from "./checkbox-assistance/checkbox-assistance.component";
+import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { CalendarioMidService } from "src/app/services/calendario_mid.service";
+import { EventosService } from "src/app/services/eventos.service";
 
 @Component({
-  selector: 'evaluacion-aspirantes',
-  templateUrl: './evaluacion-aspirantes.component.html',
-  styleUrls: ['./evaluacion-aspirantes.component.scss'],
+  selector: "evaluacion-aspirantes",
+  templateUrl: "./evaluacion-aspirantes.component.html",
+  styleUrls: ["./evaluacion-aspirantes.component.scss"],
 })
 export class EvaluacionAspirantesComponent implements OnInit {
   toasterService: any;
 
-  @Input('criterios_select')
+  @Input("criterios_select")
   set name(inscripcion_id: number) {
     this.inscripcion_id = inscripcion_id;
-    if (this.inscripcion_id === 0 || this.inscripcion_id.toString() === '0') {
+    if (this.inscripcion_id === 0 || this.inscripcion_id.toString() === "0") {
       this.selectedValue = undefined;
-      window.localStorage.setItem('programa', this.selectedValue);
+      window.localStorage.setItem("programa", this.selectedValue);
     }
-    if (this.inscripcion_id !== undefined && this.inscripcion_id !== 0 && this.inscripcion_id.toString() !== ''
-      && this.inscripcion_id.toString() !== '0') {
-
+    if (
+      this.inscripcion_id !== undefined &&
+      this.inscripcion_id !== 0 &&
+      this.inscripcion_id.toString() !== "" &&
+      this.inscripcion_id.toString() !== "0"
+    ) {
     }
   }
 
   @Output() eventChange = new EventEmitter();
 
-  @Output('result') result: EventEmitter<any> = new EventEmitter();
+  @Output("result") result: EventEmitter<any> = new EventEmitter();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   inscripcion_id!: number;
-  info_persona_id!: number;
+  info_persona_id!: string | null;
   info_ente_id!: number;
   estado_inscripcion!: number;
   info_info_persona: any;
@@ -87,8 +92,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
   show_acad = false;
   Aspirantes: any;
 
-  notas: boolean;
-  save: boolean;
+  notas!: boolean;
+  save!: boolean;
   asistencia!: boolean;
   info_persona!: boolean;
   loading!: boolean;
@@ -110,20 +115,25 @@ export class EvaluacionAspirantesComponent implements OnInit {
   nivel_load: any;
   selectednivel: any;
   tipo_criterio!: TipoCriterio;
-  dataSourceColumn: any = []
-  nameColumns: string[] = []
+  dataSourceColumn: any = [];
+  nameColumns: string[] = [];
   dataSource!: MatTableDataSource<any>;
-  datavalor: any = []
-  datasourceButtonsTable: boolean = false
+  datavalor: any = [];
+  datasourceButtonsTable: boolean = false;
   settings: any;
   columnas: any;
-  widhtColumns: any
+  widhtColumns: any;
   criterio = [];
   cantidad_aspirantes: number = 0;
+  selectMultipleNivel: boolean = false;
+  mostrarBoton = false;
+  mostrarMensajeInicial = false;
+  periodoMultiple: any;
+  nombresPeriodos: string = "";
 
-  CampoControl = new FormControl('', [Validators.required]);
-  Campo1Control = new FormControl('', [Validators.required]);
-  Campo2Control = new FormControl('', [Validators.required]);
+  CampoControl = new FormControl("", [Validators.required]);
+  Campo1Control = new FormControl("", [Validators.required]);
+  Campo2Control = new FormControl("", [Validators.required]);
 
   constructor(
     private translate: TranslateService,
@@ -131,24 +141,25 @@ export class EvaluacionAspirantesComponent implements OnInit {
     private parametrosService: ParametrosService,
     private projectService: ProyectoAcademicoService,
     private evaluacionService: EvaluacionInscripcionService,
-    private tercerosService: TercerosService,
-    private sgaMidService: SgaMidService,
     private sgaMidAdmisiones: SgaAdmisionesMid,
     private popUpManager: PopUpManager,
+    private calendarioMidService: CalendarioMidService,
+    private eventosService: EventosService,
 
-    private autenticationService: ImplicitAutenticationService,) {
+    private autenticationService: ImplicitAutenticationService
+  ) {
     this.translate = translate;
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => { });
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
+  }
+
+  async ngOnInit() {
     this.total = true;
     this.save = true;
     this.notas = false;
     this.showTab = true;
-    this.loadData();
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.createTable();
-    });
+    await this.loadData();
+    await this.createTable();
   }
-
 
   async activateTab() {
     this.showTab = true;
@@ -157,39 +168,52 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
   async loadData() {
     try {
-      this.info_persona_id = this.userService.getPersonaId();
+      this.info_persona_id = this.userService.getId();
       await this.cargarPeriodo();
       await this.loadLevel();
     } catch (error: any) {
       Swal.fire({
-        icon: 'error',
-        title: error.status + '',
-        text: this.translate.instant('inscripcion.error_cargar_informacion'),
-        confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+        icon: "error",
+        title: error.status + "",
+        text: this.translate.instant("inscripcion.error_cargar_informacion"),
+        confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
       });
     }
   }
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
-        .subscribe((res: any) => {
+      this.parametrosService
+        .get("periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .subscribe(
+          (res: any) => {
+            const r = <any>res;
+            if (res !== null && r.Status === "200") {
+              if (window.localStorage.getItem("IdPeriodoSelected")) {
+                this.periodo = res.Data.find(
+                  (p: any) =>
+                    p.Id == window.localStorage.getItem("IdPeriodoSelected")
+                );
+              } else {
+                this.periodo = res.Data.find((p: any) => p.Activo);
+              }
 
-          const r = <any>res;
-          if (res !== null && r.Status === '200') {
-            this.periodo = res.Data.find((p: any) => p.Activo);
-            window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
-            resolve(this.periodo);
-            const periodos = <any[]>res['Data'];
-            periodos.forEach((element: any) => {
-
-              this.periodos.push(element);
-            });
-          }
-        },
+              window.localStorage.setItem(
+                "IdPeriodo",
+                String(this.periodo["Id"])
+              );
+              resolve(this.periodo);
+              const periodos = <any[]>res["Data"];
+              periodos.forEach((element: any) => {
+                this.periodos.push(element);
+              });
+            }
+            window.localStorage.removeItem("IdPeriodoSelected");
+          },
           (error: HttpErrorResponse) => {
             reject(error);
-          });
+          }
+        );
     });
   }
 
@@ -203,143 +227,235 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   changePeriodo() {
-    this.CampoControl.setValue('');
-    this.Campo1Control.setValue('');
+    this.CampoControl.setValue("");
+    this.Campo1Control.setValue("");
   }
 
-  loadLevel() {
-    this.projectService.get('nivel_formacion?limit=0').subscribe(
-      (response: any) => {
-        if (response !== null || response !== undefined) {
-          this.nivel_load = <any>response;
-        }
-      },
-      error => {
-        this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-        this.loading = false;
-      },
-    );
+  async loadLevel() {
+    const nivel: any = await this.recuperarNivelFormacion();
+    this.nivel_load = nivel;
+    if (window.localStorage.getItem("Nivel")) {
+      this.selectednivel = this.nivel_load.find(
+        (p: any) => p.Id == window.localStorage.getItem("Nivel")
+      ).Id;
+      await this.loadProyectos();
+      window.localStorage.removeItem("Nivel");
+    }
+  }
+
+  recuperarNivelFormacion() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get("nivel_formacion?limit=0")
+        .subscribe((response: any) => {
+          if (response !== null || response !== undefined) {
+            resolve(response);
+          }
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('ERROR.general'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
+          });
+    });
   }
 
   filtrarProyecto(proyecto: any) {
-    if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
-      return true
+    if (this.selectednivel === proyecto["NivelFormacionId"]["Id"]) {
+      return true;
     }
-    if (proyecto['NivelFormacionId']['NivelFormacionPadreId'] !== null) {
-      if (proyecto['NivelFormacionId']['NivelFormacionPadreId']['Id'] === this.selectednivel) {
-        return true
+    if (proyecto["NivelFormacionId"]["NivelFormacionPadreId"] !== null) {
+      if (
+        proyecto["NivelFormacionId"]["NivelFormacionPadreId"]["Id"] ===
+        this.selectednivel
+      ) {
+        return true;
       } else {
-        return false
+        return false;
       }
     } else {
-      return false
+      return false;
     }
   }
 
-  loadProyectos() {
+  async cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+    const nivelDoctorado = this.nivel_load.find(
+      (nivel: any) => nivel.Nombre === "Doctorado"
+    );
+    if (nivelDoctorado) {
+      const esDoctorado = nivelDoctorado.Id === nivelSeleccionado;
+      this.selectMultipleNivel = esDoctorado;
+      this.mostrarBoton = esDoctorado;
+      this.mostrarMensajeInicial = esDoctorado;
+    } else {
+      this.selectMultipleNivel = false;
+      this.mostrarBoton = false;
+      this.mostrarMensajeInicial = false;
+    }
+    await this.loadProyectos();
+  }
+
+  consultarPeriodosDoctorado(idProyecto: number) {
+    this.calendarioMidService
+      .get(`calendario-proyecto/${idProyecto}`)
+      .subscribe(
+        (response: any) => {
+          const CalendarioId = response.Data.CalendarioId;
+          this.eventosService.get(`calendario/${CalendarioId}`).subscribe(
+            (response2: any) => {
+              const listaPeriodos: number[] = JSON.parse(
+                response2.MultiplePeriodoId
+              );
+              listaPeriodos.forEach((periodoId) => {
+                this.parametrosService
+                  .get(`periodo/${periodoId}`)
+                  .subscribe((response3: any) => {
+                    this.nombresPeriodos =
+                      this.nombresPeriodos + response3.Data.Nombre + ", ";
+                  });
+              });
+            },
+            (error: any) => {
+              this.popUpManager.showErrorAlert(
+                this.translate.instant("calendario.sin_calendario") +
+                  ". " +
+                  this.translate.instant("GLOBAL.comunicar_OAS_error")
+              );
+            }
+          );
+        },
+        (error: any) => {
+          this.popUpManager.showErrorAlert(
+            this.translate.instant("calendario.sin_calendario") +
+              ". " +
+              this.translate.instant("GLOBAL.comunicar_OAS_error")
+          );
+        }
+      );
+  }
+
+  async loadProyectos() {
     this.notas = false;
     this.selectprograma = false;
     this.criterio_selected = [];
     if (!Number.isNaN(this.selectednivel)) {
-      this.projectService.get('proyecto_academico_institucion?limit=0').subscribe(
-        (response: any) => {
-          this.autenticationService.getRole().then(
-            // (rol: Array <String>) => {
-            (rol: any) => {
-              let r = rol.find((role: any) => (role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE")); // rol admin o vice
-              if (r) {
-                this.proyectos = <any[]>response.filter(
-                  (proyecto: any) => this.filtrarProyecto(proyecto),
-                );
-              } else {
-                const id_tercero = this.userService.getPersonaId();
-                this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
-                  (respDependencia: any) => {
-                    const dependencias = <Number[]>respDependencia.Data.DependenciaId;
-                    this.proyectos = <any[]>response.filter(
-                      (proyecto: any) => dependencias.includes(proyecto.Id)
-                    );
-                    if (dependencias.length > 1) {
-                      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
-
-                    }
-                  },
-                  (error: any) => {
-                    this.popUpManager.showErrorAlert(this.translate.instant('admision.no_vinculacion_no_rol') + ". " + this.translate.instant('GLOBAL.comunicar_OAS_error'));
-                  }
-                );
-              }
-            }
-          );
-        },
-        error => {
-          this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-          this.loading = false;
-        },
-      );
+      const proyectoAcademico: any = await this.recuperarProyectoAcademicoInstitucion();
+      const rol: any = await this.autenticationService.getRole()
+      let r = rol.find((role: any) => role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE");
+      if (r) {
+        this.proyectos = <any[]>(proyectoAcademico.filter((proyecto: any) => this.filtrarProyecto(proyecto)));
+        if (window.localStorage.getItem("IdProyecto")) {
+          const idProyecto = window.localStorage.getItem("IdProyecto");
+          const proyecto = this.proyectos.find((p: any) => p.Id == idProyecto);
+          if (proyecto) {
+            this.proyectos_selected = proyecto.Id;
+            await this.loadCriterios();
+          }
+        }
+        window.localStorage.removeItem("IdProyecto");
+      } else {
+        const id_tercero = await this.userService.getPersonaId();
+        const dependencia: any = await this.recuperarDependenciaVinculacionTercero(id_tercero);
+        console.log(dependencia);
+        const dependencias = <Number[]>(dependencia.Data.DependenciaId);
+        this.proyectos = <any[]>(proyectoAcademico.filter((proyecto: any) => dependencias.includes(proyecto.Id)));
+        if (dependencias.length > 1) {
+          this.popUpManager.showAlert(this.translate.instant("GLOBAL.info"), this.translate.instant("admision.multiple_vinculacion"));
+        }
+      }
     }
   }
 
-  loadCriterios() {
-    this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:' + this.proyectos_selected + ',PeriodoId:' + this.periodo.Id).subscribe(
-      (response: any) => {
-        if (response[0].Id !== undefined && response[0] !== '{}') {
-          this.criterios = <any>response;
-          this.criterios = this.criterios.filter((e: any) => e.PorcentajeGeneral !== 0);
-
-          this.btnCalculo = false;
-          this.selectcriterio = false;
-          this.notas = false;
-          this.criterio_selected = [];
-          this.criterios.forEach(async (element: any) => {
-            await this.criterio_selected.push(element.RequisitoId)
-
+  recuperarProyectoAcademicoInstitucion() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get("proyecto_academico_institucion?limit=0")
+        .subscribe((response: any) => {
+          if (response !== null || response !== undefined) {
+            resolve(response);
+          }
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('ERROR.general'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
           });
-          this.viewtab();
-        } else {
-          const Criterios = [];
-          Criterios[0] = {
-            RequisitoId: {
-              Id: 0,
-              Nombre: '',
-            },
-          };
-          this.criterios = <any>Criterios;
-          this.criterio_selected = [];
-          this.notas = false;
-          this.popUpManager.showToast('info', this.translate.instant('admision.no_criterio'),);
-          // this.popUpManager.showToast('info', this.translate.instant('admision.no_criterio'), this.translate.instant('GLOBAL.info'));
-        }
-      },
-      error => {
-        this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
-      },
-    );
+    });
   }
 
-  createTable() {
-    return new Promise(async (resolve, reject) => {
+  recuperarDependenciaVinculacionTercero(id_tercero: any) {
+    return new Promise((resolve, reject) => {
+      this.sgaMidAdmisiones.get("admision/dependencia_vinculacion_tercero/" + id_tercero)
+        .subscribe((response: any) => {
+          resolve(response);
+        },
+          (error: any) => {
+            console.error(error);
+            this.popUpManager.showErrorAlert(this.translate.instant("admision.no_vinculacion_no_rol") + ". " + this.translate.instant("GLOBAL.comunicar_OAS_error"));
+            this.loading = false;
+            reject([]);
+          });
+    });
+  }
 
-      const IdCriterio = sessionStorage.getItem('tipo_criterio');
-      const data: any = await this.loadColumn(IdCriterio)
-      const keys = Object.keys(data!);
-      const titles = keys.map(key => data[key].title);
-      const width = keys.map(key => data[key].width);
+  async loadCriterios() {
+    const requisitoPrograma: any = await this.recuperarRequisitoProgramaAcademico(this.proyectos_selected, this.periodo.Id);
+    if (requisitoPrograma[0].Id !== undefined && requisitoPrograma[0] !== "{}") {
+      this.criterios = <any>requisitoPrograma;
+      this.criterios = this.criterios.filter((e: any) => e.PorcentajeGeneral !== 0);
+      this.btnCalculo = false;
+      this.selectcriterio = false;
+      this.notas = false;
+      this.criterio_selected = [];
+    
+      for (const element of this.criterios) {
+        this.criterio_selected.push(element.RequisitoId);
+      }
 
+      this.viewtab();
+    } else {
+      const Criterios = [];
+      Criterios[0] = {
+        RequisitoId: {
+          Id: 0,
+          Nombre: "",
+        },
+      };
+      this.criterios = <any>Criterios;
+      this.criterio_selected = [];
+      this.notas = false;
+      this.popUpManager.showToast("info", this.translate.instant("admision.no_criterio"));
+    }
+  }
 
-      this.columnas = titles
-      this.widhtColumns = width
+  recuperarRequisitoProgramaAcademico(programaId: any, periodoId: any) {
+    return new Promise((resolve, reject) => {
+      this.evaluacionService.get("requisito_programa_academico?query=ProgramaAcademicoId:" + programaId + ",PeriodoId:" + periodoId)
+        .subscribe((response: any) => {
+          resolve(response);
+        },
+          (error: any) => {
+            console.error(error);
+            this.popUpManager.showErrorToast(this.translate.instant("admision.error_cargar"));
+            this.loading = false;
+            reject([]);
+          });
+    });
+  }
 
+  async createTable() {
+    const IdCriterio = sessionStorage.getItem("tipo_criterio");
+    console.log(IdCriterio);
+    const data: any = await this.loadColumn(IdCriterio);
+    const keys = Object.keys(data!);
+    const titles = keys.map((key) => data[key].title);
+    const width = keys.map((key) => data[key].width);
 
-
-
-
-
-      this.dataSourceColumn = (titles)
-      this.dataSourceColumn.push('acciones')
-      console.log(this.dataSourceColumn)
-      resolve(this.settings)
-    })
+    this.columnas = titles;
+    this.widhtColumns = width;
+    this.dataSourceColumn = titles;
+    this.dataSourceColumn.push("acciones");
+    return this.settings;
   }
 
   useLanguage(language: string) {
@@ -347,26 +463,23 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   onEditConfirm(event: any) {
-    console.log(event)
-
-    this.guardarEvaluacion(event.newData)
+    this.guardarEvaluacion(event.newData);
   }
 
   devolverdatasourceButtonsTable() {
-    this.datasourceButtonsTable = !this.datasourceButtonsTable
+    this.datasourceButtonsTable = !this.datasourceButtonsTable;
   }
 
   async guardarEvaluacion(datos: any) {
-
     return new Promise((resolve, reject) => {
       const Evaluacion: any = {};
       // Evaluacion.Aspirantes = this.Aspirantes;
       // await this.dataSource.getElements().then(datos => Evaluacion.Aspirantes = datos)
       // Evaluacion.Aspirantes = this.dataSource.data;
-      Evaluacion.Aspirantes = [datos]
+      Evaluacion.Aspirantes = [datos];
       Evaluacion.PeriodoId = this.periodo.Id;
       Evaluacion.ProgramaId = this.proyectos_selected;
-      Evaluacion.CriterioId = sessionStorage.getItem('tipo_criterio');
+      Evaluacion.CriterioId = sessionStorage.getItem("tipo_criterio");
       const aux = Evaluacion.Aspirantes;
       // Bandera para campos vacios
       let vacio = false;
@@ -374,73 +487,82 @@ export class EvaluacionAspirantesComponent implements OnInit {
       let numero = false;
       const regex = /^[0-9]*$/;
       for (let i = 0; i < aux.length; i++) {
-
-        if (aux[i]['Asistencia'] === 's' || aux[i]['Asistencia'] === 'si' || aux[i]['Asistencia'] === 'sí' ||
-          aux[i]['Asistencia'] === 'S' || aux[i]['Asistencia'] === 'SI' || aux[i]['Asistencia'] === 'SÍ' ||
-          aux[i]['Asistencia'] === 'true' || aux[i]['Asistencia'] === 'True' || aux[i]['Asistencia'] === 'TRUE') {
-          aux[i]['Asistencia'] = true;
+        if (
+          aux[i]["Asistencia"] === "s" ||
+          aux[i]["Asistencia"] === "si" ||
+          aux[i]["Asistencia"] === "sí" ||
+          aux[i]["Asistencia"] === "S" ||
+          aux[i]["Asistencia"] === "SI" ||
+          aux[i]["Asistencia"] === "SÍ" ||
+          aux[i]["Asistencia"] === "true" ||
+          aux[i]["Asistencia"] === "True" ||
+          aux[i]["Asistencia"] === "TRUE"
+        ) {
+          aux[i]["Asistencia"] = true;
         } else {
-          aux[i]['Asistencia'] = ''
+          aux[i]["Asistencia"] = "";
         }
         for (let j = 0; j < this.columnas.length; j++) {
-
-          if (aux[i][this.columnas[j]] === undefined || aux[i][this.columnas[j]] === '') {
+          if (
+            aux[i][this.columnas[j]] === undefined ||
+            aux[i][this.columnas[j]] === ""
+          ) {
             vacio = true;
             break;
           } else {
-
             if (regex.test(aux[i][this.columnas[j]]) === true) {
-              const auxNumero = parseInt(aux[i][this.columnas[j]], 10)
+              const auxNumero = parseInt(aux[i][this.columnas[j]], 10);
               if (auxNumero >= 0 && auxNumero <= 100) {
               } else {
                 numero = true;
                 break;
               }
             } else {
-
               numero = false;
               break;
             }
-
           }
-
         }
       }
 
       // Validaciones
       if (vacio === true) {
-        this.popUpManager.showToast(this.translate.instant('admision.vacio'));
+        this.popUpManager.showToast(this.translate.instant("admision.vacio"));
       } else if (numero === true) {
-        this.popUpManager.showToast(this.translate.instant('admision.numero'));
+        this.popUpManager.showToast(this.translate.instant("admision.numero"));
       } else {
-
-        this.sgaMidAdmisiones.post('admision/evaluacion', Evaluacion).subscribe(
+        this.sgaMidAdmisiones.post("admision/evaluacion", Evaluacion).subscribe(
           (response: any) => {
-            if (response.Status === 200) {
-              this.criterio_selected.forEach(criterio => {
+            if (response.status === 200) {
+              this.criterio_selected.forEach((criterio) => {
                 if (criterio.Id === Evaluacion.CriterioId) {
-                  criterio['evaluado'] = true;
+                  criterio["evaluado"] = true;
                 }
-              })
+              });
               this.loadInfo(parseInt(Evaluacion.CriterioId, 10));
-              resolve('')
-              this.popUpManager.showToast(this.translate.instant('admision.registro_exito'));
+              resolve("");
+              this.popUpManager.showToast(
+                this.translate.instant("admision.registro_exito")
+              );
             } else {
-              reject()
-              this.popUpManager.showErrorToast(this.translate.instant('admision.registro_error'));
+              reject();
+              this.popUpManager.showErrorToast(
+                this.translate.instant("admision.registro_error")
+              );
             }
           },
-          error => {
-            reject()
-            this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
-          },
+          (error) => {
+            reject();
+            this.popUpManager.showErrorToast(
+              this.translate.instant("admision.error_cargar")
+            );
+          }
         );
       }
     });
   }
 
   async calcularEvaluacion() {
-
     const Evaluacion: any = {};
     Evaluacion.IdPersona = <Array<any>>[];
     Evaluacion.IdPeriodo = this.periodo.Id;
@@ -449,30 +571,36 @@ export class EvaluacionAspirantesComponent implements OnInit {
     await this.loadAspirantes();
     await this.loadInfo(this.criterios[0].RequisitoId.Id);
     for (let i = 0; i < this.Aspirantes.length; i++) {
-      Evaluacion.IdPersona[i] = { 'Id': this.Aspirantes[i].Id };
+      Evaluacion.IdPersona[i] = { Id: this.Aspirantes[i].Id };
     }
 
-    this.sgaMidAdmisiones.put('admision/calcular_nota', Evaluacion).subscribe(
+    this.sgaMidAdmisiones.put("admision/calcular_nota", Evaluacion).subscribe(
       (response: any) => {
-        if (response.Status === 200) {
-          this.popUpManager.showSuccessAlert(this.translate.instant('admision.calculo_exito'));
+        if (response.status === 200) {
+          this.popUpManager.showSuccessAlert(
+            this.translate.instant("admision.calculo_exito")
+          );
         } else {
-          this.popUpManager.showErrorToast(this.translate.instant('admision.calculo_error'));
+          this.popUpManager.showErrorToast(
+            this.translate.instant("admision.calculo_error")
+          );
         }
       },
-      error => {
-        this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
-      },
+      (error) => {
+        this.popUpManager.showErrorToast(
+          this.translate.instant("admision.error_cargar")
+        );
+      }
     );
   }
 
   verificarEvaluacion() {
     let evaluado = true;
-    this.criterio_selected.forEach(criterio => {
+    this.criterio_selected.forEach((criterio) => {
       if (!criterio.evaluado) {
         evaluado = false;
       }
-    })
+    });
 
     if (evaluado) {
       this.btnCalculo = false;
@@ -492,27 +620,31 @@ export class EvaluacionAspirantesComponent implements OnInit {
     }
     this.tipo_criterio.ProgramaAcademico = proyecto;
     this.tipo_criterio.Nombre = event.Nombre;
-    sessionStorage.setItem('tipo_criterio', String(event.Id));
-    await this.ngOnChanges();
-    await this.createTable()
+    sessionStorage.setItem("tipo_criterio", String(event.Id));
+    this.ngOnChanges();
+    await this.createTable();
     this.showTab = false;
-    await this.loadAspirantes().catch(e => this.loading = false);
+    await this.loadAspirantes().catch((e) => (this.loading = false));
     await this.loadInfo(event.Id);
     this.loading = false;
   }
 
   async loadAspirantes() {
     return new Promise((resolve, reject) => {
-      console.log(this.sgaMidAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2'))
-      this.sgaMidAdmisiones.get('admision/aspirantespor?id_periodo=' + this.periodo.Id + '&id_proyecto=' + this.proyectos_selected + '&tipo_lista=2')
-        .subscribe(
-          (response: any) => {
-            console.log(response)
-
-            if (response.Success == true && response.Status == 200) {
-              this.Aspirantes = response.Data;
+      this.sgaMidAdmisiones.get("admision/aspirantespor?id_periodo=" + this.periodo.Id + "&id_proyecto=" + this.proyectos_selected + "&tipo_lista=2")
+        .subscribe((response: any) => {
+            if (response.success == true && response.status == 200) {
+              this.Aspirantes = response.data;
               this.cantidad_aspirantes = this.Aspirantes.length;
 
+              // Agrega claves con el nombre de las columnas a cada aspirante
+              this.Aspirantes.forEach((aspirante: any) => {
+                this.datavalor.forEach((columna: any) => {
+                  if (!aspirante.hasOwnProperty(columna)) {
+                    aspirante[columna] = 0;
+                  }
+                });
+              });
 
               setTimeout(() => {
                 this.dataSource.paginator = this.paginator;
@@ -521,239 +653,262 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
               this.dataSource = new MatTableDataSource(this.Aspirantes);
 
-              resolve(this.Aspirantes)
+              resolve(this.Aspirantes);
             }
           },
           (error: HttpErrorResponse) => {
-            reject(error)
+            reject(error);
             Swal.fire({
-              icon: 'warning',
-              title: this.translate.instant('admision.titulo_no_aspirantes'),
-              text: this.translate.instant('admision.error_no_aspirantes'),
-              confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+              icon: "warning",
+              title: this.translate.instant("admision.titulo_no_aspirantes"),
+              text: this.translate.instant("admision.error_no_aspirantes"),
+              confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
             });
           }
         );
     });
-
   }
+
   async loadInfo(IdCriterio: number) {
-    this.datavalor = []
+    this.datavalor = [];
     return new Promise((resolve, reject) => {
-      console.log('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio)
-      this.sgaMidAdmisiones.get('admision/evaluacion/' + this.proyectos_selected + '/' + this.periodo.Id + '/' + IdCriterio).subscribe(
-        async (response: any) => {
-          console.log(response)
-          if (response.Status === 200) {
-            const data = <Array<any>>response.Data.areas;
-            if (data !== undefined) {
-              await data.forEach(async asistente => {
-                if (asistente['Asistencia'] === '') {
-                  asistente['Asistencia'] = false
-                }
-                this.Aspirantes.forEach((aspirante: any) => {
-                  if (asistente.Aspirantes === aspirante.Aspirantes) {
-                    for (const columna in asistente) {
-                      aspirante[columna] = asistente[columna]
+      this.sgaMidAdmisiones
+        .get(
+          "admision/evaluacion/" +
+            this.proyectos_selected +
+            "/" +
+            this.periodo.Id +
+            "/" +
+            IdCriterio
+        )
+        .subscribe(
+          async (response: any) => {
+            if (response.status === 200) {
+              const data = <Array<any>>response.data.areas;
+              if (data !== undefined) {
+                await data.forEach(async (asistente) => {
+                  if (asistente["Asistencia"] === "") {
+                    asistente["Asistencia"] = false;
+                  }
+                  this.Aspirantes.forEach((aspirante: any) => {
+                    if (asistente.Aspirantes === aspirante.Aspirantes) {
+                      for (const columna in asistente) {
+                        aspirante[columna] = asistente[columna];
+                      }
                     }
-                  }
-                })
-              })
+                  });
+                  //  [this, this.dataSource.load(this.Aspirantes)]
+                  const valor = Object.keys(this.Aspirantes[0]);
+                  const arreglo = valor.filter((elemento) => elemento !== "Id");
+                  this.datavalor = arreglo;
+                  this.dataSource = new MatTableDataSource(this.Aspirantes);
+                });
 
-              console.log("jola")
+                this.Aspirantes.forEach((item: any) => {
+                  this.datavalor.forEach((column: any) => {
+                    if (!item.hasOwnProperty(column)) {
+                      item[column] = "";
+                    }
+                  });
+                });
 
-              this.Aspirantes.forEach((item: any) => {
-                this.nameColumns.forEach((column) => {
-                  if (!item.hasOwnProperty(column)) {
-                    item[column] = ""
-                  }
-                })
-              })
-
-              const tieneAsistencia = this.columnas.some((item: any) => item === 'Asistencia');
-              if (tieneAsistencia) {
-
-              } else {
-                this.Aspirantes.forEach((item: any, index: any) => {
-                  delete this.Aspirantes[index].Asistencia
-                })
-              }
-              const valor = Object.keys(this.Aspirantes[0]);
-              const arreglo = valor.filter(elemento => elemento !== "Id");
-              this.datavalor = arreglo
-              console.log(this.datavalor)
-              console.log(this.Aspirantes)
-              this.dataSource = new MatTableDataSource(this.Aspirantes)
-
-            } else {
-              this.btnCalculo = true;
-            }
-            this.save = false;
-            this.verificarEvaluacion();
-            resolve(data);
-          } else if (response.Status === 404) {
-            this.Aspirantes.forEach((aspirante: any) => {
-              this.columnas.forEach((columna: any) => {
-                aspirante[columna] = '';
-                if (columna === 'Asistencia') {
-                  aspirante[columna] = false;
+                const tieneAsistencia = this.columnas.some(
+                  (item: any) => item === "Asistencia"
+                );
+                if (tieneAsistencia) {
+                } else {
+                  this.Aspirantes.forEach((item: any, index: any) => {
+                    delete this.Aspirantes[index].Asistencia;
+                  });
                 }
+                const valor = Object.keys(this.Aspirantes[0]);
+                const arreglo = valor.filter((elemento) => elemento !== "Id");
+                this.datavalor = arreglo;
+                this.dataSource = new MatTableDataSource(this.Aspirantes);
+              } else {
+                this.btnCalculo = true;
+              }
+              this.save = false;
+              this.verificarEvaluacion();
+              resolve(data);
+            } else if (response.status === 404) {
+              this.Aspirantes.forEach((aspirante: any) => {
+                this.columnas.forEach((columna: any) => {
+                  aspirante[columna] = "";
+                  if (columna === "Asistencia") {
+                    aspirante[columna] = false;
+                  }
+                });
               });
-            })
-            // this.dataSource.load(this.Aspirantes);
-            this.dataSource = new MatTableDataSource(this.Aspirantes)
-            this.btnCalculo = true;
-            resolve(response);
-          } else {
-            this.popUpManager.showErrorToast(this.translate.instant('admision.error'));
-            // this.dataSource.load([]);
-            this.dataSource = new MatTableDataSource<any>([])
-            resolve('error');
+              this.dataSource = new MatTableDataSource(this.Aspirantes);
+              this.btnCalculo = true;
+              resolve(response);
+            } else {
+              this.popUpManager.showErrorToast(
+                this.translate.instant("admision.error")
+              );
+              this.dataSource = new MatTableDataSource<any>([]);
+              resolve("error");
+            }
+          },
+          (error: any) => {
+            this.popUpManager.showErrorToast(
+              this.translate.instant("admision.error")
+            );
+            reject(error);
           }
-        },
-        (error: any) => {
-          this.popUpManager.showErrorToast(this.translate.instant('admision.error'));
-          reject(error);
-        },
-      );
+        );
     });
   }
 
-
   itemSelect(event: any): void {
-    this.datasourceButtonsTable = true
+    this.datasourceButtonsTable = true;
     if (this.asistencia !== undefined) {
       event.data.Asistencia = this.asistencia;
     }
   }
 
-  loadColumn(IdCriterio: any) {
-    this.nameColumns = []
-    return new Promise((resolve, reject) => {
+  async loadColumn(IdCriterio: any) {
+    this.nameColumns = [];
+    const requisitoPrincipal: any = await this.recuperarRequisitoByPadre(IdCriterio);
+    for (let i = 0; i < requisitoPrincipal.length; i++) {
+      this.nameColumns.push(requisitoPrincipal[i].Nombre);
+    }
+    const requisitoSecundario: any = await this.recuperarRequisito(IdCriterio);
+    const data: any = {};
+    let porcentaje: any;
 
-      this.evaluacionService.get('requisito?query=RequisitoPadreId:' + IdCriterio + '&limit=0').subscribe(
-        (response: any) => {
-          for (let i = 0; i < response.length; i++) {
-            this.nameColumns.push(response[i].Nombre)
-          }
-          this.evaluacionService.get('requisito/' + IdCriterio).subscribe(
-            async (res: any) => {
-              const data: any = {};
-              let porcentaje: any;
+    // Columna de aspirantes
+    data.Aspirantes = {
+      title: this.translate.instant("admision.aspirante"),
+      editable: false,
+      filter: false,
+      sort: true,
+      sortDirection: "asc",
+      width: "55%",
+      valuePrepareFunction: (value: any) => {
+        return value;
+      },
+    };
 
-              // Columna de aspirantes
-              data.Aspirantes = {
-                title: this.translate.instant('admision.aspirante'),
-                editable: false,
+    // Columna de asistencia si lo requiere
+    if (requisitoSecundario.Asistencia === true) {
+      data.Asistencia = {
+        title: this.translate.instant("admision.asistencia"),
+        editable: true,
+        filter: false,
+        width: "4%",
+        type: "custom",
+        renderComponent: CheckboxAssistanceComponent,
+        onComponentInitFunction: (instance: any) => {
+          instance.save.subscribe((data: any) => {
+            // sessionStorage.setItem('EstadoInscripcion', data);
+            this.asistencia = data;
+            if (data === "") {
+              this.asistencia = false;
+            }
+          });
+        },
+      };
+    }
+
+    if (requisitoPrincipal.length > 0) {
+      const idPrograma = sessionStorage.getItem("IdProyecto");
+      const programaBuscar = this.proyectos_selected ? this.proyectos_selected : idPrograma;
+      console.log(this.proyectos_selected, idPrograma)
+      porcentaje = await this.getPercentageSub(programaBuscar, this.periodo.Id, IdCriterio);
+
+      for (const key in porcentaje.areas) {
+        if (porcentaje.areas[key]["Porcentaje"] === 0) {
+          break;
+        }
+        for (const key2 in porcentaje.areas[key]) {
+          for (let i = 0; i < requisitoPrincipal.length; i++) {
+            if (porcentaje.areas[key][key2] == requisitoPrincipal[i].Nombre) {
+              this.columnas.push(requisitoPrincipal[i].Nombre);
+              data[requisitoPrincipal[i].Nombre] = {
+                title: requisitoPrincipal[i].Nombre + " (" + porcentaje.areas[key].Porcentaje + "%)",
+                editable: true,
                 filter: false,
-                sort: true,
-                sortDirection: 'asc',
-                width: '55%',
                 valuePrepareFunction: (value: any) => {
                   return value;
                 },
               };
+              break;
+            }
+          }
+        }
+      }
+    } else {
+      this.popUpManager.showInfoToast(this.translate.instant("admision.no_data"));
+    }
 
-              // Columna de asistencia si lo requiere
-              if (res.Asistencia === true) {
-                data.Asistencia = {
-                  title: this.translate.instant('admision.asistencia'),
-                  editable: true,
-                  filter: false,
-                  width: '4%',
-                  type: 'custom',
-                  renderComponent: CheckboxAssistanceComponent,
-                  onComponentInitFunction: (instance: any) => {
-                    instance.save.subscribe((data: any) => {
-                      // sessionStorage.setItem('EstadoInscripcion', data);
-                      this.asistencia = data;
-                      if (data === '') {
-                        this.asistencia = false;
-                      }
-                    });
-                  },
-                };
-              }
+    return data;
+  }
 
-              if (response.length > 0) {
-                porcentaje = await this.getPercentageSub(IdCriterio)
-
-                for (const key in porcentaje.areas) {
-                  if (porcentaje.areas[key]['Porcentaje'] === 0) {
-                    break;
-                  }
-                  for (const key2 in porcentaje.areas[key]) {
-                    for (let i = 0; i < response.length; i++) {
-                      if (porcentaje.areas[key][key2] == response[i].Nombre) {
-                        this.columnas.push(response[i].Nombre);
-                        data[response[i].Nombre] = {
-                          title: response[i].Nombre + ' (' + porcentaje.areas[key].Porcentaje + '%)',
-                          editable: true,
-                          filter: false,
-                          valuePrepareFunction: (value: any) => {
-                            return value;
-                          },
-                        };
-                        break;
-                      }
-                    }
-                  }
-                }
-
-              } else {
-
-              }
-              resolve(data);
-            },
-            error => {
-              this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
-              reject(error);
-            },
-          );
+  recuperarRequisitoByPadre(idCriterio: any) {
+    console.log(idCriterio);
+    return new Promise((resolve, reject) => {
+      this.evaluacionService.get("requisito?query=RequisitoPadreId:" + idCriterio + "&limit=0")
+        .subscribe((response: any) => {
+          resolve(response);
         },
-        error => {
-          this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
-          reject(error);
-        },
-      );
-
+          (error: any) => {
+            console.error(error);
+            this.popUpManager.showErrorToast(this.translate.instant("admision.error_cargar"));
+            this.loading = false;
+            reject(error);
+          });
     });
   }
 
-  ngOnInit() {
+  recuperarRequisito(idCriterio: any) {
+    return new Promise((resolve, reject) => {
+      this.evaluacionService.get("requisito/" + idCriterio)
+        .subscribe((response: any) => {
+          resolve(response);
+        },
+          (error: any) => {
+            console.error(error);
+            this.popUpManager.showErrorToast(this.translate.instant("admision.error_cargar"));
+            this.loading = false;
+            reject(error);
+          });
+    });
   }
 
   ngOnChanges() {
     this.columnas = [];
-    this.dataSource = new MatTableDataSource<any>([])
+    this.dataSource = new MatTableDataSource<any>([]);
     this.Aspirantes = [];
     for (let i = 0; i < this.Aspirantes.length; i++) {
       this.Aspirantes[i].Asistencia = false;
     }
   }
 
-  getPercentageSub(IdCriterio: any) {
+  getPercentageSub(programaId: any, periodoId: any, IdCriterio: any) {
     return new Promise((resolve, reject) => {
-      this.evaluacionService.get('requisito_programa_academico?query=ProgramaAcademicoId:' +
-        this.proyectos_selected + ',PeriodoId:' + this.periodo.Id + ',RequisitoId:' + IdCriterio).subscribe(
+      this.evaluacionService.get("requisito_programa_academico?query=ProgramaAcademicoId:" + programaId + ",PeriodoId:" + periodoId + ",RequisitoId:" + IdCriterio)
+        .subscribe(
           (Res: any) => {
-
             const porcentaje = JSON.parse(Res[0].PorcentajeEspecifico);
             resolve(porcentaje);
           },
-          error => {
-            this.popUpManager.showErrorToast(this.translate.instant('admision.error_cargar'));
+          (error) => {
+            this.popUpManager.showErrorToast(
+              this.translate.instant("admision.error_cargar")
+            );
             reject(error);
-          },
+          }
         );
     });
   }
 
   ajustarTitulo(titulo: string) {
     if (titulo === titulo.toUpperCase()) {
-      return titulo
+      return titulo;
     }
-    return titulo.toLowerCase()
+    return titulo.toLowerCase();
   }
 
   async viewtab() {
@@ -761,8 +916,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.notas = false;
     } else {
       this.notas = true;
-      this.verificarEvaluacion()
+      this.verificarEvaluacion();
     }
   }
-
 }

@@ -5,21 +5,6 @@
 
 }
 
-table {
-  width: 100%;
-  border-collapse: separate;
-  th {
-      text-align: center;
-      color: white;
-      background-color: var(--primary);
-  }
-  td {
-      text-align: center !important;
-      border-right: whitesmoke;
-      border-left: whitesmoke;
-  }
-}
-
 .btn-barcode,
 .container-button-column {
   display: flex;
@@ -93,6 +78,8 @@ table {
   cursor: pointer;
   color: white !important;
   display: flex;
+  padding: 10px 15px;
+  border-radius: 10px;
 }
 
 .link:hover {
@@ -180,6 +167,53 @@ mat-table {
   z-index: 1;
 }
 
+.filtro {
+  width: 100%;
+}
+
+.boton-acciones {
+  cursor: pointer;
+}
+
+.boton-acciones .item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Estilos para el indicador de estado */
+.status-indicator {
+  margin-top: 0.3em;
+  font-weight: bold;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.3rem;
+}
+.status-indicator.active {
+  color: white;
+  background-color: var(--success-accent);
+}
+.status-indicator.inactive {
+  color: white;
+  background-color: var(--danger-base);
+}
+
+.contenedor-resumen .titulo-resumen {
+  background-color: var(--primary);
+  text-align: center;
+  padding: 15px;
+  color: white;
+}
+
+.contenedor-resumen ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin: 10px;
+  text-align: center;
+}
+
 @media(width > 580px) {
   .form-container {
     grid-template-columns: repeat(2, 1fr);
@@ -189,5 +223,23 @@ mat-table {
 @media(width > 800px) {
   .form-container {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media(width < 950px) {
+  .contenedor-resumen ul {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media(width < 750px) {
+  .contenedor-resumen ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media(width < 550px) {
+  .contenedor-resumen ul {
+    grid-template-columns: repeat(1, 1fr);
   }
 }

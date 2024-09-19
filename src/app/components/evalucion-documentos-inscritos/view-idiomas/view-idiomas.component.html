@@ -1,43 +1,40 @@
-<!-- <nb-card>
-    <nb-card-body>
-        <div class="col-md-12"> -->
-            <p *ngIf="inscripcion && info_examen"><label><strong>** {{"GLOBAL.idioma_examen" | translate}}: </strong></label>
-                {{info_examen.Idioma.Nombre}}</p>
-            <table class="table-responsive">
-                <thead>
-                    <!-- <tr><th colspan="6">{{"inscripcion.idiomas" | translate}}</th></tr> -->
-                    <tr class="subheader">
-                        <th>{{"GLOBAL.idioma" | translate}}</th>
-                        <th>{{"GLOBAL.nativo" | translate}}</th>
-                        <th>{{"GLOBAL.nivel_escribe" | translate}}</th>
-                        <th>{{"GLOBAL.nivel_escucha" | translate}}</th>
-                        <th>{{"GLOBAL.nivel_habla" | translate}}</th>
-                        <th>{{"GLOBAL.nivel_lee" | translate}}</th>
-                    </tr>
-                </thead>
-                <tbody *ngIf="info_idioma">
-                    <tr *ngFor="let idioma of info_idioma">
-                        <td>{{idioma.IdiomaId.Nombre}}</td>
-                        <td *ngIf="idioma.Nativo; else elseTemplate2">Si</td>
-                        <ng-template #elseTemplate2>
-                            <td>No</td>
-                        </ng-template>
-                        <td>{{idioma.NivelEscribeId.Nombre}}</td>
-                        <td>{{idioma.NivelEscuchaId.Nombre}}</td>
-                        <td>{{idioma.NivelHablaId.Nombre}}</td>
-                        <td>{{idioma.NivelLeeId.Nombre}}</td>
-                    </tr>
-                </tbody>
-                <tfoot *ngIf="url_editar && gotoEdit">
-                  <tr>
-                    <td colspan="6" style="background-color: lightyellow;">
-                      <span (click)="editar()" class="link"><i
-                        class="ion-edit"></i> {{"GLOBAL.actualizar" | translate}}</span>
-                    </td>
-                  </tr>
-                </tfoot>
-            </table>
-<!--         </div>
-    </nb-card-body>
-</nb-card>
- -->
+<p *ngIf="inscripcion && info_examen">
+  <label
+    ><strong>** {{ "GLOBAL.idioma_examen" | translate }}: </strong></label
+  >
+  {{ info_examen.Idioma.Nombre }}
+</p>
+<table class="table-responsive">
+  <thead>
+    <tr class="subheader">
+      <th>{{ "GLOBAL.idioma" | translate }}</th>
+      <th>{{ "GLOBAL.nativo" | translate }}</th>
+      <th>{{ "GLOBAL.nivel_escribe" | translate }}</th>
+      <th>{{ "GLOBAL.nivel_escucha" | translate }}</th>
+      <th>{{ "GLOBAL.nivel_habla" | translate }}</th>
+      <th>{{ "GLOBAL.nivel_lee" | translate }}</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="info_idioma">
+    <tr *ngFor="let idioma of info_idioma">
+      <td>{{ idioma.IdiomaId.Nombre }}</td>
+      <td *ngIf="idioma.Nativo; else elseTemplate2">Si</td>
+      <ng-template #elseTemplate2>
+        <td>No</td>
+      </ng-template>
+      <td>{{ idioma.NivelEscribeId.Nombre }}</td>
+      <td>{{ idioma.NivelEscuchaId.Nombre }}</td>
+      <td>{{ idioma.NivelHablaId.Nombre }}</td>
+      <td>{{ idioma.NivelLeeId.Nombre }}</td>
+    </tr>
+  </tbody>
+  <tfoot *ngIf="url_editar && gotoEdit">
+    <tr>
+      <td colspan="6" style="background-color: lightyellow">
+        <span (click)="editar()" class="link"
+          ><i class="ion-edit"></i> {{ "GLOBAL.actualizar" | translate }}</span
+        >
+      </td>
+    </tr>
+  </tfoot>
+</table>

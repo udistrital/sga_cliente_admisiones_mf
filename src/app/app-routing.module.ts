@@ -26,7 +26,14 @@ import { RepotesInscripcionesComponent } from './components/repotes-inscripcione
 import { ListadoAspirantesPregradoComponent } from './components/listado-aspirantes-pregrado/listado-aspirantes-pregrado.component';
 import { CargueSnpComponent } from './components/cargue-snp/cargue-snp.component';
 import { EvalucionAspirantePregradoComponent } from './components/evalucion-aspirante-pregrado/evalucion-aspirante.component';
-
+import { ListadosOficializadosComponent } from './components/listados-oficializados/listados-oficializados.component';
+import { ListadoOficializadosComponent } from './components/listado-oficializados/listado-oficializados.component';
+import { ListadoAdmitidosComponent } from './components/listado-admitidos/listado-admitidos/listado-admitidos.component';
+import { PreinscripcionProyectosCurricularesComponent } from './components/preinscripcion-proyectos-curriculares/preinscripcion-proyectos-curriculares.component';
+import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lista-tipo-inscripcion/lista-tipo-inscripcion.component';
+import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/creacion-tipo-inscipcion/creacion-tipo-inscipcion.component';
+import { ListaTipoCuposComponent } from './components/tipo-cupos/lista-tipo-cupos/lista-tipo-cupos.component';
+import { CreacionTipoCuposComponent } from './components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component';
 
 const routes: Routes = [
   {
@@ -57,10 +64,10 @@ const routes: Routes = [
     path:"administracion-cuenta", 
     component: AdministracionCuentaBancariaComponent
   },
-  //{
-   // path:"evaluacion-aspirantes", 
-    //component: EvaluacionAspirantesComponent
-  //},
+  {
+   path:"evaluacion-aspirantes", 
+    component: EvaluacionAspirantesComponent
+  },
     {
     path:"evaluacion-aspirantes-pregrado", 
     component: EvalucionAspirantePregradoComponent
@@ -87,11 +94,11 @@ const routes: Routes = [
   },
   {
     path:"suite-programa", 
-    component: DefSuiteInscripProgramaComponent ,
+    component: DefSuiteInscripProgramaComponent,
   },
   {
     path:"liquidacion-recibos-posgrado", 
-    component: LiquidacionRecibosComponent ,
+    component: LiquidacionRecibosComponent,
   },
   {
     path:"liquidacion-recibos-pregrado", 
@@ -99,22 +106,50 @@ const routes: Routes = [
   },
   {
     path:"liquidacion-historico", 
-    component: LiquidacionHistoricoComponent ,
+    component: LiquidacionHistoricoComponent,
   },
-  // {
-  //   path:"soporte-configuracion", 
-  //   component: SoporteConfiguracionComponent ,
-  // },
     {path:"reportes-inscritos", 
-    component: RepotesInscripcionesComponent ,
+    component: RepotesInscripcionesComponent,
   },
   {
     path:"listado-pregrado", 
-    component: ListadoAspirantesPregradoComponent ,
+    component: ListadoAspirantesPregradoComponent,
   },
   {
     path:"snp", 
-    component: CargueSnpComponent ,
+    component: CargueSnpComponent,
+  },
+  {
+    path:"listados-oficializados", 
+    component: ListadosOficializadosComponent
+  },
+  {
+    path:"listado-oficializados", 
+    component: ListadoOficializadosComponent,
+  },
+  {
+    path:"listado-admitidos", 
+    component: ListadoAdmitidosComponent,
+  },
+  {
+    path:"inscripcion-proyectos-curriculares", 
+    component: PreinscripcionProyectosCurricularesComponent,
+  },
+  {
+    path:"lista-tipo-inscripcion", 
+    component: ListaTipoInscripcionComponent,
+  },
+  {
+    path:"crear-tipo-inscripcion", 
+    component: CreacionTipoInscipcionComponent,
+  },
+  {
+    path:"lista-tipo-cupos", 
+    component: ListaTipoCuposComponent,
+  },
+  {
+    path:"crear-tipo-cupos", 
+    component: CreacionTipoCuposComponent,
   },
 ];
 

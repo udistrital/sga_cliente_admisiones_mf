@@ -3,7 +3,8 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { FormControl, Validators } from '@angular/forms';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { SelectDocumentoProyectoComponent } from '../select-documento-proyecto/select-documento-proyecto.component';
@@ -41,6 +42,8 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
 
   facultad: any;
   facultades: any[] = [];
+
+  tipo_cupo: any;
 
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
@@ -221,7 +224,6 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
                 this.proyectos = response;
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
                 this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;
@@ -286,6 +288,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
     sessionStorage.setItem('ProgramaAcademicoId', this.proyectos_selected)
     sessionStorage.setItem('PeriodoId', this.periodo.Id)
     sessionStorage.setItem('TipoInscripcionId', this.tipo_inscripcion_selected)
+    sessionStorage.setItem('TipoCupo', this.tipo_cupo)
   }
 
   openSelectDocumentoProyectoComponent() {

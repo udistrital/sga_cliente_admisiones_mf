@@ -29,15 +29,15 @@ table {
 }
 
 
-::ng-deep .subHeaders {
+.subHeaders {
   background-color: var(--color4) !important;
 }
 
-::ng-deep .cuotas {
+.cuotas {
   background-color: var(--color600) !important;
 }
 
-::ng-deep .azulOscuro {
+.azulOscuro {
   background-color: var(--primary) !important;
   color: #ffffff !important;  /* Cambia esto al color que desees */
 }

@@ -2,7 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angu
 // import { LocalDataSource } from 'ng2-smart-table';
 // import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 // import 'style-loader!angular2-toaster/toaster.css';
 // import { NbDialogRef } from '@nebular/theme';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -85,7 +86,6 @@ export class ListDocumentoProyectoComponent implements OnInit {
             documento.Activo = 'No'
           }
           this.documentos.push(documento);
-          console.log(this.documentos)
           this.source = new MatTableDataSource(this.documentos);
           setTimeout(() => {
             this.source.paginator = this.paginator;
@@ -123,7 +123,7 @@ export class ListDocumentoProyectoComponent implements OnInit {
       showCancelButton: true,
     };
     Swal.fire(opt)
-      .then((willDelete) => {
+      .then((willDelete:any) => {
         if (willDelete.value) {
           this.info_doc_programa = <TipoDocumentoPrograma>event.data;
           this.info_doc_programa.Activo = false;
@@ -141,7 +141,7 @@ export class ListDocumentoProyectoComponent implements OnInit {
                   showCancelButton: true,
                 };
 
-                Swal.fire(opt1).then((willCreate) => {
+                Swal.fire(opt1).then((willCreate:any) => {
                   if (willCreate.value) {
                     this.loadData();
                     this.activetabFather();

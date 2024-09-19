@@ -9,6 +9,7 @@ import { PopUpManager } from '../../../managers/popUpManager';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 
 @Component({
   selector: 'ngx-perfil',
@@ -86,6 +87,7 @@ export class PerfilComponent implements OnInit {
     private zipManagerService: ZipManagerService,
     private popUpManager: PopUpManager,
     private sgaMidService: SgaMidService,
+    private inscripcionesMidService: InscripcionMidService,
     private gestorDocumentalService: NewNuxeoService,
     private inscripcionService: InscripcionService,) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -160,7 +162,8 @@ export class PerfilComponent implements OnInit {
     this.inscripcionService.get('inscripcion/' + this.info_inscripcion_id)
       .subscribe((resG: any) => {
         resG.EstadoInscripcionId.Id = 5; // id inscrito.
-        this.inscripcionService.put('inscripcion', resG)
+        resG.TerceroId = this.info_persona_id;
+        this.inscripcionesMidService.post('inscripciones/actualizar-inscripcion', resG)
           .subscribe(res => {
             sessionStorage.setItem('IdEstadoInscripcion', "");
             this.editar("", 'salir_preinscripcion');
@@ -208,7 +211,7 @@ export class PerfilComponent implements OnInit {
     })
     this.data.DOCUMENTACION = documentacionOrganizada;
 
-    this.sgaMidService.post('generar_recibo/comprobante_inscripcion', this.data).subscribe(
+    this.inscripcionesMidService.post('recibos/comprobante-inscripcion', this.data).subscribe(
       (response: any) => {
         this.loading = false;
         const dataComprobante = new Uint8Array(atob(response['Data']).split('').map((char: any) => char.charCodeAt(0)));
@@ -346,7 +349,7 @@ export class PerfilComponent implements OnInit {
       if (this.showErrors || this.en_revision) {
         if (actualTag != "inscripcion") {
           if (this.SuiteTags[actualTag].required) {
-            this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.fallo_carga_mensaje'));
+            this.popUpManager.showErrorAlert(actualTag + " - " + this.translate.instant('inscripcion.fallo_carga_mensaje'));
           }
         } else {
           this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.fallo_carga_mensaje'));

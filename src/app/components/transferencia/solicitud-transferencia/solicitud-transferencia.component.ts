@@ -3,16 +3,16 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { FORM_SOLICITUD_TRANSFERENCIA, FORM_RESPUESTA_SOLICITUD } from '../../../models/transferencia/forms-transferencia';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UserService } from 'src/app/services/users.service';
  import * as moment from 'moment';
-import { TransferenciaInternaReintegro } from 'src/app/models/inscripcion/transferencia_reintegro';
 import { HttpErrorResponse } from '@angular/common/http';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 
 @Component({
   selector: 'solicitud-transferencia',
@@ -50,9 +50,10 @@ export class SolicitudTransferenciaComponent implements OnInit {
   comentario!: string;
 
   constructor(
+    private inscripcionMidService: InscripcionMidService,
     private translate: TranslateService,
+    private terceroMidService: TerceroMidService,
     private utilidades: UtilidadesService,
-    private sgaMidService: SgaMidService,
     private nuxeo: NewNuxeoService,
     private autenticationService: ImplicitAutenticationService,
     private popUpManager: PopUpManager,
@@ -124,10 +125,10 @@ export class SolicitudTransferenciaComponent implements OnInit {
 
     if (this.uid !== undefined && this.uid !== 0 &&
       this.uid.toString() !== '' && this.uid.toString() !== '0') {
-      this.sgaMidService.get('persona/consultar_persona/' + this.uid).subscribe((res: any) => {
+      this.terceroMidService.get('personas/' + this.uid).subscribe((res: any) => {
         this.loading = true;
         if (res !== null) {
-          this.nombreCordinador = res.NombreCompleto;
+          this.nombreCordinador = res.Data.NombreCompleto;
         }
       },
         (error: HttpErrorResponse) => {
@@ -149,7 +150,7 @@ export class SolicitudTransferenciaComponent implements OnInit {
 
   loadSolicitud() {
     this.loading = true;
-    this.sgaMidService.get('transferencia/inscripcion/' + this.id).subscribe((inscripcion:any) => {
+    this.inscripcionMidService.get('transferencia/inscripcion/' + this.id).subscribe((inscripcion:any) => {
       if (inscripcion !== null) {
         if (inscripcion.Success) {
           this.loading = true;
@@ -358,12 +359,12 @@ export class SolicitudTransferenciaComponent implements OnInit {
 
   loadEstados() {
     this.loading = true;
-    this.sgaMidService.get('transferencia/estados').subscribe((estados:any) => {
+    this.inscripcionMidService.get('transferencia/estados').subscribe((estados:any) => {
       if (estados !== null) {
         if (estados.Success) {
           const respuesta = this.getIndexFormRes('Respuesta');
 
-          this.formRespuesta.campos[respuesta].opciones = estados['Data'].filter((estado:any) => estado.Nombre != 'Radicada' && estado.Nombre != 'Solicitado');
+          this.formRespuesta.campos[respuesta].opciones = estados['Data'].filter((estado:any) => estado.Nombre != 'Solicitud generada' && estado.Nombre != 'Solicitado');
 
           this.loading = false;
         }
@@ -398,17 +399,14 @@ export class SolicitudTransferenciaComponent implements OnInit {
       'EstadoAbreviacion': 'INSCREAL'
     }
 
-    this.sgaMidService.put('transferencia/actualizar_estado/' + this.solicitudId, inscripcionPut).subscribe((response: any) => {
-      this.loading = false;
+    this.inscripcionMidService.put('transferencia/actualizar-estado/' + this.solicitudId, inscripcionPut).subscribe((response: any) => {
       const r_ins = <any>response;
-      if (response !== null && r_ins.Type !== 'error') {
-        this.loading = false;
+      if (response !== null && r_ins.Success !== false) {
         this.popUpManager.showSuccessAlert(this.translate.instant('inscripcion.actualizar'));
         this.router.navigate([`pages/inscripcion/transferencia/${btoa(this.process)}`])
       }
     },
       (error: any) => {
-        this.loading = false;
         if (error.System.Message.includes('duplicate')) {
           Swal.fire({
             icon: 'info',
@@ -485,39 +483,29 @@ export class SolicitudTransferenciaComponent implements OnInit {
         'FechaRadicacion': moment().format('YYYY-MM-DD hh:mm:ss'),
       }
 
+      
       if (this.estado === 'Requiere modificación') {
-        this.sgaMidService.put('transferencia/' + this.solicitudId, data).subscribe(
+        this.inscripcionMidService.put('transferencia/' + this.solicitudId, data).subscribe(
           (res:any) => {
-            const r = <any>res.Response
-            if (r !== null && r.Type !== 'error') {
-              this.loading = false;
-              // this.popUpManager.showSuccessAlert(this.translate.instant('inscripcion.solicitud_generada')).then(cerrado => {
-              //   this.ngOnInit();
-              //   this.goback();
-              // });
+            const r = <any>res
+            if (r !== null && r.Success !== false) {
+              this.popUpManager.showSuccessAlert(this.translate.instant('inscripcion.solicitud_generada'))
             } else {
               this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.error_solicitud'));
-              this.loading = false;
             }
           }, error => {
-            this.loading = false;
           }
         );
       } else {
-        this.sgaMidService.post('transferencia', data).subscribe(
+        this.inscripcionMidService.post('transferencia', data).subscribe(
           (res:any) => {
-            const r = <any>res.Response
-            if (r !== null && r.Type !== 'error') {
-              this.loading = false;
-              // this.popUpManager.showSuccessAlert(this.translate.instant('inscripcion.solicitud_generada')).then((cerrado:any) => {
-              //   this.ngOnInit();
-              // });
+            const r = <any>res
+            if (r !== null && r.Success !== false) {
+              this.popUpManager.showSuccessAlert(this.translate.instant('inscripcion.solicitud_generada'))
             } else {
               this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.error_solicitud'));
-              this.loading = false;
             }
           }, error => {
-            this.loading = false;
           }
         );
       }
@@ -564,9 +552,9 @@ export class SolicitudTransferenciaComponent implements OnInit {
         Respuesta.FechaEspecifica = moment(event.data.Respuesta.FechaEspecifica).format('YYYY-MM-DD hh:mm:ss');
       }
 
-      this.sgaMidService.put('transferencia/respuesta_solicitud/' + this.solicitudId, Respuesta).subscribe(
+      this.inscripcionMidService.put('transferencia/respuesta-solicitud/' + this.solicitudId, Respuesta).subscribe(
         (res: any) => {
-          if (res !== null && res.Response.Code === '200') {
+          if (res !== null && res.Status == '200') {
             this.popUpManager.showSuccessAlert(this.translate.instant('GLOBAL.info_estado') + ' ' +
               this.translate.instant('GLOBAL.operacion_exitosa'));
             this.loading = false;
@@ -583,6 +571,5 @@ export class SolicitudTransferenciaComponent implements OnInit {
   }
 
   prueba(event:any) {
-    console.log(event)
   }
 }

@@ -21,6 +21,7 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
+  flex-direction: column;
 }
 
 .table-bordered {
@@ -80,4 +81,59 @@
   background-color: #03678f;
   width: 14px;
   height: 13px;
+}
+
+.contenedor-info {
+  display: flex;
+}
+
+.contenedor-info mat-icon {
+  margin: auto;
+}
+
+.contenedor-info span {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.cupos-disponibles {
+  text-align: center;
+  justify-content: center;
+  margin: 0 0 15px;
+}
+
+.cupos-disponibles label {
+  margin: 0 10px;
+}
+
+.filtro {
+  width: 100%;
+}
+
+.contenedor-tabla {
+  width: 100%;
+  overflow: overlay;
+}
+
+.loader-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(117, 115, 115, 0.5);
+  /* Fondo semitransparente rojo */
+  z-index: 1;
+}
+
+@media (width > 1000px) {
+  .card-content {
+    flex-direction: row;
+  }
 }

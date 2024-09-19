@@ -3,13 +3,15 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { ZipManagerService } from 'src/utils/zip-manager.service';
 import { DocumentoService } from 'src/app/services/documento.service';
 import { PopUpManager } from '../../../managers/popUpManager';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 
 @Component({
   selector: 'ngx-view-experiencia-laboral',
@@ -58,7 +60,7 @@ export class ViewExperienciaLaboralComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     private sgaMidService: SgaMidService,
-  
+    private inscripcionesMidService: InscripcionMidService,
     private newNuxeoService: NewNuxeoService,
     private documentoService: DocumentoService,
     private sanitization: DomSanitizer,
@@ -84,12 +86,12 @@ export class ViewExperienciaLaboralComponent implements OnInit {
 
   loadData(): void {
     this.info_experiencia_laboral = <any>[];
-    this.sgaMidService.get('experiencia_laboral/by_tercero?Id=' + this.persona_id).subscribe(
+    this.inscripcionesMidService.get('experiencia-laboral/tercero?Id=' + this.persona_id).subscribe(
       (response: any) => {
         const soportes = [];
         let soportes1 = "";
-        if (response.Data.Code === '200') {
-          this.data = <Array<any>>response.Data.Body[1];
+        if (response.Status === 200 && response.Success === true) {
+          this.data = <Array<any>>response.Data;
           this.infoCarga.nCargas = this.data.length;
           this.info_experiencia_laboral = this.data;
           for (let i = 0; i < this.info_experiencia_laboral.length; i++) {

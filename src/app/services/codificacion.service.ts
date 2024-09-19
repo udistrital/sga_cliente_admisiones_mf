@@ -9,35 +9,35 @@ export class CodificacionService {
   constructor(private requestManager: RequestManager) { }
 
   getNiveles() {
-    this.requestManager.setPath("API.PROYECTO_ACADEMICO_CRUD");
+    this.requestManager.setPath("PROYECTO_ACADEMICO_SERVICE");
     return this.requestManager.get(
       "nivel_formacion?query=Activo:true&sortby=Id&order=asc&limit=0"
     );
   }
 
   getProyectosCurriculares() {
-    this.requestManager.setPath("API.PROYECTO_ACADEMICO_CRUD");
+    this.requestManager.setPath("PROYECTO_ACADEMICO_SERVICE");
     return this.requestManager.get(
       "proyecto_academico_institucion?query=Activo:true&sortby=Nombre&order=asc&limit=0"
     );
   }
 
   getPlanDeEstudios(idProyecto: number) {
-    this.requestManager.setPath("API.PLANES_ESTUDIO_CRUD");
+    this.requestManager.setPath("PLANES_ESTUDIOS_CRUD");
     return this.requestManager.get(
       `plan_estudio?query=ProyectoAcademicoId:${idProyecto},Activo:true&sortby=Nombre&order=asc&imit=0`
     );
   }
 
-  getAdmitidos(periodoId: number, proyectoId: number, periodoValor: string, codigoProyecto: string) {
-    this.requestManager.setPath("API.ADMISIONES_MID");
+  getAdmitidos(periodoId: number, proyectoId: number, periodoValor: string, codigoProyecto: string, nivel: string | undefined) {
+    this.requestManager.setPath("SGA_ADMISIONES_MID");
     return this.requestManager.get(
-      `codificacion/admitidos/?id_periodo=${periodoId}&id_proyecto=${proyectoId}&valor_periodo=${periodoValor}&codigo_proyecto=${codigoProyecto}`
+      `codificacion/admitidos/?id_periodo=${periodoId}&id_proyecto=${proyectoId}&valor_periodo=${periodoValor}&codigo_proyecto=${codigoProyecto}&nivel_academico=${nivel}`
     );
   }
 
   postGenerarCodigos(data: Array<Record<string, any>>, sortTipo: number) {
-    this.requestManager.setPath("API.ADMISIONES_MID");
+    this.requestManager.setPath("SGA_ADMISIONES_MID");
     return this.requestManager.post(
       `codificacion/codigos/?tipo_sort=${sortTipo}`, data
     );
@@ -45,14 +45,14 @@ export class CodificacionService {
 
 
   postGuardarCodigos(data: Array<Record<string, any>>) {
-    this.requestManager.setPath("API.ADMISIONES_MID");
+    this.requestManager.setPath("SGA_ADMISIONES_MID");
     return this.requestManager.post(
       "codificacion/codigos-periodo", data
     );
   }
 
   getPeriodosAcademicos() {
-    this.requestManager.setPath("API.PARAMETRO_CRUD");
+    this.requestManager.setPath("PARAMETROS_SERVICE");
     return this.requestManager.get("periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
       .pipe(
         map((response: any) => {

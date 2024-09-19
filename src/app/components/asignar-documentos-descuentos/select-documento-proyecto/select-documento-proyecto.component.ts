@@ -2,7 +2,8 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 // import { LocalDataSource } from 'ng2-smart-table';
 // import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 //  
 import { Subscription } from 'rxjs';
 // import { NbDialogRef } from '@nebular/theme';
@@ -127,6 +128,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
             documentoNuevo.PeriodoId = parseInt(sessionStorage.getItem('PeriodoId')!, 10);
             documentoNuevo.ProgramaId = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!, 10);
             documentoNuevo.TipoInscripcionId = parseInt(sessionStorage.getItem('TipoInscripcionId')!, 10);
+            documentoNuevo.TipoCupo = parseInt(sessionStorage.getItem('TipoCupo')!,10)
             documentoNuevo.Obligatorio = true;
 
             content = Swal.getHtmlContainer();
@@ -150,7 +152,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
                   showCancelButton: true,
                 };
 
-                Swal.fire(opt1).then((willCreate) => {
+                Swal.fire(opt1).then((willCreate:any) => {
                   if (willCreate.value) {
                     this.loadDataProyecto();
                   }
@@ -185,7 +187,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
       showCancelButton: true,
     };
     Swal.fire(opt)
-      .then((willDelete) => {
+      .then((willDelete:any) => {
 
         if (willDelete.value) {
           Swal.fire({
@@ -206,6 +208,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
           documentoModificado.PeriodoId = parseInt(sessionStorage.getItem('PeriodoId')!, 10);
           documentoModificado.ProgramaId = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!, 10);
           documentoModificado.TipoInscripcionId = parseInt(sessionStorage.getItem('TipoInscripcionId')!, 10);
+          documentoModificado.TipoCupo = parseInt(sessionStorage.getItem('TipoCupo')!,10)
           documentoModificado.Obligatorio = event.data.Obligatorio;
 
           this.inscripcionService.put('documento_programa', documentoModificado).subscribe((res: any) => {
@@ -221,7 +224,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
                 showCancelButton: true,
               };
 
-              Swal.fire(opt1).then((willDelete1) => {
+              Swal.fire(opt1).then((willDelete1:any) => {
                 if (willDelete1.value) {
                   this.loadDataProyecto();
                 }
@@ -241,14 +244,12 @@ export class SelectDocumentoProyectoComponent implements OnInit {
 
   onUpdate(documento: any) {
     var msgpopUp
-    console.log(documento.Data.Obligatorio)
     if (documento.Data.Obligatorio !== true) {
       msgpopUp = this.translate.instant('documento_proyecto.poner_obligatorio')
     } else {
       msgpopUp = this.translate.instant('documento_proyecto.quitar_obligatorio')
     }
     this.popUpManager.showConfirmAlert(msgpopUp, this.translate.instant('documento_proyecto.documento')).then(accion => {
-      console.log(accion)
       if (accion.value) {
         const documentoModificado: DocumentoPrograma = new DocumentoPrograma();
         documentoModificado.TipoDocumentoProgramaId = documento.Data;
@@ -258,6 +259,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
         documentoModificado.PeriodoId = parseInt(sessionStorage.getItem('PeriodoId')!, 10);
         documentoModificado.ProgramaId = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!, 10);
         documentoModificado.TipoInscripcionId = parseInt(sessionStorage.getItem('TipoInscripcionId')!, 10);
+        documentoModificado.TipoCupo = parseInt(sessionStorage.getItem('TipoCupo')!,10)
         documentoModificado.Obligatorio = documento.value;
         this.inscripcionService.put('documento_programa', documentoModificado).subscribe((response:any) => {
           if (response.Type !== 'error') {
@@ -266,17 +268,13 @@ export class SelectDocumentoProyectoComponent implements OnInit {
           } else {
             this.popUpManager.showErrorAlert(this.translate.instant('documento_proyecto.ajuste_fail'))
             this.source= new MatTableDataSource(this.documento_proyecto);
-
-            console.log(this.source)
           }
         }, () => {
-          console.log(this.documento_proyecto)
           this.popUpManager.showErrorToast(this.translate.instant('documento_proyecto.ajuste_fail'))
           this.source= new MatTableDataSource(this.documento_proyecto);
 
         });
       } else {
-        console.log(this.documento_proyecto)
         this.source = new MatTableDataSource(this.documento_proyecto);
 
       }
@@ -322,7 +320,6 @@ export class SelectDocumentoProyectoComponent implements OnInit {
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
         }
         else if (response.length == 1 && !response[0].hasOwnProperty('TipoDocumentoProgramaId')) {
-          console.log(this.documento_proyecto)
           this.source = new MatTableDataSource(this.documento_proyecto);
           setTimeout(() => {
             this.source.paginator = this.paginator;
@@ -336,7 +333,6 @@ export class SelectDocumentoProyectoComponent implements OnInit {
             documento.TipoDocumentoProgramaId.Obligatorio = documento.Obligatorio;
             this.documento_proyecto.push(<TipoDocumentoPrograma>documento.TipoDocumentoProgramaId);
           });
-          console.log(this.documento_proyecto)
           this.source = new MatTableDataSource(this.documento_proyecto);
           setTimeout(() => {
             this.source.paginator = this.paginator;

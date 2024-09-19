@@ -1,525 +1,478 @@
-<mat-card class="card" style="margin-top: 20px;">
-    <mat-card-content style="width: 100%; ">
-        <div class=col-12>
-            <fieldset [ngClass]="{'fieldseter':true}">
-                <legend>
-                    &nbsp; {{ 'liquidacion.recibos' | translate }}
-                </legend>
+<mat-card class="card">
+    <div [class.loader-div]="loading">
+        <mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+    </div>
+    <mat-card-header>
+        <mat-card-title>
+            {{ 'liquidacion.recibos' | translate }}
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form [formGroup]="firstFormGroup" class="form-grid3">
+            <div class="form-col1">
+                <mat-card-subtitle>{{ 'listado_pregrado.facultad' | translate }}</mat-card-subtitle>
+                <mat-form-field>
+                    <mat-label>{{ 'listado_pregrado.facultad' | translate }}:</mat-label>
+                    <mat-select formControlName="validatorFacultad" (selectionChange)="onFacultadChange($event)" required>
+                        <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                        <mat-option *ngFor="let item of facultades" [value]="item.Id">
+                            {{item.Nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
 
-                <div style="margin-top: 20px;">
+            <div class="form-col1">
+                <mat-card-subtitle>{{ 'GLOBAL.proyecto_academico' | translate }}</mat-card-subtitle>
+                <mat-form-field>
+                    <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}:</mat-label>
+                    <mat-select formControlName="validatorProyecto" required>
+                        <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                        <mat-option *ngFor="let item of proyectos" [value]="item.Id">
+                            {{item.Nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
 
-                    <div>
-                        <mat-card-subtitle>Proyecto curricular</mat-card-subtitle>
-                        <mat-form-field [formGroup]="firstFormGroup" style="width: 100%;">
-                            <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}:</mat-label>
-                            <mat-select formControlName="validatorProyecto" required>
-                                <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                                <mat-option *ngFor="let item of proyectos" [value]="item" [disabled]="!item.Id">
-                                    {{item.Nombre}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-
-                    <div>
-                        <mat-card-subtitle>Periodo</mat-card-subtitle>
-                        <mat-form-field [formGroup]="firstFormGroup">
-                            <mat-label>{{ 'GLOBAL.periodo' | translate }}:</mat-label>
-                            <mat-select formControlName="validatorPeriodo" required>
-                                <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                                <mat-option *ngFor="let item of periodos" [value]="item">{{item.Nombre}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-
-
-                    <div class="container">
-                        <div class="row justify-content-md-center">
-                            <button class="boton-primary" (click)="mostrarTabla()">{{ 'GLOBAL.continuar' | translate
-                                }}</button>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
+            <div class="form-col1">
+                <mat-card-subtitle>{{ 'GLOBAL.periodo' | translate }}</mat-card-subtitle>
+                <mat-form-field>
+                    <mat-label>{{ 'GLOBAL.periodo' | translate }}:</mat-label>
+                    <mat-select formControlName="validatorPeriodo" required>
+                        <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
+                        <mat-option *ngFor="let item of periodos" [value]="item.Id">{{item.Nombre}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </form>
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <button class="boton-primary" (click)="realizarBusqueda()">{{ 'GLOBAL.continuar' | translate
+                    }}</button>
+            </div>
         </div>
     </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="tabla" style="margin-top: 10px;">
+<mat-card *ngIf="tabla" class="card-tabla">
+    <div [class.loader-div]="loading">
+        <mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+    </div>
+    <mat-card-header>
+        <mat-card-title>
+            {{ 'liquidacion.plantilla' | translate }}
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-form-field class="filtro">
+            <mat-label>{{"GLOBAL.filtro" | translate}}</mat-label>
+            <input matInput (keyup)="applyFilterProces($event)" placeholder="Ex. Mia" #input>
+        </mat-form-field>
 
-    <mat-card-content style="width: 100%; ">
-        <div class=col-12>
-            <fieldset [ngClass]="{'fieldseter':true}">
-                <legend>
-                    &nbsp; {{ 'liquidacion.plantilla' | translate }}
-                </legend>
+        <div style="overflow-x: auto; margin-top: 15px;">
+            <table mat-table [dataSource]="dataSource" class="tabla">
 
-                <div style="display: flex; justify-content: center; margin-bottom: 15px;" *ngIf="!recibosUrl">
-                    <div class="custom-filter-container">
-                        <input matInput placeholder="{{ 'GLOBAL.buscar' | translate }}"
-                            (keyup)="applyFilterProces($event)" #input>
-                        <mat-icon class="icon-search" matPrefix>search</mat-icon>
-                    </div>
-                </div>
+                <ng-container matColumnDef="seleccion">
+                    <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}"></th>
+                    <td mat-cell *matCellDef="let element"> <input type="radio" [value]="true"
+                            [checked]="element.seleccion">
+                    </td>
+                </ng-container>
 
-                <div style="overflow-x: auto; margin-top: 15px;">
-                    <table mat-table [dataSource]="admitidos" class="tabla">
+                <ng-container matColumnDef="codigo">
+                    <th mat-header-cell *matHeaderCellDef class="estudiante">
+                        {{'liquidacion.codigo' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">{{element.codigo}}</td>
+                </ng-container>
 
-                        <ng-container matColumnDef="seleccion">
-                            <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}"></th>
-                            <td mat-cell *matCellDef="let element"> <input type="radio" [value]="true"
-                                    [checked]="element.seleccion">
-                            </td>
-                        </ng-container>
+                <ng-container matColumnDef="documento">
+                    <th mat-header-cell *matHeaderCellDef class="estudiante">
+                        {{'liquidacion.documento' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="codigo">
-                            <th mat-header-cell *matHeaderCellDef class="estudiante">
-                                {{'liquidacion.codigo' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element">{{element.Codigo}}</td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="documento">
-                            <th mat-header-cell *matHeaderCellDef class="estudiante">
-                                {{'liquidacion.documento' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element"> {{element.Documento}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="nombres">
-                            <th mat-header-cell *matHeaderCellDef class="estudiante">
-                                {{'liquidacion.nombres' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element">{{element.Nombre}}</td>
-                        </ng-container>
+                <ng-container matColumnDef="nombres">
+                    <th mat-header-cell *matHeaderCellDef class="estudiante">
+                        {{'liquidacion.nombres' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">{{element.nombres}}</td>
+                </ng-container>
 
 
-                        <ng-container matColumnDef="apellidos">
-                            <th mat-header-cell *matHeaderCellDef class="estudiante">
-                                {{'liquidacion.apellidos' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element">{{element.PrimerApellido}}{{element.SegundoApellido}}
-                            </td>
-                        </ng-container>
+                <ng-container matColumnDef="apellidos">
+                    <th mat-header-cell *matHeaderCellDef class="estudiante">
+                        {{'liquidacion.apellidos' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">{{element.apellidos}}
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="A1">
-                            <th mat-header-cell *matHeaderCellDef class="variableA">
-                                {{ 'liquidacion.caso' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.a1">
-                                    <ng-container *ngSwitchCase="'1'">1</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">2</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.a1 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="puntaje1">
-                            <th mat-header-cell *matHeaderCellDef class="variableA">
-                                {{'liquidacion.puntaje' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.a1">
-                                    <ng-container *ngSwitchCase="'1'">0</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">25</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.a1 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="A2">
-                            <th mat-header-cell *matHeaderCellDef class="variableA">
-                                {{ 'liquidacion.caso' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.a2">
-                                    <ng-container *ngSwitchCase="'1'">1</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">2</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.a2 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="puntaje2">
-                            <th mat-header-cell *matHeaderCellDef class="variableA">
-                                {{'liquidacion.puntaje' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.a2">
-                                    <ng-container *ngSwitchCase="'1'">0</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">25</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.a2 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
+                <ng-container matColumnDef="A1">
+                    <th mat-header-cell *matHeaderCellDef class="variableA">
+                        {{ 'liquidacion.caso' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.A.A1}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="puntaje1">
+                    <th mat-header-cell *matHeaderCellDef class="variableA">
+                        {{'liquidacion.puntaje' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.A.puntajeA1}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="A2">
+                    <th mat-header-cell *matHeaderCellDef class="variableA">
+                        {{ 'liquidacion.caso' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.A.A2}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="puntaje2">
+                    <th mat-header-cell *matHeaderCellDef class="variableA">
+                        {{'liquidacion.puntaje' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.A.puntajeA2}}
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="A3">
-                            <th mat-header-cell *matHeaderCellDef class="variableA">
-                                {{ 'liquidacion.caso' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.a3">
-                                    <ng-container *ngSwitchCase="'1'">1</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">2</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.a3 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="puntaje3">
-                            <th mat-header-cell *matHeaderCellDef class="variableA">
-                                {{'liquidacion.puntaje' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.a3">
-                                    <ng-container *ngSwitchCase="'1'">0</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">25</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.a3 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
+                <ng-container matColumnDef="A3">
+                    <th mat-header-cell *matHeaderCellDef class="variableA">
+                        {{ 'liquidacion.caso' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.A.A3}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="puntaje3">
+                    <th mat-header-cell *matHeaderCellDef class="variableA">
+                        {{'liquidacion.puntaje' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.A.puntajeA3}}
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="B1">
-                            <th mat-header-cell *matHeaderCellDef class="variableB">
-                                {{ 'liquidacion.caso' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.b1">
-                                    <ng-container *ngSwitchCase="'1'">1</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">2</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.b1 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="puntaje4">
-                            <th mat-header-cell *matHeaderCellDef class="variableB">
-                                {{'liquidacion.puntaje' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.b1">
-                                    <ng-container *ngSwitchCase="'1'">0</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">25</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.b1 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
+                <ng-container matColumnDef="B1">
+                    <th mat-header-cell *matHeaderCellDef class="variableB">
+                        {{ 'liquidacion.caso' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.B.B1}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="puntaje4">
+                    <th mat-header-cell *matHeaderCellDef class="variableB">
+                        {{'liquidacion.puntaje' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.B.puntajeB1}}
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="B2">
-                            <th mat-header-cell *matHeaderCellDef class="variableB">
-                                {{ 'liquidacion.caso' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.b2">
-                                    <ng-container *ngSwitchCase="'1'">1</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">2</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.b2 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="puntaje5">
-                            <th mat-header-cell *matHeaderCellDef class="variableB">
-                                {{'liquidacion.puntaje' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.b2">
-                                    <ng-container *ngSwitchCase="'1'">0</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">25</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.b2 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
+                <ng-container matColumnDef="B2">
+                    <th mat-header-cell *matHeaderCellDef class="variableB">
+                        {{ 'liquidacion.caso' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.B.B2}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="puntaje5">
+                    <th mat-header-cell *matHeaderCellDef class="variableB">
+                        {{'liquidacion.puntaje' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.B.puntajeB2}}
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="B3">
-                            <th mat-header-cell *matHeaderCellDef class="variableB">
-                                {{ 'liquidacion.caso' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.b3">
-                                    <ng-container *ngSwitchCase="'1'">1</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">2</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.b3 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="puntaje6">
-                            <th mat-header-cell *matHeaderCellDef class="variableB">
-                                {{'liquidacion.puntaje' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.b3">
-                                    <ng-container *ngSwitchCase="'1'">0</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">25</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.b3 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
+                <ng-container matColumnDef="B3">
+                    <th mat-header-cell *matHeaderCellDef class="variableB">
+                        {{ 'liquidacion.caso' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.B.B3}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="puntaje6">
+                    <th mat-header-cell *matHeaderCellDef class="variableB">
+                        {{'liquidacion.puntaje' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.B.puntajeB3}}
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="B4">
-                            <th mat-header-cell *matHeaderCellDef class="variableB">
-                                {{ 'liquidacion.caso' | translate }}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.b4">
-                                    <ng-container *ngSwitchCase="'1'">1</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">2</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.b4 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="puntaje7">
-                            <th mat-header-cell *matHeaderCellDef class="variableB">
-                                {{'liquidacion.puntaje' | translate}}
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <ng-container [ngSwitch]="element.b4">
-                                    <ng-container *ngSwitchCase="'1'">0</ng-container>
-                                    <ng-container *ngSwitchCase="'2'">25</ng-container>
-                                    <ng-container *ngSwitchDefault>{{ element.b4 }}</ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
+                <ng-container matColumnDef="B4">
+                    <th mat-header-cell *matHeaderCellDef class="variableB">
+                        {{ 'liquidacion.caso' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.B.B4}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="puntaje7">
+                    <th mat-header-cell *matHeaderCellDef class="variableB">
+                        {{'liquidacion.puntaje' | translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.B.puntajeB4}}
+                    </td>
+                </ng-container>
 
 
-                        <ng-container matColumnDef="G1">
-                            <th mat-header-cell *matHeaderCellDef class="variableG">
-                                <input type="checkbox" [value]="true" *ngIf="recibosUrl">
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                {{element.pbm}}
-                            </td>
-                        </ng-container>
+                <ng-container matColumnDef="G1">
+                    <th mat-header-cell *matHeaderCellDef class="variableG">
+                        <input type="checkbox" [value]="true" *ngIf="recibosUrl">
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.general.pbm}}
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="G2">
-                            <th mat-header-cell *matHeaderCellDef class="variableG">
-                                <input type="checkbox" [value]="true" *ngIf="recibosUrl">
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <mat-select [value]="element.Sistematizacion ? 'true' : 'false'">
-                                    <mat-option value="true">Sí</mat-option>
-                                    <mat-option value="false">No</mat-option>
-                                </mat-select>
-                            </td>
-                        </ng-container>
-
-
-                        <ng-container matColumnDef="G3">
-                            <th mat-header-cell *matHeaderCellDef class="variableG">
-                                <input type="checkbox" [value]="true" *ngIf="recibosUrl">
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <mat-select [value]="element.Carne ? 'true' : 'false'">
-                                    <mat-option value="true">Sí</mat-option>
-                                    <mat-option value="false">No</mat-option>
-                                </mat-select>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="G4">
-                            <th mat-header-cell *matHeaderCellDef class="variableG">
-                                <input type="checkbox" [value]="true" *ngIf="recibosUrl">
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <mat-select [value]="element.Seguro ? 'true' : 'false'">
-                                    <mat-option value="true">Sí</mat-option>
-                                    <mat-option value="false">No</mat-option>
-                                </mat-select>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="total">
-                            <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}">
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                {{element.totalMatricula}}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="acciones">
-                            <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}">
-
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <div class="separacion-acciones">
-                                    <button aria-hidden="false" title="{{'calendario.tooltip_inactivar' | translate}}"
-                                        class=" boton-primary-table" *ngIf="recibosUrl">
-                                        <mat-icon fontIcon="delete">
-                                        </mat-icon>
-                                    </button>
-
-                                    <button aria-hidden="false" title="{{'calendario.tooltip_editar' | translate}}"
-                                        class=" boton-primary-table  " *ngIf="recibosUrl">
-                                        <mat-icon fontIcon="edit">
-                                        </mat-icon>
-                                    </button>
-
-                                    <button aria-hidden="false" title="{{'calendario.tooltip_inactivar' | translate}}"
-                                        class=" boton-primary-table">
-                                        <mat-icon fontIcon="send">
-                                        </mat-icon>
-                                    </button>
-
-                                </div>
-
-                            </td>
-                        </ng-container>
-
-                        <!-- General -->
-                        <ng-container matColumnDef="PBM">
-                            <th mat-header-cell *matHeaderCellDef class="PBM" [attr.colspan]="31">
-                                {{'liquidacion.pbm_titulo' | translate}}
-                            </th>
-                        </ng-container>
-
-                        <!-- N0 -->
-                        <ng-container matColumnDef="seleccionh">
-                            <th mat-header-cell *matHeaderCellDef class="seleccion" [attr.rowspan]="3"
-                                style="text-align: center;">
-                                {{'liquidacion.seleccion'|translate}}
-                            </th>
-                        </ng-container>
-                        <!-- Nombre -->
-                        <ng-container matColumnDef="estudiante">
-                            <th mat-header-cell *matHeaderCellDef class="estudiante" [attr.rowspan]="2"
-                                [attr.colspan]="4" style="text-align: center;">
-                                {{'liquidacion.datos_estudiante' | translate}}
-                            </th>
-                        </ng-container>
+                <ng-container matColumnDef="G2">
+                    <th mat-header-cell *matHeaderCellDef class="variableG">
+                        <input type="checkbox" [value]="true" *ngIf="recibosUrl">
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-select [value]="element.Sistematizacion ? 'true' : 'false'">
+                            <mat-option value="true">{{ 'GLOBAL.si' | translate }}</mat-option>
+                            <mat-option value="false">{{ 'GLOBAL.no' | translate }}</mat-option>
+                        </mat-select>
+                    </td>
+                </ng-container>
 
 
-                        <ng-container matColumnDef="variableA">
-                            <th mat-header-cell *matHeaderCellDef class="variableA" [attr.rowspan]="1"
-                                [attr.colspan]="6" style="text-align: center;">
-                                {{'liquidacion.variable_a' | translate}}
-                            </th>
-                        </ng-container>
+                <ng-container matColumnDef="G3">
+                    <th mat-header-cell *matHeaderCellDef class="variableG">
+                        <input type="checkbox" [value]="true" *ngIf="recibosUrl">
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-select [value]="element.Carne ? 'true' : 'false'">
+                            <mat-option value="true">{{ 'GLOBAL.si' | translate }}</mat-option>
+                            <mat-option value="false">{{ 'GLOBAL.no' | translate }}</mat-option>
+                        </mat-select>
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="T1">
-                            <th mat-header-cell *matHeaderCellDef class="variableA" [attr.colspan]="2"
-                                style="text-align: center;">
-                                {{'liquidacion.a1' | translate}}
-                            </th>
-                        </ng-container>
+                <ng-container matColumnDef="G4">
+                    <th mat-header-cell *matHeaderCellDef class="variableG">
+                        <input type="checkbox" [value]="true" *ngIf="recibosUrl">
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-select [value]="element.Seguro ? 'true' : 'false'">
+                            <mat-option value="true">{{ 'GLOBAL.si' | translate }}</mat-option>
+                            <mat-option value="false">{{ 'GLOBAL.no' | translate }}</mat-option>
+                        </mat-select>
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="T2">
-                            <th mat-header-cell *matHeaderCellDef class="variableA" [attr.colspan]="2"
-                                style="text-align: center;">
-                                {{'liquidacion.a2' | translate}}
-                            </th>
-                        </ng-container>
+                <ng-container matColumnDef="total">
+                    <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}">
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.totalMatricula}}
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="T3">
-                            <th mat-header-cell *matHeaderCellDef class="variableA" [attr.colspan]="2"
-                                style="text-align: center;">
-                                {{'liquidacion.a3' | translate}}
-                            </th>
-                        </ng-container>
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}">
 
-                        <ng-container matColumnDef="variableB">
-                            <th mat-header-cell *matHeaderCellDef class="variableB" [attr.rowspan]="1"
-                                [attr.colspan]="8" style="text-align: center;">
-                                {{'liquidacion.variable_b' | translate}}
-                            </th>
-                        </ng-container>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="separacion-acciones">
+                            <button aria-hidden="false" title="{{'calendario.tooltip_inactivar' | translate}}"
+                                class=" boton-primary-table" *ngIf="recibosUrl">
+                                <mat-icon fontIcon="delete">
+                                </mat-icon>
+                            </button>
 
-                        <ng-container matColumnDef="T4">
-                            <th mat-header-cell *matHeaderCellDef class="variableB" [attr.colspan]="2"
-                                style="text-align: center;">
-                                {{'liquidacion.b1' | translate}}
-                            </th>
-                        </ng-container>
+                            <button aria-hidden="false" title="{{'calendario.tooltip_editar' | translate}}"
+                                class=" boton-primary-table  " *ngIf="recibosUrl">
+                                <mat-icon fontIcon="edit">
+                                </mat-icon>
+                            </button>
 
-                        <ng-container matColumnDef="T5">
-                            <th mat-header-cell *matHeaderCellDef class="variableB" [attr.colspan]="2"
-                                style="text-align: center;">
-                                {{'liquidacion.b2' | translate}}
-                            </th>
-                        </ng-container>
+                            <button aria-hidden="false" title="{{'calendario.tooltip_inactivar' | translate}}"
+                                class=" boton-primary-table">
+                                <mat-icon fontIcon="send">
+                                </mat-icon>
+                            </button>
 
-                        <ng-container matColumnDef="T6">
-                            <th mat-header-cell *matHeaderCellDef class="variableB" [attr.colspan]="2"
-                                style="text-align: center;">
-                                {{'liquidacion.b3' | translate}}
-                            </th>
-                        </ng-container>
+                        </div>
 
-                        <ng-container matColumnDef="T7">
-                            <th mat-header-cell *matHeaderCellDef class="variableB" [attr.colspan]="2"
-                                style="text-align: center;">
-                                {{'liquidacion.b4' | translate}}
-                            </th>
-                        </ng-container>
+                    </td>
+                </ng-container>
 
-                        <ng-container matColumnDef="variableG">
-                            <th mat-header-cell *matHeaderCellDef class="variableG" [attr.rowspan]="1"
-                                [attr.colspan]="4" style="text-align: center;">
-                                {{'liquidacion.variable_globales' | translate}}
-                            </th>
-                        </ng-container>
+                <!-- General -->
+                <ng-container matColumnDef="PBM">
+                    <th mat-header-cell *matHeaderCellDef class="PBM" [attr.colspan]="31">
+                        {{'liquidacion.pbm_titulo' | translate}}
+                    </th>
+                </ng-container>
 
-                        <ng-container matColumnDef="T8">
-                            <th mat-header-cell *matHeaderCellDef class="variableG">
-                                {{'liquidacion.g1' | translate}}
-                            </th>
-                        </ng-container>
-
-                        <ng-container matColumnDef="T9">
-                            <th mat-header-cell *matHeaderCellDef class="variableG">
-                                {{'liquidacion.g2' | translate}}
-                            </th>
-                        </ng-container>
-
-                        <ng-container matColumnDef="T10">
-                            <th mat-header-cell *matHeaderCellDef class="variableG">
-                                {{'liquidacion.g3' | translate}}
-                            </th>
-                        </ng-container>
-
-                        <ng-container matColumnDef="T11">
-                            <th mat-header-cell *matHeaderCellDef class="variableG">
-                                {{'liquidacion.g4' | translate}}
-                            </th>
-                        </ng-container>
-
-                        <ng-container matColumnDef="totalT">
-                            <th mat-header-cell *matHeaderCellDef class="total" [attr.rowspan]="3">
-                                {{'liquidacion.total' | translate}}
-                            </th>
-                        </ng-container>
-                        <ng-container matColumnDef="accionesT">
-                            <th mat-header-cell *matHeaderCellDef class="acciones" [attr.rowspan]="3">
-                                {{'liquidacion.acciones' | translate}}
-                            </th>
-                        </ng-container>
+                <!-- N0 -->
+                <ng-container matColumnDef="seleccionh">
+                    <th mat-header-cell *matHeaderCellDef class="seleccion" [attr.rowspan]="3"
+                        style="text-align: center;">
+                        {{'liquidacion.seleccion'|translate}}
+                    </th>
+                </ng-container>
+                <!-- Nombre -->
+                <ng-container matColumnDef="estudiante">
+                    <th mat-header-cell *matHeaderCellDef class="estudiante" [attr.rowspan]="2"
+                        [attr.colspan]="4" style="text-align: center;">
+                        {{'liquidacion.datos_estudiante' | translate}}
+                    </th>
+                </ng-container>
 
 
-                        <tr mat-header-row *matHeaderRowDef="['PBM']" class="PBM"></tr>
-                        <tr mat-header-row
-                            *matHeaderRowDef="['seleccionh','estudiante','variableA','variableB','variableG', 'totalT','accionesT' ]">
-                        </tr>
-                        <tr mat-header-row
-                            *matHeaderRowDef="['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11']"></tr>
+                <ng-container matColumnDef="variableA">
+                    <th mat-header-cell *matHeaderCellDef class="variableA" [attr.rowspan]="1"
+                        [attr.colspan]="6" style="text-align: center;">
+                        {{'liquidacion.variable_a' | translate}}
+                    </th>
+                </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                        <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell" colspan="4">{{'calendario.sin_procesos' | translate}}</td>
-                        </tr>
-                    </table>
-                </div>
+                <ng-container matColumnDef="T1">
+                    <th mat-header-cell *matHeaderCellDef class="variableA" [attr.colspan]="2"
+                        style="text-align: center;">
+                        {{'liquidacion.a1' | translate}}
+                    </th>
+                </ng-container>
 
-                <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true" class="paginador">
-                </mat-paginator>
+                <ng-container matColumnDef="T2">
+                    <th mat-header-cell *matHeaderCellDef class="variableA" [attr.colspan]="2"
+                        style="text-align: center;">
+                        {{'liquidacion.a2' | translate}}
+                    </th>
+                </ng-container>
 
-                <div class="container" style="padding: 2%;">
-                    <div class="row justify-content-md-center">
-                        <button class="boton-primary" (click)="guardarLiquidaciones()">{{
-                            'liquidacion.generar_recibo' | translate }}</button>
-                        <button class="boton-primary">{{
-                            'liquidacion.descargar_listado' | translate }}</button>
-                        <button class="boton-primary"(click)="descargarPDFs()">{{
-                            'liquidacion.conjunto_recibos' | translate }}</button>
-                        <button class="boton-primary" (click)="generarRecibos()">{{
-                            'liquidacion.asignar_recibo' | translate }}</button>
-                    </div>
-                </div>
-            </fieldset>
+                <ng-container matColumnDef="T3">
+                    <th mat-header-cell *matHeaderCellDef class="variableA" [attr.colspan]="2"
+                        style="text-align: center;">
+                        {{'liquidacion.a3' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="variableB">
+                    <th mat-header-cell *matHeaderCellDef class="variableB" [attr.rowspan]="1"
+                        [attr.colspan]="8" style="text-align: center;">
+                        {{'liquidacion.variable_b' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="T4">
+                    <th mat-header-cell *matHeaderCellDef class="variableB" [attr.colspan]="2"
+                        style="text-align: center;">
+                        {{'liquidacion.b1' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="T5">
+                    <th mat-header-cell *matHeaderCellDef class="variableB" [attr.colspan]="2"
+                        style="text-align: center;">
+                        {{'liquidacion.b2' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="T6">
+                    <th mat-header-cell *matHeaderCellDef class="variableB" [attr.colspan]="2"
+                        style="text-align: center;">
+                        {{'liquidacion.b3' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="T7">
+                    <th mat-header-cell *matHeaderCellDef class="variableB" [attr.colspan]="2"
+                        style="text-align: center;">
+                        {{'liquidacion.b4' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="variableG">
+                    <th mat-header-cell *matHeaderCellDef class="variableG" [attr.rowspan]="1"
+                        [attr.colspan]="4" style="text-align: center;">
+                        {{'liquidacion.variable_globales' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="T8">
+                    <th mat-header-cell *matHeaderCellDef class="variableG">
+                        {{'liquidacion.g1' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="T9">
+                    <th mat-header-cell *matHeaderCellDef class="variableG">
+                        {{'liquidacion.g2' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="T10">
+                    <th mat-header-cell *matHeaderCellDef class="variableG">
+                        {{'liquidacion.g3' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="T11">
+                    <th mat-header-cell *matHeaderCellDef class="variableG">
+                        {{'liquidacion.g4' | translate}}
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="totalT">
+                    <th mat-header-cell *matHeaderCellDef class="total" [attr.rowspan]="3">
+                        {{'liquidacion.total' | translate}}
+                    </th>
+                </ng-container>
+                <ng-container matColumnDef="accionesT">
+                    <th mat-header-cell *matHeaderCellDef class="acciones" [attr.rowspan]="3">
+                        {{'liquidacion.acciones' | translate}}
+                    </th>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="['PBM']" class="PBM"></tr>
+                <tr mat-header-row
+                    *matHeaderRowDef="['seleccionh','estudiante','variableA','variableB','variableG', 'totalT','accionesT' ]">
+                </tr>
+                <tr mat-header-row
+                    *matHeaderRowDef="['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11']"></tr>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">{{'calendario.sin_procesos' | translate}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true" class="paginador">
+        </mat-paginator>
+
+        <div class="container" style="padding: 2%;">
+            <div class="row justify-content-md-center">
+                <button class="boton-primary" (click)="guardarLiquidaciones()">{{
+                    'liquidacion.guardar' | translate }}</button>
+                <button class="boton-primary">{{
+                    'liquidacion.descargar_listado' | translate }}</button>
+                <button class="boton-primary"(click)="descargarPDFs()"[disabled]="!generados">{{
+                    'liquidacion.conjunto_recibos' | translate }}</button>
+                <button class="boton-primary" (click)="generarRecibos()">{{
+                    'liquidacion.generar_recibo' | translate }}</button>
+                    <button class="boton-primary" (click)="notificarGeneracionRecibos()"[disabled]="!generados">{{
+                        'liquidacion.asignar_recibo' | translate }}</button>
+            </div>
         </div>
     </mat-card-content>
 </mat-card>

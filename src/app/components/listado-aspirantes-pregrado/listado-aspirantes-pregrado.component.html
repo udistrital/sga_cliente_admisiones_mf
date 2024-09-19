@@ -46,7 +46,7 @@
           </div>
 
         <div class="button-stepper">
-          <button mat-stroked-button matStepperNext class="btn boton-primary" (click)="generarBusqueda(stepper)" [disabled]="!firstFormGroup.valid" [ngClass]="{'button-disabled': !firstFormGroup.valid}">{{ 'listado_pregrado.consultar' | translate }}</button>
+          <button mat-stroked-button class="btn boton-primary" (click)="generarBusqueda(stepper)" [disabled]="!firstFormGroup.valid" [ngClass]="{'button-disabled': !firstFormGroup.valid}">{{ 'listado_pregrado.consultar' | translate }}</button>
         </div>
 
         </mat-card-content>
@@ -62,130 +62,109 @@
           </mat-card-header>
           <br><br>
           <mat-card-content>
-            <mat-grid-list cols="7" rowHeight="40px">
-              <!-- Elemento 1 -->
-              <mat-grid-tile colspan="7" rowspan="1" [style.background]="tiles[0].color" [style.color]="tiles[0].textColor">
+            <div class="contenedor-resumen">
+              <div class="titulo-resumen">
                 <h6>{{ 'listado_pregrado.resumen_estado_grid' | translate }}</h6>
-                
-              </mat-grid-tile>
-              
-              <!-- Elemento 2 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[1].color" [style.color]="tiles[1].textColor">
-                <p>{{ 'listado_pregrado.inscripcion_solicitada' | translate }}</p>
-                <p>{{ inscripcionesSolicitadas }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 3 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[2].color" [style.color]="tiles[2].textColor">
-                <p>{{ 'listado_pregrado.admitido' | translate }}</p>
-                <p>{{ inscripcionesAdmitidas }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 4 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[3].color" [style.color]="tiles[3].textColor">
-                <p>{{ 'listado_pregrado.opcionado' | translate }}</p>
-                <p>{{ inscripcionesOpcionadas }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 5 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[4].color" [style.color]="tiles[4].textColor">
-                <p>{{ 'listado_pregrado.no_admitido' | translate }}</p>
-                <p>{{ inscripcionesNoAdmitidas }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 6 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[5].color" [style.color]="tiles[5].textColor">
-                <p>{{ 'listado_pregrado.inscrito' | translate }}</p>
-                <p>{{ inscripcionesInscritas }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 7 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[6].color" [style.color]="tiles[6].textColor">
-                <p>{{ 'listado_pregrado.inscrito_ob' | translate }}</p>
-                <p>{{ inscripcionesInscritasObservacion }}</p>
-              </mat-grid-tile>
-              
-              <!-- Elemento 8 -->
-              <mat-grid-tile colspan="1" rowspan="2" [style.background]="tiles[7].color" [style.color]="tiles[7].textColor">
-                <p>{{ 'listado_pregrado.total' | translate }}</p>
-                <p>{{ inscripcionesTotal }}</p>
-              </mat-grid-tile>
-            </mat-grid-list>
+              </div>
+              <ul>
+                <li>{{ 'listado_pregrado.inscripcion_solicitada' | translate }} {{ inscripcionesSolicitadas }}</li>
+                <li>{{ 'listado_pregrado.admitido' | translate }} {{ inscripcionesAdmitidas }}</li>
+                <li>{{ 'listado_pregrado.opcionado' | translate }} {{ inscripcionesOpcionadas }}</li>
+                <li>{{ 'listado_pregrado.no_admitido' | translate }} {{ inscripcionesNoAdmitidas }}</li>
+                <li>{{ 'listado_pregrado.inscrito' | translate }} {{ inscripcionesInscritas }}</li>
+                <li>{{ 'listado_pregrado.inscrito_ob' | translate }} {{ inscripcionesInscritasObservacion }}</li>
+                <li>{{ 'listado_pregrado.admitido_legalizado' | translate }} {{ inscripcionesAdmitidasLegalizadas }}</li>
+                <li>{{ 'listado_pregrado.admitido_observacion' | translate }} {{ inscripcionesAdmitidasObservacion }}</li>
+                <li>{{ 'listado_pregrado.matriculado' | translate }} {{ inscripcionesMatriculadas }}</li>
+                <li>{{ 'listado_pregrado.no_oficializado' | translate }} {{ inscripcionesNoOficializadas }}</li>
+                <li><strong>{{ 'listado_pregrado.total' | translate }} {{ inscripcionesTotal }}</strong></li>
+              </ul>
+            </div>
           </mat-card-content>
         </mat-card>
         <br><br>
         <mat-card>
           <mat-card-content>
+            <mat-form-field class="filtro">
+              <mat-label>{{ "GLOBAL.filtro" | translate }}</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+            </mat-form-field>
             <div class="table-container" style="overflow-x: auto;">
-              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 scrollable-table">
+              <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 scrollable-table">
 
                 <ng-container matColumnDef="Orden">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.orden' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.orden' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.numeral}} </td>
                 </ng-container>
               
-                <!-- <ng-container matColumnDef="Documento">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.documento' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.data.Documento}} </td>
-                </ng-container> -->
-              
                 <ng-container matColumnDef="NombreCompleto">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.nombre_completo' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.nombre_completo' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.nombre_completo}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="Telefono">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.telefono' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.telefono' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.telefono}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="Correo">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.correo' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.correo' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.correo}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="Puntaje">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.puntaje' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.puntaje' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.puntaje}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="TipoInscripcion">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.tipo_inscripcion' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.tipo_inscripcion' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.tipo_inscripcion}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="EstadoInscripcion">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.estado_inscripcion' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.estado_inscripcion' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.estado_inscripcion}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="EstadoRecibo">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.estado_recibo' | translate }}</th>
-                  <td mat-cell *matCellDef="let row"> {{row.estado_recibo}} </td>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.estado_recibo' | translate }}</th>
+                  <td mat-cell *matCellDef="let row"> {{row.estado_recibo}} 
+                    <div
+                    class="status-indicator"
+                    [ngClass]="{
+                      active: row.estado_recibo === 'Pago',
+                      inactive: row.estado_recibo === 'Vencido'
+                    }"
+                  >
+                    {{ row.estado_recibo === 'Pago' ? "Pago" : "Vencido"}}
+                  </div>
+                  </td>
+
                 </ng-container>
               
                 <ng-container matColumnDef="Credencial">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.credencial' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.credencial' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.credencial}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="IdentificacionEnExamenEstado">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.identificacion_examen_estado' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.identificacion_examen_estado' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.num_doc_icfes}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="IdentificacionActual">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.documento' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.documento' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.num_doc_actual}} </td>
                 </ng-container>
               
                 <ng-container matColumnDef="CodigoProyecto">
-                  <th mat-header-cell *matHeaderCellDef class="subHeaders">{{ 'listado_pregrado.codigo_proyecto' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="subHeaders">{{ 'listado_pregrado.codigo_proyecto' | translate }}</th>
                   <td mat-cell *matCellDef="let row"> {{row.cod_proyecto}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="SNP">
-                  <th mat-header-cell *matHeaderCellDef>{{ 'listado_pregrado.snp' | translate }}</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'listado_pregrado.snp' | translate }}</th>
                   <td mat-cell *matCellDef="let row">
                     <div *ngIf="editingRowId === row.numeral; else notEditing">
                       <!-- <input [(ngModel)]="row.snp" (blur)="salirEdicion(row.numeral)" /> -->
@@ -197,21 +176,30 @@
                   </td>
                 </ng-container>
 
-                <!-- Acciones Column -->
-                <ng-container matColumnDef="Acciones">
-                  <th mat-header-cell *matHeaderCellDef class="border-right">{{ 'listado_pregrado.acciones' | translate }}</th>
-                  <td mat-cell *matCellDef="let row" class="border-right ">
-                    <div class="action-container">
-                      <button class="boton-accion" mat-raised-button (click)="editar(row.numeral)">
-                        <mat-icon class="icon-boton" *ngIf="!row.estado_edicion">edit</mat-icon>
-                        <mat-icon class="icon-boton" *ngIf="row.estado_edicion">done</mat-icon>
-                      </button>
-                      <!-- <button mat-icon-button (click)="editar(row.numeral)" style="margin-right: 10px;">
-                        <mat-icon>edit</mat-icon>
-                      </button> -->
-                    </div>
+                <ng-container matColumnDef="Acciones" stickyEnd>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"listado_pregrado.acciones" | translate}} </th>
+                  <td mat-cell *matCellDef="let row">
+                      <div class="contenedor-acciones">
+                          <button mat-icon-button [matMenuTriggerFor]="menu" class="boton-acciones"
+                              aria-label="Example icon-button with a menu">
+                              <mat-icon>more_vert</mat-icon>
+                          </button>
+                          <mat-menu #menu="matMenu">
+                              <button mat-menu-item (click)="editar(row.numeral)" class="boton-acciones">
+                                  <div *ngIf="!row.estado_edicion" class="item">
+                                    <mat-icon class="icon-boton">edit</mat-icon>
+                                    <span>{{"GLOBAL.editar" | translate}}</span>
+                                  </div>
+                                  <div *ngIf="row.estado_edicion" class="item">
+                                    <mat-icon class="icon-boton">done</mat-icon>
+                                    <span>{{"GLOBAL.guardar" | translate}}</span>
+                                  </div>
+                              </button>
+                          </mat-menu>
+                      </div>
+
                   </td>
-                </ng-container>
+              </ng-container>
 
 
                 <tr mat-header-row *matHeaderRowDef="colums"></tr>
@@ -219,10 +207,8 @@
 
 
               </table>
+              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
             </div>
-
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
-
 
             <div class="button-container" style="display: flex; justify-content: center;">
               <div class="button-stepper">

@@ -137,13 +137,21 @@ export class NewNuxeoService {
         const documentos :any[] = [];
 
         files.map(async (file:any) => {
+            // const sendFileData = [{
+            //     IdTipoDocumento: file.IdDocumento,
+            //     nombre: file.nombre.replace(/[\.]/g),
+            //     metadatos: file.metadatos ? file.metadatos : {},
+            //     descripcion: file.descripcion ? file.descripcion : "",
+            //     file: await this.fileToBase64(file.file)
+            // }]
+
             const sendFileData = [{
                 IdTipoDocumento: file.IdDocumento,
                 nombre: file.nombre.replace(/[\.]/g),
                 metadatos: file.metadatos ? file.metadatos : {},
                 descripcion: file.descripcion ? file.descripcion : "",
-                file: await this.fileToBase64(file.file)
-            }]
+                file: file.base64 ? file.base64 : await this.fileToBase64(file.file)
+            }];
 
             this.anyService.post(environment.NUXEO_SERVICE, '/document/uploadAnyFormat', sendFileData)
                 .subscribe((dataResponse) => {

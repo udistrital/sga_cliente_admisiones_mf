@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
@@ -10,6 +10,9 @@ import { MatStepper } from '@angular/material/stepper';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 
 // interface Food {
 //   value: string;
@@ -43,7 +46,9 @@ interface Tile {
   styleUrls: ['./cargue-snp.component.scss']
 })
 export class CargueSnpComponent {
-
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  
   formulario: boolean = false;
   dataSource = new MatTableDataSource<any>();
 
@@ -73,13 +78,7 @@ export class CargueSnpComponent {
   secondFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
   });
-  isLinear = true; //////////////////////////////////////////////////////
-
-  // foods: Food[] = [
-  //   {value: 'steak-0', viewValue: 'Steak'},
-  //   {value: 'pizza-1', viewValue: 'Pizza'},
-  //   {value: 'tacos-2', viewValue: 'Tacos'},
-  // ];
+  isLinear = true;
 
   tiles: Tile[] = [
     {text: '0', cols: 3, rows: 1, color: '#03678F', textColor: 'white'},
@@ -88,10 +87,10 @@ export class CargueSnpComponent {
     {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
   ];
 
-  //****************************************************//
   proyectosCurriculares!: any[]
   periodos!: any[]
   facultades!: any[]
+  proyectosPregrado!: any[];
 
   inscripciones: any = [];
   inscritosData: any[] = [];
@@ -113,37 +112,11 @@ export class CargueSnpComponent {
     private inscripcionService: InscripcionService,
     private sgamidService: SgaMidService,
     private evaluacionInscripcionService: EvaluacionInscripcionService,
+    private projectService: ProyectoAcademicoService,
     private popUpManager: PopUpManager
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
     });
-
-    // const columns: colums[] = [
-    //   {
-    //     Orden: 1,
-    //     NombreCompleto: 'Juan Perez',
-    //     Telefono: '1234567890',
-    //     Correo: 'juan.perez@example.com',
-    //     Credencial: 'Credencial 1',
-    //     IdentificacionEnExamenEstado: 'Identificado',
-    //     IdentificacionActual: '11111112',
-    //     CodigoProyecto: 'Proyecto 1',
-    //     SNP: 'SNP 1'
-    //   },
-    //   {
-    //     Orden: 2,
-    //     NombreCompleto: 'Maria Rodriguez',
-    //     Telefono: '0987654321',
-    //     Correo: 'maria.rodriguez@example.com',
-    //     Credencial: 'Credencial 2',
-    //     IdentificacionEnExamenEstado: 'Identificado',
-    //     IdentificacionActual: '22111112',
-    //     CodigoProyecto: 'Proyecto 2',
-    //     SNP: 'SNP 2'
-    //   }
-    // ];
-
-    // this.dataSource.data = columns.map(info => ({data: info}));
   }
 
   async ngOnInit() {
@@ -155,6 +128,7 @@ export class CargueSnpComponent {
   async cargarSelects() {
     await this.cargarPeriodos();
     await this.cargarFacultades();
+    await this.cargarProyectosPregrado();
   }
 
   cargarFacultades() {
@@ -162,12 +136,10 @@ export class CargueSnpComponent {
       this.oikosService.get('dependencia_padre/FacultadesConProyectos?Activo:true&limit=0')
         .subscribe((res: any) => {
           this.facultades = res;
-          console.log(this.facultades);
           resolve(res)
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.facultades_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -178,12 +150,26 @@ export class CargueSnpComponent {
       this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           this.periodos = res.Data;
-          console.log(this.periodos);
           resolve(res)
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.periodo_error'));
-            console.log(error);
+            reject([]);
+          });
+    });
+  }
+
+  cargarProyectosPregrado() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get('proyecto_academico_institucion?query=Activo:true,NivelFormacionId:1&sortby=Id&order=asc&limit=0')
+        .subscribe((res: any) => {
+          this.proyectosPregrado = res;
+          resolve(res)
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_admision.facultades_error'));
+            this.loading = false;
+            console.error(error);
             reject([]);
           });
     });
@@ -191,8 +177,10 @@ export class CargueSnpComponent {
 
   onFacultadChange(event: any) {
     this.loading = true;
-    const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
-    this.proyectosCurriculares = facultad.Opciones;
+    // const facultad = this.facultades.find((facultad: any) => facultad.Id === event.value);
+    // this.proyectosCurriculares = facultad.Opciones;
+    const programas = this.proyectosPregrado.filter((item: any) => item.FacultadId == event.value);
+    this.proyectosCurriculares = programas;
     this.loading = false;
   }
 
@@ -210,48 +198,51 @@ export class CargueSnpComponent {
 
     this.inscripciones = await this.buscarInscripciones(proyecto, periodo);
     const requisitoPrograma: any = await this.buscarRequisitoProgramaAcademico(proyecto, periodo)
-    this.detallesEvaluacion = await this.verificarEstadoCargaIcfes()
-    this.requisitoPrograma = requisitoPrograma[0]
-    let count = 0
-    console.log("INSCRIPCIONES: ", this.inscripciones, requisitoPrograma[0], this.detallesEvaluacion)
-    for (const inscripcion of this.inscripciones) {
-      const infoIcfes: any = await this.buscarInscripcionPregrado(inscripcion.Id)
-      if (Object.keys(infoIcfes[0]).length > 0) {
-        count += 1
-        const persona: any = await this.consultarTercero(inscripcion.PersonaId);
-        const detalle = this.detallesEvaluacion.find((item: any) => item.InscripcionId === inscripcion.Id)
-        console.log("INFO ICFES: ", count, infoIcfes, infoIcfes[0], inscripcion.Id, persona, detalle);
+    if (requisitoPrograma.length > 0 && typeof requisitoPrograma[0] === 'object' && requisitoPrograma[0] !== null && Object.keys(requisitoPrograma[0]).length > 0) {
+      this.detallesEvaluacion = await this.verificarEstadoCargaIcfes()
+      this.requisitoPrograma = requisitoPrograma[0]
+      let count = 0
+      for (const inscripcion of this.inscripciones) {
+        const infoIcfes: any = await this.buscarInscripcionPregrado(inscripcion.Id)
+        if (Object.keys(infoIcfes[0]).length > 0) {
+          count += 1
+          const persona: any = await this.consultarTercero(inscripcion.PersonaId);
+          const detalle = this.detallesEvaluacion.find((item: any) => item.InscripcionId === inscripcion.Id)
 
-        if (detalle) {
-          this.inscritosCargados += 1;
+          if (detalle) {
+            this.inscritosCargados += 1;
+          } else {
+            this.inscritosPendientes += 1;
+          }
+
+          const inscritoData = {
+            "persona_id": inscripcion.PersonaId,
+            "inscripcion_id": inscripcion.Id,
+            "inscripcion_pregrado_id": infoIcfes[0].Id,
+            "numeral": count,
+            "credencial": 123,
+            "num_doc_icfes": infoIcfes[0].NumeroIdentificacionIcfes,
+            "num_doc_actual": persona.NumeroIdentificacion,
+            "nombre_completo": persona.NombreCompleto,
+            "telefono": persona.Telefono,
+            "correo": persona.UsuarioWSO2,
+            "cod_proyecto": inscripcion.ProgramaAcademicoId,
+            "snp": infoIcfes[0].CodigoIcfes,
+            "estado_carga": detalle ? true : false
+          }
+          this.inscritosData.push(inscritoData);
         } else {
-          this.inscritosPendientes += 1;
+          continue;
         }
-
-        const inscritoData = {
-          "persona_id": inscripcion.PersonaId,
-          "inscripcion_id": inscripcion.Id,
-          "inscripcion_pregrado_id": infoIcfes[0].Id,
-          "numeral": count,
-          "credencial": 123,
-          "num_doc_icfes": infoIcfes[0].NumeroIdentificacionIcfes,
-          "num_doc_actual": persona.NumeroIdentificacion,
-          "nombre_completo": persona.NombreCompleto,
-          "telefono": persona.Telefono,
-          "correo": persona.UsuarioWSO2,
-          "cod_proyecto": inscripcion.ProgramaAcademicoId,
-          "snp": infoIcfes[0].CodigoIcfes,
-          "estado_carga": detalle ? true : false
-        }
-        this.inscritosData.push(inscritoData);
-      } else {
-        continue;
       }
+      this.totalInscritos = this.inscritosPendientes + this.inscritosCargados;
+      this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      stepper.next();
+    } else {
+      this.popUpManager.showAlert(this.translate.instant('admision.titulo_programa_sin_requisitos'), this.translate.instant('admision.programa_sin_requisitos'));
     }
-    this.totalInscritos = this.inscritosPendientes + this.inscritosCargados;
-    console.log(this.inscritosData)
-    this.dataSource = new MatTableDataSource<any>(this.inscritosData);
-    stepper.next();
     this.loading = false;
   }
 
@@ -262,8 +253,8 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
+            this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -276,8 +267,8 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
+            this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -291,7 +282,6 @@ export class CargueSnpComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.inscripciones_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -304,8 +294,8 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
+            this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.tercero_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -319,23 +309,22 @@ export class CargueSnpComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.requisito_programa_error'));
-            console.log(error);
+            this.loading = false;
+            console.error(error);
             reject([]);
           });
     });
   }
 
   verificarEstadoCargaIcfes() {
-    //console.log("VARIABLES ENTRADA ISNCRIPCION: ", inscripcionId, requisitoId);
     return new Promise((resolve, reject) => {
-      // this.evaluacionInscripcionService.get('detalle_evaluacion?query=Activo:true,InscripcionId:' + inscripcionId + ',RequisitoProgramaAcademicoId.Id:' + requisitoId + '&sortby=Id&order=asc&limit=0')
       this.evaluacionInscripcionService.get('detalle_evaluacion?query=Activo:true,RequisitoProgramaAcademicoId.RequisitoId.Id:1&sortby=Id&order=asc&limit=0')
         .subscribe((res: any) => {
           resolve(res)
         },
           (error: any) => {
+            this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('admision.detalle_evaluacion_error'));
-            console.log("ERROR:", error);
             reject([]);
           });
     });
@@ -360,61 +349,30 @@ export class CargueSnpComponent {
       this.loading = true;
       const fileContent = event.target.result;
       const resultados = fileContent.split(/\r?\n/)
-      const detallesEvaluacionActuales: any = await this.recuperarDetallesEvaluacion(this.requisitoPrograma.Id) 
-      console.log("RESULTADOS SPLIT", resultados, detallesEvaluacionActuales)
+      const detallesEvaluacionActuales: any = await this.recuperarDetallesEvaluacion(this.requisitoPrograma.Id)
 
       for (const resultado of resultados) {
         const datosIcfes = resultado.split(",")
-        console.log("ANTES INSCRIPCION CODIGO")
         const inscripcion: any = await this.buscarInscripcionPregradoByCodigo(datosIcfes[0])
-        console.log("DESPUES INSCRIPCION CODIGO")
-        console.log(inscripcion)
         if (Object.keys(inscripcion[0]).length <= 0) {
-          console.log("No existe la inscripcion pregrado")
           this.popUpManager.showAlert(this.translate.instant('admision.titulo_inscripcion_no_encontrada'), this.translate.instant('admision.inscripcion_no_encontrada'));
           continue;
         }
         const inscripcionDetalleEv = detallesEvaluacionActuales.find((item: any) => item.InscripcionId == inscripcion[0].InscripcionId.Id)
-        console.log("DESPUES INSCRIPCION DETALLE", inscripcionDetalleEv)
         if (inscripcionDetalleEv) {
-          console.log("Ya existe un detalle ev")
           this.popUpManager.showAlert(this.translate.instant('admision.titulo_detalle_evaluacion_existente'), this.translate.instant('admision.detalle_evaluacion_existente'));
           continue;
         }
+
         const icfesData = {
-          "CODREGSNP": datosIcfes[0],
-          "NOMBRE": datosIcfes[1],
-          "TIPODOCIDE": datosIcfes[2],
-          "NODOCIDENT": datosIcfes[3],
-          "CODCOLEGIO": datosIcfes[4],
-          "NOMCIUDADCOLEGIO": datosIcfes[5],
-          "ACTA": datosIcfes[6],
-          "FECHAACTA": datosIcfes[7],
-          "PERPGLOB": datosIcfes[8],
-          "PERPGLOBPE": datosIcfes[9],
-          "GLOBAL": datosIcfes[10],
-          "PLC": datosIcfes[11],
-          "PMA": datosIcfes[12],
-          "PSC": datosIcfes[13],
-          "PCN": datosIcfes[14],
-          "PIN": datosIcfes[15],
-          "PERLC": datosIcfes[16],
-          "PERMA": datosIcfes[17],
-          "PERSC": datosIcfes[18],
-          "PERCN": datosIcfes[19],
-          "PERIN": datosIcfes[20],
-          "NLC": datosIcfes[21],
-          "NMA": datosIcfes[22],
-          "NSC": datosIcfes[23],
-          "NCN": datosIcfes[24],
-          "NIN": datosIcfes[25],
-          "IPEM": datosIcfes[26],
-          "PERPELC": datosIcfes[27],
-          "PERPEMA": datosIcfes[28],
-          "PERPESC": datosIcfes[29],
-          "PERPECN": datosIcfes[30],
-          "PERPEIN": datosIcfes[31],
-          "OBSERVACIONES": datosIcfes[32],
+          "areas": [
+            {"PLC": datosIcfes[11]},
+            {"PMA": datosIcfes[12]},
+            {"PSC": datosIcfes[13]},
+            {"PCN": datosIcfes[14]},
+            {"PIN": datosIcfes[15]}
+          ],
+          "global" : datosIcfes[10]
         }
         const jsonicfesData = JSON.stringify(icfesData);
         const detalleEvaluacionData = {
@@ -429,14 +387,9 @@ export class CargueSnpComponent {
         }
 
         const res: any = await this.crearDetalleEvaluacion(detalleEvaluacionData);
-        console.log(res.InscripcionId, inscripcion[0].InscripcionId.Id);
         if (res.InscripcionId == inscripcion[0].InscripcionId.Id) {
-          console.log("ENTRA")
           this.actualizarTablas(res.InscripcionId)
         }
-
-        console.log("INFO FILE CONTENT:", fileContent, inscripcion, datosIcfes, icfesData, jsonicfesData, detalleEvaluacionData, res);
-        // console.log("INFO FILE CONTENT:", fileContent, inscripcion, datosIcfes, icfesData, jsonicfesData, detalleEvaluacionData);
       }
       this.loading = false;
     };
@@ -452,7 +405,6 @@ export class CargueSnpComponent {
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(this.translate.instant('admision.creacion_detalle_evaluacion_error'));
-            console.log(error);
             reject([]);
           });
     });
@@ -465,23 +417,36 @@ export class CargueSnpComponent {
           resolve(res)
         },
           (error: any) => {
-            this.popUpManager.showErrorAlert(this.translate.instant("admision.detalle_evaluacion_error"));
-            console.log(error);
-            reject([]);
+            if (error == undefined) {
+              resolve([])
+            } else {
+              this.popUpManager.showErrorAlert(this.translate.instant("admision.detalle_evaluacion_error"));
+              reject([]);
+            }
+            this.loading = false;
           });
     });
   }
 
   actualizarTablas(inscripcionId: any) {
     for (const inscripcion of this.inscritosData) {
-      console.log(inscripcion.inscripcion_id, inscripcionId)
       if (inscripcion.inscripcion_id == inscripcionId) {
         this.inscritosCargados += 1;
         this.inscritosPendientes = this.inscritosPendientes == 0 ? 0 : this.inscritosPendientes - 1;
         inscripcion.estado_carga = true;
       }
     }
-    console.log("Actualización tabla:", this.inscritosData)
     this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }

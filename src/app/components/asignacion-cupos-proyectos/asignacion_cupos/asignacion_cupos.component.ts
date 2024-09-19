@@ -22,86 +22,45 @@ import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
   styleUrls: ['./asignacion_cupos.component.scss'],
 })
 export class AsignacionCuposComponent implements OnInit, OnChanges {
-  toasterService: any;
 
-
-
-  @Output() eventChange = new EventEmitter();
-  // tslint:disable-next-line: no-output-rename
-  @Output('result') result: EventEmitter<any> = new EventEmitter();
-  inscripcion_id!: number;
-  info_persona_id!: number;
-  info_ente_id!: number;
-  estado_inscripcion!: number;
-  info_info_persona: any;
-  usuariowso2: any;
-  datos_persona: any;
-  inscripcion!: Inscripcion;
-  preinscripcion!: boolean;
-  step = 0;
-  cambioTab = 0;
-  nForms!: number;
-  SelectedTipoBool: boolean = true;
-  info_inscripcion: any;
-
-
-  total: boolean = false;
-
-  proyectos: any[] = [];
-  criterios = [];
-  periodos: any[] = [];
-  niveles!: NivelFormacion[];
-  tipoinscripcion!: TipoInscripcion[];
-  nivelSelect!: NivelFormacion[];
-  tipoinscripcionSelect!: TipoInscripcion[];
-
-  show_cupos = false;
-  show_profile = false;
-  show_expe = false;
-  show_acad = false;
-
-  info_persona!: boolean;
-  loading!: boolean;
-  ultimo_select!: number;
-  button_politica: boolean = true;
-  programa_seleccionado: any;
-  viewtag: any;
-  selectedValue: any;
-  selectedTipo: any;
-  proyectos_selected!: any[] | undefined;
-  tipins_selected!: any[] | undefined;
-  criterio_selected!: any[];
-  selectTipoIcfes: any;
-  selectTipoEntrevista: any;
-  selectTipoPrueba: any;
-  selectTabView: any;
-  tag_view_posg!: boolean;
-  tag_view_pre!: boolean;
-  selectprograma: boolean = true;
-  selectcriterio: boolean = true;
   periodo: any;
   selectednivel: any;
+  show_cupos = false;
+  periodos: any[] = [];
+  proyectos: any[] = [];
+  inscripcion!: Inscripcion;
+  niveles!: NivelFormacion[];
   esPosgrado: boolean = false;
-
+  nivelSelect!: NivelFormacion[];
+  selectprograma: boolean = true;
+  tipoinscripcion!: TipoInscripcion[];
+  tipins_selected!: any[] | undefined;
+  proyectos_selected!: any[] | undefined;
+ 
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
+
+
   constructor(
-    private translate: TranslateService,
-    private parametrosService: ParametrosService,
-    private popUpManager: PopUpManager,
-    private projectService: ProyectoAcademicoService,
-    private inscripcionService: InscripcionService,
     private userService: UserService,
+    private popUpManager: PopUpManager,
+    private translate: TranslateService,
     private sgaAdmisiones: SgaAdmisionesMid,
+    private parametrosService: ParametrosService,
+    private inscripcionService: InscripcionService,
+    private projectService: ProyectoAcademicoService,
     private autenticationService: ImplicitAutenticationService,
   ) {
-    this.translate = translate;
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-    });
-    this.total = true;
+
     this.cargarPeriodo();
-    this.nivel_load()
+    this.nivel_load();
+
+  }
+
+  selectPeriodo() {
+    this.selectednivel = undefined;
+    this.proyectos_selected = undefined;
   }
 
   cargarPeriodo() {
@@ -126,17 +85,11 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     });
   }
 
-
-  selectPeriodo() {
-    this.selectednivel = undefined;
-    this.proyectos_selected = undefined;
-  }
-
   nivel_load() {
     this.projectService.get('nivel_formacion?limit=0').subscribe(
       // (response: NivelFormacion[]) => {
-        (response: any) => {
-        this.niveles = response.filter((nivel:any) => nivel.NivelFormacionPadreId === null)//&& nivel.Nombre === 'Posgrado')
+      (response: any) => {
+        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null)//&& nivel.Nombre === 'Posgrado')
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
@@ -146,8 +99,8 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
   inscripcion_load() {
     this.inscripcionService.get('tipo_inscripcion?limit=0').subscribe(
-        (response: any) => {
-        this.tipoinscripcion = response.filter((  tipoInscripcion:any) => tipoInscripcion.Nombre != null)
+      (response: any) => {
+        this.tipoinscripcion = response.filter((tipoInscripcion: any) => tipoInscripcion.Nombre != null)
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
@@ -156,8 +109,6 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   }
 
   filtrarProyecto(proyecto: any) {
-    console.log(proyecto)
-    console.log(this.selectednivel)
     if (this.selectednivel === proyecto['NivelFormacionId']['Id']) {
       return true
     }
@@ -189,7 +140,6 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                console.log('admision/dependencia_vinculacion_tercero/' + id_tercero)
                 this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>respDependencia.Data.DependenciaId;
@@ -216,9 +166,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     }
   }
 
-  useLanguage(language: string) {
-    this.translate.use(language);
-  }
+
 
   perfil_editar(event: any): void {
     switch (event) {
@@ -234,11 +182,9 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
   validarNvel() {
     this.esPosgrado = false;
-    console.log(this.selectednivel)
     this.projectService.get('nivel_formacion?query=Id:' + Number(this.selectednivel)).subscribe(
       // (response: NivelFormacion[]) => {
       (response: any) => {
-        console.log(response)
         this.nivelSelect = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null)
         if (this.nivelSelect[0].Nombre === 'Posgrado') {
           this.esPosgrado = true;

@@ -48,7 +48,7 @@ export class DialogoCriteriosComponent implements OnInit {
         Descripcion: this.data.oldCriterio.Descripcion,
         CodigoAbreviacion: this.data.oldCriterio.CodigoAbreviacion,
         Asistencia: this.data.oldCriterio.Asistencia,
-        ExamenEstado: this.data.oldCriterio.ExamenEstado,
+        ExamenEstado: this.data.oldCriterio.ExamenEstado ? this.data.oldCriterio.ExamenEstado : false,
       });
       this.examenEstadoForm.setValue({
         Saber11: this.data.oldCriterio.Subcriterios.find((subcriterio: any) => subcriterio.Nombre === 'Saber11') !== undefined,
@@ -83,7 +83,6 @@ export class DialogoCriteriosComponent implements OnInit {
           this.criterio.CodigoAbreviacion = this.criterioForm.value.CodigoAbreviacion;
           this.criterio.Asistencia = this.criterioForm.value.Asistencia;
         }
-        console.log(this.criterio);
         this.dialogRef.close(this.criterio);
       }
     });
@@ -92,7 +91,6 @@ export class DialogoCriteriosComponent implements OnInit {
   subcriteriosExamenEstado(){
     const subcriterios = [];
     for (const controlName in this.examenEstadoForm.controls) {
-      console.log(controlName);
 
       if (this.examenEstadoForm.get(controlName)?.value) {
         const subcriterio = new Criterio();

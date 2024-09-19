@@ -68,7 +68,6 @@ export class LiquidacionTableComponent implements OnInit{
     }
   }
 
-
   variableB: B = {
     B1: {
       "1": 0.6,
@@ -149,103 +148,79 @@ export class LiquidacionTableComponent implements OnInit{
   }
 
   async generarRegistros() {
-    console.log("GENERACION REGISTROS: " ,this.inscripciones)
+    this.loading = true;
     this.data = [];
-
-    for (const inscripcion of this.inscripciones) {
-      const persona: any = await this.consultarTercero(inscripcion.PersonaId);
-      if (Array.isArray(persona) && persona.length === 0) {
-        continue;
+  
+    if (this.inscripciones.length != 0 && Object.keys(this.inscripciones[0]).length != 0) {
+      for (const inscripcion of this.inscripciones) {
+        try {
+          const persona: any = await this.consultarTercero(inscripcion.PersonaId);
+          if (Array.isArray(persona) && persona.length === 0) {
+            continue;
+          }
+    
+          const infoLegalizacion: any = await this.getLegalizacionMatricula(persona.Id);
+          if (infoLegalizacion === "No existe legalizacion") {
+            continue;
+          }
+    
+          if (!infoLegalizacion || infoLegalizacion.pensionSM11 == null || infoLegalizacion.ingresosSMCostea == null) {
+            console.error('Datos incompletos en infoLegalizacion:', infoLegalizacion);
+            continue;
+          }
+    
+          const valorStringA2 = this.calcularValorPension(infoLegalizacion.pensionSM11);
+          const valorStringA3 = this.calcularValorIngresos(infoLegalizacion.ingresosSMCostea);
+    
+          const valorLiquidacionData: any = {
+            "estado_edicion": false,
+            "inscripcionId": inscripcion.Id,
+            "personaId": persona.Id,
+            "seleccion": true,
+            "codigo": 1000,
+            "documento": persona.NumeroIdentificacion,
+            "nombres": `${persona.PrimerNombre} ${persona.SegundoNombre}`,
+            "apellidos": `${persona.PrimerApellido} ${persona.SegundoApellido}`,
+            A: {
+              A1: infoLegalizacion.estratoCostea,
+              puntajeA1: this.variableA.A1[infoLegalizacion.estratoCostea],
+              A2: infoLegalizacion.pensionSM11,
+              puntajeA2: this.variableA.A2[valorStringA2],
+              A3: infoLegalizacion.ingresosSMCostea,
+              puntajeA3: this.variableA.A3[valorStringA3],
+            },
+            B: {
+              B1: infoLegalizacion.estratoCostea,
+              puntajeB1: this.variableB.B1[infoLegalizacion.estratoCostea],
+              B2: infoLegalizacion.ubicacionResidenciaCostea,
+              puntajeB2: this.variableB.B2[infoLegalizacion.ubicacionResidenciaCostea],
+              B3: infoLegalizacion.nucleoFamiliar,
+              puntajeB3: this.variableB.B3[infoLegalizacion.nucleoFamiliar],
+              B4: infoLegalizacion.situacionLaboral,
+              puntajeB4: this.variableB.B4[infoLegalizacion.situacionLaboral],
+            },
+            general: {
+              pbm: 10,
+            },
+          };
+    
+          this.calculoPBM(valorLiquidacionData);
+          this.data.push(valorLiquidacionData);
+          this.dataSource = new MatTableDataSource(this.data);
+    
+          setTimeout(() => {
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          }, 300);
+        } catch (error) {
+          console.error('Error procesando inscripción:', inscripcion, error);
+        }
       }
-      const infoLegalizacion: any = await this.getLegalizacionMatricula(persona.Id)
-      if (infoLegalizacion == "No existe legalizacion") {
-        continue;
-      }
-      console.log("INSCRIP:", inscripcion, persona, infoLegalizacion);
-      const valorStringA2 = this.calcularValorPension(infoLegalizacion.pensionSM11)
-      const valorStringA3 = this.calcularValorIngresos(infoLegalizacion.ingresosSMCostea)
-      //const valorStringB1 = this.retornarLugarResidencia(infoLegalizacion.estratoCostea)
-      
-
-      const valorLiquidacionData: any = {
-        "estado_edicion": false,
-        "inscripcionId": inscripcion.Id,
-        "personaId": persona.Id,
-        "seleccion": true,
-        "codigo": 1000,
-        "documento": persona.NumeroIdentificacion,
-        "nombres": persona.PrimerNombre + "" + persona.SegundoNombre,
-        "apellidos": persona.PrimerApellido + "" + persona.SegundoApellido,
-        A: {
-          A1: infoLegalizacion.estratoCostea,
-          puntajeA1: this.variableA.A1[infoLegalizacion.estratoCostea],
-          A2: infoLegalizacion.pensionSM11,
-          puntajeA2: this.variableA.A2[valorStringA2],
-          A3: infoLegalizacion.ingresosSMCostea,
-          puntajeA3: this.variableA.A3[valorStringA3],
-        },
-        B: {
-          B1: infoLegalizacion.estratoCostea,
-          puntajeB1: this.variableB.B1[infoLegalizacion.estratoCostea],
-          B2: infoLegalizacion.ubicacionResidenciaCostea,
-          puntajeB2: this.variableB.B2[infoLegalizacion.ubicacionResidenciaCostea],
-          B3: infoLegalizacion.nucleoFamiliar,
-          puntajeB3: this.variableB.B3[infoLegalizacion.nucleoFamiliar],
-          B4: infoLegalizacion.situacionLaboral,
-          puntajeB4: this.variableB.B4[infoLegalizacion.situacionLaboral],
-        },
-        general: {
-          pbm: 10,
-        },
-      }
-      this.calculoPBM(valorLiquidacionData);
-      this.data.push(valorLiquidacionData);
-      this.dataSource = new MatTableDataSource(this.data);
-
-      setTimeout(() => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      }, 300);
+    } else {
+      this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'))
     }
-
-    // for (let i = 0; i < 20; i++) {
-    //   const liquidaciondata: liquidacion = {
-    //     seleccion: true,
-    //     codigo: i + 1,
-    //     documetno: 100000000 + i,
-    //     nombres: "Nombre" + (i + 1),
-    //     apellidos: "Apellido" + (i + 1),
-    //     A: {
-    //       A1: "1",
-    //       puntajeA1: this.variableA.A1["1"],
-    //       A2: "Entre 0 y,004",
-    //       puntajeA2: this.variableA.A2["Entre 0 y,004"],
-    //       A3: "Entre 0 y 2",
-    //       puntajeA3: this.variableA.A3["Entre 0 y 2"],
-    //     },
-    //     B: {
-    //       B1: "Estrato 1 y 2 o rural",
-    //       puntajeB1: this.variableB.B1["Estrato 1 y 2 o rural"],
-    //       B2: "Fuera del Perimetro Urbano",
-    //       puntajeB2: this.variableB.B2["Fuera del Perimetro Urbano"],
-    //       B3: "Vive solo o es casado",
-    //       puntajeB3: this.variableB.B3["Vive solo o es casado"],
-    //       B4: "Trabaja",
-    //       puntajeB4: this.variableB.B4["Trabaja"],
-    //     },
-    //     general: {
-    //       pbm: 10,
-    //     },
-    //   };
-    //   this.data.push(liquidaciondata);
-    //   this.dataSource = new MatTableDataSource(this.data);
-
-    //   setTimeout(() => {
-    //     this.dataSource.paginator = this.paginator;
-    //     this.dataSource.sort = this.sort;
-    //   }, 300);
-
-    // }
+  
+    this.loading = false;
   }
 
   retornarLugarResidencia(ubicacion: any) {
@@ -262,68 +237,43 @@ export class LiquidacionTableComponent implements OnInit{
   }
 
   calcularValorPension(valorSM: any) {
-    console.log("VALOR DE LA PENSIÓN:", valorSM)
     let valorString;
 
     switch (true) {
       case valorSM <= 0.004:
-        console.log("Rango:", "Entre 0 y 0,004");
-        console.log("Valor Pensión:", 15);
         valorString = "Entre 0 y,004"
         break;
       case valorSM <= 0.08:
-        console.log("Rango:", "Entre 0.0041 y 0.08");
-        console.log("Valor Pensión:", 20);
         valorString = "Entre 0.0041 y 0.08"
         break;
       case valorSM <= 0.12:
-        console.log("Rango:", "Entre 0.081 y 0.12");
-        console.log("Valor Pensión:", 30);
         valorString = "Entre 0.081 y 0.12"
         break;
       case valorSM <= 0.16:
-        console.log("Rango:", "Entre 0.121 y 0.16");
-        console.log("Valor Pensión:", 40);
         valorString = "Entre 0.121 y 0.16"
         break;
       case valorSM <= 0.2:
-        console.log("Rango:", "Entre 0.161 y 0.2");
-        console.log("Valor Pensión:", 50);
         valorString = "Entre 0.161 y 0.2"
         break;
       case valorSM <= 0.3:
-        console.log("Rango:", "Entre 0.21 y 0,3");
-        console.log("Valor Pensión:", 60);
         valorString = "Entre 0.21 y 0,3"
         break;
       case valorSM <= 0.4:
-        console.log("Rango:", "Entre 0.31 y 0.4");
-        console.log("Valor Pensión:", 70);
         valorString = "Entre 0.31 y 0.4"
         break;
       case valorSM <= 0.5:
-        console.log("Rango:", "Entre 0.41 y 0.5");
-        console.log("Valor Pensión:", 80);
         valorString = "Entre 0.41 y 0.5"
         break;
       case valorSM <= 0.6:
-        console.log("Rango:", "Entre 0.51 y 0.6");
-        console.log("Valor Pensión:", 90);
         valorString = "Entre 0.51 y 0.6"
         break;
       case valorSM <= 0.7:
-        console.log("Rango:", "Entre 0.61 y 0.7");
-        console.log("Valor Pensión:", 100);
         valorString = "Entre 0.61 y 0.7"
         break;
       case valorSM > 0.7:
-        console.log("Rango:", "Entre 0.61 y 0.7");
-        console.log("Valor Pensión:", 100);
         valorString = "Entre 0.61 y 0.7"
         break;
       default:
-        console.log("Rango:", "No informa");
-        console.log("Valor Pensión:", 100);
         valorString = "No informa"
     }
 
@@ -331,93 +281,58 @@ export class LiquidacionTableComponent implements OnInit{
   }
 
   calcularValorIngresos(valorSM: any) {
-    console.log("VALOR DE LOS INGRESOS:", valorSM)
     let valorString;
 
     switch (true) {
       case valorSM <= 2:
-        console.log("Rango:", "Entre 0 y 2");
-        console.log("Valor Pensión:", 15);
         valorString = "Entre 0 y 2"
         break;
       case valorSM <= 2.5:
-        console.log("Rango:", "Entre 2,1 y 2,5");
-        console.log("Valor Pensión:", 25);
         valorString = "Entre 2,1 y 2,5"
         break;
       case valorSM <= 3:
-        console.log("Rango:", "Entre 2,5 y 3");
-        console.log("Valor Pensión:", 30);
         valorString = "Entre 2,5 y 3"
         break;
       case valorSM <= 4:
-        console.log("Rango:", "Entre 3 y 4");
-        console.log("Valor Pensión:", 35);
         valorString = "Entre 3 y 4"
         break;
       case valorSM <= 5:
-        console.log("Rango:", "Entre 4 y 5");
-        console.log("Valor Pensión:", 40);
         valorString = "Entre 4 y 5"
         break;
       case valorSM <= 5.5:
-        console.log("Rango:", "Entre 5 y 5,5");
-        console.log("Valor Pensión:", 45);
         valorString = "Entre 5 y 5,5"
         break;
       case valorSM <= 6:
-        console.log("Rango:", "Entre 5,5 y 6");
-        console.log("Valor Pensión:", 50);
         valorString = "Entre 5,5 y 6"
         break;
       case valorSM <= 6.5:
-        console.log("Rango:", "Entre 6 y 6,5");
-        console.log("Valor Pensión:", 55);
         valorString = "Entre 6 y 6,5"
         break;
       case valorSM <= 7:
-        console.log("Rango:", "Entre 6,5 y 7");
-        console.log("Valor Pensión:", 60);
         valorString = "Entre 6,5 y 7"
         break;
       case valorSM <= 7.5:
-        console.log("Rango:", "Entre 7 y 7,5");
-        console.log("Valor Pensión:", 70);
         valorString = "Entre 7 y 7,5"
         break;
       case valorSM <= 8:
-        console.log("Rango:", "Entre 7,5 y 8");
-        console.log("Valor Pensión:", 75);
         valorString = "Entre 7,5 y 8"
         break;
       case valorSM <= 9.5:
-        console.log("Rango:", "Entre 8 y 9,5");
-        console.log("Valor Pensión:", 80);
         valorString = "Entre 8 y 9,5"
         break;
       case valorSM <= 11:
-        console.log("Rango:", "Entre 9,5 y 11");
-        console.log("Valor Pensión:", 85);
         valorString = "Entre 9,5 y 11"
         break;
       case valorSM <= 14:
-        console.log("Rango:", "Entre 11 y 14");
-        console.log("Valor Pensión:", 90);
         valorString = "Entre 11 y 14"
         break;
       case valorSM <= 18:
-        console.log("Rango:", "Entre 14 y 18");
-        console.log("Valor Pensión:", 95);
         valorString = "Entre 14 y 18"
         break;
       case valorSM > 18:
-        console.log("Rango:", ">18");
-        console.log("Valor Pensión:", 100);
         valorString = ">18"
         break;
       default:
-        console.log("Rango:", "No informa");
-        console.log("Valor Pensión:", 100);
         valorString = "No informa"
     }
 
@@ -429,9 +344,8 @@ export class LiquidacionTableComponent implements OnInit{
       const response = await this.sgamidService.get('persona/consultar_persona/' + personaId).toPromise();
       return response;
     } catch (error) {
-      // this.popUpManager.showErrorAlert(this.translate.instant('legalizacion_matricula.tercero_error'));
-      console.log(error);
-      return []; // Return an empty array to indicate an error
+      console.error(error)
+      return []; 
     }
   }
 
@@ -440,7 +354,7 @@ export class LiquidacionTableComponent implements OnInit{
       //this.loading = true;
       this.inscripcionMidService.get('legalizacion/informacion-legalizacion/' + personaId)
         .subscribe((res: any) => {
-          resolve(res.data);
+          resolve(res.Data);
         },
           (error: any) => {
             this.popUpManager.showErrorAlert(
@@ -522,87 +436,14 @@ export class LiquidacionTableComponent implements OnInit{
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.loading = true;
-    console.log("CAMBIOS EN:", changes)
-    console.log("DATOS RECIBOS", this.datosRecibos)
+  ngOnChanges(): void {
     if (this.datosRecibos.hasOwnProperty('visible')) {
       this.visible = this.datosRecibos['visible']
     }
     if (this.datosRecibos.hasOwnProperty('inscripciones')) {
       this.inscripciones = this.datosRecibos['inscripciones']
       this.generarRegistros()
-    }
-    this.loading = false;
-  }
-
-  editar = async (elemento: any) => {
-    console.log('Editando la fila con inscripcionId:', elemento, this.editingRowId);
-    if (this.editingRowId === elemento.inscripcionId) {
-      console.log('Saliendo edición guardando');
-      const actualizacionLiquidiacionBody = {
-        "personaId": elemento.personaId,
-        "estratoCostea": elemento.A.A1,
-        "valorMatriculaUltimoAnioSM": elemento.A.A2,
-        "valorMatriculaUltimoAnio": elemento.A.A2 * 1300000,
-        "ingresosBrutosFamSM": elemento.A.A3,
-        "ingresosBrutosFam": elemento.A.A3 * 1300000,
-        "ubicacionResidencia": elemento.B.B2,
-        "nucleoFamiliar": elemento.B.B3,
-        "situacionLaboral": elemento.B.B4
-      }
-      const res = await this.actualizarLegalizacionMatricula(actualizacionLiquidiacionBody)
-      console.log('DATOS A ACTUALIZAR:', actualizacionLiquidiacionBody, res);
-      this.editingRowId = null;
-      this.editando = false;
-      this.cambiarEstado(elemento.inscripcionId, false)
-    } else {
-      console.log('Entrando a edición');
-      this.editingRowId = elemento.inscripcionId;
-      this.editando = true;
-      this.cambiarEstado(elemento.inscripcionId, true)
-    }
-  }
-
-  async actualizarLegalizacionMatricula(legalizacionBody: any) {
-    return new Promise((resolve, reject) => {
-      this.loading = true;
-      this.inscripcionMidService.put('legalizacion/actualizar-info-legalizacion', legalizacionBody)
-        .subscribe((res: any) => {
-          this.loading = false;
-          this.popUpManager.showSuccessAlert(this.translate.instant('admision.actualizacion_legalizacion_ok'));
-          resolve(res.data);
-        },
-          (error: any) => {
-            this.loading = false;
-            this.popUpManager.showErrorAlert(
-              this.translate.instant('admision.actualizacion_legalizacion_error')
-            );
-          });
-    });
-  }
-
-  // actualizarDatosLegalizacion(elemento: any) {
-  //   console.log("ELEMENENTO A ACTUALIZAR:", elemento);
-  //   console.log("ELEMENENTO ORIGINAL AL ACTUALIZAR:", this.valorOriginal);
-  //   this.editingRowId = null;
-  //   this.editando = false;
-
-  //   const actualizacionLiquidiacionBody = {
-  //     "personaId": elemento.personaId,
-  //     "estratoCostea": elemento.A.A1,
-  //   }
-
-  //   this.cambiarEstado(elemento.inscripcionId, false)
-  // }
-
-  cambiarEstado(inscripcionId: any, estado: any) {
-    for (const inscripcion of this.data) {
-      if (inscripcion.inscripcionId == inscripcionId) {
-        inscripcion.estado_edicion = estado;
-      }
-    }
-    this.dataSource = new MatTableDataSource(this.data);
+    } 
   }
 
   async guardar() {
