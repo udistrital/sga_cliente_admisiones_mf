@@ -2726,8 +2726,7 @@
     "BUTTON_DESCARGAR_LISTADO": "Download List",
     "BUTTON_GENERAR_CODIGOS": "Generate Codes",
     "BUTTON_GENERAR_CODIFICACION": "Assign Codification",
-    "TABLE_COLUMNA_PUNTAJE": "score"
-  },
+    "TABLE_COLUMNA_PUNTAJE": "score",
   "HOME": {
     "TITLE": "SGA",
     "SELECT": "Change language",
