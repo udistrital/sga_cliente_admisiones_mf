@@ -6,6 +6,7 @@
 
 export const environment = {
     production: false,
+    encryptSecretKey: process.env["NG_APP_KEY"],
     apiUrl:"http://localhost:4204/",
     NUXEO: {
       PATH: 'https://documental.portaloas.udistrital.edu.co/nuxeo/',
@@ -90,5 +91,6 @@ export const environment = {
     NOTIFICACION_MID: 'http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/',
     CALENDARIO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/",
     //SOLICITUDES_ADMISIONES:'https://autenticacion.portaloas.udistrital.edu.co/apioas/solicitudes_crud/v1',
+    SGA_TERCERO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/terceros_mid/v1"
   };
   
