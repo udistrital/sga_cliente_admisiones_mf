@@ -6,7 +6,6 @@
 
 export const environment = {
     production: false,
-    encryptSecretKey: process.env["NG_APP_KEY"],
     apiUrl:"http://localhost:4204/",
     NUXEO: {
       PATH: 'https://documental.portaloas.udistrital.edu.co/nuxeo/',
