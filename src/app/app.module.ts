@@ -125,6 +125,8 @@ import { MatDividerModule } from "@angular/material/divider";
 import { SubcriteriosDialogComponent } from './components/crieterios-admisiones-proyectos/subcriterios-dialog/subcriterios-dialog.component';
 import { TiposCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/tipos-cupos/tipos-cupos.component';
 import { SoporteCupoInscripcionComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/soporte-cupo-inscripcion/soporte-cupo-inscripcion.component';
+import { TablaCriteriosEstudiantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/tabla-criterios-estudiantes/tabla-criterios-estudiantes.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -219,8 +221,10 @@ export function createTranslateLoader(http: HttpClient) {
     PreinscripcionProyectosCurricularesComponent,
     SubcriteriosDialogComponent,
     SoporteCupoInscripcionComponent,
+    TablaCriteriosEstudiantesComponent,
   ],
   imports: [
+    NgxPaginationModule,
     CodificacionModule,
     NgxDocViewerModule,
     FormsModule,
