@@ -1435,7 +1435,9 @@
         "quitar_obligatorio": "¿Establecer documento como opcional?",
         "ajuste_ok": "Cambio realizado",
         "ajuste_fail": "No se pudo realizar el cambio",
-        "seleccion_facultad": "Seleccionar facultad"
+        "seleccion_facultad": "Seleccionar facultad",
+        "sin_acceso": "Sin acceso",
+        "sin_acceso_cuerpo": "Usted no tiene acceso a este componente, si necesita crear un nuevo documento por favor póngase en contacto con la oficina para crear una nueva solicitud."
     },
     "descuento_academico": {
         "descuento_academico_no_registrado": "Descuento académico no registrado",
