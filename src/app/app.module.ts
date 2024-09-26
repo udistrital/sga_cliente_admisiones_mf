@@ -133,6 +133,9 @@ export function createTranslateLoader(http: HttpClient) {
     environment.apiUrl + "assets/i18n/",
     ".json"
   );
+  console.log(environment.apiUrl)
+  console.log(environment.apiUrl + "assets/i18n/" + ".json")
+
 }
 
 @NgModule({
