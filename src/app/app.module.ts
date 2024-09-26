@@ -128,14 +128,7 @@ import { SoporteCupoInscripcionComponent } from './components/asignacion-cupos-p
 
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.apiUrl + "assets/i18n/",
-    ".json"
-  );
-  console.log(environment.apiUrl)
-  console.log(environment.apiUrl + "assets/i18n/" + ".json")
-
+  return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
 }
 
 @NgModule({
