@@ -6,7 +6,7 @@
 
 export const environment = {
     production: false,
-    apiUrl:'pruebassgaadmisiones.portaloas.udistrital.edu.co/',
+    apiUrl:'https://pruebassgaadmisiones.portaloas.udistrital.edu.co/',
     NUXEO: {
       PATH: 'https://documental.portaloas.udistrital.edu.co/nuxeo/',
       CREDENTIALS: {
