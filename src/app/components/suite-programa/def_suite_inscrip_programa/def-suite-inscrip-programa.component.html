@@ -164,6 +164,16 @@
                         </mat-card-footer>
                     </mat-card>
 
+                    <mat-card class="exp-card form-col1" [ngClass]="{'isSelected':tagsObject.informacion_academica.selected}">
+                        <mat-card-header>{{ 'inscripcion.informacion_academica' | translate }}</mat-card-header>
+                        <mat-card-content class="icon-form" (click)="clickTag('informacion_academica')" title="{{ 'GLOBAL.seleccionar' | translate }}">
+                            <mat-icon class="icon" fontIcon="school"></mat-icon>
+                        </mat-card-content>
+                        <mat-card-footer>
+                            <mat-checkbox color="primary" (click)="!tagsObject.informacion_academica.selected ? $event.preventDefault() : ''" [(ngModel)]="tagsObject.informacion_academica.required"><b>{{ 'GLOBAL.obligatorio' | translate }}</b></mat-checkbox>
+                        </mat-card-footer>
+                    </mat-card>
+
                     <mat-card class="exp-card form-col1" [ngClass]="{'isSelected':tagsObject.datos_acudiente.selected}">
                         <mat-card-header>{{ 'inscripcion.datos_acudiente' | translate }}</mat-card-header>
                         <mat-card-content class="icon-form" (click)="clickTag('datos_acudiente')" title="{{ 'GLOBAL.seleccionar' | translate }}">

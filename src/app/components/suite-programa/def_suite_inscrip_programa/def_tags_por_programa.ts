@@ -43,4 +43,8 @@ export const TAGS_INSCRIPCION_PROGRAMA = {
       selected: false,
       required: false,
     },
+    informacion_academica: {
+      selected: false,
+      required: false,
+    },
   }
