@@ -1676,7 +1676,8 @@
     "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico",
     "ver_subcriterios": "Ver subcriterios",
     "error_porcentaje_invalido" : "Los porcentajes no son válidos porque no suman el 100%.",
-    "crear_subcriterio" : "Crear subcriterio"
+    "crear_subcriterio" : "Crear subcriterio",
+    "vigencia": "Años de vigencia"
   },
   "oficializados": {
     "titulo": "Oficialización",
