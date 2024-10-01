@@ -34,6 +34,7 @@ import { ListaTipoInscripcionComponent } from './components/tipo-inscripcion/lis
 import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/creacion-tipo-inscipcion/creacion-tipo-inscipcion.component';
 import { ListaTipoCuposComponent } from './components/tipo-cupos/lista-tipo-cupos/lista-tipo-cupos.component';
 import { CreacionTipoCuposComponent } from './components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component';
+import { ReportesComponent } from './components/reportes/reportes.component';
 
 const routes: Routes = [
   {
@@ -150,6 +151,10 @@ const routes: Routes = [
   {
     path:"crear-tipo-cupos", 
     component: CreacionTipoCuposComponent,
+  },
+  {
+    path:"reportes", 
+    component: ReportesComponent,
   },
 ];
 
