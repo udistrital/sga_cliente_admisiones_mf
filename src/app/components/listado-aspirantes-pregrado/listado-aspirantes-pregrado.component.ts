@@ -191,7 +191,8 @@ export class ListadoAspirantesPregradoComponent {
       .subscribe((response: any) => {
         if (response.success == true && response.status == 200) {
           response.data.forEach(async (inscripcion: any, index: number) => {
-            console.log(inscripcion)
+            this.firstFormGroup.get('validatorProyecto')?.setValue(inscripcion.ProgramaAcademicoId)
+            this.firstFormGroup.get('validatorFacultad')?.setValue(inscripcion.ProgramaAcademicoId)
             this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
             const inscritoData = {
               "persona_id": inscripcion.PersonaId,
@@ -279,7 +280,7 @@ export class ListadoAspirantesPregradoComponent {
 
   buscarInscripciones(proyecto: any, periodo: any) {
     return new Promise((resolve, reject) => {
-      this.inscripcionService.get('inscripcion?query=Activo:true,ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + '&sortby=Id&order=asc&limit=0')
+      this.inscripcionService.get('inscripcion?query=Activo:true,ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:2&sortby=Id&order=asc&limit=0')
         .subscribe((res: any) => {
           resolve(res)
         },
