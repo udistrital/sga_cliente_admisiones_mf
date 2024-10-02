@@ -2750,7 +2750,8 @@
     "inscrito": "Inscrito: ",
     "inscrito_ob": "Inscrito con observación: ",
     "total": "Total aspirantes: ",
-    "acciones": "Acciones"
+    "acciones": "Acciones",
+    "consultar_general":"Consulta General"
   },
   "cargue_snp": {
     "tabla_resumen": "Resumen SNP",

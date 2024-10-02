@@ -13,6 +13,7 @@ import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 interface Tile {
   color: string;
@@ -32,14 +33,14 @@ export class ListadoAspirantesPregradoComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  
+
   formulario: boolean = false;
   dataSource!: MatTableDataSource<any>;
 
   public editingRowId: number | null = null;
 
 
-  colums: string [] = [
+  colums: string[] = [
     'Orden',
     'Credencial',
     'IdentificacionEnExamenEstado',
@@ -68,14 +69,14 @@ export class ListadoAspirantesPregradoComponent {
   isLinear = true;
 
   tiles: Tile[] = [
-    {text: '0', cols: 7, rows: 1, color: '#03678F', textColor: 'white'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
+    { text: '0', cols: 7, rows: 1, color: '#03678F', textColor: 'white' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
   ];
 
   proyectosCurriculares!: any[]
@@ -104,13 +105,14 @@ export class ListadoAspirantesPregradoComponent {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private dialog: MatDialog, 
+    private dialog: MatDialog,
     private translate: TranslateService,
     private oikosService: OikosService,
     private parametrosService: ParametrosService,
     private inscripcionService: InscripcionService,
     private sgamidService: SgaMidService,
     private projectService: ProyectoAcademicoService,
+    private sgaAdmisionService: SgaAdmisionesMid,
     private popUpManager: PopUpManager
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -180,6 +182,47 @@ export class ListadoAspirantesPregradoComponent {
     const programas = this.proyectosPregrado.filter((item: any) => item.FacultadId == event.value);
     this.proyectosCurriculares = programas;
     this.loading = false;
+  }
+
+  async generarBusquedaGeneral(stepper: MatStepper) {
+    this.loading = true;
+    this.sgaAdmisionService.get("admision/listadoaspirantegeneral/id_periodo?id_periodo=" + this.firstFormGroup.get('validatorPeriodo')?.value)
+      .subscribe((response: any) => {
+        if (response.success == true && response.status == 200) {
+          response.data.forEach(async (inscripcion: any, index: number) => {
+            console.log(inscripcion)
+            this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
+            const inscritoData = {
+              "persona_id": inscripcion.PersonaId,
+              "inscripcion_id": inscripcion.Id,
+              "inscripcion_pregrado_id": inscripcion.Id,
+              "numeral": index + 1,
+              "credencial": 123,
+              "num_doc_icfes": inscripcion.examenEstado[0].NumeroIdentificacionIcfes,
+              "num_doc_actual": inscripcion.Persona.Data.NumeroIdentificacion,
+              "nombre_completo": inscripcion.Persona.Data.NombreCompleto,
+              "telefono": inscripcion.Persona.Data.Telefono,
+              "correo": inscripcion.Persona.Data.UsuarioWSO2,
+              "cod_proyecto": inscripcion.ProgramaAcademicoId,
+              "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
+              "puntaje": inscripcion.NotaFinal,
+              "estado_inscripcion": inscripcion.EstadoInscripcionId.Nombre,
+              "estado_recibo": "Pagado",
+              "snp": inscripcion.examenEstado[0].CodigoIcfes,
+              "estado_edicion": false
+            }
+            this.inscritosData.push(inscritoData);
+          });
+          this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          stepper.next();
+          this.loading = false;
+        } else {
+          this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
+        }
+      })
+    
   }
 
   async generarBusqueda(stepper: MatStepper) {
