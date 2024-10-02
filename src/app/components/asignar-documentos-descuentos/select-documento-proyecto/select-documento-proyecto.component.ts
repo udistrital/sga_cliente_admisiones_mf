@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 // import { LocalDataSource } from 'ng2-smart-table';
-// import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
+/* import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster'; */
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 // @ts-ignore
 import Swal from 'sweetalert2/dist/sweetalert2';
@@ -18,6 +18,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DocumentoPrograma } from 'src/app/models/documento/documento_programa';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 
 @Component({
   selector: 'ngx-select-documento-proyecto',
@@ -41,12 +42,13 @@ export class SelectDocumentoProyectoComponent implements OnInit {
   documentos: any = [];
   subscription!: Subscription;
   documento_proyecto: any = [];
+  hasPermission: boolean = false;
 
   constructor(private translate: TranslateService,
     private inscripcionService: InscripcionService,
-     private dialogRef: MatDialogRef<SelectDocumentoProyectoComponent>,
+    private dialogRef: MatDialogRef<SelectDocumentoProyectoComponent>,
     private popUpManager: PopUpManager,
-   
+    private autenticationService: ImplicitAutenticationService
     ) {
     this.loading = true;
     this.loadData();
@@ -73,6 +75,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerPermisos()
   }
 
   activetab(): void {
@@ -128,6 +131,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
             documentoNuevo.PeriodoId = parseInt(sessionStorage.getItem('PeriodoId')!, 10);
             documentoNuevo.ProgramaId = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!, 10);
             documentoNuevo.TipoInscripcionId = parseInt(sessionStorage.getItem('TipoInscripcionId')!, 10);
+            documentoNuevo.TipoCupo = parseInt(sessionStorage.getItem('TipoCupo')!,10)
             documentoNuevo.Obligatorio = true;
 
             content = Swal.getHtmlContainer();
@@ -207,6 +211,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
           documentoModificado.PeriodoId = parseInt(sessionStorage.getItem('PeriodoId')!, 10);
           documentoModificado.ProgramaId = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!, 10);
           documentoModificado.TipoInscripcionId = parseInt(sessionStorage.getItem('TipoInscripcionId')!, 10);
+          documentoModificado.TipoCupo = parseInt(sessionStorage.getItem('TipoCupo')!,10)
           documentoModificado.Obligatorio = event.data.Obligatorio;
 
           this.inscripcionService.put('documento_programa', documentoModificado).subscribe((res: any) => {
@@ -242,7 +247,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
 
   onUpdate(documento: any) {
     var msgpopUp
-    if (documento.Data.Obligatorio !== true) {
+    if (documento.value == true) {
       msgpopUp = this.translate.instant('documento_proyecto.poner_obligatorio')
     } else {
       msgpopUp = this.translate.instant('documento_proyecto.quitar_obligatorio')
@@ -257,6 +262,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
         documentoModificado.PeriodoId = parseInt(sessionStorage.getItem('PeriodoId')!, 10);
         documentoModificado.ProgramaId = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!, 10);
         documentoModificado.TipoInscripcionId = parseInt(sessionStorage.getItem('TipoInscripcionId')!, 10);
+        documentoModificado.TipoCupo = parseInt(sessionStorage.getItem('TipoCupo')!,10)
         documentoModificado.Obligatorio = documento.value;
         this.inscripcionService.put('documento_programa', documentoModificado).subscribe((response:any) => {
           if (response.Type !== 'error') {
@@ -279,9 +285,31 @@ export class SelectDocumentoProyectoComponent implements OnInit {
   }
 
   openListDocumentoComponent() {
-    this.administrar_documentos = true;
-    this.boton_retornar = true;
+    if (this.hasPermission) {
+      this.administrar_documentos = true;
+      this.boton_retornar = true;
+    }else {
+      Swal.fire({
+        icon: 'info',
+        title: this.translate.instant('documento_proyecto.sin_acceso'),
+        text: this.translate.instant('documento_proyecto.sin_acceso_cuerpo'),
+        confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
+      })
+    }
+
   }
+
+obtenerPermisos() {
+  this.autenticationService.getRole().then((rol) => {
+    const roles = rol as Array<String>;  // Casting a Array<String>
+    if (roles.includes('ADMIN_SGA')) {
+      this.hasPermission = true;
+    } else {
+      this.hasPermission = false;
+    }
+  });
+}
+
 
   retorno(event: any) {
     this.boton_retornar = event;

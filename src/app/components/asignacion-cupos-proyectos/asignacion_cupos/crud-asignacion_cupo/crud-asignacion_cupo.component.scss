@@ -1,5 +1,4 @@
-
-.mt-20{
+.mt-20 {
   margin-top: 20px;
 
 }
@@ -11,24 +10,33 @@
 }
 
 .boton-primary {
-    border: solid 1px #03678f;
-    border-radius: 5px;
-    font-weight: 300;
-    background-color: #03678f;
-    border-color: #03678f;
-    margin: 0;
-    cursor: pointer;
-    color: white !important;
-    padding: 8px;
-  }
+  border: solid 1px #03678f;
+  border-radius: 5px;
+  font-weight: 300;
+  background-color: #03678f;
+  border-color: #03678f;
+  margin: 0;
+  cursor: pointer;
+  color: white !important;
+  padding: 8px;
+}
 
-  .flex-container {
-    width: 100%;
-    display: flex;
-    gap: 10px; /* Ajusta el espacio entre los contenedores según sea necesario */
-    align-items: center; /* Alinea los elementos verticalmente al centro */
-  }
-  
-  .flex-container > div {
-    flex: 1; /* Hace que cada hijo tome el mismo espacio disponible */
-  }
+.flex-container {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  /* Ajusta el espacio entre los contenedores según sea necesario */
+  align-items: center;
+  /* Alinea los elementos verticalmente al centro */
+}
+
+.flex-container>div {
+  flex: 1;
+  /* Hace que cada hijo tome el mismo espacio disponible */
+}
+
+.contenedor-tabla {
+  width: 95%;
+  margin: auto;
+  overflow: overlay;
+}

@@ -1676,8 +1676,7 @@
     "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico",
     "ver_subcriterios": "Ver subcriterios",
     "error_porcentaje_invalido" : "Los porcentajes no son válidos porque no suman el 100%.",
-    "crear_subcriterio" : "Crear subcriterio",
-    "vigencia": "Años de vigencia"
+    "crear_subcriterio" : "Crear subcriterio"
   },
   "oficializados": {
     "titulo": "Oficialización",
@@ -2751,7 +2750,7 @@
     "inscrito_ob": "Inscrito con observación: ",
     "total": "Total aspirantes: ",
     "acciones": "Acciones",
-    "consultar_general":"Consulta General"
+    "consultar_general": "Consultar general"
   },
   "cargue_snp": {
     "tabla_resumen": "Resumen SNP",

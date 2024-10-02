@@ -6,7 +6,7 @@
 
 export const environment = {
     production: false,
-    apiUrl:"http://localhost:4204/",
+    apiUrl:'https://pruebassgaadmisiones.portaloas.udistrital.edu.co/',
     NUXEO: {
       PATH: 'https://documental.portaloas.udistrital.edu.co/nuxeo/',
       CREDENTIALS: {
@@ -14,8 +14,8 @@ export const environment = {
         PASS: 'xxx',
       },
     },
-    // NUXEO_SERVICE:'https://autenticacion.portaloas.udistrital.edu.co/apioas/gestor_documental_mid/v1',
-    NUXEO_SERVICE:'http://pruebasapi2.intranetoas.udistrital.edu.co:8199/v1',
+    NUXEO_SERVICE:'https://autenticacion.portaloas.udistrital.edu.co/apioas/gestor_documental_mid/v1',
+    //NUXEO_SERVICE:'http://pruebasapi2.intranetoas.udistrital.edu.co:8199/v1',
     CONFIGURACION_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/configuracion_crud_api/v1/',
     NOTIFICACION_SERVICE: 'wss://pruebasapi.portaloas.udistrital.edu.co:8116/ws',
     CONF_MENU_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/configuracion_crud_api/v1/menu_opcion_padre/ArbolMenus/',
@@ -90,5 +90,8 @@ export const environment = {
     NOTIFICACION_MID: 'http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/',
     CALENDARIO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/",
     //SOLICITUDES_ADMISIONES:'https://autenticacion.portaloas.udistrital.edu.co/apioas/solicitudes_crud/v1',
+    SGA_TERCERO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/terceros_mid/v1",
+    SGA_INSCRIPCION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_mid/v1 ",
+
   };
   
