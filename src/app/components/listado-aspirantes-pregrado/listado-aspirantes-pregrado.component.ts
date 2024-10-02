@@ -14,6 +14,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
 
 interface Tile {
   color: string;
@@ -110,7 +111,7 @@ export class ListadoAspirantesPregradoComponent {
     private oikosService: OikosService,
     private parametrosService: ParametrosService,
     private inscripcionService: InscripcionService,
-    private sgamidService: SgaMidService,
+    private terceroMidService: TerceroMidService,
     private projectService: ProyectoAcademicoService,
     private sgaAdmisionService: SgaAdmisionesMid,
     private popUpManager: PopUpManager
@@ -230,6 +231,7 @@ export class ListadoAspirantesPregradoComponent {
     const proyecto = this.firstFormGroup.get('validatorProyecto')?.value;
     const periodo = this.firstFormGroup.get('validatorPeriodo')?.value;
 
+
     this.reiniciarDatosTablas();
     this.inscripciones = await this.buscarInscripciones(proyecto, periodo);
     let count = 0
@@ -248,10 +250,10 @@ export class ListadoAspirantesPregradoComponent {
             "numeral": count,
             "credencial": 123,
             "num_doc_icfes": infoIcfes[0].NumeroIdentificacionIcfes,
-            "num_doc_actual": persona.NumeroIdentificacion,
-            "nombre_completo": persona.NombreCompleto,
-            "telefono": persona.Telefono,
-            "correo": persona.UsuarioWSO2,
+            "num_doc_actual": persona.Data.NumeroIdentificacion,
+            "nombre_completo": persona.Data.NombreCompleto,
+            "telefono": persona.Data.Telefono,
+            "correo": persona.Data.UsuarioWSO2,
             "cod_proyecto": inscripcion.ProgramaAcademicoId,
             "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
             "puntaje": inscripcion.NotaFinal,
@@ -307,7 +309,7 @@ export class ListadoAspirantesPregradoComponent {
 
   consultarTercero(personaId: any) {
     return new Promise((resolve, reject) => {
-      this.sgamidService.get('persona/consultar_persona/' + personaId)
+      this.terceroMidService.get('personas/' + personaId)
         .subscribe((res: any) => {
           resolve(res)
         },
