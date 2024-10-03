@@ -4342,7 +4342,8 @@
     "programa_sin_requisitos": "No assessment requirements found for this academic program",
     "ver_subcriterios" : "View subcriteria",
     "error_porcentaje_invalido" : "The percentages are not valid because they do not add up to 100%.",
-    "crear_subcriterio" : "Create subcriteria"
+    "crear_subcriterio" : "Create subcriteria",
+    "vigencia": "Years of validity"
   },
 
   "oficializados": {
