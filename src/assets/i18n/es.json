@@ -914,7 +914,15 @@
         "Acciones": "Acciones",
         "SelectNivel": "Selecciona el nivel",
         "SelectTipoInscripcion": "Selecciona el tipo de inscripcion",
-        "SelectEstadoInscripcion": "Selecciona el estado de la inscripción"
+        "SelectEstadoInscripcion": "Selecciona el estado de la inscripción",
+        "titulo_reportes": "Gestión de reportes académicos",
+        "subtitulo_reportes": "Por favor, elija el período académico, el proceso, el nivel y el proyecto curricular para acceder a la información correspondiente.",
+        "seleccione_periodo_tipo": "Paso 1: Selección de parámetros académicos",
+        "reporte_tabla": "Paso 2: Revisión de parámetros seleccionados",
+        "periodo_academico": "Seleccione el periodo académico",
+        "proceso_academico": "Proceso Académico:",
+        "proyecto_academico": "Proyecto Curricular:",
+        "nivel_academico": "Nivel Académico:"
     },
     "evento": {
         "evento": "Evento",
@@ -1506,7 +1514,7 @@
         "nombre": "Nombre",
         "id": "Identificación",
         "credencial": "Credencial",
-        "periodo_": "*Periodo académico: *",
+        "periodo_": "Período Académico:",
         "inscripcion": "Inscripciones por proyecto curricular - Evaluación de documentos",
         "calculo_error": "Ocurrió un error al calcular el puntaje",
         "calculo_exito": "El puntaje final de los aspirantes ha sido calculado con éxito",

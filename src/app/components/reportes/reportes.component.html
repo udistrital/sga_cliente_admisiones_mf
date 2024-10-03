@@ -1,1 +1,81 @@
-<p>Nuevo componente de reportes</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ 'reportes.titulo_reportes' | translate }}</mat-card-title>
+    <mat-card-subtitle>{{ "reportes.subtitulo_reportes" | translate }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
+      <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>{{ 'reportes.seleccione_periodo_tipo' | translate }}</ng-template>
+          <div class="form-container">
+            <!--Periodo académico-->
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "admision.periodo_" | translate }}</mat-label>
+              <mat-icon color="primary" matPrefix>school</mat-icon>
+              <mat-select [formControl]="Campo2Control" required>
+                <mat-option value="" disabled>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+                <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
+                  <div style="display: flex; flex-wrap: wrap; align-items: center">
+                    <div class="badge"
+                      [ngStyle]="{ backgroundColor: periodo.Activo ? 'var(--success-accent)' : 'var(--danger-base)' }">
+                    </div>
+                    <b>{{ periodo.Nombre }}</b>
+                    <small>(Inicio vigencia: {{ periodo.InicioVigencia | date: 'yyyy-MM-dd' }})</small>
+                  </div>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- Proceso académico -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "reportes.proceso_academico" | translate }}</mat-label>
+              <mat-icon class="mat-icon-outlined" color="primary" matPrefix>timeline</mat-icon>
+              <mat-select [formControl]="Campo3Control">
+                <mat-option value="" disabled>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+                <mat-option *ngFor="let item of data_proceso" [value]="item.Id">
+                  {{ item.Nombre }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="Campo3Control.hasError('required')">
+                {{ "admision.erro_selec_nivel" | translate }}
+              </mat-error>
+            </mat-form-field>
+            <!--Nivel académico-->
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "reportes.nivel_academico" | translate }}</mat-label>
+              <mat-icon color="primary" matPrefix>timeline</mat-icon>
+              <mat-select [formControl]="CampoControl" (selectionChange)="cambiarSelectPeriodoSegunNivel($event.value)">
+                <mat-option value="" disabled>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+                <mat-option *ngFor="let item of nivel_load" [value]="item.Id">{{ item.Nombre }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="CampoControl.hasError('required')">
+                {{ "admision.erro_selec_nivel" | translate }}
+              </mat-error>
+            </mat-form-field>
+            <!-- Proyecto académico -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "reportes.proyecto_academico" | translate }}</mat-label>
+              <mat-icon color="primary" matPrefix>school</mat-icon>
+              <mat-select [formControl]="Campo1Control">
+                <mat-option value="" disabled>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+                <mat-option *ngFor="let item of proyectos" [value]="item.Id">{{ item.Nombre }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="Campo1Control.hasError('required')">
+                {{ "admision.error_proyecto" | translate }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <button mat-stroked-button matStepperNext class="azulOscuro fixed-button">
+            {{ 'GLOBAL.continuar' | translate }}
+          </button>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroupNivel">
+        <ng-template matStepLabel>{{ 'reportes.reporte_tabla' | translate }}</ng-template>
+        <form [formGroup]="secondFormGroupNivel">
+          <p>{{ 'metricas.mensaje_facultad' | translate }}</p>
+        </form>
+      </mat-step>
+    </mat-stepper>
+  </mat-card-content>
+</mat-card>
