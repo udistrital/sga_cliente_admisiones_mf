@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, SimpleChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
@@ -33,6 +33,7 @@ export class CrudAsignacionCupoComponent implements OnInit {
   @Input() info_periodo: any;
   @Input() info_proyectos: any;
   @Input() info_nivel!: boolean;
+  @Input() tipo_inscripcion!: any;
   @Output() eventChange = new EventEmitter();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @Output('result') result: EventEmitter<any> = new EventEmitter();
@@ -44,7 +45,9 @@ export class CrudAsignacionCupoComponent implements OnInit {
     private inscripcion: InscripcionService,
     private inscripcionMidService: InscripcionMidService,
 
-  ) { }
+  ) {
+    console.log(this.tipo_inscripcion)
+  }
 
   obtenerCupos() {
     this.http.get<any>(`${environment.INSCRIPCION_MID_SERVICE}cupos/`).subscribe(
@@ -105,7 +108,8 @@ export class CrudAsignacionCupoComponent implements OnInit {
           Descripcion: element.Descripcion,
           Tipo: element.Tipo,
           Activo: true,
-          NombreInscripcion: this.dataSource.data[0].NombreInscripcion,
+          // NombreInscripcion: this.dataSource.data[0].NombreInscripcion,
+          NombreInscripcion: (this.dataSource.data[0] && this.dataSource.data[0].NombreInscripcion) ? this.dataSource.data[0].NombreInscripcion : this.tipo_inscripcion.Nombre,
           CuposHabilitados: element.CuposHabilitados,
           CuposOpcionados: element.CuposOpcionados,
           CupoId: element.Id
@@ -138,23 +142,22 @@ export class CrudAsignacionCupoComponent implements OnInit {
         this.obtenerCupos();
       }
     });
-
   }
 
   onAction(event: any) {
-    if (event.action == 'eliminar') {
+    if (event.action == 'eliminar' && event.data.Id == undefined) {
+      this.dataSource.data = this.dataSource.data.filter((item: any) => item.Nombre !== event.data.Nombre);
+    } else {
       this.EliminarCupo(event.data)
     }
-
     if (event.action == 'soporte') {
-
       this.CargarSoporte(event.data)
 
     }
   }
 
   guardarDocumento() {
-    this.dataSource.data.forEach((element: any, index:any) => {
+    this.dataSource.data.forEach((element: any, index: any) => {
       const file: any[] = [];;
       if (element.Id == undefined) {
         file.push({
@@ -219,7 +222,12 @@ export class CrudAsignacionCupoComponent implements OnInit {
 
 
 
-
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['tipo_inscripcion'] && changes['tipo_inscripcion'].currentValue) {
+      // Lógica para manejar cambios en tipo_inscripcion
+      console.log(this.tipo_inscripcion);
+    }
+  }
 
 
 

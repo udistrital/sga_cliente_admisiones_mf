@@ -34,9 +34,9 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   nivelSelect!: NivelFormacion[];
   selectprograma: boolean = true;
   tipoinscripcion!: TipoInscripcion[];
-  tipins_selected!: any[] | undefined;
+  tipins_selected!:any;
   proyectos_selected!: any[] | undefined;
- 
+ tipo_inscirpcion: any;
   CampoControl = new FormControl('', [Validators.required]);
   Campo1Control = new FormControl('', [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
@@ -171,8 +171,8 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   perfil_editar(event: any): void {
     switch (event) {
       case 'info_cupos':
-        this.show_cupos = true;
         this.validarNvel();
+        this.show_cupos = true;
         break;
       default:
         this.show_cupos = false;
