@@ -1424,7 +1424,9 @@
         "quitar_obligatorio": "Set document as optional?",
         "ajuste_ok": "Change made",
         "ajuste_fail": "The change could not be made",
-        "seleccion_facultad": "Select the faculty"
+        "seleccion_facultad": "Select the faculty",
+        "sin_acceso": "No Acces",
+        "sin_acceso_cuerpo": "You dont have acces to this component, if you need to create a new document please contact the support office to create a new request"
     },
     "descuento_academico": {
         "documento_programa_no_registrado": "Document not registered",
@@ -2726,8 +2728,7 @@
     "BUTTON_DESCARGAR_LISTADO": "Download List",
     "BUTTON_GENERAR_CODIGOS": "Generate Codes",
     "BUTTON_GENERAR_CODIFICACION": "Assign Codification",
-    "TABLE_COLUMNA_PUNTAJE": "score"
-  },
+    "TABLE_COLUMNA_PUNTAJE": "score",
   "HOME": {
     "TITLE": "SGA",
     "SELECT": "Change language",
