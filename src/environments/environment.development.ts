@@ -48,7 +48,7 @@ export const environment = {
     //SGA_ADMISIONES_MID: 'http://localhost:8080/v1/',
     SGA_CALENDARIO_MID: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8107/v1/',
     //SGA_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/sga_mid/v1/',
-    INSCRIPCION_MID_SERVICE: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8543/v1/',
+    INSCRIPCION_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_mid/v1/',
     //INSCRIPCION_MID_SERVICE: 'http://localhost:8090/v1/',
     SGA_MID_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8119/v1/',
     CLIENTE_HABILITAR_PERIODO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/core_crud/v1/',
