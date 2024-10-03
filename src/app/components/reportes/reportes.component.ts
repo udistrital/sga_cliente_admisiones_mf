@@ -6,7 +6,6 @@ import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.se
 import { PopUpManager } from '../../managers/popUpManager';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
-
 export interface Estudiante {
   nombres: string;
   apellidos: string;
@@ -25,7 +24,6 @@ export interface Estudiante {
   estado_inscripcion: string;
   estado_admision: string;
 }
-
 @Component({
   selector: 'app-reportes',
   templateUrl: './reportes.component.html',
@@ -33,7 +31,7 @@ export interface Estudiante {
 })
 export class ReportesComponent implements OnInit {
 
-  data_proceso = [{ Id: 1, Nombre: 'Pregrado' }, { Id: 2, Nombre: 'Postgrado' }];
+  data_proceso = [{ Id: 1, Nombre: 'Inscripciones' }, { Id: 2, Nombre: 'Admisiones' }];
   loading: boolean = false;
   CampoControl = new FormControl("", [Validators.required]);
   Campo1Control = new FormControl("", [Validators.required]);
@@ -70,8 +68,6 @@ export class ReportesComponent implements OnInit {
   ];
 
   dataSource = new MatTableDataSource<Estudiante>([]);
-
-  
 
   constructor(
     private translate: TranslateService,    
@@ -127,7 +123,6 @@ export class ReportesComponent implements OnInit {
   filtrarProyecto(proyecto: any, nivelSeleccionado: any) {
     return proyecto.NivelFormacionId.Id === nivelSeleccionado;
   }
-
 
   loadDataTabla() {
     const estudiantes: Estudiante[] = [
@@ -224,8 +219,4 @@ export class ReportesComponent implements OnInit {
     ];
     this.dataSource.data = estudiantes;
   }
-
-  
 }
-
-
