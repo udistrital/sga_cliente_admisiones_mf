@@ -603,7 +603,9 @@
         "filtro": "Filtro",
         "especial": "Especial",
         "legalizacion": "Legalización",
-        "cargado": "Cargado"
+        "cargado": "Cargado",
+        "items_per_page": "Elementos por página",
+        "of": "/"    
     },
     "ERROR": {
         "general": "La solicitud no pudo ser cumplida",
