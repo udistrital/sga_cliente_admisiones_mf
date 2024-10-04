@@ -2001,7 +2001,11 @@
     "tooltip_crear": "Crear tipo de inscripción",
     "tooltip_editar": "Editar tipo de inscripción",
     "tooltip_cancelar": "Cancelar",
-    "tooltip_guargar": "Guardar"
+    "tooltip_guargar": "Guardar",
+    "tooltip_activar": "Activar tipo de inscripción",
+    "seguro_activar_tipo_inscripcion": "¿Esta seguro de activar tipo de inscripción?",
+    "habilitar" : "Habilitar",
+    "deshabilitar" : "Deshabilitar"
   },
   "formacion_academica": {
     "no_data": "No existen datos registrados sobre formación académica",
