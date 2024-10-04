@@ -130,11 +130,7 @@ import { CrudDescuentoProyectoComponent } from './components/asignar-documentos-
 
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.apiUrl + "assets/i18n/",
-    ".json"
-  );
+  return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
 }
 
 @NgModule({

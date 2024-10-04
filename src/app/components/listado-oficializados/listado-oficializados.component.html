@@ -132,7 +132,31 @@
                     aria-label="Select page"></mat-paginator>
             </div>
         </mat-card-content>
+
+        <br><br>
+
+        <mat-card-content *ngIf="mostrarSelectorCupos">
+            <div>
+                <mat-form-field style="width: 100%;">
+                    <mat-label>
+                        {{ 'evaluacionPregrado.periodo' | translate }}:
+                    </mat-label>
+                    <mat-select [(ngModel)]="tipoCupo" [disabled]='false' [formControl]="tipoCupoControl">
+                        <mat-option>
+                            --{{ 'GLOBAL.seleccionar' | translate }}--
+                        </mat-option>
+                        <mat-option *ngFor="let item of tipoCupos" [value]="item.ParametroId.Id">
+                            {{ item.ParametroId.Nombre }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
         <mat-card-actions class="actions-listado">
+            
+            
+
+
             <div class="contenedor-botones">
                 <button mat-stroked-button class="boton-general btn boton-primary" (click)="listarAspirantes()">{{
                     'admision.listar_aspirantes' | translate }}</button>

@@ -30,6 +30,7 @@ export class DinamicformComponent implements OnInit, OnChanges {
 
   DocumentoInputVariable!: ElementRef;
   init!: boolean;
+  onChangeCheckBox: any;
 
   constructor(
     private sanitization: DomSanitizer,

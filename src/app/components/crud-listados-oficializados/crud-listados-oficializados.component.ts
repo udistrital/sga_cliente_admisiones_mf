@@ -3,6 +3,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
+import { PopUpManager } from 'src/app/managers/popUpManager';
 
 @Component({
   selector: 'udistrital-listados-oficializados',
@@ -11,6 +13,7 @@ import { MatSort } from '@angular/material/sort';
 })
 export class CrudListadosOficializadosComponent implements OnInit {
 
+  periodoId: number = 40;
   uid: number = 0;
   cambiotab: boolean = false;
 
@@ -34,7 +37,9 @@ export class CrudListadosOficializadosComponent implements OnInit {
   displayedColumnsReplicada = ['Facultad', 'Codigo', 'Documento', 'PrimerNombre', 'SegundoNombre', 'PrimerApellido', 'SegundoApellido', 'CorreoPersonal', 'Telefono'];
 
   constructor(
-    private translate: TranslateService
+    private translate: TranslateService,
+    private sgaInscripcionMid: InscripcionMidService,
+    private popUpManager: PopUpManager,
   ) {}
 
   loadData(): void {
@@ -71,5 +76,23 @@ export class CrudListadosOficializadosComponent implements OnInit {
 
   selectTab(event: any): void {
     this.cambiotab = event.index !== 0;
+  }
+
+  liberarCupos(periodoId: number) {
+    const body = {
+      "periodoId": periodoId
+    }
+    return new Promise((resolve, reject) => {
+      this.sgaInscripcionMid.put('inscripciones/actualizar-cupos-admitidos-opcionados', body).subscribe((res: any) => {
+        console.log(res);
+        this.popUpManager.showSuccessAlert(this.translate.instant('inscripcion.cupos_liberados_exito'));
+        resolve(res);
+      },
+        (error: any) => {
+          console.error(error);
+          this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.cupos_liberados_exito'));
+          reject(error);
+        });
+    });
   }
 }

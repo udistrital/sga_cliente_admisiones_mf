@@ -45,6 +45,22 @@
                         </mat-error>
                     </mat-form-field>
 
+                    <mat-card-content *ngIf="mostrarSelectorCupos">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>
+                                    {{ 'evaluacionPregrado.periodo' | translate }}:
+                                </mat-label>
+                                <mat-select [(ngModel)]="tipoCupo" [disabled]='false' [formControl]="tipoCupoControl">
+                                    <mat-option>
+                                        --{{ 'GLOBAL.seleccionar' | translate }}--
+                                    </mat-option>
+                                    <mat-option *ngFor="let item of tipoCupos" [value]="item.ParametroId.Id">
+                                        {{ item.ParametroId.Nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                    </mat-card-content>
+
                 </div>
                 <div class="contenedor-botones">
                     <button mat-stroked-button class="boton-general btn boton-primary" (click)="generarBusqueda()">{{ 'GLOBAL.buscar' | translate }}</button>

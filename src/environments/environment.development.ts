@@ -6,7 +6,7 @@
 
 export const environment = {
     production: false,
-    apiUrl:"http://localhost:4204/",
+    apiUrl:'https://pruebassgaadmisiones.portaloas.udistrital.edu.co/',
     NUXEO: {
       PATH: 'https://documental.portaloas.udistrital.edu.co/nuxeo/',
       CREDENTIALS: {
@@ -14,8 +14,8 @@ export const environment = {
         PASS: 'xxx',
       },
     },
-    // NUXEO_SERVICE:'https://autenticacion.portaloas.udistrital.edu.co/apioas/gestor_documental_mid/v1',
-    NUXEO_SERVICE:'http://pruebasapi2.intranetoas.udistrital.edu.co:8199/v1',
+    NUXEO_SERVICE:'https://autenticacion.portaloas.udistrital.edu.co/apioas/gestor_documental_mid/v1',
+    //NUXEO_SERVICE:'http://pruebasapi2.intranetoas.udistrital.edu.co:8199/v1',
     CONFIGURACION_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/configuracion_crud_api/v1/',
     NOTIFICACION_SERVICE: 'wss://pruebasapi.portaloas.udistrital.edu.co:8116/ws',
     CONF_MENU_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/configuracion_crud_api/v1/menu_opcion_padre/ArbolMenus/',
@@ -45,10 +45,11 @@ export const environment = {
     PROYECTO_ACADEMICO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/proyecto_academico_crud/v1/',
     //PROYECTO_ACADEMICO_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8116/v1/',
     SGA_ADMISIONES_MID: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8547/v1/',
+    // SGA_ADMISIONES_MID: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8547/v1/',
     //SGA_ADMISIONES_MID: 'http://localhost:8080/v1/',
     SGA_CALENDARIO_MID: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8107/v1/',
     //SGA_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/sga_mid/v1/',
-    INSCRIPCION_MID_SERVICE: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8543/v1/',
+    INSCRIPCION_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_mid/v1/',
     //INSCRIPCION_MID_SERVICE: 'http://localhost:8090/v1/',
     SGA_MID_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8119/v1/',
     CLIENTE_HABILITAR_PERIODO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/core_crud/v1/',
@@ -89,6 +90,9 @@ export const environment = {
     SGA_PROYECTO_CURRICULAR_MID: "http://pruebasapi2.intranetoas.udistrital.edu.co:8540/v1/",
     NOTIFICACION_MID: 'http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/',
     CALENDARIO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/",
-    //SOLICITUDES_ADMISIONES:'https://autenticacion.portaloas.udistrital.edu.co/apioas/solicitudes_crud/v1',
+    SOLICITUDES_ADMISIONES:'https://autenticacion.portaloas.udistrital.edu.co/apioas/solicitudes_crud/v1',
+    SGA_TERCERO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/terceros_mid/v1",
+    SGA_INSCRIPCION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_mid/v1 ",
+
   };
   

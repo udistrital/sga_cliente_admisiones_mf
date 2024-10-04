@@ -1,3 +1,6 @@
+<div [class.loader-div]="loading">
+    <mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+</div>
 <mat-card class="mt-20">
 
     <mat-card-header class="mt-20 center-header">
@@ -137,68 +140,84 @@
             {{ "preinscripcion-proyectos-curriculares.pin" | translate }}
         </section>
 
-        <table mat-table [dataSource]="datasourcePreinscipcion" class=" mt-20 mat-elevation-z8">
+        <div class="contenedor-tabla">
+            <table mat-table [dataSource]="datasourcePreinscipcion" matSort>
 
-            <ng-container matColumnDef="recibo">
-                <th mat-header-cell *matHeaderCellDef>
-                    {{"preinscripcion-proyectos-curriculares.recibo" | translate}}
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.ReciboInscripcion}} </td>
-            </ng-container>
+                <ng-container matColumnDef="recibo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"preinscripcion-proyectos-curriculares.recibo" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.ReciboInscripcion}} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="inscripcion">
-                <th mat-header-cell *matHeaderCellDef>
-                    {{"preinscripcion-proyectos-curriculares.inscripcion" |
-                    translate}} </th>
-                <td mat-cell *matCellDef="let element"> {{element. Id}} </td>
-            </ng-container>
+                <ng-container matColumnDef="inscripcion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"preinscripcion-proyectos-curriculares.inscripcion" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.Id}} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="nivel">
-                <th mat-header-cell *matHeaderCellDef>
-                    {{"preinscripcion-proyectos-curriculares.nivel" | translate}}
-                </th>
-                <td mat-cell *matCellDef="let element"> {{element.ProyectoAcademico?.NivelFormacionId.Nombre}} </td>
-            </ng-container>
+                <ng-container matColumnDef="nivel">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"preinscripcion-proyectos-curriculares.nivel" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.ProyectoAcademico?.NivelFormacionId.Nombre}} </td>
+                </ng-container>
 
+                <ng-container matColumnDef="tipo_inscripcion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"preinscripcion-proyectos-curriculares.tipo_inscripcion" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.TipoInscripcionId.Nombre}} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="tipo_inscripcion">
-                <th mat-header-cell *matHeaderCellDef>
-                    {{"preinscripcion-proyectos-curriculares.tipo_inscripcion" |translate}}</th>
-                <td mat-cell *matCellDef="let element"> {{element.TipoInscripcionId.Nombre}} </td>
-            </ng-container>
+                <ng-container matColumnDef="estado_inscripcion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"preinscripcion-proyectos-curriculares.estado_inscripcion" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.EstadoInscripcionId.Nombre}} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="estado_inscripcion">
-                <th mat-header-cell *matHeaderCellDef>
-                    {{"preinscripcion-proyectos-curriculares.estado_inscripcion" |translate}} </th>
-                <td mat-cell *matCellDef="let element"> {{element.EstadoInscripcionId.Nombre}} </td>
-            </ng-container>
+                <ng-container matColumnDef="activo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ "calendario.estado" | translate }} </th>
+                    <td mat-cell *matCellDef="let row">
+                      <div class="status-indicator" [ngClass]="{active: row.Activo, inactive: !row.Activo}">
+                        <div *ngIf="row.Activo">
+                          {{ "GLOBAL.activo" | translate }}
+                        </div>
+                        <div *ngIf="!row.Activo">
+                          {{ "GLOBAL.inactivo" | translate }}
+                        </div>
+                      </div>
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="fecha_generacion">
-                <th mat-header-cell *matHeaderCellDef>
-                    {{"preinscripcion-proyectos-curriculares.fecha_generacion" |translate}} </th>
-                <td mat-cell *matCellDef="let element"> {{element.FechaCreacion}} </td>
-            </ng-container>
+                <ng-container matColumnDef="fecha_generacion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"preinscripcion-proyectos-curriculares.fecha_generacion" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.FechaCreacion}} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="resultado">
-                <th mat-header-cell *matHeaderCellDef>
-                    {{"preinscripcion-proyectos-curriculares.resultado" | translate}}
-                </th>
-                <td mat-cell *matCellDef="let element">
-                    <button class="boton-primary" (click)="InformacionDetalladaPreinscripciones(element.Id)">
-                        <span>Detalle</span>
-                    </button>
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="resultado" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"GLOBAL.acciones" | translate}} </th>
+                    <td mat-cell *matCellDef="let row">
+                        <div class="contenedor-acciones">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" class="boton-acciones" aria-label="Example icon-button with a menu">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="informacionDetalladaPreinscripciones(row.Id)">
+                                    <mat-icon>search</mat-icon>
+                                    <span>{{"GLOBAL.detalle" | translate}}</span>
+                                </button>
+                                <button *ngIf="esAdmitido(row.EstadoInscripcionId.CodigoAbreviacion)" mat-menu-item (click)="irPantallaLegalizacion(row)">
+                                    <mat-icon>send</mat-icon>
+                                    <span>{{"GLOBAL.legalizacion" | translate}}</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+                    </td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumnsPreinscipcion"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsPreinscipcion;"></tr>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsPreinscipcion"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsPreinscipcion;"></tr>
 
-        </table>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="7">No data matching the filter</td>
+                </tr>
+            </table>
 
-        <mat-paginator #paginator1 [pageSize]="3" [showFirstLastButtons]="true"></mat-paginator>
-
-        <br>
-
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+        </div>
     </mat-card-content>
 
 </mat-card>
@@ -213,7 +232,6 @@
     </mat-card-header>
 
     <mat-card-content class="mt-20">
-
         <section>
             <span>
                <strong>{{"preinscripcion-proyectos-curriculares.periodo_inscrito" | translate}}: {{periodo}}</strong>
@@ -272,7 +290,7 @@
 
         <div class="button-container" style="display: flex; justify-content: center;">
             <div class="button-stepper">
-                <button mat-stroked-button (click)="Regresar()" class="btn boton-primary">{{ 'listado_pregrado.regresar' | translate
+                <button mat-stroked-button (click)="regresar()" class="btn boton-primary">{{ 'listado_pregrado.regresar' | translate
                     }}</button>
             </div>
         </div>

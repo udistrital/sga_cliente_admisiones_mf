@@ -84,8 +84,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
   show_acad = false;
   Aspirantes: any;
 
-  notas: boolean;
-  save: boolean;
+  notas!: boolean;
+  save!: boolean;
   asistencia!: boolean;
   info_persona!: boolean;
   loading!: boolean;
@@ -154,10 +154,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.save = true;
     this.notas = false;
     this.showTab = true;
-    this.loadData();
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.createTable();
-    });
+    await this.loadData();
+    await this.createTable();
   }
 
   async activateTab() {
@@ -226,27 +224,33 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.Campo1Control.setValue("");
   }
 
-  loadLevel() {
-    this.projectService.get("nivel_formacion?limit=0").subscribe(
-      (response: any) => {
-        if (response !== null || response !== undefined) {
-          this.nivel_load = <any>response;
-          if (window.localStorage.getItem("Nivel")) {
-            this.selectednivel = this.nivel_load.find(
-              (p: any) => p.Id == window.localStorage.getItem("Nivel")
-            ).Id;
-            this.loadProyectos();
-            window.localStorage.removeItem("Nivel");
+  async loadLevel() {
+    const nivel: any = await this.recuperarNivelFormacion();
+    this.nivel_load = nivel;
+    if (window.localStorage.getItem("Nivel")) {
+      this.selectednivel = this.nivel_load.find(
+        (p: any) => p.Id == window.localStorage.getItem("Nivel")
+      ).Id;
+      await this.loadProyectos();
+      window.localStorage.removeItem("Nivel");
+    }
+  }
+
+  recuperarNivelFormacion() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get("nivel_formacion?limit=0")
+        .subscribe((response: any) => {
+          if (response !== null || response !== undefined) {
+            resolve(response);
           }
-        }
-      },
-      (error) => {
-        this.popUpManager.showErrorToast(
-          this.translate.instant("ERROR.general")
-        );
-        this.loading = false;
-      }
-    );
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('ERROR.general'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
+          });
+    });
   }
 
   filtrarProyecto(proyecto: any) {
@@ -267,7 +271,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     }
   }
 
-  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
+  async cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
     const nivelDoctorado = this.nivel_load.find(
       (nivel: any) => nivel.Nombre === "Doctorado"
     );
@@ -281,7 +285,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       this.mostrarBoton = false;
       this.mostrarMensajeInicial = false;
     }
-    this.loadProyectos();
+    await this.loadProyectos();
   }
 
   consultarPeriodosDoctorado(idProyecto: number) {
@@ -328,83 +332,68 @@ export class EvaluacionAspirantesComponent implements OnInit {
       );
   }
 
-  loadProyectos() {
+  async loadProyectos() {
     this.notas = false;
     this.selectprograma = false;
     this.criterio_selected = [];
     if (!Number.isNaN(this.selectednivel)) {
-      this.projectService
-        .get("proyecto_academico_institucion?limit=0")
-        .subscribe(
-          (response: any) => {
-            this.autenticationService.getRole().then((rol: any) => {
-              let r = rol.find(
-                (role: any) =>
-                  role == "ADMIN_SGA" ||
-                  role == "VICERRECTOR" ||
-                  role == "ASESOR_VICE"
-              ); // rol admin o vice
-              if (r) {
-                this.proyectos = <any[]>(
-                  response.filter((proyecto: any) =>
-                    this.filtrarProyecto(proyecto)
-                  )
-                );
-                if (window.localStorage.getItem("IdProyecto")) {
-                  const idProyecto = window.localStorage.getItem("IdProyecto");
-                  const proyecto = this.proyectos.find(
-                    (p: any) => p.Id == idProyecto
-                  );
-                  if (proyecto) {
-                    this.proyectos_selected = proyecto.Id;
-                    this.loadCriterios();
-                  }
-                }
-                window.localStorage.removeItem("IdProyecto");
-              } else {
-                const id_tercero = this.userService.getPersonaId();
-                this.sgaMidAdmisiones
-                  .get("admision/dependencia_vinculacion_tercero/" + id_tercero)
-                  .subscribe(
-                    (respDependencia: any) => {
-                      const dependencias = <Number[]>(
-                        respDependencia.Data.DependenciaId
-                      );
-                      this.proyectos = <any[]>(
-                        response.filter((proyecto: any) =>
-                          dependencias.includes(proyecto.Id)
-                        )
-                      );
-                      if (dependencias.length > 1) {
-                        this.popUpManager.showAlert(
-                          this.translate.instant("GLOBAL.info"),
-                          this.translate.instant(
-                            "admision.multiple_vinculacion"
-                          )
-                        );
-                      }
-                    },
-                    (error: any) => {
-                      this.popUpManager.showErrorAlert(
-                        this.translate.instant(
-                          "admision.no_vinculacion_no_rol"
-                        ) +
-                          ". " +
-                          this.translate.instant("GLOBAL.comunicar_OAS_error")
-                      );
-                    }
-                  );
-              }
-            });
-          },
-          (error) => {
-            this.popUpManager.showErrorToast(
-              this.translate.instant("ERROR.general")
-            );
-            this.loading = false;
+      const proyectoAcademico: any = await this.recuperarProyectoAcademicoInstitucion();
+      const rol: any = await this.autenticationService.getRole()
+      let r = rol.find((role: any) => role == "ADMIN_SGA" || role == "VICERRECTOR" || role == "ASESOR_VICE");
+      if (r) {
+        this.proyectos = <any[]>(proyectoAcademico.filter((proyecto: any) => this.filtrarProyecto(proyecto)));
+        if (window.localStorage.getItem("IdProyecto")) {
+          const idProyecto = window.localStorage.getItem("IdProyecto");
+          const proyecto = this.proyectos.find((p: any) => p.Id == idProyecto);
+          if (proyecto) {
+            this.proyectos_selected = proyecto.Id;
+            await this.loadCriterios();
           }
-        );
+        }
+        window.localStorage.removeItem("IdProyecto");
+      } else {
+        const id_tercero = await this.userService.getPersonaId();
+        const dependencia: any = await this.recuperarDependenciaVinculacionTercero(id_tercero);
+        console.log(dependencia);
+        const dependencias = <Number[]>(dependencia.Data.DependenciaId);
+        this.proyectos = <any[]>(proyectoAcademico.filter((proyecto: any) => dependencias.includes(proyecto.Id)));
+        if (dependencias.length > 1) {
+          this.popUpManager.showAlert(this.translate.instant("GLOBAL.info"), this.translate.instant("admision.multiple_vinculacion"));
+        }
+      }
     }
+  }
+
+  recuperarProyectoAcademicoInstitucion() {
+    return new Promise((resolve, reject) => {
+      this.projectService.get("proyecto_academico_institucion?limit=0")
+        .subscribe((response: any) => {
+          if (response !== null || response !== undefined) {
+            resolve(response);
+          }
+        },
+          (error: any) => {
+            this.popUpManager.showErrorAlert(this.translate.instant('ERROR.general'));
+            this.loading = false;
+            console.error(error);
+            reject([]);
+          });
+    });
+  }
+
+  recuperarDependenciaVinculacionTercero(id_tercero: any) {
+    return new Promise((resolve, reject) => {
+      this.sgaMidAdmisiones.get("admision/dependencia_vinculacion_tercero/" + id_tercero)
+        .subscribe((response: any) => {
+          resolve(response);
+        },
+          (error: any) => {
+            console.error(error);
+            this.popUpManager.showErrorAlert(this.translate.instant("admision.no_vinculacion_no_rol") + ". " + this.translate.instant("GLOBAL.comunicar_OAS_error"));
+            this.loading = false;
+            reject([]);
+          });
+    });
   }
 
   loadCriterios() {
@@ -715,7 +704,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.tipo_criterio.ProgramaAcademico = proyecto;
     this.tipo_criterio.Nombre = event.Nombre;
     sessionStorage.setItem("tipo_criterio", String(event.Id));
-    await this.ngOnChanges();
+    this.ngOnChanges();
     await this.createTable();
     this.showTab = false;
     await this.loadInfo(event.Id);
@@ -738,7 +727,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
             if (response.Success == true && response.Status == 200) {
               this.Aspirantes = response.Data;
               this.cantidad_aspirantes = this.Aspirantes.length;
-
               // Agrega claves con el nombre de las columnas a cada aspirante
               this.Aspirantes.forEach((aspirante: any) => {
                 this.datavalor.forEach((columna: any) => {
@@ -882,39 +870,39 @@ export class EvaluacionAspirantesComponent implements OnInit {
                 const data: any = {};
                 let porcentaje: any;
 
-                // Columna de aspirantes
-                data.Aspirantes = {
-                  title: this.translate.instant("admision.aspirante"),
-                  editable: false,
-                  filter: false,
-                  sort: true,
-                  sortDirection: "asc",
-                  width: "55%",
-                  valuePrepareFunction: (value: any) => {
-                    return value;
-                  },
-                };
+    // Columna de aspirantes
+    data.Aspirantes = {
+      title: this.translate.instant("admision.aspirante"),
+      editable: false,
+      filter: false,
+      sort: true,
+      sortDirection: "asc",
+      width: "55%",
+      valuePrepareFunction: (value: any) => {
+        return value;
+      },
+    };
 
-                // Columna de asistencia si lo requiere
-                if (res.Asistencia === true) {
-                  data.Asistencia = {
-                    title: this.translate.instant("admision.asistencia"),
-                    editable: true,
-                    filter: false,
-                    width: "4%",
-                    type: "custom",
-                    renderComponent: CheckboxAssistanceComponent,
-                    onComponentInitFunction: (instance: any) => {
-                      instance.save.subscribe((data: any) => {
-                        // sessionStorage.setItem('EstadoInscripcion', data);
-                        this.asistencia = data;
-                        if (data === "") {
-                          this.asistencia = false;
-                        }
-                      });
-                    },
-                  };
-                }
+    // Columna de asistencia si lo requiere
+    if (requisitoSecundario.Asistencia === true) {
+      data.Asistencia = {
+        title: this.translate.instant("admision.asistencia"),
+        editable: true,
+        filter: false,
+        width: "4%",
+        type: "custom",
+        renderComponent: CheckboxAssistanceComponent,
+        onComponentInitFunction: (instance: any) => {
+          instance.save.subscribe((data: any) => {
+            // sessionStorage.setItem('EstadoInscripcion', data);
+            this.asistencia = data;
+            if (data === "") {
+              this.asistencia = false;
+            }
+          });
+        },
+      };
+    }
 
                 if (response.length > 1) {
                   porcentaje = await JSON.parse(
@@ -975,8 +963,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
               this.translate.instant("admision.error_cargar")
             );
             reject(error);
-          }
-        );
+          });
     });
   }
 
@@ -1006,8 +993,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
         )
         .subscribe(
           (Res: any) => {
-            const porcentaje = JSON.parse(Res[0].PorcentajeEspecifico);
-            resolve(porcentaje);
+            resolve(Res[0]);
           },
           (error) => {
             this.popUpManager.showErrorToast(

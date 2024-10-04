@@ -43,10 +43,12 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   facultad: any;
   facultades: any[] = [];
 
-  CampoControl = new FormControl("", [Validators.required]);
-  Campo1Control = new FormControl("", [Validators.required]);
-  Campo2Control = new FormControl("", [Validators.required]);
-  Campo3Control = new FormControl("", [Validators.required]);
+  tipo_cupo: any;
+
+  CampoControl = new FormControl('', [Validators.required]);
+  Campo1Control = new FormControl('', [Validators.required]);
+  Campo2Control = new FormControl('', [Validators.required]);
+  Campo3Control = new FormControl('', [Validators.required]);
 
   loadingGlobal: boolean = false;
 
@@ -336,9 +338,10 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   ngOnChanges() {}
 
   savePrograma() {
-    sessionStorage.setItem("ProgramaAcademicoId", this.proyectos_selected);
-    sessionStorage.setItem("PeriodoId", this.periodo.Id);
-    sessionStorage.setItem("TipoInscripcionId", this.tipo_inscripcion_selected);
+    sessionStorage.setItem('ProgramaAcademicoId', this.proyectos_selected)
+    sessionStorage.setItem('PeriodoId', this.periodo.Id)
+    sessionStorage.setItem('TipoInscripcionId', this.tipo_inscripcion_selected)
+    sessionStorage.setItem('TipoCupo', this.tipo_cupo)
   }
 
   openSelectDocumentoProyectoComponent() {
