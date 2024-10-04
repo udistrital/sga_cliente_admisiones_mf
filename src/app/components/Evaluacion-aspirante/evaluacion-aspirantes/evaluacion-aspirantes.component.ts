@@ -303,17 +303,24 @@ export class EvaluacionAspirantesComponent implements OnInit {
           const CalendarioId = response.Data.CalendarioId;
           this.eventosService.get(`calendario/${CalendarioId}`).subscribe(
             (response2: any) => {
-              const listaPeriodos: number[] = JSON.parse(
-                response2.MultiplePeriodoId
-              );
-              listaPeriodos.forEach((periodoId) => {
-                this.parametrosService
-                  .get(`periodo/${periodoId}`)
-                  .subscribe((response3: any) => {
-                    this.nombresPeriodos =
-                      this.nombresPeriodos + response3.Data.Nombre + ", ";
-                  });
-              });
+              if (response2.MultiplePeriodoId != ""){
+                const listaPeriodos: number[] = JSON.parse(
+                  response2.MultiplePeriodoId
+                );
+                
+                listaPeriodos.forEach((periodoId) => {
+                  this.parametrosService
+                    .get(`periodo/${periodoId}`)
+                    .subscribe((response3: any) => {
+                      
+                      this.nombresPeriodos =
+                        this.nombresPeriodos + response3.Data.Nombre + ", ";
+                    });
+                });
+              }else{
+                this.loadCriterios();
+              }
+              
             },
             (error: any) => {
               this.popUpManager.showErrorAlert(
@@ -402,7 +409,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
     const requisitoPrograma: any = await this.recuperarRequisitoProgramaAcademico(this.proyectos_selected, this.periodo.Id);
     if (requisitoPrograma[0].Id !== undefined && requisitoPrograma[0] !== "{}") {
       this.criterios = <any>requisitoPrograma;
-      this.criterios = this.criterios.filter((e: any) => e.PorcentajeGeneral !== 0);
       this.btnCalculo = false;
       this.selectcriterio = false;
       this.notas = false;
@@ -633,10 +639,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones.get("admision/aspirantespor?id_periodo=" + this.periodo.Id + "&id_proyecto=" + this.proyectos_selected + "&tipo_lista=2")
         .subscribe((response: any) => {
-            if (response.success == true && response.status == 200) {
-              this.Aspirantes = response.data;
+            if (response.Success == true && response.Status == 200) {
+              this.Aspirantes = response.Data;
               this.cantidad_aspirantes = this.Aspirantes.length;
-
               // Agrega claves con el nombre de las columnas a cada aspirante
               this.Aspirantes.forEach((aspirante: any) => {
                 this.datavalor.forEach((columna: any) => {
