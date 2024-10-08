@@ -6,7 +6,7 @@
 
 export const environment = {
     production: false,
-    apiUrl:'https://pruebassgaadmisiones.portaloas.udistrital.edu.co/',
+    apiUrl:'https://sgaadmisiones.portaloas.udistrital.edu.co/',
     NUXEO_SERVICE:'https://autenticacion.portaloas.udistrital.edu.co/apioas/gestor_documental_mid/v1',
     TOKEN: {
       AUTORIZATION_URL: 'https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize',

@@ -1,12 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-// import pdfMake from 'pdfmake/build/pdfmake';
 import { PivotDocument } from '../../../../utils/pivot_document.service';
-import html2canvas from 'html2canvas';
-import { interval, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { ZipManagerService } from '../../../../utils/zip-manager.service';
 import { PopUpManager } from '../../../managers/popUpManager';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
@@ -86,7 +83,6 @@ export class PerfilComponent implements OnInit {
     public pivotDocument: PivotDocument,
     private zipManagerService: ZipManagerService,
     private popUpManager: PopUpManager,
-    private sgaMidService: SgaMidService,
     private inscripcionesMidService: InscripcionMidService,
     private gestorDocumentalService: NewNuxeoService,
     private inscripcionService: InscripcionService,) {

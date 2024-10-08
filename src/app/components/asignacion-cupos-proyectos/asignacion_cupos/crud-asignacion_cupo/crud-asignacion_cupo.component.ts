@@ -50,7 +50,7 @@ export class CrudAsignacionCupoComponent implements OnInit {
   }
 
   obtenerCupos() {
-    this.http.get<any>(`${environment.INSCRIPCION_MID_SERVICE}cupos/`).subscribe(
+    this.http.get<any>(`${environment.SGA_INSCRIPCION_MID_SERVICE}cupos/`).subscribe(
       (response) => {
         response.Data.forEach((element: any) => {
           this.cuposAdmitidos = this.cuposAdmitidos + element.CuposHabilitados

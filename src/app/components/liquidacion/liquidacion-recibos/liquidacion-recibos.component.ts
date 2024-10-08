@@ -22,8 +22,8 @@ import * as saveAs from 'file-saver';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.service';
 import { OikosService } from 'src/app/services/oikos.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
+import { TercerosService } from 'src/app/services/terceros.service';
 
 @Component({
   selector: 'app-liquidacion-recibos',
@@ -172,15 +172,13 @@ export class LiquidacionRecibosComponent {
     private parametrosService: ParametrosService,
     private popUpManager: PopUpManager,
     private projectService: ProyectoAcademicoService,
-    private userService: UserService,
-    private sgaAdmisiones: SgaAdmisionesMid,
-    private sgamidService: SgaMidService,
     private liquidacionService: LiquidacionService,
     private inscripcionMidService: InscripcionMidService,
-    private autenticationService: ImplicitAutenticationService,
     private inscripcionService: InscripcionService,
     private oikosService: OikosService,
-    private notificacionService: NotificacionesMidService) {
+    private notificacionService: NotificacionesMidService,
+    private tercerosService: TercerosService,
+  ) {
 
   }
 
@@ -364,7 +362,7 @@ export class LiquidacionRecibosComponent {
 
   async consultarTercero(personaId: any): Promise<any | []> {
     try {
-      const response = await this.sgamidService.get('persona/consultar_persona/' + personaId).toPromise();
+      const response = await this.tercerosService.get('personas/' + personaId).toPromise();
       return response;
     } catch (error) {
       this.loading = false;

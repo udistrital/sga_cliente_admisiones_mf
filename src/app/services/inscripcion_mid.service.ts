@@ -18,22 +18,22 @@ const httpOptions = {
 export class InscripcionMidService {
 
   constructor(private requestManager: RequestManager) {
-    this.requestManager.setPath('INSCRIPCION_MID_SERVICE');
+    this.requestManager.setPath('SGA_INSCRIPCION_MID_SERVICE');
   }
   get(endpoint:string) {
-    this.requestManager.setPath('INSCRIPCION_MID_SERVICE');
+    this.requestManager.setPath('SGA_INSCRIPCION_MID_SERVICE');
     return this.requestManager.get(endpoint);
   }
   post(endpoint:string, element:any) {
-    this.requestManager.setPath('INSCRIPCION_MID_SERVICE');
+    this.requestManager.setPath('SGA_INSCRIPCION_MID_SERVICE');
     return this.requestManager.post(endpoint, element);
   }
   put(endpoint:string, element:any) {
-    this.requestManager.setPath('INSCRIPCION_MID_SERVICE');
+    this.requestManager.setPath('SGA_INSCRIPCION_MID_SERVICE');
     return this.requestManager.put(endpoint, element);
   }
   delete(endpoint:string, element:any) {
-    this.requestManager.setPath('INSCRIPCION_MID_SERVICE');
+    this.requestManager.setPath('SGA_INSCRIPCION_MID_SERVICE');
     return this.requestManager.delete(endpoint, element.Id);
   }
 }

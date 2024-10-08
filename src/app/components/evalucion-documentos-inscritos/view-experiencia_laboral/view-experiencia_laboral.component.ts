@@ -1,5 +1,3 @@
-
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
@@ -59,7 +57,6 @@ export class ViewExperienciaLaboralComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
-    private sgaMidService: SgaMidService,
     private inscripcionesMidService: InscripcionMidService,
     private newNuxeoService: NewNuxeoService,
     private documentoService: DocumentoService,

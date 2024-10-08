@@ -13,7 +13,7 @@ import { ProyectoAcademicoService } from '../../services/proyecto_academico.serv
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { OikosService } from 'src/app/services/oikos.service';
 import { MatSort } from '@angular/material/sort';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { TercerosService } from 'src/app/services/terceros.service';
 
 
 
@@ -77,9 +77,8 @@ export class EvalucionAspirantePregradoComponent {
     private parametrosService: ParametrosService,
     private projectService: ProyectoAcademicoService,
     private InscripcionService: InscripcionService,
-    private oikosService: OikosService,
     private EvalaucionInscripcionServices: EvaluacionInscripcionService,
-    private sgamidService: SgaMidService,
+    private tercerosService: TercerosService
   ) { }
 
   async ngOnInit() {
@@ -326,7 +325,7 @@ export class EvalucionAspirantePregradoComponent {
 
   async consultarTercero(personaId: any): Promise<any | []> {
     try {
-      const response = await this.sgamidService.get('persona/consultar_persona/' + personaId).toPromise();
+      const response = await this.tercerosService.get('personas/' + personaId).toPromise();
       return response;
     } catch (error) {
       this.loading = false;

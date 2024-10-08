@@ -8,28 +8,12 @@ import { ParametrosService } from 'src/app/services/parametros.service';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MatStepper } from '@angular/material/stepper';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
+import { TercerosService } from 'src/app/services/terceros.service';
 
-// interface Food {
-//   value: string;
-//   viewValue: string;
-// }
-
-// interface colums {
-//   Orden: number;
-//   NombreCompleto: string;
-//   Telefono: string;
-//   Correo: string;
-//   Credencial: string;
-//   IdentificacionEnExamenEstado: string;
-//   IdentificacionActual: string;
-//   CodigoProyecto: string;
-//   SNP: string;
-// }
 
 interface Tile {
   color: string;
@@ -105,15 +89,14 @@ export class CargueSnpComponent {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private dialog: MatDialog,
     private translate: TranslateService,
     private oikosService: OikosService,
     private parametrosService: ParametrosService,
     private inscripcionService: InscripcionService,
-    private sgamidService: SgaMidService,
     private evaluacionInscripcionService: EvaluacionInscripcionService,
     private projectService: ProyectoAcademicoService,
-    private popUpManager: PopUpManager
+    private popUpManager: PopUpManager,
+    private tercerosService: TercerosService,
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
     });
@@ -289,7 +272,7 @@ export class CargueSnpComponent {
 
   consultarTercero(personaId: any) {
     return new Promise((resolve, reject) => {
-      this.sgamidService.get('persona/consultar_persona/' + personaId)
+      this.tercerosService.get('personas/' + personaId)
         .subscribe((res: any) => {
           resolve(res)
         },
