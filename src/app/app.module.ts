@@ -62,7 +62,6 @@ import { ViewPropuestaGradoComponent } from './components/evalucion-documentos-i
 import { StoreModule } from '@ngrx/store';
 import { rootReducer } from './store/rootReducer';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ListService } from './store/services/list.service';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
@@ -273,7 +272,6 @@ export function createTranslateLoader(http: HttpClient) {
 
   providers: [
     MatSnackBar,
-    ListService,
     TerceroMidService,
     InscripcionMidService,
     RequestManager,
