@@ -12,8 +12,6 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { PopUpManager } from "../../../managers/popUpManager";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { DialogoDocumentosComponent } from "../dialogo-documentos/dialogo-documentos.component";
-import { Documento } from "src/app/models/documento/documento";
-import { GoogleService } from "src/app/services/google.service";
 import { Invitacion } from "src/app/models/correo/invitacion";
 import { InvitacionTemplate } from "../../../models/correo/invitacionTemplate";
 // @ts-ignore
