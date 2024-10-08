@@ -67,7 +67,7 @@ export class EvalucionAspirantePregradoComponent {
 
   columnsCurriculares = ['curricular', 'estado', 'accion'];
   columnsFacultades = ['facultad', 'estado', '%', 'accion'];
-  columnspuntajeaspirantes: string[] = [ 'Credencial', 'Nombre'];
+  columnspuntajeaspirantes: string[] = ['Credencial', 'Nombre'];
 
   constructor(
     private router: Router,
@@ -93,8 +93,8 @@ export class EvalucionAspirantePregradoComponent {
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones.get('admision/facultad/inscritos')
         .subscribe((res: any) => {
-          if (res.Data) {
-            this.facultades = res.Data;
+          if (res.data) {
+            this.facultades = res.data;
             this.datasourceFacultades = new MatTableDataSource<any>(this.facultades);
             this.datasourceFacultades.paginator = this.paginator1;
             this.datasourceFacultades.sort = this.sort1;
@@ -242,7 +242,7 @@ export class EvalucionAspirantePregradoComponent {
     this.selectcriterio = false;
     this.criterio_selected = [];
     this.selectCriterio = [];
-    
+
     for (const element of this.requisitosActuales) {
       if (this.requisitosActuales != "ICFES") {
         this.selectCriterio.push(element.RequisitoId);
@@ -260,7 +260,7 @@ export class EvalucionAspirantePregradoComponent {
           } else {
             this.loading = false;
             reject(false);
-          } 
+          }
         },
           (error: HttpErrorResponse) => {
             console.error(error);
@@ -377,6 +377,43 @@ export class EvalucionAspirantePregradoComponent {
       this.datasourcePuntajeAspirantes.paginator.firstPage();
     }
   }
-  
+
+  descargarExcel() {
+    this.sgaMidAdmisiones.get('reporte/inscripcion-evaluacion/id_periodo/id_proyecto?id_periodo=' + this.periodo + '&id_proyedcto=' + localStorage.getItem('IdProyecto'))
+      .subscribe((response: any) => {
+        if (response.data) {
+          this.loading = true;
+          const base64Excel = response.data.Excel;
+          const binaryString = atob(base64Excel);
+
+          // Paso 2: Crear un array de bytes
+          const len = binaryString.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+
+          // Paso 3: Crear un Blob a partir de los datos decodificados
+          const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+          // Paso 4: Crear un enlace de descarga
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = 'ListadoEvaluacion.xlsx';
+          // Paso 5: Hacer clic en el enlace de descarga programáticamente
+          link.click();
+          this.loading = false;
+        } else {
+          this.popUpManager.showErrorAlert(this.translate.instant('evaluacionPregrado.error_descarga'));
+          this.loading = false;
+        }
+      }),
+      (error: any) => {
+        this.popUpManager.showErrorAlert(this.translate.instant('evaluacionPregrado.error_descarga'));
+        console.error(error);
+        this.loading = false;
+      };
+  }
+
 }
 

@@ -2794,8 +2794,9 @@
     "listado": "Listado de aspirantes registrados",
     "evaluar_criterio": "Evaluar criterio",
     "revision_curricular": "Enviar para revisión al proyecto curricular",
-    "descargar_pdf": "Descargar listado (PDF/Excel)",
-    "definir_admitidos": "Definir listas de admitidos"
+    "descargar_pdf": "Descargar listado (Excel)",
+    "definir_admitidos": "Definir listas de admitidos",
+    "error_descarga": "Error al descargar el archivo"
   },
   "evaluacion-admitidos": {
     "titulo": "Listado admitidos",
