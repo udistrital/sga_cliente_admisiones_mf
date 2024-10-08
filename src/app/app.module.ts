@@ -36,7 +36,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { EvaluacionInscripcionService } from './services/evaluacion_inscripcion.service';
 import { ParametrosService } from './services/parametros.service';
-import { SgaMidService } from './services/sga_mid.service';
 import { CheckboxAssistanceComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component';
 import { AdministradorCriteriosComponent } from './components/administrar-criterios-admisiones/administrador-criterios/administrador-criterios.component';
 import { DialogoCriteriosComponent } from './components/administrar-criterios-admisiones/dialogo-criterios/dialogo-criterios.component';
@@ -59,12 +58,10 @@ import { ViewExperienciaLaboralComponent } from './components/evalucion-document
 import { ViewProduccionAcademicaComponent } from './components/evalucion-documentos-inscritos/view-produccion_academica/view-produccion_academica.component';
 import { ViewDocumentoProgramaComponent } from './components/evalucion-documentos-inscritos/view-documento_programa/view-documento_programa.component';
 import { ViewDescuentoAcademicoComponent } from './components/evalucion-documentos-inscritos/view-descuento_academico/view-descuento_academico.component';
-import { CampusMidService } from './services/campus_mid.service';
 import { ViewPropuestaGradoComponent } from './components/evalucion-documentos-inscritos/view-propuesta_grado/view-propuesta_grado.component';
 import { StoreModule } from '@ngrx/store';
 import { rootReducer } from './store/rootReducer';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ListService } from './store/services/list.service';
 import { AdministracionCuentaBancariaComponent } from './components/administracion-cuenta-bancaria/administracion-cuenta-bancaria.component';
 import { ComentariosCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/comentarios-cupos/comentarios-cupos.component';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
@@ -275,14 +272,11 @@ export function createTranslateLoader(http: HttpClient) {
 
   providers: [
     MatSnackBar,
-    ListService,
-    SgaMidService,
     TerceroMidService,
     InscripcionMidService,
     RequestManager,
     SgaAdmisionesMid,
     DocumentoService,
-    CampusMidService,
     ParametrosService,
     NotificacionesMidService,
     EventoService,

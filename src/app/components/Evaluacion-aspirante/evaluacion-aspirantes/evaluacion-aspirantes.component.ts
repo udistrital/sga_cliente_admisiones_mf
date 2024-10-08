@@ -6,8 +6,6 @@ import { ProyectoAcademicoService } from "src/app/services/proyecto_academico.se
 import { ParametrosService } from "src/app/services/parametros.service";
 import { EvaluacionInscripcionService } from "src/app/services/evaluacion_inscripcion.service";
 import { Inscripcion } from "src/app/models/inscripcion/inscripcion";
-import { TercerosService } from "src/app/services/terceros.service";
-import { SgaMidService } from "src/app/services/sga_mid.service";
 import { SgaAdmisionesMid } from "src/app/services/sga_admisiones_mid.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { TipoCriterio } from "../../../models/admision/tipo_criterio";

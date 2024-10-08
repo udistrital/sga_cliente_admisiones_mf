@@ -15,14 +15,11 @@ import {
   Validators,
   FormGroup,
   FormBuilder,
-  ReactiveFormsModule,
 } from "@angular/forms";
 import { EvaluacionInscripcionService } from "src/app/services/evaluacion_inscripcion.service";
 import { ProyectoAcademicoService } from "src/app/services/proyecto_academico.service";
-// import { LocalDataSource } from 'ng2-smart-table';
 import { PopUpManager } from "../../../managers/popUpManager";
 import { NivelFormacion } from "src/app/models/proyecto_academico/nivel_formacion";
-import { SgaMidService } from "src/app/services/sga_mid.service";
 import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { OikosService } from "src/app/services/oikos.service";
