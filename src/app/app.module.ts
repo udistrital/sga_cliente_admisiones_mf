@@ -36,7 +36,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { EvaluacionInscripcionService } from './services/evaluacion_inscripcion.service';
 import { ParametrosService } from './services/parametros.service';
-import { SgaMidService } from './services/sga_mid.service';
 import { CheckboxAssistanceComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/checkbox-assistance/checkbox-assistance.component';
 import { AdministradorCriteriosComponent } from './components/administrar-criterios-admisiones/administrador-criterios/administrador-criterios.component';
 import { DialogoCriteriosComponent } from './components/administrar-criterios-admisiones/dialogo-criterios/dialogo-criterios.component';
@@ -275,7 +274,6 @@ export function createTranslateLoader(http: HttpClient) {
   providers: [
     MatSnackBar,
     ListService,
-    SgaMidService,
     TerceroMidService,
     InscripcionMidService,
     RequestManager,
