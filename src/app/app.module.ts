@@ -59,7 +59,6 @@ import { ViewExperienciaLaboralComponent } from './components/evalucion-document
 import { ViewProduccionAcademicaComponent } from './components/evalucion-documentos-inscritos/view-produccion_academica/view-produccion_academica.component';
 import { ViewDocumentoProgramaComponent } from './components/evalucion-documentos-inscritos/view-documento_programa/view-documento_programa.component';
 import { ViewDescuentoAcademicoComponent } from './components/evalucion-documentos-inscritos/view-descuento_academico/view-descuento_academico.component';
-import { CampusMidService } from './services/campus_mid.service';
 import { ViewPropuestaGradoComponent } from './components/evalucion-documentos-inscritos/view-propuesta_grado/view-propuesta_grado.component';
 import { StoreModule } from '@ngrx/store';
 import { rootReducer } from './store/rootReducer';
@@ -282,7 +281,6 @@ export function createTranslateLoader(http: HttpClient) {
     RequestManager,
     SgaAdmisionesMid,
     DocumentoService,
-    CampusMidService,
     ParametrosService,
     NotificacionesMidService,
     EventoService,
