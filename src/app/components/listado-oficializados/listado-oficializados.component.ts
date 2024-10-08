@@ -12,9 +12,9 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TranslateService } from '@ngx-translate/core';
 import * as saveAs from 'file-saver';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { SolicitudesAdmisiones } from 'src/app/services/solicitudes_admisiones.service';
 import { MatSort } from '@angular/material/sort';
+import { TercerosService } from 'src/app/services/terceros.service';
 
 @Component({
   selector: 'app-listado-oficializados',
@@ -84,8 +84,8 @@ export class ListadoOficializadosComponent {
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private sgaAdmisionesMidService: SgaAdmisionesMid,
-    private sgamidService: SgaMidService,
     private solicitudesAdmisiones: SolicitudesAdmisiones,
+    private tercerosService: TercerosService,
   ) { }
 
   async ngOnInit() {
@@ -377,7 +377,7 @@ export class ListadoOficializadosComponent {
 
   consultarTercero(personaId: any) {
     return new Promise((resolve, reject) => {
-      this.sgamidService.get('persona/consultar_persona/' + personaId).subscribe((res: any) => {
+      this.tercerosService.get('personas/' + personaId).subscribe((res: any) => {
         resolve(res);
       },
         (error: any) => {

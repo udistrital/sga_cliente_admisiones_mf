@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { InscripcionService } from "src/app/services/inscripcion.service";
 import { SolicitudDescuento } from "src/app/models/descuento/solicitud_descuento";
-import { SgaMidService } from "src/app/services/sga_mid.service";
 import { DocumentoService } from "src/app/services/documento.service";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
@@ -13,7 +12,6 @@ import { UtilidadesService } from "src/app/services/utilidades.service";
 import { ZipManagerService } from "src/utils/zip-manager.service";
 import { PopUpManager } from "../../../managers/popUpManager";
 import { InscripcionMidService } from "src/app/services/sga_inscripcion_mid.service";
-import { decrypt } from "src/utils/util-encrypt";
 import { UserService } from "src/app/services/users.service";
 
 @Component({

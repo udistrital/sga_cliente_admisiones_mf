@@ -9,7 +9,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 // @ts-ignore
 import Swal from 'sweetalert2/dist/sweetalert2';
 import { ProduccionAcademicaPost } from 'src/app/models/produccion_academica/produccion_academica';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { ZipManagerService } from 'src/utils/zip-manager.service';
