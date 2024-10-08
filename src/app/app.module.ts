@@ -127,6 +127,7 @@ import { SubcriteriosDialogComponent } from './components/crieterios-admisiones-
 import { TiposCuposComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/tipos-cupos/tipos-cupos.component';
 import { SoporteCupoInscripcionComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/soporte-cupo-inscripcion/soporte-cupo-inscripcion.component';
 import { CrudDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-descuento-proyecto/crud-descuento-proyecto.component';
+import { ReportesComponent } from './components/reportes/reportes.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -219,6 +220,7 @@ export function createTranslateLoader(http: HttpClient) {
     SubcriteriosDialogComponent,
     SoporteCupoInscripcionComponent,
     CrudDescuentoProyectoComponent,
+    ReportesComponent,
   ],
   imports: [
     CodificacionModule,

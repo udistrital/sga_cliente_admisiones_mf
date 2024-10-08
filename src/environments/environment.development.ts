@@ -45,8 +45,7 @@ export const environment = {
     PROYECTO_ACADEMICO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/proyecto_academico_crud/v1/',
     //PROYECTO_ACADEMICO_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8116/v1/',
     SGA_ADMISIONES_MID: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8547/v1/',
-    // SGA_ADMISIONES_MID: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8547/v1/',
-    //SGA_ADMISIONES_MID: 'http://localhost:8080/v1/',
+    //SGA_ADMISIONES_MID: 'http://localhost:8080/v1/',/cupos/
     SGA_CALENDARIO_MID: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8107/v1/',
     //SGA_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/sga_mid/v1/',
     INSCRIPCION_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_mid/v1/',

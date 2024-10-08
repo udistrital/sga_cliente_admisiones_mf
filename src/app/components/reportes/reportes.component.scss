@@ -1,0 +1,75 @@
+.form-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas en pantallas grandes */
+  gap: 10px;
+  
+  @media (max-width: 768px) { /* Para pantallas pequeñas */
+      grid-template-columns: 1fr; /* Una sola columna */
+  }
+}
+
+button {
+  margin: 20px 0;
+  width: 180px;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+
+  th {
+      text-align: center;
+      color: white;
+      background-color: var(--primary);
+  }
+
+  td {
+      text-align: center !important;
+      border-right: whitesmoke;
+      border-left: whitesmoke;
+  }
+}
+
+/* Estilos para el indicador de estado */
+.badge {
+  margin: 0.4em;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 100%;
+}
+
+.mat-step {
+  width: 100%; /* Ajusta el ancho según tus necesidades */
+}
+
+/* HOVER SOBRE LAS FILAS */
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: var(--color100);
+}
+
+/* Ajustes para el Snackbar */
+::ng-deep .mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #03678F;
+  --mdc-snackbar-supporting-text-color: rgba(255, 255, 255, 0.87);
+  --mat-snack-bar-button-color: #145a95;
+}
+
+/* Para compatibilidad con Angular Material */
+.mat-mdc-form-field {
+  margin-top: 16px;
+}
+
+.mat-form-field {
+  width: 100%; /* Asegura que los campos de selección ocupen todo el ancho */
+}
+
+::ng-deep .azulOscuro {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+table[_ngcontent-ng-c4093210823] th[_ngcontent-ng-c4093210823] {
+  text-align: center;
+  color: #212121;
+  background-color: #ffffff;
+}
