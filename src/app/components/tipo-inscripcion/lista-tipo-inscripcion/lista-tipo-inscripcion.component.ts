@@ -155,4 +155,24 @@ export class ListaTipoInscripcionComponent {
         );
     });
   }
+
+  activar(data: any) {
+    this.popUpManager.showPopUpGeneric(
+      this.translate.instant('tipo_inscripcion.tooltip_activar'),
+      this.translate.instant('tipo_inscripcion.seguro_activar_tipo_inscripcion'),
+      MODALS.INFO,
+      true).then(
+        async (action) => {
+          if (action.value) {
+            await this.prepararActivacion(data);
+          }
+        });
+  }
+
+  async prepararActivacion(data: any) {
+    this.loading = true;
+    data.Activo = true;
+    await this.actualizarTipoInscripcion(data);
+    this.loading = false;
+  }
 }

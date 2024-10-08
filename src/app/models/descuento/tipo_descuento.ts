@@ -5,6 +5,6 @@ export class TipoDescuento {
   CodigoAbreviacion!: string;
   Activo!: boolean;
   NumeroOrden!: number;
-  General!: boolean;
+  General!: boolean | string;
   ConceptoAcademicoId!: number;
 }

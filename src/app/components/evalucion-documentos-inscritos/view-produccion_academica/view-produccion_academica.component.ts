@@ -87,7 +87,7 @@ export class ViewProduccionAcademicaComponent implements OnInit {
   }
 
   loadData(): void {
-    this.inscripcionesMidService.get('academico/produccion/' + this.persona_id)
+    this.inscripcionesMidService.get('academico/produccion/tercero/' + this.persona_id)
       .subscribe((res: any) => {
         if (res !== null) {
           if (res.Status === 200 && res.Data !== null) {

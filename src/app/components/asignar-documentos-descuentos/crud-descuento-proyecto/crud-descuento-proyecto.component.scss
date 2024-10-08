@@ -1,0 +1,24 @@
+.crud-descuento-proyecto{
+    width: 500px;
+}
+
+@media screen and (max-width: 500px) {
+    .crud-descuento-proyecto{
+        width: 400px;
+    }
+    
+}
+
+@media screen and (max-width: 600px) {
+    .crud-descuento-proyecto{
+        width: 300px;
+    }
+    
+}
+
+@media screen and (max-width: 400px) {
+    .crud-descuento-proyecto{
+        width: 200px;
+    }
+    
+}
