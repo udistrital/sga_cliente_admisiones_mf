@@ -7,7 +7,7 @@
 export const environment = {
     production: false,
     apiUrl:'https://sgaadmisiones.portaloas.udistrital.edu.co/',
-    NUXEO_SERVICE:'https://autenticacion.portaloas.udistrital.edu.co/apioas/gestor_documental_mid/v1',
+    NUXEO_SERVICE:'https://autenticacion.portaloas.udistrital.edu.co/apioas/gestor_documental_mid/v1/',
     TOKEN: {
       AUTORIZATION_URL: 'https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize',
       CLIENTE_ID: 'e36v1MPQk2jbz9KM4SmKhk8Cyw0a',
@@ -27,7 +27,7 @@ export const environment = {
     PROYECTO_ACADEMICO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/proyecto_academico_crud/v1/',
     SGA_ADMISIONES_MID: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/admisiones_mid/v1/',
     SGA_CALENDARIO_MID: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/',
-    SGA_INSCRIPCION_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_mid/v1 ",
+    SGA_INSCRIPCION_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_mid/v1/',
     INSCRIPCION_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_crud/v2/',
     IDIOMA_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/idiomas_crud/v2/',
     DESCUENTO_ACADEMICO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/matriculas_descuentos_crud/v2/',
@@ -36,9 +36,9 @@ export const environment = {
     PARAMETROS_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/parametros/v1/',
     LIQUIDACION_SERVICE: 'http://localhost:8080/v1/',
     NOTIFICACION_MID: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/notificacion_mid/v1/',
-    CALENDARIO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/",
-    SOLICITUDES_ADMISIONES:'https://autenticacion.portaloas.udistrital.edu.co/apioas/solicitudes_crud/v1',
-    SGA_TERCERO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/terceros_mid/v1",
+    CALENDARIO_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/',
+    SOLICITUDES_ADMISIONES:'https://autenticacion.portaloas.udistrital.edu.co/apioas/solicitudes_crud/v1/',
+    SGA_TERCERO_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/terceros_mid/v1/',
     PLANES_ESTUDIOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/planes_estudios_crud/v1/",
   };
   
