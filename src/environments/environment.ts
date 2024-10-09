@@ -26,6 +26,7 @@ export const environment = {
   OIKOS_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8087/v2/',
   PROYECTO_ACADEMICO_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8116/v1/',
   SGA_ADMISIONES_MID: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8547/v1/',
+  //SGA_ADMISIONES_MID: 'http://localhost:8098/v1/',
   SGA_CALENDARIO_MID: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8545/v1/',
   SGA_INSCRIPCION_MID_SERVICE: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8543/v1/',
   INSCRIPCION_SERVICE: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8208/v1/',
