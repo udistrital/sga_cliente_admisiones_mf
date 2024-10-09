@@ -15,14 +15,11 @@ import {
   Validators,
   FormGroup,
   FormBuilder,
-  ReactiveFormsModule,
 } from "@angular/forms";
 import { EvaluacionInscripcionService } from "src/app/services/evaluacion_inscripcion.service";
 import { ProyectoAcademicoService } from "src/app/services/proyecto_academico.service";
-// import { LocalDataSource } from 'ng2-smart-table';
 import { PopUpManager } from "../../../managers/popUpManager";
 import { NivelFormacion } from "src/app/models/proyecto_academico/nivel_formacion";
-import { SgaMidService } from "src/app/services/sga_mid.service";
 import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { OikosService } from "src/app/services/oikos.service";
@@ -80,6 +77,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   proyectosFilteredFacultad!: any[];
   criterioEsExamenEstado: boolean = false;
   valorMinimo: any = 0;
+  vigencia: any = 0
   validarExistenciaExamenEstado: boolean = false;
 
   percentage_info: number = 0;
@@ -147,6 +145,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   CampoControl = new FormControl("", [Validators.required]);
   Campo1Control = new FormControl("", [Validators.required]);
   Campo2Control = new FormControl("", [Validators.required]);
+  Campo3Control = new FormControl("", [Validators.required]);
   constructor(
     private popUpManager: PopUpManager,
     private projectService: ProyectoAcademicoService,
@@ -162,7 +161,7 @@ export class CriterioAdmisionComponent implements OnChanges {
     private dialog: MatDialog
   ) {
     this.translate = translate;
-    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => { });
     // this.dataSource = new LocalDataSource();
     this.ofertarOpcion2 = this.builder.group({
       opcion: [false, Validators.required],
@@ -188,9 +187,9 @@ export class CriterioAdmisionComponent implements OnChanges {
         this.parametrosService
           .get(
             "parametro_periodo?query=Activo:true,PeriodoId:" +
-              this.periodo.Id +
-              ",ParametroId:" +
-              response.Data[0].Id
+            this.periodo.Id +
+            ",ParametroId:" +
+            response.Data[0].Id
           )
           .subscribe(
             (response: any) => {
@@ -345,9 +344,9 @@ export class CriterioAdmisionComponent implements OnChanges {
     this.evaluacionService
       .get(
         "requisito_programa_academico?query=Activo:true,ProgramaAcademicoId:" +
-          this.proyectos_selected +
-          ",PeriodoId:" +
-          this.periodo.Id
+        this.proyectos_selected +
+        ",PeriodoId:" +
+        this.periodo.Id
       )
       .subscribe(
         (response) => {
@@ -367,6 +366,9 @@ export class CriterioAdmisionComponent implements OnChanges {
               if (element.PuntajeMinimoExamenEstado) {
                 const valorMinimo_aux = element.PuntajeMinimoExamenEstado;
                 this.valorMinimo = valorMinimo_aux;
+              }
+              if (element.PorcentajeEspecifico){
+                this.vigencia = JSON.parse( element.PorcentajeEspecifico).vigencia;
               }
 
               criterio_aux.Subcriterios.forEach((sub: any) => {
@@ -514,8 +516,8 @@ export class CriterioAdmisionComponent implements OnChanges {
                   (error: any) => {
                     this.popUpManager.showErrorAlert(
                       this.translate.instant("admision.no_vinculacion_no_rol") +
-                        ". " +
-                        this.translate.instant("GLOBAL.comunicar_OAS_error")
+                      ". " +
+                      this.translate.instant("GLOBAL.comunicar_OAS_error")
                     );
                   }
                 );
@@ -553,7 +555,7 @@ export class CriterioAdmisionComponent implements OnChanges {
               this.admisiones
                 .get(
                   "requisito?limit=0&query=Activo:true,RequisitoPadreId.Id:" +
-                    criterio.Id
+                  criterio.Id
                 )
                 .subscribe(
                   (response: any) => {
@@ -615,7 +617,7 @@ export class CriterioAdmisionComponent implements OnChanges {
     }
   }
 
-  ngOnChanges() {}
+  ngOnChanges() { }
 
   viewtab() {
     if (this.criterio_selected.length === 0) {
@@ -754,10 +756,10 @@ export class CriterioAdmisionComponent implements OnChanges {
       this.evaluacionService
         .get(
           "requisito_programa_academico?query=ProgramaAcademicoId:" +
-            this.proyectos_selected +
-            ",PeriodoId:" +
-            this.periodo.Id +
-            ",Activo:true&limit=0"
+          this.proyectos_selected +
+          ",PeriodoId:" +
+          this.periodo.Id +
+          ",Activo:true&limit=0"
         )
         .subscribe(
           (res: any) => {
@@ -783,12 +785,11 @@ export class CriterioAdmisionComponent implements OnChanges {
                       }
                       this.areas = {};
                       this.areas.areas = objectConcat;
+                      this.areas.vigencia = this.vigencia;
                       requisitoPut.PorcentajeEspecifico = JSON.stringify(
-                        this.areas
+                        this.areas,
                       );
-
                       this.requisitoPut(requisitoPut);
-
                       break;
                     }
                   }
@@ -825,10 +826,10 @@ export class CriterioAdmisionComponent implements OnChanges {
         this.evaluacionService
           .get(
             "requisito_programa_academico?query=ProgramaAcademicoId:" +
-              this.proyectos_selected +
-              ",PeriodoId:" +
-              this.periodo.Id +
-              "&limit=0"
+            this.proyectos_selected +
+            ",PeriodoId:" +
+            this.periodo.Id +
+            "&limit=0"
           )
           .subscribe(
             (res: any) => {
@@ -880,8 +881,8 @@ export class CriterioAdmisionComponent implements OnChanges {
               if (settings.confirm) {
                 this.popUpManager.showErrorAlert(
                   this.translate.instant("GLOBAL.cargar") +
-                    "-" +
-                    this.translate.instant("GLOBAL.programa_academico")
+                  "-" +
+                  this.translate.instant("GLOBAL.programa_academico")
                 );
               }
               this.loading = false;
@@ -892,10 +893,10 @@ export class CriterioAdmisionComponent implements OnChanges {
           this.evaluacionService
             .get(
               "requisito_programa_academico?query=ProgramaAcademicoId:" +
-                proyecto.Id +
-                ",PeriodoId:" +
-                this.periodo.Id +
-                ",Activo:true&limit=0"
+              proyecto.Id +
+              ",PeriodoId:" +
+              this.periodo.Id +
+              ",Activo:true&limit=0"
             )
             .subscribe(
               (res: any) => {
@@ -937,8 +938,8 @@ export class CriterioAdmisionComponent implements OnChanges {
                 if (settings.confirm) {
                   this.popUpManager.showErrorAlert(
                     this.translate.instant("GLOBAL.cargar") +
-                      "-" +
-                      this.translate.instant("GLOBAL.programa_academico")
+                    "-" +
+                    this.translate.instant("GLOBAL.programa_academico")
                   );
                 }
                 this.loading = false;
@@ -984,7 +985,7 @@ export class CriterioAdmisionComponent implements OnChanges {
               );
             }
           } else {
-            if ( confirm ){
+            if (confirm) {
               this.popUpManager.showErrorToast(
                 this.translate.instant("GLOBAL.error")
               );
@@ -1005,7 +1006,7 @@ export class CriterioAdmisionComponent implements OnChanges {
               confirmButtonText: this.translate.instant("GLOBAL.aceptar"),
             });
           }
-          
+
         }
       );
   }

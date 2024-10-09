@@ -3608,7 +3608,15 @@
     "Acciones": "Actions",
     "SelectNivel": "Select level",
     "SelectTipoInscripcion": "Select inscription type",
-    "SelectEstadoInscripcion": "Selet inscription status"
+    "SelectEstadoInscripcion": "Selet inscription status",
+    "titulo_reportes": "Academic Report Management",
+    "subtitulo_reportes": "Please select the academic period, process, level, and curricular project to access the corresponding information.",
+    "seleccione_periodo_tipo": "Step 1: Selection of Academic Parameters",
+    "reporte_tabla": "Step 2: Review of Selected Parameters",
+    "periodo_academico": "Select the Academic Period",
+    "proceso_academico": "Academic Process:",
+    "proyecto_academico": "Curricular Project:",
+    "nivel_academico": "Academic Level:"
   },
   "evento": {
     "evento": "Event",
@@ -4342,7 +4350,8 @@
     "programa_sin_requisitos": "No assessment requirements found for this academic program",
     "ver_subcriterios" : "View subcriteria",
     "error_porcentaje_invalido" : "The percentages are not valid because they do not add up to 100%.",
-    "crear_subcriterio" : "Create subcriteria"
+    "crear_subcriterio" : "Create subcriteria",
+    "vigencia": "Years of validity"
   },
 
   "oficializados": {
@@ -4620,7 +4629,11 @@
     "tooltip_crear": "Create new registration type",
     "tooltip_editar": "Edit registration type",
     "tooltip_cancelar": "Cancel",
-    "tooltip_guargar": "Save"
+    "tooltip_guargar": "Save",
+    "tooltip_activar": "Activate registration type",
+    "seguro_activar_tipo_inscripcion": "Are you sure to activate this registration type?",
+    "habilitar": "Enable",
+    "deshabilitar": "Disable"
   },
   "formacion_academica": {
     "no_data": "There are no registered data on academic training",

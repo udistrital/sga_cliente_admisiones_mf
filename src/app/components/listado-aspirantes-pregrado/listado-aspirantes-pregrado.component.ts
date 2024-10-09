@@ -6,13 +6,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { OikosService } from 'src/app/services/oikos.service';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { ParametrosService } from 'src/app/services/parametros.service';
-import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { MatStepper } from '@angular/material/stepper';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
 
 interface Tile {
   color: string;
@@ -32,14 +32,14 @@ export class ListadoAspirantesPregradoComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  
+
   formulario: boolean = false;
   dataSource!: MatTableDataSource<any>;
 
   public editingRowId: number | null = null;
 
 
-  colums: string [] = [
+  colums: string[] = [
     'Orden',
     'Credencial',
     'IdentificacionEnExamenEstado',
@@ -68,14 +68,14 @@ export class ListadoAspirantesPregradoComponent {
   isLinear = true;
 
   tiles: Tile[] = [
-    {text: '0', cols: 7, rows: 1, color: '#03678F', textColor: 'white'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
-    {text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black'},
+    { text: '0', cols: 7, rows: 1, color: '#03678F', textColor: 'white' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
+    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
   ];
 
   proyectosCurriculares!: any[]
@@ -104,13 +104,14 @@ export class ListadoAspirantesPregradoComponent {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private dialog: MatDialog, 
+    private dialog: MatDialog,
     private translate: TranslateService,
     private oikosService: OikosService,
     private parametrosService: ParametrosService,
     private inscripcionService: InscripcionService,
-    private sgamidService: SgaMidService,
+    private terceroMidService: TerceroMidService,
     private projectService: ProyectoAcademicoService,
+    private sgaAdmisionService: SgaAdmisionesMid,
     private popUpManager: PopUpManager
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -182,10 +183,53 @@ export class ListadoAspirantesPregradoComponent {
     this.loading = false;
   }
 
+  async generarBusquedaGeneral(stepper: MatStepper) {
+    this.loading = true;
+    this.sgaAdmisionService.get("admision/listadoaspirantegeneral/id_periodo?id_periodo=" + this.firstFormGroup.get('validatorPeriodo')?.value)
+      .subscribe((response: any) => {
+        if (response.success == true && response.status == 200) {
+          response.data.forEach(async (inscripcion: any, index: number) => {
+            this.firstFormGroup.get('validatorProyecto')?.setValue(inscripcion.ProgramaAcademicoId)
+            this.firstFormGroup.get('validatorFacultad')?.setValue(inscripcion.ProgramaAcademicoId)
+            this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
+            const inscritoData = {
+              "persona_id": inscripcion.PersonaId,
+              "inscripcion_id": inscripcion.Id,
+              "inscripcion_pregrado_id": inscripcion.Id,
+              "numeral": index + 1,
+              "credencial": 123,
+              "num_doc_icfes": inscripcion.examenEstado[0].NumeroIdentificacionIcfes,
+              "num_doc_actual": inscripcion.Persona.Data.NumeroIdentificacion,
+              "nombre_completo": inscripcion.Persona.Data.NombreCompleto,
+              "telefono": inscripcion.Persona.Data.Telefono,
+              "correo": inscripcion.Persona.Data.UsuarioWSO2,
+              "cod_proyecto": inscripcion.ProgramaAcademicoId,
+              "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
+              "puntaje": inscripcion.NotaFinal,
+              "estado_inscripcion": inscripcion.EstadoInscripcionId.Nombre,
+              "estado_recibo": "Pagado",
+              "snp": inscripcion.examenEstado[0].CodigoIcfes,
+              "estado_edicion": false
+            }
+            this.inscritosData.push(inscritoData);
+          });
+          this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          stepper.next();
+          this.loading = false;
+        } else {
+          this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
+        }
+      })
+    
+  }
+
   async generarBusqueda(stepper: MatStepper) {
     this.loading = true;
     const proyecto = this.firstFormGroup.get('validatorProyecto')?.value;
     const periodo = this.firstFormGroup.get('validatorPeriodo')?.value;
+
 
     this.reiniciarDatosTablas();
     this.inscripciones = await this.buscarInscripciones(proyecto, periodo);
@@ -205,10 +249,10 @@ export class ListadoAspirantesPregradoComponent {
             "numeral": count,
             "credencial": 123,
             "num_doc_icfes": infoIcfes[0].NumeroIdentificacionIcfes,
-            "num_doc_actual": persona.NumeroIdentificacion,
-            "nombre_completo": persona.NombreCompleto,
-            "telefono": persona.Telefono,
-            "correo": persona.UsuarioWSO2,
+            "num_doc_actual": persona.Data.NumeroIdentificacion,
+            "nombre_completo": persona.Data.NombreCompleto,
+            "telefono": persona.Data.Telefono,
+            "correo": persona.Data.UsuarioWSO2,
             "cod_proyecto": inscripcion.ProgramaAcademicoId,
             "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
             "puntaje": inscripcion.NotaFinal,
@@ -234,7 +278,7 @@ export class ListadoAspirantesPregradoComponent {
 
   buscarInscripciones(proyecto: any, periodo: any) {
     return new Promise((resolve, reject) => {
-      this.inscripcionService.get('inscripcion?query=Activo:true,ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + '&sortby=Id&order=asc&limit=0')
+      this.inscripcionService.get('inscripcion?query=Activo:true,ProgramaAcademicoId:' + proyecto + ',PeriodoId:' + periodo + ',EstadoInscripcionId.Id:2&sortby=Id&order=asc&limit=0')
         .subscribe((res: any) => {
           resolve(res)
         },
@@ -264,7 +308,7 @@ export class ListadoAspirantesPregradoComponent {
 
   consultarTercero(personaId: any) {
     return new Promise((resolve, reject) => {
-      this.sgamidService.get('persona/consultar_persona/' + personaId)
+      this.terceroMidService.get('personas/' + personaId)
         .subscribe((res: any) => {
           resolve(res)
         },

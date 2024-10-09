@@ -6,7 +6,7 @@
 
 export const environment = {
     production: false,
-    apiUrl:'https://pruebassgaadmisiones.portaloas.udistrital.edu.co/',
+    apiUrl:'https://sgaadmisiones.portaloas.udistrital.edu.co/',
     NUXEO_SERVICE:'https://autenticacion.portaloas.udistrital.edu.co/apioas/gestor_documental_mid/v1/',
     TOKEN: {
       AUTORIZATION_URL: 'https://autenticacion.portaloas.udistrital.edu.co/oauth2/authorize',
@@ -39,6 +39,6 @@ export const environment = {
     CALENDARIO_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/',
     SOLICITUDES_ADMISIONES:'https://autenticacion.portaloas.udistrital.edu.co/apioas/solicitudes_crud/v1/',
     SGA_TERCERO_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/terceros_mid/v1/',
-    PLANES_ESTUDIOS_CRUD: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/planes_estudios_crud/v1/',
+    PLANES_ESTUDIOS_CRUD: "https://autenticacion.portaloas.udistrital.edu.co/apioas/planes_estudios_crud/v1/",
   };
   
