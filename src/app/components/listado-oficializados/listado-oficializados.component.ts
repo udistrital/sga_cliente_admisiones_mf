@@ -15,6 +15,7 @@ import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { SolicitudesAdmisiones } from 'src/app/services/solicitudes_admisiones.service';
 import { MatSort } from '@angular/material/sort';
 import { TercerosService } from 'src/app/services/terceros.service';
+import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
 
 @Component({
   selector: 'app-listado-oficializados',
@@ -38,7 +39,7 @@ export class ListadoOficializadosComponent {
   periodoControl = new FormControl('', [Validators.required]);
 
   //fehas activa
-  cicloActual!: string;
+  cicloActual: string = "No se encuentra Proceso Activo";
   estado!: boolean;
 
   //Peticiones 
@@ -85,7 +86,7 @@ export class ListadoOficializadosComponent {
     private translate: TranslateService,
     private sgaAdmisionesMidService: SgaAdmisionesMid,
     private solicitudesAdmisiones: SolicitudesAdmisiones,
-    private tercerosService: TercerosService,
+    private tercerosMidService: TerceroMidService,
   ) { }
 
   async ngOnInit() {
@@ -96,7 +97,6 @@ export class ListadoOficializadosComponent {
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      
       this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
@@ -108,13 +108,10 @@ export class ListadoOficializadosComponent {
             periodos.forEach((element: any) => {
               this.periodos.push(element);
             });
-            
             this.periodo = localStorage.getItem('IdPeriodo')
-
             this.cargarTipoCuposPorPeriodo(this.periodo).then((tipoCupos) => {
               setTimeout(() => {
                   this.tipoCupos = tipoCupos;
-
                   if (Object.keys(this.tipoCupos[0]).length === 0) {
                       this.mostrarSelectorCupos = false
                   }
@@ -138,29 +135,29 @@ export class ListadoOficializadosComponent {
     return `${day}/${month}/${year}`;
   }
 
-  loadData(): void {
-    this.solicitudesAdmisiones.get('solicitud?query=EstadoTipoSolicitudId.TipoSolicitud.Id:40').subscribe(res => {
-      if (res !== null) {
-        const data = <Array<any>><unknown>res;
-        this.datos = data.map(item => ({
-          Proceso: item.EstadoTipoSolicitudId.TipoSolicitud.Nombre,
-          Fechas: this.formatDate(item.FechaRadicacion), 
-          Estado: item.EstadoTipoSolicitudId.EstadoId.Nombre,
-          Gestion: item 
-        }));
-        this.datos.sort((a, b) => new Date(b.Fechas).getTime() - new Date(a.Fechas).getTime()); // Ordenar por fecha descendente
-        this.datasource = new MatTableDataSource(this.datos);
-        this.datasource.paginator = this.paginator;
-        this.datasource.sort = this.sort;
-      }
-    });
-  }
+  // loadData(): void {
+  //   this.solicitudesAdmisiones.get('solicitud?query=EstadoTipoSolicitudId.TipoSolicitud.Id:40').subscribe(res => {
+  //     if (res !== null) {
+  //       const data = <Array<any>><unknown>res;
+  //       this.datos = data.map(item => ({
+  //         Proceso: item.EstadoTipoSolicitudId.TipoSolicitud.Nombre,
+  //         Fechas: this.formatDate(item.FechaRadicacion), 
+  //         Estado: item.EstadoTipoSolicitudId.EstadoId.Nombre,
+  //         Gestion: item 
+  //       }));
+  //       this.datos.sort((a, b) => new Date(b.Fechas).getTime() - new Date(a.Fechas).getTime()); // Ordenar por fecha descendente
+  //       this.datasource = new MatTableDataSource(this.datos);
+  //       this.datasource.paginator = this.paginator;
+  //       this.datasource.sort = this.sort;
+  //     }
+  //   });
+  // }
 
 
 
 
   async generarBusqueda() {
-    this.loadData();
+    // this.loadData();
     this.loading = true;
     const fechaActual = new Date();
     let actividades: any[] = [];
@@ -168,9 +165,10 @@ export class ListadoOficializadosComponent {
     for (const evento of eventos) {
       if (evento.Nivel == 1) {
         const res: any = await this.consultarCalendarioAcademico(evento.Id);
+        console.log(res)
         const data = res.Data[0].proceso
         for (const item of data) {
-          // if (item.Proceso == "Proceso admitidos" || item.Proceso == "Proceso opcionados") {
+           if (item.Proceso == "Ciclo admisiones") {
             actividades = actividades.concat(item.Actividades);
             item.Actividades.forEach((actividad: any) => {
               const fechaInicio = new Date(actividad.FechaInicio);
@@ -179,13 +177,14 @@ export class ListadoOficializadosComponent {
                 this.cicloActual = actividad.Descripcion
               }
             });
-          // }
+           }
         }
 
         if (actividades.length > 0) {
           for (const actividad of actividades) {
             actividad.Fechas = this.formatearFecha(`${actividad.FechaInicio} & ${actividad.FechaFin}`)
           }
+          console.log(actividades)
           this.datasourceListado = new MatTableDataSource(actividades);
           this.datasourceListado.paginator = this.paginator0;
           this.viewProceso = true;
@@ -246,49 +245,57 @@ export class ListadoOficializadosComponent {
     let aspirantesOficializados: any[] = [];
     let aspirantesNoOficializados: any[] = [];
     const facultades: any = await this.cargarFacultades();
+    console.log(facultades)
     for (const facultad of facultades) {
       const proyectos = facultad.Opciones
-      for (const proyecto of proyectos) {
-        const inscripcionesMatriculadas: any = await this.recuperarInscripciones(11, this.periodo, proyecto.Id, this.tipoCupo)
-        // if (Object.keys(inscripcionesMatriculadas[0]).length != 0) {
-          for (const inscripcion of inscripcionesMatriculadas) {
-            const persona: any = await this.consultarTercero(59846)
-            const itemBody = {
-              facultad: facultad.Nombre,
-              proyecto: proyecto.Nombre,
-              codigo: inscripcion.Id,
-              documento: persona.NumeroIdentificacion,
-              nombre: `${persona.PrimerNombre} ${persona.SegundoNombre}`,
-              apellido: `${persona.PrimerApellido} ${persona.SegundoApellido}`,
-              correopersonal: persona.UsuarioWSO2,
-              telefono: persona.Telefono,
-              correoSugerido: `${persona.PrimerNombre}${persona.SegundoNombre}${persona.PrimerApellido}${persona.SegundoApellido}@udistrital.edu.co`,
-              correoAsignado: persona.UsuarioWSO2
+      if(proyectos != null){
+        for (const proyecto of proyectos) {
+          const inscripcionesMatriculadas: any = await this.recuperarInscripciones(11, this.periodo, proyecto.Id, this.tipoCupo)
+           if (Object.keys(inscripcionesMatriculadas[0]).length != 0) {
+            for (const inscripcion of inscripcionesMatriculadas) {
+              if(inscripcion.PersonaId != undefined){
+                const persona: any = await this.consultarTercero(inscripcion.PersonaId)
+                console.log(persona)
+                const itemBody = {
+                  facultad: facultad.Nombre,
+                  proyecto: proyecto.Nombre,
+                  codigo: inscripcion.Id,
+                  documento: persona.Data.NumeroIdentificacion,
+                  nombre: `${persona.Data.PrimerNombre} ${persona.Data.SegundoNombre}`,
+                  apellido: `${persona.Data.PrimerApellido} ${persona.Data.SegundoApellido}`,
+                  correopersonal: persona.Data.UsuarioWSO2,
+                  telefono: persona.Data.Telefono,
+                  correoSugerido: `${persona.Data.PrimerNombre}${persona.Data.SegundoNombre}${persona.Data.PrimerApellido}${persona.Data.SegundoApellido}@udistrital.edu.co`,
+                  correoAsignado: persona.Data.UsuarioWSO2
+                }
+                aspirantesOficializados.push(itemBody)
+              }
+  
             }
-            aspirantesOficializados.push(itemBody)
           }
-        // }
-
-        const inscripcionesNoOficializadas: any = await this.recuperarInscripciones(12, this.periodo, proyecto.Id, this.tipoCupo)
-        if (Object.keys(inscripcionesNoOficializadas[0]).length != 0) {
-          for (const inscripcion of inscripcionesNoOficializadas) {
-            const persona: any = await this.consultarTercero(inscripcion.PersonaId)
-            const itemBody = {
-              facultad: facultad.Nombre,
-              proyecto: proyecto.Nombre,
-              codigo: inscripcion.Id,
-              documento: persona.NumeroIdentificacion,
-              nombre: `${persona.PrimerNombre} ${persona.SegundoNombre}`,
-              apellido: `${persona.PrimerApellido} ${persona.SegundoApellido}`,
-              correopersonal: persona.UsuarioWSO2,
-              telefono: persona.Telefono,
-              correoSugerido: `${persona.PrimerNombre}${persona.SegundoNombre}${persona.PrimerApellido}${persona.SegundoApellido}@udistrital.edu.co`,
-              correoAsignado: persona.UsuarioWSO2
+  
+          const inscripcionesNoOficializadas: any = await this.recuperarInscripciones(12, this.periodo, proyecto.Id, this.tipoCupo)
+          if (Object.keys(inscripcionesNoOficializadas[0]).length != 0) {
+            for (const inscripcion of inscripcionesNoOficializadas) {
+              const persona: any = await this.consultarTercero(inscripcion.PersonaId)
+              const itemBody = {
+                facultad: facultad.Nombre,
+                proyecto: proyecto.Nombre,
+                codigo: inscripcion.Id,
+                documento: persona.Data.NumeroIdentificacion,
+                nombre: `${persona.Data.PrimerNombre} ${persona.Data.SegundoNombre}`,
+                apellido: `${persona.Data.PrimerApellido} ${persona.Data.SegundoApellido}`,
+                correopersonal: persona.Data.UsuarioWSO2,
+                telefono: persona.Data.Telefono,
+                correoSugerido: `${persona.Data.PrimerNombre}${persona.Data.SegundoNombre}${persona.Data.PrimerApellido}${persona.Data.SegundoApellido}@udistrital.edu.co`,
+                correoAsignado: persona.Data.UsuarioWSO2
+              }
+              aspirantesNoOficializados.push(itemBody)
             }
-            aspirantesNoOficializados.push(itemBody)
           }
         }
       }
+      
     }
 
     if (aspirantesOficializados.length > 0) {
@@ -305,11 +312,12 @@ export class ListadoOficializadosComponent {
       this.popUpManager.showAlert(this.translate.instant('admision.titulo_aspirantes_no_encontrados'), this.translate.instant('admision.aspirantes_no_oficializados_no_encontrados'))
     }
 
-    this.viewProceso = false;
+    this.viewProceso = true;
     this.viewOficializados = true;
     this.viewNoOficializados = true;
-
     this.loading = false;
+    console.log(aspirantesOficializados)
+    console.log(aspirantesNoOficializados)
   }
 
   cargarFacultades() {
@@ -377,7 +385,7 @@ export class ListadoOficializadosComponent {
 
   consultarTercero(personaId: any) {
     return new Promise((resolve, reject) => {
-      this.tercerosService.get('personas/' + personaId).subscribe((res: any) => {
+      this.tercerosMidService.get('personas/' + personaId).subscribe((res: any) => {
         resolve(res);
       },
         (error: any) => {
@@ -391,8 +399,8 @@ export class ListadoOficializadosComponent {
 
   descargarListadoOficializados(estado:number){
     this.sgaAdmisionesMidService.get(`admision/listadooficializados/${this.periodo}/1/${estado}`).subscribe((res: any) => {
-      if (res.status === 200 && res.success === true ){
-        const base64String = res.data.Pdf;
+      if (res.Status === 200 && res.Success === true ){
+        const base64String = res.Data.Pdf;
         this.downloadPdf(base64String);
 
       }else{
