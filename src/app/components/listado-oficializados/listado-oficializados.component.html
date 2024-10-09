@@ -83,13 +83,13 @@
     <mat-card *ngIf="viewProceso" class="mt-20">
         <mat-card-content>
             <div class="mt-20" class="mat-elevation-z8 table">
-                <table mat-table [dataSource]="datasource" matSort>
+                <table mat-table [dataSource]="datasourceListado" matSort>
 
                     <!-- Columns -->
                     <ng-container matColumnDef="proceso">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "oficializados.proceso" | translate }}
                         </th>
-                        <td mat-cell *matCellDef="let element"> {{element.Proceso}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.Nombre}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="fechas">
@@ -107,21 +107,9 @@
                         </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="gestion">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ "oficializados.gestion" | translate }}
-                        <td mat-cell *matCellDef="let element">
-                            <!-- <button mat-mini-fab class="blue-header-icon">
-                                <mat-icon class="large-icon">pageview</mat-icon>
-                            </button> -->
-                            <button mat-icon-button color="accent">
-                                <mat-icon aria-hidden="false" fontIcon="search"></mat-icon>
-                              </button>
-                        </td>
-                    </ng-container>
-
                     <!-- Header and Row Declarations -->
-                    <tr mat-header-row *matHeaderRowDef="display"></tr>
-                    <tr mat-row *matRowDef="let row; columns: display;"></tr>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsListados"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsListados;"></tr>
                     <tr class="mat-row" *matNoDataRow>
 
                         <td mat-cell class="mat-cell" colspan="4"> {{ 'evaluacionPregrado.nodata' | translate }}</td>
@@ -270,12 +258,12 @@
                     </div> -->
 
                     <div class="contenedor-botones">
-                        <button mat-stroked-button class="boton-primary">
+                        <button mat-stroked-button  (click)="descargarListadoOficializados(11)" class="boton-primary">
                             {{ "listado-oficializados.descargar_listado" | translate }}
                         </button>
-                        <button mat-stroked-button class="boton-primary">
+                        <!-- <button mat-stroked-button class="boton-primary">
                             {{ "listado-oficializados.sugerir_usuarios" | translate }}
-                        </button>
+                        </button> -->
                         <button mat-stroked-button class="boton-primary">
                             {{ "listado-oficializados.solicitud_correos_institucionales" | translate }}
                         </button>
