@@ -1,198 +1,332 @@
 <mat-card>
   <mat-card-content>
     <h2>{{ "admision.evaluacion_aspirantes" | translate }}</h2>
+
     <!-- FORMULARIO -->
     <section *ngIf="showTab">
-      <div *ngIf="!(show_profile || show_icfes)" class="form-grid4">
-        <!--Periodo académico-->
-        <mat-form-field>
-          <mat-label>{{ "admision.periodo_" | translate }}:</mat-label>
-          <mat-select [(ngModel)]="periodo" (selectionChange)="selectPeriodo()">
-            <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
-            <mat-option *ngFor="let item of periodos" [value]="item">
-              {{ item.Nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div *ngIf="!(show_profile || show_icfes)">
+        <!-- FORMULARIO DE SELECTS -->
+        <section>
+          <!--Periodo académico-->
+          <mat-form-field style="width: 100%">
+            <mat-label>{{ "admision.periodo_" | translate }}:</mat-label>
+            <mat-select
+              [(ngModel)]="periodo"
+              (selectionChange)="selectPeriodo()"
+            >
+              <mat-option
+                >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
+              >
+              <mat-option *ngFor="let item of periodos" [value]="item">
+                {{ item.Nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-        <!-- select Nivel -->
-        <mat-form-field>
-          <mat-label>{{ "admision.aviso_nivel" | translate }}:</mat-label>
-          <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel" (selectionChange)="cambiarSelectPeriodoSegunNivel($event.value)">
-            <mat-option value="">{{ "GLOBAL.seleccionar" | translate }}</mat-option>
-            <mat-option *ngFor="let item of nivel_load" [value]="item.Id">
-              {{ item.Nombre }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="CampoControl.hasError('required')">
-            {{ "admision.erro_selec_nivel" | translate }}
-          </mat-error>
-        </mat-form-field>
+          <!-- select Nivel -->
+          <mat-form-field style="width: 100%">
+            <mat-label>{{ "admision.aviso_nivel" | translate }}:</mat-label>
+            <mat-select
+              [formControl]="CampoControl"
+              [(ngModel)]="selectednivel"
+              (selectionChange)="cambiarSelectPeriodoSegunNivel($event.value)"
+            >
+              <mat-option value="">{{
+                "GLOBAL.seleccionar" | translate
+              }}</mat-option>
+              <mat-option *ngFor="let item of nivel_load" [value]="item.Id">
+                {{ item.Nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="CampoControl.hasError('required')">
+              {{ "admision.erro_selec_nivel" | translate }}
+            </mat-error>
+          </mat-form-field>
 
-        <!-- select Proyectos -->
-        <mat-form-field style="width: 100%">
-          <mat-label>{{ "admision.aviso_proyecto" | translate }}:</mat-label>
-          <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_selected" (selectionChange)="consultarPeriodosDoctorado(proyectos_selected)">
-            <mat-option value="">{{ "GLOBAL.seleccionar" | translate }}</mat-option>
-            <mat-option *ngFor="let item of proyectos" [value]="item.Id">
-              {{ item.Nombre }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="Campo1Control.hasError('required')">
-            {{ "admision.erro_selec_proyecto" | translate }}
-          </mat-error>
-        </mat-form-field>
+          <!-- select Proyectos -->
+          <mat-form-field style="width: 100%">
+            <mat-label>{{ "admision.aviso_proyecto" | translate }}:</mat-label>
+            <mat-select
+              [formControl]="Campo1Control"
+              [(ngModel)]="proyectos_selected"
+              (selectionChange)="
+                consultarPeriodosDoctorado(proyectos_selected);
+                this.loadCriterios()
+              "
+            >
+              <mat-option value="">{{
+                "GLOBAL.seleccionar" | translate
+              }}</mat-option>
+              <mat-option *ngFor="let item of proyectos" [value]="item.Id">{{
+                item.Nombre
+              }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="Campo1Control.hasError('required')">
+              {{ "admision.erro_selec_proyecto" | translate }}
+            </mat-error>
+          </mat-form-field>
 
+          <!-- select criterios -->
+          <mat-form-field style="width: 100%">
+            <mat-label>{{ "admision.aviso_criterios" | translate }}:</mat-label>
+            <mat-select
+              [formControl]="Campo2Control"
+              [(ngModel)]="criterio_selected"
+              (selectionChange)="viewtab()"
+              [disabled]="selectcriterio"
+              multiple
+            >
+              <mat-option
+                *ngFor="let item of criterios"
+                [value]="item.RequisitoId"
+              >
+                {{ item.RequisitoId.Nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="Campo2Control.hasError('required')">
+              {{ "admision.erro_selec_criterio" | translate }}
+            </mat-error>
+          </mat-form-field>
+        </section>
 
-        <!-- select criterios -->
-        <mat-form-field style="width: 100%">
-          <mat-label>{{ "admision.aviso_criterios" | translate }}:</mat-label>
-          <mat-select [formControl]="Campo2Control" [(ngModel)]="criterio_selected" (selectionChange)="viewtab()" [disabled]="selectcriterio" multiple>
-            <mat-option *ngFor="let item of criterios" [value]="item.RequisitoId.Nombre">
-              {{ item.RequisitoId.Nombre }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="Campo2Control.hasError('required')">
-            {{ "admision.erro_selec_criterio" | translate }}
-          </mat-error>
-        </mat-form-field>
-      </div>
+        <!-- Tag de criterios -->
+        <section class="container-tag-criterios">
+          <div class="container">
+            <div id="info_basica" *ngFor="let criterio of criterio_selected">
+              <mat-card
+                class="exp-card"
+                *ngIf="criterio.Nombre != 'ICFES'"
+                (click)="perfil_editar(criterio)"
+              >
+                <mat-card-header class="exp-card-header">{{
+                  "Criterio " + ajustarTitulo(criterio.Nombre)
+                }}</mat-card-header>
+                <mat-card-content class="exp-card-content">
+                  <mat-icon
+                    fontIcon="edit_square"
+                    class="exp-card-content-icon"
+                  ></mat-icon>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
 
-      <!-- Tag de criterios -->
-      <div class="form-grid3 tags">
-        <div class="form-col1" id="info_basica" *ngFor="let criterio of criterio_selected">
-          <mat-card class="exp-card"  (click)="perfil_editar(criterio)">
-            <mat-card-header>{{ "Criterio " + ajustarTitulo(criterio.Nombre) }}</mat-card-header>
-            <mat-card-content class="icon-form">
-              <mat-icon fontIcon="folder" class="folder-icon"></mat-icon>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </div>
-      
-      <!--Botón de calculo de nota final-->
-      <div class="text-center">
-        <button class="boton-primary m-10" mat-button type="button" *ngIf="notas" (click)="calcularEvaluacion()" [disabled]="btnCalculo">
-          {{ "admision.calcular" | translate }}
-        </button>
-      </div>
+          <!--Botón de calculo de nota final-->
+          <div class="text-center">
+            <button
+              mat-flat-button
+              color="accent"
+              type="button"
+              *ngIf="notas"
+              (click)="calcularEvaluacion()"
+              [disabled]="btnCalculo"
+            >
+              {{ "admision.calcular" | translate }}
+            </button>
+          </div>
 
-      <div class="ancho-boton">
-        <button class="boton-primary container-bottons centrar-texto" type="button" *ngIf="mostrarBoton" (click)="selectPeriodo()">
-          <mat-icon style="vertical-align: middle" fontIcon="add"></mat-icon>
-          <label>{{ "GLOBAL.buscar" | translate }}</label>
-        </button>
-      </div>
+          <div>
+            <button
+              mat-flat-button
+              color="accent"
+              type="button"
+              *ngIf="mostrarBoton"
+              (click)="selectPeriodo()"
+            >
+              <mat-icon
+                style="vertical-align: middle"
+                fontIcon="add"
+              ></mat-icon>
+              <label>{{ "GLOBAL.buscar" | translate }}</label>
+            </button>
+          </div>
 
-      <div *ngIf="mostrarMensajeInicial" class="alert warning margin-y">
-        <mat-icon class="icon">info</mat-icon>
-        <span>
-          {{ "gestion_horarios.mensaje_doctorado" | translate }} :
-          {{ nombresPeriodos }}
-          {{ "gestion_horarios.mensaje_doctorado_mensaje" | translate }}
-        </span>
+          <div *ngIf="mostrarMensajeInicial" class="alert warning margin-y">
+            <mat-icon class="icon">info</mat-icon>
+            <span
+              >{{ "gestion_horarios.mensaje_doctorado" | translate }} :
+              {{ nombresPeriodos }}
+              {{
+                "gestion_horarios.mensaje_doctorado_mensaje" | translate
+              }}</span
+            >
+          </div>
+        </section>
       </div>
     </section>
 
-    <section *ngIf="!showTab">
-      <mat-card>
-        <mat-card-header>
-          <div>
-            <strong>{{ "admision.criterio" | translate }}: {{ tipo_criterio.Nombre }}</strong>
-          </div>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="body_criterios">
-            <strong>
-              {{ "admision.programa" | translate }}:
-              {{ tipo_criterio.ProgramaAcademico }}
-            </strong>
-            <br /><br />
-            <strong>
-              {{ "admision.periodo" | translate }}:
-              {{ tipo_criterio.Periodo }}
-            </strong>
-          </div>
-          <br />
-          <div class="aviso_criterio">
-            <label class="fondo_aviso">
-              <strong>{{ "admision.nota" | translate }}:</strong>
-              {{ "admision.aviso" | translate }}. <br />
-              {{ "admision.aviso_no_edicion" | translate }}
-            </label>
-          </div>
-          <br />
-          <div class="d-flex justify-content-around align-items-center">
-            <label>{{ "admision.total_aspirantes" | translate }}:<b>{{ cantidad_aspirantes }}</b></label>
-          </div>
-          <br />
+    <!-- SECCION DE EVALUACION DE ASPIRANTES POR CRITERIO -->
+    <section *ngIf="!showTab" class="margin-y">
+      <div class="margin-y">
+        <p>
+          <strong>{{ "admision.criterio" | translate }}: </strong
+          >{{ tipo_criterio.Nombre }}
+        </p>
 
-          <div class="table-container">
-            <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
+        <p>
+          <strong>{{ "admision.programa" | translate }}: </strong
+          >{{ tipo_criterio.ProgramaAcademico }}
+        </p>
+
+        <p>
+          <strong>{{ "admision.periodo" | translate }}: </strong
+          >{{ tipo_criterio.Periodo }}
+        </p>
+
+        <p>
+          <strong>{{ "GLOBAL.porcentaje" | translate }}: </strong
+          >{{ this.criterioEnEdicion.PorcentajeGeneral }}%.
+        </p>
+      </div>
+      <div class="alert info margin-y">
+        <mat-icon class="icon">info</mat-icon>
+        <span
+          ><strong>{{ "admision.nota" | translate }}:</strong>
+          {{ "admision.aviso" | translate }}. <br />
+          {{ "admision.aviso_no_edicion" | translate }}</span
+        >
+      </div>
+
+      <label
+        >{{ "admision.total_aspirantes" | translate }}:
+        <b>{{ cantidad_aspirantes }}</b></label
+      >
+      <br />
+
+      <form [formGroup]="formGroupTable">
+        <div class="table" *ngIf="tableReady">
+          <!-- Relacionar con el FormArray -->
+          <div formArrayName="rows">
+            <table
+              mat-table
+              [dataSource]="dataSourceTable"
+              matSort
+              class="full-width-table"
+            >
               <!-- Definición de las columnas -->
-              <ng-container *ngFor="let title of columnas; let i = index" [matColumnDef]="title">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width]="widhtColumns[i]">
-                  {{ title }}
+              <ng-container
+                *ngFor="let column of columns; let colIndex = index"
+                [matColumnDef]="column.title"
+              >
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  [style.width]="widhtColumns[colIndex]"
+                >
+                  {{ column.title }}
                 </th>
-
-                <ng-container *ngIf="title == 'Aspirants' || title == 'Aspirantes'">
+      
+                <!-- Columna de Aspirantes -->
+                <ng-container
+                  *ngIf="column.title === 'Aspirants' || column.title === 'Aspirantes'"
+                >
                   <td mat-cell *matCellDef="let row">
                     {{ row.Aspirantes }}
                   </td>
                 </ng-container>
-
-                <ng-container *ngIf="title == 'Attendance' || title == 'Asistencia'">
-                  <td mat-cell *matCellDef="let row">
-                    <input *ngIf="!row.mostrarBotones" type="checkbox" class="input-table" [(ngModel)]="row.Asistencia" [disabled]="!row.mostrarBotones"/>
-                    <input *ngIf="row.mostrarBotones" type="text" class="input-table" [(ngModel)]="row.Asistencia" [disabled]="!row.mostrarBotones"/>
+      
+                <!-- Columna de Asistencia -->
+                <ng-container
+                  *ngIf="column.title === 'Attendance' || column.title === 'Asistencia'"
+                >
+                  <td
+                    mat-cell
+                    *matCellDef="let row; let rowIndex = index"
+                    [formGroupName]="rowIndex"
+                  >
+                    <input
+                      type="checkbox"
+                      class="input-table"
+                      [formControlName]="'Asistencia'"
+                    />
                   </td>
                 </ng-container>
-                <ng-container *ngIf="(title !== 'Aspirants' && title !== 'Attendance' && title !== 'acciones') || title == 'Asistencia' || title == 'Aspirantes'">
-                  <td mat-cell *matCellDef="let row">
-                    <input type="text" class="input-table" [(ngModel)]="row[datavalor[i]]" [disabled]="!row.mostrarBotones"/>
+      
+                <!-- Otras columnas con controles dinámicos -->
+                <ng-container
+                  *ngIf="
+                    column.title !== 'acciones' &&
+                    column.title !== 'Asistencia' &&
+                    column.title !== 'Aspirantes'
+                  "
+                >
+                  <td
+                    mat-cell
+                    *matCellDef="let row; let rowIndex = index"
+                    [formGroupName]="rowIndex"
+                  >
+                    <input
+                      type="number"
+                      class="input-table"
+                      [formControlName]="column.key"
+                      [disabled]="row.Asistencia"
+                    />
                   </td>
                 </ng-container>
-
-                <ng-container *ngIf="title !== 'acciones'">
-                  <td mat-cell *matCellDef="let row"></td>
-                </ng-container>
-
-                <ng-container *ngIf="title === 'acciones'">
-                  <td mat-cell *matCellDef="let row" style="width: 8%">
+      
+                <!-- Columna de acciones -->
+                <ng-container *ngIf="column.title === 'acciones'">
+                  <td
+                    mat-cell
+                    *matCellDef="let row; let rowIndex = index"
+                    style="width: 8%"
+                  >
                     <!-- Lógica para las acciones -->
                     <div class="separacion-acciones">
-                      <button aria-hidden="false" class="table-button-edit" *ngIf="!row.mostrarBotones" title="{{ 'admision.tooltip_editar' | translate }}" class="boton-primary" (click)="itemSelect({ data: row }); buttonedit(row)">
-                        <mat-icon fontIcon="edit"></mat-icon>
-                      </button>
-                      <button aria-hidden="false" *ngIf="row.mostrarBotones" title="{{ 'admision.tooltip_guargar' | translate }}" class="boton-primary" (click)="onEditConfirm({ newData: row }); buttonedit(row)">
-                        <mat-icon fontIcon="check"></mat-icon>
-                      </button>
-                      <button aria-hidden="false" *ngIf="row.mostrarBotones" title="{{ 'admision.tooltip_cancelar' | translate }}" class="boton-primary" (click)="buttonedit(row)">
-                        <mat-icon fontIcon="close"></mat-icon>
+                      <button
+                        mat-icon-button
+                        color="accent"
+                        aria-hidden="false"
+                        title="{{ 'admision.tooltip_guargar' | translate }}"
+                        class="boton-primary"
+                        (click)="onEditConfirm(rowIndex, row)"
+                      >
+                      <mat-icon [fontIcon]="row.tieneEvaluacion ? 'edit' : 'save'"></mat-icon>
                       </button>
                     </div>
                   </td>
                 </ng-container>
               </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-              <tr mat-row *matRowDef="let row; columns: columnas"></tr>
-
+      
+              <tr mat-header-row *matHeaderRowDef="columnsTable"></tr>
+              <tr
+                mat-row
+                *matRowDef="
+                  let row;
+                  let rowIndex = index;
+                  columns: columnsTable
+                "
+                [formGroupName]="rowIndex"
+                [ngClass]="{ 'evaluado': row.tieneEvaluacion }"
+              ></tr>
+      
               <tr class="mat-row" *matNoDataRow>
                 <td class="mat-cell" colspan="4">
                   {{ "calendario.sin_procesos" | translate }}
                 </td>
               </tr>
             </table>
-            <mat-paginator #paginator [pageSize]="6" [showFirstLastButtons]="true"></mat-paginator>
           </div>
-          <br /><br />
-          <button style="display: flex; align-items: center" (click)="activateTab()" class="boton-primary">
-            <mat-icon fontIcon="arrow_back"></mat-icon>
-            {{ "GLOBAL.regresar" | translate }}
-          </button>
-        </mat-card-content>
-      </mat-card>
+      
+          <mat-paginator
+            #paginator
+            [pageSize]="6"
+            [showFirstLastButtons]="true"
+          ></mat-paginator>
+        </div>
+      </form>
+
+      <br /><br />
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="activateTab()"
+        class="boton-primary"
+      >
+        <mat-icon fontIcon="arrow_back"></mat-icon>
+        {{ "GLOBAL.regresar" | translate }}
+      </button>
     </section>
   </mat-card-content>
 </mat-card>

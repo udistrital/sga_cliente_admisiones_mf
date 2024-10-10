@@ -12,14 +12,11 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { PopUpManager } from "../../../managers/popUpManager";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { DialogoDocumentosComponent } from "../dialogo-documentos/dialogo-documentos.component";
-import { Documento } from "src/app/models/documento/documento";
-import { GoogleService } from "src/app/services/google.service";
 import { Invitacion } from "src/app/models/correo/invitacion";
 import { InvitacionTemplate } from "../../../models/correo/invitacionTemplate";
 // @ts-ignore
 import Swal from "sweetalert2/dist/sweetalert2";
 import { PivotDocument } from "src/utils/pivot_document.service";
-import { SgaMidService } from "src/app/services/sga_mid.service";
 import { EvaluacionInscripcionService } from "src/app/services/evaluacion_inscripcion.service";
 import { TAGS_INSCRIPCION_PROGRAMA } from "../def_suite_inscrip_programa/def_tags_por_programa";
 import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
@@ -105,9 +102,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     private documentoService: DocumentoService,
     private notificacionesMidService: NotificacionesMidService,
     private dialog: MatDialog,
-    private googleMidService: GoogleService,
     private pivotDocument: PivotDocument,
-    private sgaMidService: SgaMidService,
     private sgaMiAdmisiones: SgaAdmisionesMid,
     private inscripcionesMidService: InscripcionMidService,
     private evaluacionInscripcionService: EvaluacionInscripcionService,

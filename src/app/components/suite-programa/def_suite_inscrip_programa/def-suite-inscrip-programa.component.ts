@@ -8,10 +8,8 @@ import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.se
 import { PopUpManager } from '../../../managers/popUpManager';
 import { TAGS_INSCRIPCION_PROGRAMA } from './def_tags_por_programa';
 import { UserService } from 'src/app/services/users.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { OikosService } from 'src/app/services/oikos.service';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 @Component({
