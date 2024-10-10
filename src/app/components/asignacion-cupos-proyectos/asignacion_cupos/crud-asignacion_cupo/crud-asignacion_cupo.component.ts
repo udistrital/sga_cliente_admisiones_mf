@@ -52,8 +52,9 @@ export class CrudAsignacionCupoComponent implements OnInit {
   }
 
   obtenerCupos() {
-    this.inscripcionMidService.get(`cupos/`).subscribe(
+    this.inscripcionMidService.get(`cupos`).subscribe(
       (response:any) => {
+        console.log(response)
         response.Data.forEach((element: any) => {
           this.cuposAdmitidos = this.cuposAdmitidos + element.CuposHabilitados
           this.cuposOpcionados = this.cuposOpcionados + element.CuposOpcionados
