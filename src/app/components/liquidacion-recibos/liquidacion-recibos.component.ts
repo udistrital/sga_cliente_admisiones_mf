@@ -250,7 +250,7 @@ export class LiquidacionRecibosComponent {
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
@@ -272,7 +272,7 @@ export class LiquidacionRecibosComponent {
 
   cargarAdmitidos(id_periodo: undefined, id_proyecto: undefined) {
     return new Promise((resolve, reject) => {
-      //const url = `liquidacion/?id_periodo=${id_periodo}&id_proyecto=${id_proyecto}`;
+      //const url = `liquidacion?id_periodo=${id_periodo}&id_proyecto=${id_proyecto}`;
       const url = `liquidacion?id_periodo=9&id_proyecto=32`;
       this.sgaAdmisiones.get(url).subscribe(
         (response: { Data: any; }) => {

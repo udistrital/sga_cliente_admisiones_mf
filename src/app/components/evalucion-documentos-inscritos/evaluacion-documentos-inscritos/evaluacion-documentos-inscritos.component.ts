@@ -155,7 +155,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -749,6 +749,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                 this.popUpManager.showSuccessAlert(
                   this.translate.instant("admision.registro_exito")
                 );
+                console.log("folderTagtoReload", data);
                 this.folderTagtoReload = data.folderOrTag;
                 if (
                   !data.metadata.aprobado &&

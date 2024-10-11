@@ -97,7 +97,7 @@ export class ReportesComponent implements OnInit {
   }
 
   cargarPeriodo() {
-    return this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0').toPromise().then((res: any) => {
+    return this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0').toPromise().then((res: any) => {
       this.periodos = res.Data;
     }).catch((error: HttpErrorResponse) => {
       console.error('Error cargando periodos', error);
