@@ -302,7 +302,7 @@ export class PreinscripcionProyectosCurricularesComponent {
 
   consultarPeriodo(IdPeriodo: number) {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get(`periodo/?query=Id:${IdPeriodo}`).subscribe(
+      this.parametrosService.get(`periodo?query=Id:${IdPeriodo}`).subscribe(
         (res: any) => {
           if (res.Status == "200") {
             resolve(res);
