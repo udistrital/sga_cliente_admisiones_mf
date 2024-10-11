@@ -111,7 +111,7 @@ export class AdministradorCriteriosComponent implements OnInit {
       this.dialogConfig
     );
     criterioDialog.afterClosed().subscribe((criterio: Criterio) => {
-      if (criterio !== undefined) {
+      if (criterio) {
         this.admisiones
           .post("requisito", criterio)
           .pipe(
@@ -173,7 +173,7 @@ export class AdministradorCriteriosComponent implements OnInit {
       this.dialogConfig
     );
     criterioDialog.afterClosed().subscribe((criterio: Criterio) => {
-      if (criterio !== undefined) {
+      if (criterio) {
         this.admisiones.put("requisito", criterio).subscribe(
           (response: any) => {
             const updatedCriterio: Criterio = <Criterio>response;
@@ -240,7 +240,7 @@ export class AdministradorCriteriosComponent implements OnInit {
       this.dialogConfig
     );
     criterioDialog.afterClosed().subscribe((subCriterio: Criterio) => {
-      if (subCriterio !== undefined) {
+      if (subCriterio) {
         subCriterio.RequisitoPadreId = { Id: criterio.Id };
         this.admisiones.post("requisito", subCriterio).subscribe(
           (response: any) => {
