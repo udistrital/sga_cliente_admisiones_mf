@@ -88,7 +88,7 @@ export class ViewPropuestaGradoComponent implements OnInit {
   }
 
   loadData(): void {
-    this.inscripcionService.get('propuesta/?query=Activo:true,InscripcionId:' + this.inscripcion_id)
+    this.inscripcionService.get('propuesta?query=Activo:true,InscripcionId:' + this.inscripcion_id)
       .subscribe((res:any) => {
         if (res !== null && JSON.stringify(res[0]) !== '{}') {
           const temp = <any>res[0];
@@ -164,7 +164,7 @@ export class ViewPropuestaGradoComponent implements OnInit {
             confirmButtonText: this.translate.instant('GLOBAL.aceptar'),
           });
         });
-    // this.inscripcionService.get('propuesta/?query=InscripcionId:' + this.inscripcion_id +
+    // this.inscripcionService.get('propuesta?query=InscripcionId:' + this.inscripcion_id +
     //   '&limit=0')
     //   .subscribe(res => {
     //     if (res !== null) {

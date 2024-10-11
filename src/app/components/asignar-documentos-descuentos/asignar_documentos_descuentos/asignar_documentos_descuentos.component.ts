@@ -90,7 +90,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -147,7 +147,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   cargarFacultad() {
     return new Promise((resolve, reject) => {
       this.oikosService
-        .get("dependencia_tipo_dependencia/?query=Activo:true&limit=0")
+        .get("dependencia_tipo_dependencia?query=Activo:true&limit=0")
         .subscribe(
           (response: any) => {
             if (

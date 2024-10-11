@@ -43,8 +43,7 @@
               "path": "extra-webpack.config.js",
               "libraryName": "sga-cliente-admisiones-mf",
               "libraryTarget": "umd"
-            },
-            "deployUrl": "http://localhost:4200/"
+            }
           },
           "configurations": {
             "production": {
@@ -60,8 +59,7 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.production.ts"
                 }
-              ],
-              "deployUrl": "https://sgaadmisiones.portaloas.udistrital.edu.co/"
+              ]
             },
             "development": {
               "optimization": true,
@@ -76,8 +74,7 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.development.ts"
                 }
-              ],
-              "deployUrl": "https://pruebassgaadmisiones.portaloas.udistrital.edu.co/"
+              ]
             },
             "local": {
               "buildOptimizer": false,
@@ -86,8 +83,7 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
-              "outputHashing": "none",
-              "deployUrl": "http://localhost:4207/"
+              "outputHashing": "none"
             }
           },
           "defaultConfiguration": "local"

@@ -24,8 +24,8 @@
         </td>
         <td>
           <button
-            class="boton-primary"
-            mat-button
+            color="accent"
+            mat-icon-button
             type="button"
             (click)="verListaDocumentos(produccion)"
           >
@@ -72,9 +72,9 @@
     *ngIf="(url_editar && gotoEdit) || (updateDocument && canUpdateDocument)"
   >
     <tr>
-      <td colspan="5" style="background-color: lightyellow">
+      <td colspan="5" style="background-color: var(--warning-main)" (click)="editar()">
         <span (click)="editar()" class="link"
-          ><i class="ion-edit"></i> {{ "GLOBAL.actualizar" | translate }}</span
+          ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
         >
       </td>
     </tr>
