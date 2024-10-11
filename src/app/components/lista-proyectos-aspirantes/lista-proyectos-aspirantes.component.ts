@@ -59,7 +59,7 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      this.subscripcion.add(this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.subscripcion.add(this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
@@ -194,8 +194,8 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
     const proyectoId = proyecto.ProyectoId
     const periodoId = this.periodo.Id
 
-    // this.subscripcion.add(this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
-      this.subscripcion.add(this.inscripcionService.get('cupo_inscripcion/?query=ProgramaAcademicoId :' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
+    // this.subscripcion.add(this.evaluacionService.get('cupos_por_dependencia?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
+      this.subscripcion.add(this.inscripcionService.get('cupo_inscripcion?query=ProgramaAcademicoId :' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
       (response: any) => {
         if (response !== null && response !== undefined && response[0].Id !== undefined) {
           proyecto.cuposProyecto = response[0].CuposHabilitados;

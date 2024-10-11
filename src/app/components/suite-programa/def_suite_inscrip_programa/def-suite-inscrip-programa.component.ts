@@ -76,7 +76,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   cargarPeriodo(){
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((response: any) => {
           if (response != null && response.Status == '200') {
             this.periodo = response.Data.find((p:any) => p.Activo).Id;
@@ -112,7 +112,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   cargarFacultad(){
     return new Promise((resolve, reject) => {
-      this.oikosService.get('dependencia_tipo_dependencia/?query=Activo:true&limit=0')
+      this.oikosService.get('dependencia_tipo_dependencia?query=Activo:true&limit=0')
         .subscribe((response: any) => {
           if (response != null && response.Status != '404' 
               && Object.keys(response[0]).length > 0) {
