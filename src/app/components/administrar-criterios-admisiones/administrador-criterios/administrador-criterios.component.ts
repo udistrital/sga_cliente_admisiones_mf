@@ -103,7 +103,7 @@ export class AdministradorCriteriosComponent implements OnInit {
     } else {
       // Configuración para pantallas más grandes
       this.dialogConfig.width = "600px";
-      this.dialogConfig.height = "400px";
+      this.dialogConfig.maxHeight = "80%";
     }
     this.dialogConfig.data = {};
     const criterioDialog = this.dialog.open(
