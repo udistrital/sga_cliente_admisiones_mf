@@ -236,6 +236,12 @@ export class AdministradorCriteriosComponent implements OnInit {
           (response: any) => {
             const newSubcriterio: Criterio = <Criterio>response;
             criterio.Subcriterios.unshift(newSubcriterio);
+            criterio.Subcriterios = criterio.Subcriterios;
+            const foundCriterio = this.criterios.find(c => c.Id === criterio.Id);
+            if (foundCriterio) {
+              foundCriterio.Subcriterios = [...criterio.Subcriterios];
+            }
+            this.cdr.detectChanges(); // Forzar la detección de cambios
             this.popUpManager.showSuccessAlert(
               this.translate.instant("admision.criterio_exito")
             );
