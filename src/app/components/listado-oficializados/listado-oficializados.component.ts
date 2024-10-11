@@ -16,6 +16,7 @@ import { SolicitudesAdmisiones } from 'src/app/services/solicitudes_admisiones.s
 import { MatSort } from '@angular/material/sort';
 import { TercerosService } from 'src/app/services/terceros.service';
 import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
+import { SolicitudesCorreosService } from 'src/app/services/solicitudes_correos.service';
 
 @Component({
   selector: 'app-listado-oficializados',
@@ -85,7 +86,7 @@ export class ListadoOficializadosComponent {
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private sgaAdmisionesMidService: SgaAdmisionesMid,
-    private solicitudesAdmisiones: SolicitudesAdmisiones,
+    private solicitudesServices: SolicitudesCorreosService,
     private tercerosMidService: TerceroMidService,
   ) { }
 
@@ -420,6 +421,28 @@ export class ListadoOficializadosComponent {
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: 'application/pdf' });
     saveAs(blob, 'ListadOficializados.pdf');
+  }
+
+  solicitudCorreos(){
+    const fechaActual = new Date().toISOString(); 
+    const data = {
+      "EstadoTipoSolicitudId": {"Id": 92},
+      "Referencia": "{\"Periodo\":40,\"Opcion\":1}",
+      "Resultado": "",
+      // "FechaRadicacion": fechaActual,
+      // "FechaCreacion": fechaActual,
+      // "FechaModificacion": fechaActual,
+      "FechaRadicacion": "2024-07-25 00:00:00 +0000 +0000",
+      "FechaCreacion": "2024-10-03 20:37:37.733842 +0000 +0000",
+      "FechaModificacion": "2024-10-03 20:37:37.733936 +0000 +0000",
+      "SolicitudFinalizada": false,
+      "Activo": true,
+      "SolicitudPadreId": null
+    }
+   
+    this.solicitudesServices.post('solicitud', data).subscribe((response:any) => {
+
+    });
   }
 
 

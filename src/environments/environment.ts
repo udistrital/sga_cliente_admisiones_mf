@@ -41,4 +41,5 @@ export const environment = {
   CALENDARIO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/",
   SOLICITUDES_ADMISIONES: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8117/v1/',
   PLANES_ESTUDIOS_CRUD: "http://pruebasapi.intranetoas.udistrital.edu.co:8537/v1/",
+  SOLICITUDES_ADMINISTRACION:'http://pruebasapi2.intranetoas.udistrital.edu.co:8117/v1/',
 };
