@@ -1716,7 +1716,13 @@
         "descripcion_eliminar_tipos_cupo": "Are you sure about continuing with the elimination of the quota type?",
         "eliminacion_tipos_cupo_exito": "Successful removal of quota type",
         "eliminacion_tipos_cupo_fallo": "An error occurred trying to delete the quota type",
-        "cupos_disponibles_label": "Available places"
+        "cupos_disponibles_label": "Available places",
+        "errorCupos": "Error getting quotas",
+        "cupoEliminado": "Quota successfully removed",
+        "cargar_soporte":"Cargar soporte",
+        "cargar_cantidad_cupos": "Load number of enabled and optional quotas",
+        "documento_guardado": "Document saved successfully",
+        "error_guardar_documento": "Error saving document"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Are you sure to disable this calendar?",
