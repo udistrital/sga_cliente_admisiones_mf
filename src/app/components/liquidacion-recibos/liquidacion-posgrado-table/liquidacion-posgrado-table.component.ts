@@ -280,7 +280,7 @@ export class LiquidacionPosgradoTableComponent {
       const url = `liquidacion?id_periodo=9&id_proyecto=32`;
       this.sgaAdmisiones.get(url).subscribe(
         (response: { Data: any; }) => {
-          const dat = response.Data;
+          const data = response.Data;
           this.admitidos = data;
           this.admitidos.forEach(row => {
             row.Seguro = true;
