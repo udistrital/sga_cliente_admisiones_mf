@@ -112,7 +112,8 @@ export class PerfilComponent implements OnInit {
       this.popUpManager.showPopUpGeneric(this.translate.instant('inscripcion.imprimir_comprobante'), this.translate.instant('inscripcion.info_impresion_auto'), 'info', false);
     }
     if (this.reloadTagComponent != "") {
-      this.manageReloadComponent(this.linkFolderWithTag[this.reloadTagComponent]);
+      const cleanedTagName = this.reloadTagComponent.split('/')[0].trim();
+      this.manageReloadComponent(this.linkFolderWithTag[cleanedTagName]);
     } 
 
   }
@@ -137,12 +138,24 @@ export class PerfilComponent implements OnInit {
   }
 
   manageReloadComponent(tagName: any) {
-    this.SuiteTags[tagName].render = false;
-    this.renderInscripcion = false;
-    setTimeout(() => {
-      this.SuiteTags[tagName].render = true;
-      this.renderInscripcion = true;
-    }, 1);
+    // Verificar si tagName es válido
+    if (tagName && typeof tagName === 'string') {
+      // Limpiar el texto de entrada para extraer solo la parte relevante
+      const cleanedTagName = tagName.split('/')[0].trim();
+      // Verificar si el tag existe en SuiteTags
+      if (this.SuiteTags[cleanedTagName]) {
+        this.SuiteTags[cleanedTagName].render = false;
+        this.renderInscripcion = false;
+        setTimeout(() => {
+          this.SuiteTags[cleanedTagName].render = true;
+          this.renderInscripcion = true;
+        }, 1);
+      } else {
+        console.error(`Tag ${cleanedTagName} no encontrado en SuiteTags.`);
+      }
+    } else {
+      console.error('tagName es inválido:', tagName);
+    }
   }
 
   checkZeroObservations() {
