@@ -126,6 +126,7 @@ import { SoporteCupoInscripcionComponent } from './components/asignacion-cupos-p
 import { CrudDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-descuento-proyecto/crud-descuento-proyecto.component';
 import { ReportesComponent } from './components/reportes/reportes.component';
 import { ListService } from './store/services/list.service';
+import { IsGrantedDirective } from './directives/is-granted.directive';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
@@ -218,6 +219,7 @@ export function createTranslateLoader(http: HttpClient) {
     SoporteCupoInscripcionComponent,
     CrudDescuentoProyectoComponent,
     ReportesComponent,
+    IsGrantedDirective,
   ],
   imports: [
     CodificacionModule,
