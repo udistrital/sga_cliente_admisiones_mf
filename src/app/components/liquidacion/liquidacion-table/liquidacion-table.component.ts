@@ -9,7 +9,7 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { liquidacion } from 'src/app/models/liquidacion/liquidacion';
 import { A, B } from 'src/app/models/liquidacion/Variables';
 import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
+import { TercerosService } from 'src/app/services/terceros.service';
 
 @Component({
   selector: 'app-liquidacion-table',
@@ -135,10 +135,10 @@ export class LiquidacionTableComponent implements OnInit{
 
   constructor(
     private http: HttpClient,
-    private sgamidService: SgaMidService,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private inscripcionMidService: InscripcionMidService,
+    private tercerosService: TercerosService,
   ) 
   {
     this.obtenerClaves(this.variableA, this.variableB)
@@ -341,7 +341,7 @@ export class LiquidacionTableComponent implements OnInit{
 
   async consultarTercero(personaId: any): Promise<any | []> {
     try {
-      const response = await this.sgamidService.get('persona/consultar_persona/' + personaId).toPromise();
+      const response = await this.tercerosService.get('personas/' + personaId).toPromise();
       return response;
     } catch (error) {
       console.error(error)

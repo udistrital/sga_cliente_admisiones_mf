@@ -6,8 +6,6 @@ import { ProyectoAcademicoService } from "src/app/services/proyecto_academico.se
 import { ParametrosService } from "src/app/services/parametros.service";
 import { EvaluacionInscripcionService } from "src/app/services/evaluacion_inscripcion.service";
 import { Inscripcion } from "src/app/models/inscripcion/inscripcion";
-import { TercerosService } from "src/app/services/terceros.service";
-import { SgaMidService } from "src/app/services/sga_mid.service";
 import { SgaAdmisionesMid } from "src/app/services/sga_admisiones_mid.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { TipoCriterio } from "../../../models/admision/tipo_criterio";
@@ -183,7 +181,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -545,18 +543,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   onEditConfirm(rowIndex: number, row: any): void {
-    if (row.tieneEvaluacion) {
-      this.popUpManager
-        .showConfirmAlert(
-          "info",
-          this.translate.instant("admision.no_editar_evaluacion")
-        )
-        .then((confirmacion) => {
-          if (!confirmacion.isConfirmed) {
-            return;
-          }
-        });
-    }
     const rowFormGroup = this.rows.at(rowIndex) as FormGroup;
     if (rowFormGroup.invalid) {
       const mensajeAlerta = `Por favor, complete los campos requeridos en la fila ${
@@ -637,12 +623,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
             this.loadInfo(parseInt(Evaluacion.CriterioId, 10));
             resolve("");
             this.popUpManager.showToast(
-              this.translate.instant("admision.registro_exito")
+              this.translate.instant("GLOBAL.operacion_exitosa")
             );
           } else {
             reject();
             this.popUpManager.showErrorToast(
-              this.translate.instant("admision.registro_error")
+              this.translate.instant("GLOBAL.error")
             );
           }
         },

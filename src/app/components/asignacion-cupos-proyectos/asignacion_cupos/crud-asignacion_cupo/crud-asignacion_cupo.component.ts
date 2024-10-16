@@ -12,6 +12,7 @@ import { SoporteCupoInscripcionComponent } from '../soporte-cupo-inscripcion/sop
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { Periodo } from 'src/app/models/periodo/periodo';
 import { __awaiter } from 'tslib';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 
 @Component({
@@ -44,14 +45,16 @@ export class CrudAsignacionCupoComponent implements OnInit {
     private dialogService: MatDialog,
     private inscripcion: InscripcionService,
     private inscripcionMidService: InscripcionMidService,
+    private sgaAdmisionesService: SgaAdmisionesMid
 
   ) {
     console.log(this.tipo_inscripcion)
   }
 
   obtenerCupos() {
-    this.http.get<any>(`${environment.INSCRIPCION_MID_SERVICE}cupos/`).subscribe(
-      (response) => {
+    this.inscripcionMidService.get(`cupos`).subscribe(
+      (response:any) => {
+        console.log(response)
         response.Data.forEach((element: any) => {
           this.cuposAdmitidos = this.cuposAdmitidos + element.CuposHabilitados
           this.cuposOpcionados = this.cuposOpcionados + element.CuposOpcionados
@@ -60,7 +63,7 @@ export class CrudAsignacionCupoComponent implements OnInit {
         this.dataSource = new MatTableDataSource(response.Data)
         this.dataSource.paginator = this.paginator;
       },
-      (error) => {
+      (error:Error) => {
         console.error("Error al obtener los cupos:", error);
       }
     );

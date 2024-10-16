@@ -6,7 +6,6 @@ import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
 import { OikosService } from 'src/app/services/oikos.service';
 import { ParametrosService } from 'src/app/services/parametros.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { NivelFormacion } from 'src/app/models/proyecto_academico/nivel_formacion';
 
@@ -43,14 +42,11 @@ export class LiquidacionHistoricoComponent {
   proyectosPregrado!: any[];
 
   constructor(
-    private _formBuilder: FormBuilder, 
     private oikosService: OikosService,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private parametrosService: ParametrosService,
     private inscripcionService: InscripcionService,
-    private sgamidService: SgaMidService,
-    private inscripcionMidService: InscripcionMidService,
     private projectService: ProyectoAcademicoService,
   )
   {}
@@ -124,7 +120,7 @@ export class LiquidacionHistoricoComponent {
 
   cargarPeriodos() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           this.periodos = res.Data;
           resolve(res)

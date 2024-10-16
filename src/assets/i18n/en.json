@@ -3608,7 +3608,15 @@
     "Acciones": "Actions",
     "SelectNivel": "Select level",
     "SelectTipoInscripcion": "Select inscription type",
-    "SelectEstadoInscripcion": "Selet inscription status"
+    "SelectEstadoInscripcion": "Selet inscription status",
+    "titulo_reportes": "Academic Report Management",
+    "subtitulo_reportes": "Please select the academic period, process, level, and curricular project to access the corresponding information.",
+    "seleccione_periodo_tipo": "Step 1: Selection of Academic Parameters",
+    "reporte_tabla": "Step 2: Review of Selected Parameters",
+    "periodo_academico": "Select the Academic Period",
+    "proceso_academico": "Academic Process:",
+    "proyecto_academico": "Curricular Project:",
+    "nivel_academico": "Academic Level:"
   },
   "evento": {
     "evento": "Event",
@@ -5357,6 +5365,10 @@
     "admitido": "Admitted: ",
     "opcionado": "Opted: ",
     "no_admitido": "Not Admitted: ",
+    "admitido_legalizado": "Admitted legalized: ",
+    "admitido_observacion": "Admitted with observation: ",
+    "matriculado": "Enrolled: ",
+    "no_oficializado": "Not officialized: ",
     "inscrito": "Registered: ",
     "inscrito_ob": "Registered with Observation: ",
     "total": "Total Applicants: ",

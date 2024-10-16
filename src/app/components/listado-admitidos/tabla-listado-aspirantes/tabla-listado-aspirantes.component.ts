@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { TercerosService } from 'src/app/services/terceros.service';
 
 @Component({
@@ -28,7 +27,6 @@ export class TablaListadoAspirantesComponent {
     private terceroService: TercerosService,
     private EvalaucionInscripcionServices: EvaluacionInscripcionService,
     private inscripcionService: InscripcionService,
-    private sgamidService: SgaMidService,
   ) { }
 
   async ngOnChanges() {
@@ -75,7 +73,7 @@ export class TablaListadoAspirantesComponent {
   
   consultarTercero(personaId: any) {
     return new Promise((resolve, reject) => {
-      this.sgamidService.get('persona/consultar_persona/' + personaId).subscribe((res: any) => {
+      this.terceroService.get('personas/' + personaId).subscribe((res: any) => {
         resolve(res);
       },
         (error: any) => {

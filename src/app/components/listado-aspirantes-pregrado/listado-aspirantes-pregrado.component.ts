@@ -6,10 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { OikosService } from 'src/app/services/oikos.service';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { ParametrosService } from 'src/app/services/parametros.service';
-import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { MatStepper } from '@angular/material/stepper';
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
@@ -149,7 +147,7 @@ export class ListadoAspirantesPregradoComponent {
 
   cargarPeriodos() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           this.periodos = res.Data;
           resolve(res)

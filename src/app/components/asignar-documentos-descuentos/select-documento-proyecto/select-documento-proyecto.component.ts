@@ -12,8 +12,6 @@ import { Validators, FormControl } from '@angular/forms';
 import { TipoDocumentoPrograma } from 'src/app/models/documento/tipo_documento_programa';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
-import { DocumentoProgramaService } from 'src/app/services/documento_programa.service';
-import { DocProgramaObligatorioComponent } from '../doc-programa-obligatorio/doc-programa-obligatorio.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { DocumentoPrograma } from 'src/app/models/documento/documento_programa';
 import { MatPaginator } from '@angular/material/paginator';

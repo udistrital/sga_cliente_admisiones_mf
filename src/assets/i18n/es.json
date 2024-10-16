@@ -1676,7 +1676,10 @@
     "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico",
     "ver_subcriterios": "Ver subcriterios",
     "error_porcentaje_invalido" : "Los porcentajes no son válidos porque no suman el 100%.",
-    "crear_subcriterio" : "Crear subcriterio"
+    "crear_subcriterio" : "Crear subcriterio",
+    "vigencia" : "Vigencia de un examen de estado",
+    "titulo_aspirantes_no_encontrados": "No se encontraron aspirantes",
+    "aspirantes_no_oficializados_no_encontrados": "No se encontraron aspirantes no oficializados"
   },
   "oficializados": {
     "titulo": "Oficialización",
@@ -1704,6 +1707,7 @@
     "liberar_cupos": "Liberar cupos",
     "sugerir_usuarios": "Sugerir usuarios",
     "enviar_correos": "Enviar solicitud de correos institucionales"
+ 
   },
   "cupos": {
     "aviso_periodo": "Período en el cual se define los cupos de admisión",
@@ -1756,7 +1760,8 @@
         "warn_nombre": "Por favor digite el nombre del tipo de cupo",
         "warn_descripcion": "Por favor, Ingresa la descripcion del tipo de cupo",
         "warn_codigo_abreviacion": "Por favor, Ingresa el codigo de abreviacion del tipo de cupo",
-        "warn_numero_orden": "Por favor, Ingresa el numero de orden del tipo de cupo"
+        "warn_numero_orden": "Por favor, Ingresa el numero de orden del tipo de cupo",
+        "cupos_disponibles_label": "Cupos disponibles"
   },
   "calendario": {
     "seguro_continuar_inhabilitar_calendario": "¿Está seguro de inhabilitar este calendario?",
@@ -2750,6 +2755,10 @@
     "admitido": "Admitido: ",
     "opcionado": "Opcionado: ",
     "no_admitido": "No admitido: ",
+    "admitido_legalizado": "Admitido legalizado: ",
+    "admitido_observacion": "Admitido con Observacion: ",
+    "matriculado": "Matriculado: ",
+    "no_oficializado": "No Oficializado: ",
     "inscrito": "Inscrito: ",
     "inscrito_ob": "Inscrito con observación: ",
     "total": "Total aspirantes: ",

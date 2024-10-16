@@ -15,14 +15,11 @@ import {
   Validators,
   FormGroup,
   FormBuilder,
-  ReactiveFormsModule,
 } from "@angular/forms";
 import { EvaluacionInscripcionService } from "src/app/services/evaluacion_inscripcion.service";
 import { ProyectoAcademicoService } from "src/app/services/proyecto_academico.service";
-// import { LocalDataSource } from 'ng2-smart-table';
 import { PopUpManager } from "../../../managers/popUpManager";
 import { NivelFormacion } from "src/app/models/proyecto_academico/nivel_formacion";
-import { SgaMidService } from "src/app/services/sga_mid.service";
 import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { OikosService } from "src/app/services/oikos.service";
@@ -268,7 +265,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -437,7 +434,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   cargarFacultad() {
     return new Promise((resolve, reject) => {
       this.oikosService
-        .get("dependencia_tipo_dependencia/?query=Activo:true&limit=0")
+        .get("dependencia_tipo_dependencia?query=Activo:true&limit=0")
         .subscribe(
           (response: any) => {
             if (
@@ -545,7 +542,7 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   loadCriterios() {
     this.evaluacionService
-      .get("requisito/?query=Activo:true&limit=0")
+      .get("requisito?query=Activo:true&limit=0")
       .subscribe(
         (res: any) => {
           const r = <any>res;

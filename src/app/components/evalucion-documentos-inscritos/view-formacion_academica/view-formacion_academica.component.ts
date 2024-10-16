@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 
-import { SgaMidService } from 'src/app/services/sga_mid.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
 // @ts-ignore
@@ -56,7 +55,6 @@ export class ViewFormacionAcademicaComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
-    private sgaMidService: SgaMidService,
     private inscripcionesMidService: InscripcionMidService,
     private documentoService: DocumentoService,
     private newNuxeoService: NewNuxeoService,
@@ -83,7 +81,7 @@ export class ViewFormacionAcademicaComponent implements OnInit {
   }
 
   loadData(): void {
-    this.inscripcionesMidService.get('academico/formacion/?Id=' + this.persona_id)
+    this.inscripcionesMidService.get('academico/formacion?Id=' + this.persona_id)
       .subscribe((response:any) => {
         if (response !== null && response.Status === 200 && (Object.keys(response.Data).length > 0)) {
           const data = <Array<any>>response.Data;

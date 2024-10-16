@@ -32,14 +32,14 @@ export class CodificacionService {
   getAdmitidos(periodoId: number, proyectoId: number, periodoValor: string, codigoProyecto: string, nivel: string | undefined) {
     this.requestManager.setPath("SGA_ADMISIONES_MID");
     return this.requestManager.get(
-      `codificacion/admitidos/?id_periodo=${periodoId}&id_proyecto=${proyectoId}&valor_periodo=${periodoValor}&codigo_proyecto=${codigoProyecto}&nivel_academico=${nivel}`
+      `codificacion/admitidos?id_periodo=${periodoId}&id_proyecto=${proyectoId}&valor_periodo=${periodoValor}&codigo_proyecto=${codigoProyecto}&nivel_academico=${nivel}`
     );
   }
 
   postGenerarCodigos(data: Array<Record<string, any>>, sortTipo: number) {
     this.requestManager.setPath("SGA_ADMISIONES_MID");
     return this.requestManager.post(
-      `codificacion/codigos/?tipo_sort=${sortTipo}`, data
+      `codificacion/codigos?tipo_sort=${sortTipo}`, data
     );
   }
 
@@ -53,7 +53,7 @@ export class CodificacionService {
 
   getPeriodosAcademicos() {
     this.requestManager.setPath("PARAMETROS_SERVICE");
-    return this.requestManager.get("periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+    return this.requestManager.get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
       .pipe(
         map((response: any) => {
           // Verifica si 'Data' existe y es una lista
