@@ -13,6 +13,8 @@ import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { Periodo } from 'src/app/models/periodo/periodo';
 import { __awaiter } from 'tslib';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+import { PopUpManager } from 'src/app/managers/popUpManager';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -41,15 +43,14 @@ export class CrudAsignacionCupoComponent implements OnInit {
 
   constructor(
     private newNuxeoService: NewNuxeoService,
-    private http: HttpClient,
+    private popUpManager: PopUpManager,
     private dialogService: MatDialog,
+    private translate: TranslateService,
     private inscripcion: InscripcionService,
     private inscripcionMidService: InscripcionMidService,
     private sgaAdmisionesService: SgaAdmisionesMid
 
-  ) {
-    console.log(this.tipo_inscripcion)
-  }
+  ) {}
 
   obtenerCupos() {
     this.inscripcionMidService.get(`cupos`).subscribe(
@@ -64,7 +65,7 @@ export class CrudAsignacionCupoComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
       },
       (error:Error) => {
-        console.error("Error al obtener los cupos:", error);
+        this.popUpManager.showErrorAlert(this.translate.instant('cupos.errorCupos'));
       }
     );
   }
@@ -140,7 +141,8 @@ export class CrudAsignacionCupoComponent implements OnInit {
     }
     this.inscripcion.put(`cupo_inscripcion/` + cupo.Id, data).subscribe((response: any) => {
       if (response != null || response != undefined || response != "") {
-        alert("Cupo eliminado con exito");
+        
+        this.popUpManager.showErrorAlert(this.translate.instant('cupos.cupoEliminado'));
         this.dataSource.data = [];
         this.obtenerCupos();
       }
@@ -186,13 +188,13 @@ export class CrudAsignacionCupoComponent implements OnInit {
       if (element.Id == undefined) {
         if (element.base64 == undefined || element.Comentario == undefined || element.base64 == "" || element.Comentario == "") {
           Validar = false;
-          alert("Cargar soporte");
+          this.popUpManager.showErrorAlert(this.translate.instant('cupos.cargar_soporte'));
           return;
         }
 
         if (element.CuposOpcionados == undefined || element.CuposHabilitados == undefined || element.CuposDisponibles == undefined || element.cuposOpcionados == 0 || element.cuposHabilitados == 0 || element.CuposDisponibles == 0) {
           Validar = false;
-          alert("Asignar cantidad de cupos habilitados y opcionados");
+          this.popUpManager.showErrorAlert(this.translate.instant('cupos.cargar_cantidad_cupos'));
           return;
         }
       }
@@ -202,14 +204,16 @@ export class CrudAsignacionCupoComponent implements OnInit {
       setTimeout(() => {
         this.inscripcionMidService.post('cupos', this.dataSource.data).subscribe(
           (response: any) => {
+            console.log(this.dataSource.data)
             if (response.Status == 200) {
-              alert("Guardado con exito");
+              this.popUpManager.showSuccessAlert(this.translate.instant('cupos.documento_guardado'));
               this.dataSource.data = [];
               this.obtenerCupos();
             }
           },
           (error) => {
             console.error(error);
+            this.popUpManager.showErrorAlert(this.translate.instant('cupos.error_guardar_documento'));
           }
         );
       }, 3000);
@@ -227,8 +231,6 @@ export class CrudAsignacionCupoComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['tipo_inscripcion'] && changes['tipo_inscripcion'].currentValue) {
-      // Lógica para manejar cambios en tipo_inscripcion
-      console.log(this.tipo_inscripcion);
     }
   }
 
