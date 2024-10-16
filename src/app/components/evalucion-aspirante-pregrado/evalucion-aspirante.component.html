@@ -252,7 +252,7 @@
           <br><br>
           <div style="display: flex; justify-content: center; align-items: center;">
             <button class="boton-primary">{{ 'evaluacionPregrado.revision_curricular' | translate }}</button>
-            <button class="boton-primary">{{ 'evaluacionPregrado.descargar_pdf' | translate }}</button>
+            <button (click)="descargarExcel()" class="boton-primary">{{ 'evaluacionPregrado.descargar_pdf' | translate }}</button>
             <button class="boton-primary">{{ 'evaluacionPregrado.definir_admitidos' | translate }}</button>
           </div>
           <br>

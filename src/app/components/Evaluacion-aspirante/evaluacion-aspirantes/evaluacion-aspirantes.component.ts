@@ -543,18 +543,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   onEditConfirm(rowIndex: number, row: any): void {
-    if (row.tieneEvaluacion) {
-      this.popUpManager
-        .showConfirmAlert(
-          "info",
-          this.translate.instant("admision.no_editar_evaluacion")
-        )
-        .then((confirmacion) => {
-          if (!confirmacion.isConfirmed) {
-            return;
-          }
-        });
-    }
     const rowFormGroup = this.rows.at(rowIndex) as FormGroup;
     if (rowFormGroup.invalid) {
       const mensajeAlerta = `Por favor, complete los campos requeridos en la fila ${
@@ -635,12 +623,12 @@ export class EvaluacionAspirantesComponent implements OnInit {
             this.loadInfo(parseInt(Evaluacion.CriterioId, 10));
             resolve("");
             this.popUpManager.showToast(
-              this.translate.instant("admision.registro_exito")
+              this.translate.instant("GLOBAL.operacion_exitosa")
             );
           } else {
             reject();
             this.popUpManager.showErrorToast(
-              this.translate.instant("admision.registro_error")
+              this.translate.instant("GLOBAL.error")
             );
           }
         },
