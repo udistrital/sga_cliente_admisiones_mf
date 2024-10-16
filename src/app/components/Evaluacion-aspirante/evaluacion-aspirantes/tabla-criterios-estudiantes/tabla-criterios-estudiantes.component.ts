@@ -66,14 +66,20 @@ export class TablaCriteriosEstudiantesComponent implements OnInit {
   }
 
   getNota(evaluacion: any, criterioId: number): number | string {
+    if (!evaluacion || !evaluacion.criterios) {
+        return '-';
+    }
     const criterioEvaluacion = evaluacion.criterios.find((c: any) => c.criterioId === criterioId);
     return criterioEvaluacion ? criterioEvaluacion.NotaRequisito : '-';
   }
 
   getAsistencia(evaluacion: any, criterioId: number): string {
+    if (!evaluacion || !evaluacion.criterios) {
+        return '-';
+    }
     const criterioEvaluacion = evaluacion.criterios.find((c: any) => c.criterioId === criterioId);
     if (criterioEvaluacion && 'asistencia' in criterioEvaluacion) {
-      return criterioEvaluacion.asistencia ? this.translate.instant('admision.si') : this.translate.instant('admision.no');
+        return criterioEvaluacion.asistencia ? this.translate.instant('admision.si') : this.translate.instant('admision.no');
     }
     return '-';
   }
