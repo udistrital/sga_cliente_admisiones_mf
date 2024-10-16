@@ -17,6 +17,7 @@ import { MatSort } from '@angular/material/sort';
 import { TercerosService } from 'src/app/services/terceros.service';
 import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
 import { SolicitudesCorreosService } from 'src/app/services/solicitudes_correos.service';
+import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 
 @Component({
   selector: 'app-listado-oficializados',
@@ -425,16 +426,18 @@ export class ListadoOficializadosComponent {
 
   solicitudCorreos(){
     const fechaActual = new Date().toISOString(); 
+    const date = new Date();
+    const yearMonthDay = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
     const data = {
       "EstadoTipoSolicitudId": {"Id": 92},
-      "Referencia": "{\"Periodo\":40,\"Opcion\":1}",
+      "Referencia": "{\"Periodo\":"+this.periodo+",\"Opcion\":1}",
       "Resultado": "",
       // "FechaRadicacion": fechaActual,
       // "FechaCreacion": fechaActual,
       // "FechaModificacion": fechaActual,
-      "FechaRadicacion": "2024-07-25 00:00:00 +0000 +0000",
-      "FechaCreacion": "2024-10-03 20:37:37.733842 +0000 +0000",
-      "FechaModificacion": "2024-10-03 20:37:37.733936 +0000 +0000",
+      "FechaRadicacion": yearMonthDay ,
+      "FechaCreacion":yearMonthDay ,
+      "FechaModificacion": yearMonthDay,
       "SolicitudFinalizada": false,
       "Activo": true,
       "SolicitudPadreId": null
