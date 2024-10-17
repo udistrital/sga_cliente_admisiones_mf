@@ -154,7 +154,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.showTab = true;
     this.loadData();
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.createTable();
+      this.useLanguage(event.lang);
     });
   }
 
@@ -420,7 +420,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
             this.criterios = this.criterios.filter(
               (e: any) => e.PorcentajeGeneral !== 0
             );
-            console.log(this.criterios);
 
             this.btnCalculo = false;
             this.selectcriterio = false;
@@ -481,8 +480,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
       this.titlesTable.forEach((key: string) => {
         if (this.dataColumsTable[key].editable) {
-          // console.log("AGREGANDO CONTROL A ", key);
-          // Agregar controles dinámicos al FormGroup basado en las columnas
           switch (key) {
             case "Asistencia":
               rowGroup.addControl(
@@ -554,8 +551,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
       return;
     }
     const rowValues = rowFormGroup.value;
-    console.log("rowValues", rowValues);
-    console.log("row", row);
 
     // Crear el objeto de datos para el aspirante
     const aspiranteData: any = {
@@ -568,7 +563,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
     Object.keys(rowValues).forEach((key) => {
       const columnDef = this.dataColumsTable[key];
       const value = rowValues[key];
-      console.log("key", key);
       if (columnDef) {
         if (key === "Asistencia") {
           aspiranteData.Asistencia = value === "true" || value === true;
@@ -598,8 +592,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
       ProgramaId: this.proyectos_selected,
       CriterioId: sessionStorage.getItem("tipo_criterio"),
     };
-
-    console.log("GUARDAR", Evaluacion);
 
     // Llamar a guardarEvaluacion con el objeto Evaluacion
     this.guardarEvaluacion(Evaluacion);
@@ -773,7 +765,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
           async (response: any) => {
             if (response.Status === 200) {
               const data = <Array<any>>response.Data;
-              console.log("data", data);
               if (data !== null) {
                 // Inicializar la propiedad tieneEvaluacion para cada aspirante
                 this.Aspirantes.forEach((aspirante: any) => {
@@ -782,7 +773,6 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
                 // Iterar sobre cada evaluación
                 data.forEach((evaluacionData) => {
-                  console.log("aspirantes", this.Aspirantes);
                   // Encontrar el índice del aspirante en this.Aspirantes
                   const aspirantIndex = this.Aspirantes.findIndex(
                     (aspirante: any) =>
