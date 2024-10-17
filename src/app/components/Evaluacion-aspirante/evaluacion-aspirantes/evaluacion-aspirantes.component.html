@@ -156,7 +156,11 @@
 
         <!-- Tabla de evaluacion -->
         <section>
-         <tabla-criterios-estudiantes *ngIf="periodo && proyectos_selected" [periodo]="periodo.Id" [proyecto]="proyectos_selected" />
+         <tabla-criterios-estudiantes *ngIf="periodo && proyectos_selected" 
+          [periodo]="periodo.Id" 
+          [proyecto]="proyectos_selected"
+          [key]="key"
+        />
         </section>
       </div>
     </section>
