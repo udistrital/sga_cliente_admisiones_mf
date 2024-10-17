@@ -9,6 +9,7 @@ import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
   styleUrls: ['./tabla-criterios-estudiantes.component.scss']
 })
 export class TablaCriteriosEstudiantesComponent implements OnInit {
+  @Input() key: number = 0;
   @Input() periodo: number | null = null;
   @Input() proyecto: number | null = null;
 
@@ -71,7 +72,7 @@ export class TablaCriteriosEstudiantesComponent implements OnInit {
         return '-';
     }
     const criterioEvaluacion = evaluacion.criterios.find((c: any) => c.criterioId === criterioId);
-    return criterioEvaluacion ? criterioEvaluacion.NotaRequisito : '-';
+    return criterioEvaluacion ? (criterioEvaluacion.NotaRequisito * 100)/criterioEvaluacion.porcentajeGeneral : '-';
   }
 
   getAsistencia(evaluacion: any, criterioId: number): string {
