@@ -1761,7 +1761,13 @@
         "warn_descripcion": "Por favor, Ingresa la descripcion del tipo de cupo",
         "warn_codigo_abreviacion": "Por favor, Ingresa el codigo de abreviacion del tipo de cupo",
         "warn_numero_orden": "Por favor, Ingresa el numero de orden del tipo de cupo",
-        "cupos_disponibles_label": "Cupos disponibles"
+        "cupos_disponibles_label": "Cupos disponibles",
+        "errorCupos": "Error al obtener los cupos",
+        "cupoEliminado": "Cupo eliminado con exito",
+        "cargar_cantidad_cupos": "Cargar cantidad de cupos habilitado y opcionados",
+        "documento_guardado": "Documento guardado con exito",
+        "error_guardar_documento": "Error al guardar el documento"
+        
   },
   "calendario": {
     "seguro_continuar_inhabilitar_calendario": "¿Está seguro de inhabilitar este calendario?",
@@ -2803,8 +2809,9 @@
     "listado": "Listado de aspirantes registrados",
     "evaluar_criterio": "Evaluar criterio",
     "revision_curricular": "Enviar para revisión al proyecto curricular",
-    "descargar_pdf": "Descargar listado (PDF/Excel)",
-    "definir_admitidos": "Definir listas de admitidos"
+    "descargar_pdf": "Descargar listado (Excel)",
+    "definir_admitidos": "Definir listas de admitidos",
+    "error_descarga": "Error al descargar el archivo"
   },
   "evaluacion-admitidos": {
     "titulo": "Listado admitidos",

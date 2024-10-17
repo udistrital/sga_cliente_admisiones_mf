@@ -5,58 +5,61 @@ import { throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 
-const httpOptions = {
-    headers: new HttpHeaders({
-        'Accept': 'application/json',
-    }),
-}
-
 @Injectable({
   providedIn: 'root',
 })
 
 export class AnyService {
-
+    public httpOptions: any;
     constructor(private http: HttpClient) {
+      const acces_token = window.localStorage.getItem('access_token');
+      if (acces_token !== null) {
+        this.httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${acces_token}`,
+          }),
+        }
+      }
     }
 
     get(path: string, endpoint: string) {
-        return this.http.get(path + endpoint, httpOptions).pipe(
+        return this.http.get(path + endpoint, this.httpOptions).pipe(
           catchError(this.handleError),
         );
     }
 
     getp(path: any, endpoint: any) {
-      return this.http.get(path + endpoint, { ...httpOptions, reportProgress: true, observe: 'events' }).pipe(
+      return this.http.get(path + endpoint, { ...this.httpOptions, reportProgress: true, observe: 'events' }).pipe(
         catchError(this.handleError),
       );
   }
 
     post(path: any, endpoint: any, element: any) {
-        return this.http.post(path + endpoint, element, httpOptions).pipe(
+        return this.http.post(path + endpoint, element, this.httpOptions).pipe(
           catchError(this.handleError),
         );
     }
 
     put(path: any, endpoint: any, element: any) {
-        return this.http.put(path + endpoint + '/', element, httpOptions).pipe(
+        return this.http.put(path + endpoint + '/', element, this.httpOptions).pipe(
           catchError(this.handleError),
         ); // + element.Id
     }
     put2(path: any, endpoint: any, element: { Id: string; }) {
-      return this.http.put(path + endpoint + '/' + element.Id, element, httpOptions).pipe(
+      return this.http.put(path + endpoint + '/' + element.Id, element, this.httpOptions).pipe(
         catchError(this.handleError),
       );
     }
 
     delete(path: any, endpoint: any, element: { Id: string; }) {
-        return this.http.delete(path + endpoint + '/' + element.Id, httpOptions).pipe(
+        return this.http.delete(path + endpoint + '/' + element.Id, this.httpOptions).pipe(
           catchError(this.handleError),
         );
     }
 
     delete2(path: any, endpoint: any) {
-      return this.http.delete(path + endpoint, httpOptions).pipe(
+      return this.http.delete(path + endpoint, this.httpOptions).pipe(
         catchError(this.handleError),
       );
   }
