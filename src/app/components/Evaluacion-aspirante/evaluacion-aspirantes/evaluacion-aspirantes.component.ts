@@ -132,6 +132,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   dataColumsTable: {} | any = {};
 
   criterioEnEdicion: {} | any = {};
+  key: number = 0;
 
   constructor(
     private translate: TranslateService,
@@ -651,6 +652,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
           this.popUpManager.showSuccessAlert(
             this.translate.instant("admision.calculo_exito")
           );
+          this.recargarComponenteTabla();
         } else {
           this.popUpManager.showErrorToast(
             this.translate.instant("admision.calculo_error")
@@ -1054,5 +1056,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
       }
     }
     return undefined; // Retorna undefined si no se encuentra la clave
+  }
+
+  recargarComponenteTabla() {
+    this.key++; // Cambia la propiedad key para forzar la recreación del componente
   }
 }
