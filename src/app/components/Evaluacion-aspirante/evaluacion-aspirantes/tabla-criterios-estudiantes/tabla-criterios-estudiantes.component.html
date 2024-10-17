@@ -9,7 +9,7 @@
         <tr>
           <th rowspan="2">{{ translate.instant('admision.aspirante') }}</th>
           <ng-container *ngFor="let criterio of criterios">
-            <th [attr.colspan]="criterio.Asistencia ? 2 : 1">{{ criterio.Nombre }}</th>
+            <th [attr.colspan]="criterio.Asistencia ? 2 : 1">{{ criterio.Nombre }} ({{criterio.Porcentaje}}%)</th>
           </ng-container>
           <th rowspan="2">{{ translate.instant('admision.nota_final') }}</th>
         </tr>
