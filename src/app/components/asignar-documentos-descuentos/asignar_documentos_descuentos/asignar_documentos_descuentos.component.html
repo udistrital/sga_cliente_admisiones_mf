@@ -130,12 +130,9 @@
           </mat-card-content>
         </mat-card>
       </div>
-      <!-- <div
-        id="info_basica"
-        *ngIsGranted="['VICERRECTOR', 'ASESOR_VICE']"
-      > -->
       <div
         id="info_basica"
+        *isGranted="['ADMIN_SGA', 'VICERRECTOR', 'ASESOR_VICE']"
       >
         <mat-card
           class="exp-card"
