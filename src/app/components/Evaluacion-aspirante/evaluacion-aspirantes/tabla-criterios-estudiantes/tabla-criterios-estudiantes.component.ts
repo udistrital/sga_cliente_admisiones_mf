@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 @Component({
   selector: 'tabla-criterios-estudiantes',
@@ -8,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./tabla-criterios-estudiantes.component.scss']
 })
 export class TablaCriteriosEstudiantesComponent implements OnInit {
+  @Input() key: number = 0;
   @Input() periodo: number | null = null;
   @Input() proyecto: number | null = null;
 
@@ -20,7 +22,7 @@ export class TablaCriteriosEstudiantesComponent implements OnInit {
   isError: boolean = false; // Estado de error en la petición
   errorMessage: string = ''; // Mensaje de error en caso de falla
 
-  constructor(private http: HttpClient, public translate: TranslateService) {}
+  constructor(private http: HttpClient, public translate: TranslateService, private sgaAdmisionesMid: SgaAdmisionesMid) {}
 
   ngOnInit(): void {
     if (this.periodo && this.proyecto) {
@@ -45,8 +47,8 @@ export class TablaCriteriosEstudiantesComponent implements OnInit {
     this.isError = false;
     this.errorMessage = '';
 
-    const apiUrl = `http://localhost:8098/v1/admision/aspirantes/evaluados?id_periodo=${this.periodo}&id_proyecto=${this.proyecto}&id_nivel=2`;
-    this.http.get(apiUrl).subscribe(
+    const endPoint = `admision/aspirantes/evaluados?id_periodo=${this.periodo}&id_proyecto=${this.proyecto}&id_nivel=2`;
+    this.sgaAdmisionesMid.get(endPoint).subscribe(
       (response: any) => {
         if (response.Success && response.Data) {
           this.criterios = response.Data.criterios;
@@ -57,7 +59,7 @@ export class TablaCriteriosEstudiantesComponent implements OnInit {
         }
         this.isLoading = false;
       },
-      error => {
+      (error:any) => {
         this.isError = true;
         this.errorMessage = this.translate.instant('admision.error_cargar_datos', { error: error.message });
         this.isLoading = false;
@@ -70,7 +72,7 @@ export class TablaCriteriosEstudiantesComponent implements OnInit {
         return '-';
     }
     const criterioEvaluacion = evaluacion.criterios.find((c: any) => c.criterioId === criterioId);
-    return criterioEvaluacion ? criterioEvaluacion.NotaRequisito : '-';
+    return criterioEvaluacion ? (criterioEvaluacion.NotaRequisito * 100)/criterioEvaluacion.porcentajeGeneral : '-';
   }
 
   getAsistencia(evaluacion: any, criterioId: number): string {
