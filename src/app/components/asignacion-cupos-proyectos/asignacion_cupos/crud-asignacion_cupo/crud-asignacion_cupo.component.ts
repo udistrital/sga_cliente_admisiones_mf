@@ -48,13 +48,11 @@ export class CrudAsignacionCupoComponent implements OnInit {
     private sgaAdmisionesService: SgaAdmisionesMid
 
   ) {
-    console.log(this.tipo_inscripcion)
   }
 
   obtenerCupos() {
-    this.inscripcionMidService.get(`cupos`).subscribe(
+    this.inscripcionMidService.get(`cupos/` + this.info_periodo.Id + '/' + this.info_proyectos.Id + '/' + this.tipo_inscripcion.Id).subscribe(
       (response:any) => {
-        console.log(response)
         response.Data.forEach((element: any) => {
           this.cuposAdmitidos = this.cuposAdmitidos + element.CuposHabilitados
           this.cuposOpcionados = this.cuposOpcionados + element.CuposOpcionados
@@ -115,7 +113,10 @@ export class CrudAsignacionCupoComponent implements OnInit {
           NombreInscripcion: (this.dataSource.data[0] && this.dataSource.data[0].NombreInscripcion) ? this.dataSource.data[0].NombreInscripcion : this.tipo_inscripcion.Nombre,
           CuposHabilitados: element.CuposHabilitados,
           CuposOpcionados: element.CuposOpcionados,
-          CupoId: element.Id
+          CupoId: element.Id,
+          PeriodoId: this.info_periodo.Id,
+          ProyectoAcademicoId: this.info_proyectos.Id,
+          TipoInscripcionId : this.tipo_inscripcion.Id
         }
         this.dataSource.data.push(registro)
         this.dataSource.paginator = this.paginator;
@@ -138,7 +139,7 @@ export class CrudAsignacionCupoComponent implements OnInit {
       ProyectoAcademicoId: cupo.ProyectoAcademicoId,
       TipoInscripcionId: { Id: cupo.TipoInscripcionId },
     }
-    this.inscripcion.put(`cupo_inscripcion/` + cupo.Id, data).subscribe((response: any) => {
+    this.inscripcion.put(`cupo_inscripcion/` + cupo.CupoId, data).subscribe((response: any) => {
       if (response != null || response != undefined || response != "") {
         alert("Cupo eliminado con exito");
         this.dataSource.data = [];
