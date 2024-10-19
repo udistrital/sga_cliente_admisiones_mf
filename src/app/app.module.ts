@@ -125,7 +125,10 @@ import { TiposCuposComponent } from './components/asignacion-cupos-proyectos/asi
 import { SoporteCupoInscripcionComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/soporte-cupo-inscripcion/soporte-cupo-inscripcion.component';
 import { CrudDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/crud-descuento-proyecto/crud-descuento-proyecto.component';
 import { ReportesComponent } from './components/reportes/reportes.component';
-
+import { ListService } from './store/services/list.service';
+import { IsGrantedDirective } from './directives/is-granted.directive';
+import { TablaCriteriosEstudiantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/tabla-criterios-estudiantes/tabla-criterios-estudiantes.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
@@ -218,8 +221,12 @@ export function createTranslateLoader(http: HttpClient) {
     SoporteCupoInscripcionComponent,
     CrudDescuentoProyectoComponent,
     ReportesComponent,
+    IsGrantedDirective,
+    TablaCriteriosEstudiantesComponent,
+    
   ],
   imports: [
+    NgxPaginationModule,
     CodificacionModule,
     NgxDocViewerModule,
     FormsModule,
@@ -284,6 +291,7 @@ export function createTranslateLoader(http: HttpClient) {
     SgaCalendarioMidService,
     SgaProyectoAcademicoService,
     EventosService,
+    ListService,
     { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }
   ],
   bootstrap: [AppComponent],

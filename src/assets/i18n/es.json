@@ -1679,7 +1679,25 @@
     "crear_subcriterio" : "Crear subcriterio",
     "vigencia" : "Vigencia de un examen de estado",
     "titulo_aspirantes_no_encontrados": "No se encontraron aspirantes",
-    "aspirantes_no_oficializados_no_encontrados": "No se encontraron aspirantes no oficializados"
+    "aspirantes_no_oficializados_no_encontrados": "No se encontraron aspirantes no oficializados",
+    "filtrar-aspirantes": "Filtrar aspirantes",
+    "actualizacion_aspirantes_puntaje_minimo": "Actualización de aspirantes por puntaje mínimo",
+    "exito_actualizar_aspirantes": "Actualización existosa de los aspirantes",
+    "error_actualizar_aspirantes": "Ocurrio un error tratando de actualizar los aspirantes",
+    "cargando": "Cargando datos, por favor espere...",
+    "no_datos": "No se encontraron datos",
+    "error_cargar_datos": "Error al cargar los datos: {{ error }}",
+    "si": "Sí",
+    "no": "No",
+    "nota_final": "Nota Final",
+    "n": "N",
+    "a": "A",
+    "mostrar": "Mostrar",
+    "todos": "Todos",
+    "registros_por_pagina": "registros por página",
+    "anterior": "« Anterior",
+    "siguiente": "Siguiente »",
+    "no_datos_mostrar": "No hay datos para mostrar."
   },
   "oficializados": {
     "titulo": "Oficialización",
@@ -1761,7 +1779,13 @@
         "warn_descripcion": "Por favor, Ingresa la descripcion del tipo de cupo",
         "warn_codigo_abreviacion": "Por favor, Ingresa el codigo de abreviacion del tipo de cupo",
         "warn_numero_orden": "Por favor, Ingresa el numero de orden del tipo de cupo",
-        "cupos_disponibles_label": "Cupos disponibles"
+        "cupos_disponibles_label": "Cupos disponibles",
+        "errorCupos": "Error al obtener los cupos",
+        "cupoEliminado": "Cupo eliminado con exito",
+        "cargar_cantidad_cupos": "Cargar cantidad de cupos habilitado y opcionados",
+        "documento_guardado": "Documento guardado con exito",
+        "error_guardar_documento": "Error al guardar el documento"
+        
   },
   "calendario": {
     "seguro_continuar_inhabilitar_calendario": "¿Está seguro de inhabilitar este calendario?",
@@ -2755,6 +2779,10 @@
     "admitido": "Admitido: ",
     "opcionado": "Opcionado: ",
     "no_admitido": "No admitido: ",
+    "admitido_legalizado": "Admitido legalizado: ",
+    "admitido_observacion": "Admitido con Observacion: ",
+    "matriculado": "Matriculado: ",
+    "no_oficializado": "No Oficializado: ",
     "inscrito": "Inscrito: ",
     "inscrito_ob": "Inscrito con observación: ",
     "total": "Total aspirantes: ",
@@ -2799,8 +2827,9 @@
     "listado": "Listado de aspirantes registrados",
     "evaluar_criterio": "Evaluar criterio",
     "revision_curricular": "Enviar para revisión al proyecto curricular",
-    "descargar_pdf": "Descargar listado (PDF/Excel)",
-    "definir_admitidos": "Definir listas de admitidos"
+    "descargar_pdf": "Descargar listado (Excel)",
+    "definir_admitidos": "Definir listas de admitidos",
+    "error_descarga": "Error al descargar el archivo"
   },
   "evaluacion-admitidos": {
     "titulo": "Listado admitidos",
