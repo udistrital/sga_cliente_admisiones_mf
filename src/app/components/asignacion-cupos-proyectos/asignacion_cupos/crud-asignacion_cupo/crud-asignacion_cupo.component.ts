@@ -135,7 +135,7 @@ export class CrudAsignacionCupoComponent{
 
   EliminarCupo(cupo: any) {
     const data = {
-      Activo: !cupo.Activo,
+      Activo: false,
       CupoId: cupo.CupoId,
       CuposHabilitados: cupo.CuposHabilitados,
       CuposOpcionados: cupo.CuposOpcionados,
@@ -147,7 +147,7 @@ export class CrudAsignacionCupoComponent{
       ProyectoAcademicoId: cupo.ProyectoAcademicoId,
       TipoInscripcionId: { Id: cupo.TipoInscripcionId },
     }
-    this.inscripcion.put(`cupo_inscripcion/` + cupo.CupoId, data).subscribe((response: any) => {
+    this.inscripcion.put(`cupo_inscripcion/` + cupo.Id, data).subscribe((response: any) => {
       if (response != null || response != undefined || response != "") {
         
         this.popUpManager.showErrorAlert(this.translate.instant('cupos.cupoEliminado'));
