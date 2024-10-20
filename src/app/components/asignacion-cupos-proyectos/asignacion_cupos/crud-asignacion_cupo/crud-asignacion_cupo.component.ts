@@ -22,7 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: "./crud-asignacion_cupo.component.html",
   styleUrls: ["./crud-asignacion_cupo.component.scss"],
 })
-export class CrudAsignacionCupoComponent implements OnInit {
+export class CrudAsignacionCupoComponent{
 
   cupo: any;
   cuposAdmitidos: number = 0;
@@ -47,15 +47,18 @@ export class CrudAsignacionCupoComponent implements OnInit {
     private dialogService: MatDialog,
     private translate: TranslateService,
     private inscripcion: InscripcionService,
-    private inscripcionMidService: InscripcionMidService,
-    private sgaAdmisionesService: SgaAdmisionesMid
+    private inscripcionMidService: InscripcionMidService
 
-  ) {}
+  ) {
+    this.dataSource = new MatTableDataSource<any>([]);
+    this.dataSource.paginator = this.paginator;
+  }
 
   obtenerCupos() {
     this.inscripcionMidService.get(`cupos/` + this.info_periodo.Id + '/' + this.info_proyectos.Id + '/' + this.tipo_inscripcion.Id).subscribe(
       (response:any) => {
         if (response.Data == null) {
+          this.dataSource.data = [];
           this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), response.Message);
           return;
         }
@@ -64,8 +67,7 @@ export class CrudAsignacionCupoComponent implements OnInit {
           this.cuposOpcionados = this.cuposOpcionados + element.CuposOpcionados
           this.cuposDisponibles = this.cuposDisponibles + element.CuposDisponibles
         });
-        this.dataSource = new MatTableDataSource(response.Data)
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.data = response.Data;
       },
       (error:Error) => {
         this.popUpManager.showErrorAlert(this.translate.instant('cupos.errorCupos'));
@@ -227,17 +229,9 @@ export class CrudAsignacionCupoComponent implements OnInit {
     }
   }
 
-
-  ngOnInit(): void {
-    this.obtenerCupos();
-  }
-
-
-
-
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['tipo_inscripcion'] && changes['tipo_inscripcion'].currentValue) {
-    }
+    console.log('changes',changes)
+    this.obtenerCupos();
   }
 
 
