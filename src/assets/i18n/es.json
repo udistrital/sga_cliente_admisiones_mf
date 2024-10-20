@@ -628,7 +628,8 @@
     "first_page": "Primera página",
     "last_page": "Última página",
     "of": "de",
-    "ir_observacion": "Ir a observación"
+    "ir_observacion": "Ir a observación",
+    "cargado": "Cargado"
   },
   "ERROR": {
     "general": "La solicitud no pudo ser cumplida",
@@ -1784,7 +1785,8 @@
         "cupoEliminado": "Cupo eliminado con exito",
         "cargar_cantidad_cupos": "Cargar cantidad de cupos habilitado y opcionados",
         "documento_guardado": "Documento guardado con exito",
-        "error_guardar_documento": "Error al guardar el documento"
+        "error_guardar_documento": "Error al guardar el documento",
+        "soporte": "Soporte documento"
         
   },
   "calendario": {
