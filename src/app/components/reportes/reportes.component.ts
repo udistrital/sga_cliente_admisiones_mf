@@ -22,7 +22,6 @@ export interface Estudiante {
   edad: number;
   sexo: string;
   estado_inscripcion: string;
-  estado_admision: string;
 }
 @Component({
   selector: 'app-reportes',
@@ -63,8 +62,7 @@ export class ReportesComponent implements OnInit {
     'tiempo_grado',
     'edad',
     'sexo',
-    'estado_inscripcion',
-    'estado_admision'
+    'estado_inscripcion'
   ];
 
   dataSource = new MatTableDataSource<Estudiante>([]);
@@ -141,8 +139,7 @@ export class ReportesComponent implements OnInit {
         tiempo_grado: '2 años',
         edad: 16,
         sexo: 'Masculino',
-        estado_inscripcion: 'Inscrito',
-        estado_admision: 'Aceptado'
+        estado_inscripcion: 'Inscrito'
       },
       {
         nombres: 'María',
@@ -159,8 +156,7 @@ export class ReportesComponent implements OnInit {
         tiempo_grado: '1 año',
         edad: 17,
         sexo: 'Femenino',
-        estado_inscripcion: 'Inscrito',
-        estado_admision: 'Pendiente'
+        estado_inscripcion: 'Inscrito'
       },
       {
         nombres: 'Carlos',
@@ -177,8 +173,7 @@ export class ReportesComponent implements OnInit {
         tiempo_grado: '3 años',
         edad: 18,
         sexo: 'Masculino',
-        estado_inscripcion: 'Inscrito',
-        estado_admision: 'Rechazado'
+        estado_inscripcion: 'Inscrito'
       },
       {
         nombres: 'Ana',
@@ -195,8 +190,7 @@ export class ReportesComponent implements OnInit {
         tiempo_grado: '6 meses',
         edad: 15,
         sexo: 'Femenino',
-        estado_inscripcion: 'No Inscrito',
-        estado_admision: 'N/A'
+        estado_inscripcion: 'No Inscrito'
       },
       {
         nombres: 'Luis',
@@ -213,8 +207,7 @@ export class ReportesComponent implements OnInit {
         tiempo_grado: '1 año',
         edad: 19,
         sexo: 'Masculino',
-        estado_inscripcion: 'Inscrito',
-        estado_admision: 'Aceptado'
+        estado_inscripcion: 'Inscrito'
       }
     ];
     this.dataSource.data = estudiantes;
