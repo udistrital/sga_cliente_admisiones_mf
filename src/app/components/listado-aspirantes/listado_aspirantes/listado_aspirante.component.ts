@@ -205,7 +205,7 @@ export class ListadoAspiranteComponent implements OnInit, OnChanges {
 
     cargarCantidadCupos() {
         // this.evaluacionService.get('cupos_por_dependencia?query=DependenciaId:' + Number(this.proyectos_selected.Id) + ',PeriodoId:' + Number(this.periodo.Id) + '&limit=1').subscribe(
-            this.inscripcionService.get('cupo_inscripcion?query=ProgramaAcademicoId:' + Number(this.proyectos_selected.Id) + ',PeriodoId:' + Number(this.periodo.Id) + '&limit=1').subscribe(
+            this.inscripcionService.get('cupo_inscripcion?query=ProyectoAcademicoId:' + Number(this.proyectos_selected.Id) + ',PeriodoId:' + Number(this.periodo.Id) + ',Activo:true&limit=1').subscribe(
             (response: any) => {
                 if (response !== null && response !== undefined && response[0].Id !== undefined) {
                     this.cuposProyecto = response[0].CuposHabilitados;
