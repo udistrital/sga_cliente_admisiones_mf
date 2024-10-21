@@ -940,7 +940,16 @@
     "Acciones": "Acciones",
     "SelectNivel": "Selecciona el nivel",
     "SelectTipoInscripcion": "Selecciona el tipo de inscripcion",
-    "SelectEstadoInscripcion": "Selecciona el estado de la inscripción"
+    "SelectEstadoInscripcion": "Selecciona el estado de la inscripción",
+    "titulo_reportes": "Gestión de Reportes Académicos",
+    "subtitulo_reportes": "Por favor, seleccione el período académico, proceso, nivel y proyecto curricular para acceder a la información correspondiente.",
+    "seleccione_periodo_tipo": "Paso 1: Selección de Parámetros Académicos",
+    "reporte_tabla": "Paso 2: Revisión de Parámetros Seleccionados",
+    "periodo_academico": "Seleccione el Período Académico",
+    "proceso_academico": "Proceso Académico:",
+    "proyecto_academico": "Proyecto Curricular:",
+    "nivel_academico": "Nivel Académico:"
+
   },
   "evento": {
     "evento": "Evento",
