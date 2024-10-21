@@ -1736,7 +1736,8 @@
         "cargar_soporte":"Cargar soporte",
         "cargar_cantidad_cupos": "Load number of enabled and optional quotas",
         "documento_guardado": "Document saved successfully",
-        "error_guardar_documento": "Error saving document"
+        "error_guardar_documento": "Error saving document",
+        "soporte": "Support document"
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Are you sure to disable this calendar?",
