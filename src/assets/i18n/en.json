@@ -1737,7 +1737,16 @@
         "cargar_cantidad_cupos": "Load number of enabled and optional quotas",
         "documento_guardado": "Document saved successfully",
         "error_guardar_documento": "Error saving document",
-        "soporte": "Support document"
+        "soporte": "Support document",
+        "error_soporte_archivo": "Error loading the support, please add a file",
+        "error_soporte_comentario": "Error loading the support, please add a comment",
+        "asignanacion_automatica": "Automatic quota assignment",
+        "asignacion_automatica_explicacion": "Dear user, the system will sort the applicants by their highest score and proceed to assign the status of Admitted, Waitlisted, or Not Admitted according to the available capacity of defined slots. Applicants with the highest scores will be admitted until the available spots are filled; then, waitlist slots will be assigned, and finally, those without spots will be classified as not admitted.",
+        "asignado_estados":  "The statuses are being assigned to the applicants",
+        "procesando_inscritos": "Processing applicants: ",
+        "no_aspirantes_inscritos": "There are no registered applicants with state 'inscribed'",
+        "cupos_asignados": "Quotas assigned"
+        
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Are you sure to disable this calendar?",
