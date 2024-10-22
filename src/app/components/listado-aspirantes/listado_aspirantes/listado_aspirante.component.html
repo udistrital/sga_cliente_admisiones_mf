@@ -68,7 +68,23 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- RESUMEN 1 -->
+  <!-- Indicador de carga SVG -->
+  <div *ngIf="loading" class="loading-indicator">
+    <svg class="loading-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+      <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="25" y="50">
+        <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate>
+      </rect>
+      <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="85" y="50">
+        <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate>
+      </rect>
+      <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="145" y="50">
+        <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate>
+      </rect>
+    </svg>
+  </div>
+
+  <div *ngIf="!loading" class="content-cards">
+    <!-- RESUMEN 1 -->
   <mat-card style="border: 1px solid var(--primary)" *ngIf="mostrarConteos">
     <mat-card-header class="card-header">
       {{ "admision.resumen_estados_inscripcion" | translate }}
@@ -106,35 +122,34 @@
   </mat-card>
 
   <!-- RESUMEN 2 -->
-  <mat-card *ngIf="show_listado">
+  <mat-card *ngIf="show_listado && mostrarConteos">
     <mat-card-content class="card-content">
       <label
         >{{ "cupos.cupos_proyecto" | translate }}:
         <b>{{ cuposProyecto }}</b></label
       >
       <label
+        >{{ "cupos.cupos_opcionados" | translate }}:
+        <b>{{ cuposOpcionados }}</b></label
+      >
+      <label
         >{{ "cupos.cupos_disponibles" | translate }}
         <b>{{ cuposProyecto - cuposAsignados }}</b></label
       >
+      <!-- *ngIf="cuposProyecto - cuposAsignados > 0" -->
       <button
         mat-flat-button
         color="accent"
-        (click)="admitirInscritos()"
-        *ngIf="cuposProyecto - cuposAsignados > 0"
+        (click)="asignacionDeCuposPorPrioridad()"
+        
       >
-        {{ "GLOBAL.admitir" | translate }}
-        {{
-          inscritos.length < cuposProyecto - cuposAsignados
-            ? inscritos.length
-            : cuposProyecto - cuposAsignados
-        }}
-        {{ "GLOBAL.aspirantes_inscritos" | translate }}
+        {{ "cupos.asignanacion_automatica" | translate }}
       </button>
     </mat-card-content>
   </mat-card>
 
   <!-- TABLA -->
-  <mat-card *ngIf="show_listado">
+  <mat-card *ngIf="show_listado && mostrarConteos">
     <mat-card-content>
       <div class="table">
         <table mat-table [dataSource]="source_emphasys" matSort>
@@ -142,7 +157,6 @@
             <th
               mat-header-cell
               *matHeaderCellDef
-              mat-sort-header
               style="width: 2%"
             >
               #
@@ -153,7 +167,7 @@
           </ng-container>
 
           <ng-container matColumnDef="numero_documento">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef>
               {{ "GLOBAL.Documento" | translate }}
             </th>
             <td mat-cell *matCellDef="let row">
@@ -162,7 +176,7 @@
           </ng-container>
 
           <ng-container matColumnDef="nombre_completo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef >
               {{ "GLOBAL.Nombre" | translate }}
             </th>
 
@@ -172,28 +186,28 @@
           </ng-container>
 
           <ng-container matColumnDef="Telefono">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef >
               {{ "GLOBAL.telefono" | translate }}
             </th>
 
             <td mat-cell *matCellDef="let row">{{ row.Telefono }}</td>
           </ng-container>
           <ng-container matColumnDef="correoelectronico">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef >
               {{ "GLOBAL.correo_principal" | translate }}
             </th>
 
             <td mat-cell *matCellDef="let row">{{ row.Email }}</td>
           </ng-container>
           <ng-container matColumnDef="Puntaje">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef >
               {{ "GLOBAL.Puntaje" | translate }}
             </th>
 
             <td mat-cell *matCellDef="let row">{{ row.NotaFinal }}</td>
           </ng-container>
           <ng-container matColumnDef="tipo_de_inscripcion">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef >
               {{ "GLOBAL.TipoInscripcion" | translate }}
             </th>
 
@@ -202,7 +216,7 @@
             </td>
           </ng-container>
           <ng-container matColumnDef="enfasis">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef >
               {{ "enfasis.enfasis" | translate }}
             </th>
 
@@ -210,7 +224,7 @@
           </ng-container>
 
           <ng-container matColumnDef="estado">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef >
               {{ "GLOBAL.Estado" | translate }}
             </th>
 
@@ -228,6 +242,7 @@
                 <mat-select
                   [(value)]="row.NuevoEstadoInscripcionId"
                   style="color: black"
+                  (valueChange)="onSaveConfirm(row)"
                 >
                   <mat-option
                     >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
@@ -259,7 +274,7 @@
           </ng-container>
 
           <ng-container matColumnDef="estado_de_recibo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef >
               {{ "inscripcion.estado_recibo" | translate }}
             </th>
 
@@ -277,7 +292,7 @@
           >
 
           <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
+            <th mat-header-cell *matHeaderCellDef >Acciones</th>
             <td mat-cell *matCellDef="let row">
               <!-- BOTONES DE EDITAR -->
               <div class="container-actions">
@@ -294,15 +309,6 @@
 
                 <!-- BOTONES DE CONFIRMAR O CANCELAR -->
                 <ng-container *ngIf="row.mostrarBotones">
-                  <button
-                    mat-icon-button
-                    color="accent"
-                    (click)="onSaveConfirm({ newData: row })"
-                    [disabled]="!hasTransition(row.EstadoInscripcionId.Nombre)"
-                    [hidden]="!hasTransition(row.EstadoInscripcionId.Nombre)"
-                  >
-                    <mat-icon>check</mat-icon>
-                  </button>
                   <button
                     mat-icon-button
                     color="warn"
@@ -322,7 +328,7 @@
           ></tr>
 
           <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4">
+            <td class="mat-cell" [attr.colspan]="source_emphasysColumns.length">
               {{ "calendario.sin_procesos" | translate }}
             </td>
           </tr>
@@ -330,11 +336,12 @@
       </div>
       <mat-paginator
         #paginator
-        [pageSize]="5"
+        [pageSize]="cantidad_aspirantes"
         [showFirstLastButtons]="true"
         [pageSizeOptions]="[5, 10, 25, 50]"
       >
       </mat-paginator>
     </mat-card-content>
   </mat-card>
+  </div>
 </main>
