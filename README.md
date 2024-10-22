@@ -18,7 +18,6 @@ Cliente para la gestión de admisiones, parte del Sistema de Gestión Académica
 - [Zone.js](https://github.com/angular/angular/tree/master/packages/zone.js) ~0.13.0
 
 
-
 ### Variables de Entorno
 
 ```javascript
