@@ -32,6 +32,7 @@ export class CrudAsignacionCupoComponent{
   errorMessage!: string;
   dataSource = new MatTableDataSource<any>();
   displayedColumns: string[] = ['nombre', 'descripcion', 'estado', 'tipo', 'cuposhabilitados', "cuposopcionados", "cuposDisponibles", "soporte", 'acciones'];
+  loading: boolean = false;
 
   @Input() info_periodo: any;
   @Input() info_proyectos: any;
@@ -62,6 +63,9 @@ export class CrudAsignacionCupoComponent{
           this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), response.Message);
           return;
         }
+        this.cuposAdmitidos = 0
+        this.cuposOpcionados = 0
+        this.cuposDisponibles = 0
         response.Data.forEach((element: any) => {
           this.cuposAdmitidos = this.cuposAdmitidos + element.CuposHabilitados
           this.cuposOpcionados = this.cuposOpcionados + element.CuposOpcionados
@@ -158,10 +162,12 @@ export class CrudAsignacionCupoComponent{
   }
 
   onAction(event: any) {
-    if (event.action == 'eliminar' && event.data.Id == undefined) {
-      this.dataSource.data = this.dataSource.data.filter((item: any) => item.Nombre !== event.data.Nombre);
-    } else {
-      this.EliminarCupo(event.data)
+    if (event.action == 'eliminar') {
+      if (event.data.Id == undefined){
+        this.dataSource.data = this.dataSource.data.filter((item: any) => item.Nombre !== event.data.Nombre);
+      } else {
+        this.EliminarCupo(event.data)
+      }
     }
     if (event.action == 'soporte') {
       this.CargarSoporte(event.data)
@@ -191,18 +197,21 @@ export class CrudAsignacionCupoComponent{
 
 
   async guardarCupos() {
+    this.loading = true;
     let Validar = true;
     this.dataSource.data.forEach((element: any) => {
       if (element.Id == undefined) {
         if (element.base64 == undefined || element.Comentario == undefined || element.base64 == "" || element.Comentario == "") {
           Validar = false;
           this.popUpManager.showErrorAlert(this.translate.instant('cupos.cargar_soporte'));
+          this.loading = false;
           return;
         }
 
         if (element.CuposOpcionados == undefined || element.CuposHabilitados == undefined || element.CuposDisponibles == undefined || element.cuposOpcionados == 0 || element.cuposHabilitados == 0 || element.CuposDisponibles == 0) {
           Validar = false;
           this.popUpManager.showErrorAlert(this.translate.instant('cupos.cargar_cantidad_cupos'));
+          this.loading = false;
           return;
         }
       }
@@ -218,14 +227,17 @@ export class CrudAsignacionCupoComponent{
               this.dataSource.data = [];
               this.obtenerCupos();
             }
+            this.loading = false;
           },
           (error) => {
             console.error(error);
             this.popUpManager.showErrorAlert(this.translate.instant('cupos.error_guardar_documento'));
+            this.loading = false;
           }
         );
       }, 3000);
-
+    } else {
+      this.loading = false;
     }
   }
 
