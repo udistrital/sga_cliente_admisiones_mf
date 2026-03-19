@@ -155,6 +155,7 @@ export class ListadoAspiranteComponent implements OnInit {
     private popUpManager: PopUpManager,
     private inscripcionService: InscripcionService,
     private inscripcionMidService: InscripcionMidService,
+    private evaluacionInscripcionService: EvaluacionInscripcionService,
     private usuarioService: UserService,
     private tercerosService: TercerosService,
     private proyectoAcademicoService: ProyectoAcademicoService,
@@ -259,9 +260,9 @@ export class ListadoAspiranteComponent implements OnInit {
   }
 
   cargarCantidadCupos() {
-    this.inscripcionService
+    this.evaluacionInscripcionService
       .get(
-        "cupo_inscripcion?query=ProyectoAcademicoId:" +
+        "cupos_por_dependencia?query=DependenciaId:" +
           Number(this.proyectos_selected.Id) +
           ",PeriodoId:" +
           Number(this.periodo.Id) +

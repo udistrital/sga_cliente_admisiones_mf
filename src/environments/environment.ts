@@ -19,7 +19,7 @@ export const environment = {
     AUTENTICACION_MID: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/autenticacion_mid/v1/token/userRol',
   },
 
-  TERCEROS_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8121/v1/',
+  TERCEROS_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/terceros_crud/v1/',
   DOCUMENTO_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8094/v1/',
   CORE_SERVICE: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8105/v1/',
   EVENTO_SERVICE: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8107/v1/',
@@ -29,7 +29,7 @@ export const environment = {
   // SGA_ADMISIONES_MID: 'http://localhost:8900/v1/',
 
   SGA_CALENDARIO_MID: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/',
-  SGA_INSCRIPCION_MID_SERVICE: 'http://pruebasapi3.intranetoas.udistrital.edu.co:8543/v1/',
+  SGA_INSCRIPCION_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_mid/v1/',
   INSCRIPCION_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_crud/v2/',
   IDIOMA_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/idiomas_crud/v2/',
   DESCUENTO_ACADEMICO_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/matriculas_descuentos_crud/v2/',
