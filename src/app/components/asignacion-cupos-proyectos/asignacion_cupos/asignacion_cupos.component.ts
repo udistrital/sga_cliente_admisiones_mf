@@ -56,6 +56,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
     this.cargarPeriodo();
     this.nivel_load();
+    this.inscripcion_load();
 
   }
 
@@ -107,6 +108,9 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     this.inscripcionService.get('tipo_inscripcion?query=Activo:true&limit=0').subscribe(
       (response: any) => {
         this.tipoinscripcion = response.filter((tipoInscripcion: any) => tipoInscripcion.Nombre != null)
+        if (!this.tipins_selected && this.tipoinscripcion.length > 0) {
+          this.tipins_selected = this.tipoinscripcion[0];
+        }
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));

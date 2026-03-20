@@ -7,14 +7,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { TiposCuposComponent } from '../tipos-cupos/tipos-cupos.component';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
-import { SoporteConfiguracionComponent } from 'src/app/components/soporte-configuracion/soporte-configuracion.component';
 import { SoporteCupoInscripcionComponent } from '../soporte-cupo-inscripcion/soporte-cupo-inscripcion.component';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
-import { Periodo } from 'src/app/models/periodo/periodo';
 import { __awaiter } from 'tslib';
-import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TranslateService } from '@ngx-translate/core';
+import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 
 @Component({
@@ -28,16 +26,30 @@ export class CrudAsignacionCupoComponent{
   cuposAdmitidos: number = 0;
   cuposOpcionados: number = 0;
   cuposDisponibles: number = 0;
+  show_posgrado: boolean = false;
+  show_calculos_cupos: boolean = false;
+  show_listado: boolean = false;
   base64String!: string;
   errorMessage!: string;
   dataSource = new MatTableDataSource<any>();
   displayedColumns: string[] = ['nombre', 'descripcion', 'estado', 'tipo', 'cuposhabilitados', "cuposopcionados", "cuposDisponibles", "soporte", 'acciones'];
   loading: boolean = false;
 
+  formModel: any = {
+    CuposAsignados: null,
+    CuposOpcionados: null,
+  };
+  errors: any = {};
+
+
   @Input() info_periodo: any;
   @Input() info_proyectos: any;
   @Input() info_nivel!: boolean;
   @Input() tipo_inscripcion!: any;
+  @Input() autoPrecargaCupos: boolean = true;
+  @Input() inicializarCerosSinCupos: boolean = true;
+  @Input() mostrarAlertaSinCupos: boolean = true;
+  @Input() endpointCupos: string = 'cupos';
   @Output() eventChange = new EventEmitter();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @Output('result') result: EventEmitter<any> = new EventEmitter();
@@ -48,7 +60,8 @@ export class CrudAsignacionCupoComponent{
     private dialogService: MatDialog,
     private translate: TranslateService,
     private inscripcion: InscripcionService,
-    private inscripcionMidService: InscripcionMidService
+    private inscripcionMidService: InscripcionMidService,
+    private sgaAdmisionesMid: SgaAdmisionesMid
 
   ) {
     this.dataSource = new MatTableDataSource<any>([]);
@@ -56,11 +69,24 @@ export class CrudAsignacionCupoComponent{
   }
 
   obtenerCupos() {
-    this.inscripcionMidService.get(`cupos/` + this.info_periodo.Id + '/' + this.info_proyectos.Id + '/' + this.tipo_inscripcion.Id).subscribe(
+    if (!this.info_periodo?.Id || !this.info_proyectos?.Id || !this.tipo_inscripcion?.Id) {
+      this.dataSource.data = [];
+      this.formModel.CuposAsignados = null;
+      this.formModel.CuposOpcionados = null;
+      return;
+    }
+
+    this.inscripcionMidService.get(`${this.endpointCupos}/` + this.info_periodo.Id + '/' + this.info_proyectos.Id + '/' + this.tipo_inscripcion.Id).subscribe(
       (response:any) => {
         if (response.Data == null) {
           this.dataSource.data = [];
-          this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), response.Message);
+          if (this.inicializarCerosSinCupos) {
+            this.formModel.CuposAsignados = 0;
+            this.formModel.CuposOpcionados = 0;
+          }
+          if (this.mostrarAlertaSinCupos) {
+            this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), response.Message);
+          }
           return;
         }
         this.cuposAdmitidos = 0
@@ -71,10 +97,77 @@ export class CrudAsignacionCupoComponent{
           this.cuposOpcionados = this.cuposOpcionados + element.CuposOpcionados
           this.cuposDisponibles = this.cuposDisponibles + element.CuposDisponibles
         });
+        this.formModel.CuposAsignados = this.cuposAdmitidos;
+        this.formModel.CuposOpcionados = this.cuposOpcionados;
         this.dataSource.data = response.Data;
       },
       (error:Error) => {
         this.popUpManager.showErrorAlert(this.translate.instant('cupos.errorCupos'));
+      }
+    );
+  }
+
+  submitForm() {
+    this.errors = {};
+    const cuposAsignados = Number(this.formModel.CuposAsignados);
+    const cuposOpcionados = Number(this.formModel.CuposOpcionados || 0);
+
+    if (Number.isNaN(cuposAsignados) || cuposAsignados < 0 || cuposAsignados > 999) {
+      this.errors.CuposAsignados = this.translate.instant('cupos.cargar_cantidad_cupos');
+      return;
+    }
+    if (!this.show_posgrado && (Number.isNaN(cuposOpcionados) || cuposOpcionados < 0 || cuposOpcionados > 999)) {
+      this.errors.CuposOpcionados = this.translate.instant('cupos.cargar_cantidad_cupos');
+      return;
+    }
+
+    this.cuposAdmitidos = cuposAsignados;
+    this.cuposOpcionados = this.show_posgrado ? 0 : cuposOpcionados;
+    this.cuposDisponibles = Math.max(cuposAsignados - this.cuposOpcionados, 0);
+    this.show_calculos_cupos = true;
+    this.show_listado = true;
+
+    const cuposEspeciales = this.show_posgrado
+      ? {
+          ComunidadesNegras: '0',
+          DesplazadosVictimasConflicto: '0',
+          ComunidadesIndiginas: '0',
+          MejorBachiller: '0',
+          Ley1084: '0',
+          ProgramaReincorporacion: '0',
+        }
+      : {
+          ComunidadesNegras: String(Math.trunc((this.cuposAdmitidos / 40) * 2)),
+          DesplazadosVictimasConflicto: String(Math.trunc((this.cuposAdmitidos / 40) * 1)),
+          ComunidadesIndiginas: String(Math.trunc((this.cuposAdmitidos / 40) * 2)),
+          MejorBachiller: String(Math.trunc((this.cuposAdmitidos / 40) * 1)),
+          Ley1084: '1',
+          ProgramaReincorporacion: '1',
+        };
+
+    const payload = {
+      CuposAsignados: this.cuposAdmitidos,
+      CuposOpcionados: this.cuposOpcionados,
+      CuposEspeciales: cuposEspeciales,
+      Proyectos: [this.info_proyectos],
+      Periodo: this.info_periodo,
+    };
+
+    this.loading = true;
+    this.sgaAdmisionesMid.post('admision/cupos', payload).subscribe(
+      (response: any) => {
+        if (response && response.Status === '200') {
+          this.popUpManager.showSuccessAlert(this.translate.instant('cupos.documento_guardado'));
+          this.eventChange.emit(true);
+          this.obtenerCupos();
+        } else {
+          this.popUpManager.showErrorAlert(this.translate.instant('cupos.error_guardar_documento'));
+        }
+        this.loading = false;
+      },
+      () => {
+        this.popUpManager.showErrorAlert(this.translate.instant('cupos.error_guardar_documento'));
+        this.loading = false;
       }
     );
   }
@@ -243,7 +336,10 @@ export class CrudAsignacionCupoComponent{
 
   ngOnChanges(changes: SimpleChanges) {
     console.log('changes',changes)
-    this.obtenerCupos();
+    this.show_posgrado = !!this.info_nivel;
+    if (this.autoPrecargaCupos) {
+      this.obtenerCupos();
+    }
   }
 
 

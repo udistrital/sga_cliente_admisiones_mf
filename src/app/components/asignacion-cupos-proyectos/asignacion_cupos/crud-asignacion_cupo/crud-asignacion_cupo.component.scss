@@ -51,3 +51,9 @@
 .loading-svg { /* Ajusta el tamaño del SVG */
   height: 2.5em; /* Ajusta el tamaño del SVG */
 }
+
+.actions-row {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
