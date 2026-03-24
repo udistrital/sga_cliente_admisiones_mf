@@ -44,8 +44,8 @@
         "semestre": "Semester",
         "generar": "Generate",
         "consultar": "Consult",
-        "facultad":"Faculty",
-        "descargar":"Download",
+        "facultad": "Faculty",
+        "descargar": "Download",
         "aspirantes_inscritos": "Enrolled Applicants",
         "click_aqui": "Click here",
         "detalle": "Detail",
@@ -1666,7 +1666,6 @@
         "siguiente": "Next »",
         "no_datos_mostrar": "No data to display."
     },
-    
     "oficializados": {
         "titulo": "Officialization",
         "mensaje": "This module will support you in the process of purifying the list of those admitted that have been made official; In turn, it will release the places for people who have not completed the process.",
@@ -1705,7 +1704,7 @@
         "aviso_proyecto_actualizar": "Select the academic projects you wish to update status",
         "aviso_proyec": "Select the academic project you wish to list",
         "erro_selec_nivel": "Please select the level!",
-        "selec_cuenta":"Select the account",
+        "selec_cuenta": "Select the account",
         "erro_selec_proyecto": "Please select at least one project!",
         "cupos": "Definition of quotas for the period and the selected academic projects",
         "asignar": "Assign quotas",
@@ -1733,20 +1732,20 @@
         "cupos_disponibles_label": "Available places",
         "errorCupos": "Error getting quotas",
         "cupoEliminado": "Quota successfully removed",
-        "cargar_soporte":"Cargar soporte",
+        "cargar_soporte": "Cargar soporte",
         "cargar_cantidad_cupos": "Load number of enabled and optional quotas",
         "documento_guardado": "Document saved successfully",
         "error_guardar_documento": "Error saving document",
         "soporte": "Support document",
+        "error_cupos_asignados": "Please enter a valid value for the assigned places",
         "error_soporte_archivo": "Error loading the support, please add a file",
         "error_soporte_comentario": "Error loading the support, please add a comment",
         "asignanacion_automatica": "Automatic quota assignment",
         "asignacion_automatica_explicacion": "Dear user, the system will sort the applicants by their highest score and proceed to assign the status of Admitted, Waitlisted, or Not Admitted according to the available capacity of defined slots. Applicants with the highest scores will be admitted until the available spots are filled; then, waitlist slots will be assigned, and finally, those without spots will be classified as not admitted.",
-        "asignado_estados":  "The statuses are being assigned to the applicants",
+        "asignado_estados": "The statuses are being assigned to the applicants",
         "procesando_inscritos": "Processing applicants: ",
         "no_aspirantes_inscritos": "There are no registered applicants with state 'inscribed'",
         "cupos_asignados": "Quotas assigned"
-        
     },
     "calendario": {
         "seguro_continuar_inhabilitar_calendario": "¿Are you sure to disable this calendar?",
@@ -2596,13 +2595,13 @@
     },
     "liquidacion": {
         "recibos": "Curriculum project information",
-        "detalle":"Detail",
+        "detalle": "Detail",
         "concepto_base": "Base concept",
         "conceptos_descuentos": "Discount concepts",
         "fechas_pago_cuotas": "Payment dates",
         "nombres_apellidos": "Names and surnames",
         "consulta_historica": "Consultation of historical liquidation list",
-        "info_1":"Curricular project information",
+        "info_1": "Curricular project information",
         "cuotas": "Quotas",
         "primera_cuota": "First quota",
         "segunda_cuota": "Second quota",
@@ -2759,5 +2758,4 @@
     "BUTTON_GENERAR_CODIGOS": "Generate Codes",
     "BUTTON_GENERAR_CODIFICACION": "Assign Codification",
     "TABLE_COLUMNA_PUNTAJE": "score"
-  
 }

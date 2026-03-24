@@ -56,6 +56,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
     this.cargarPeriodo();
     this.nivel_load();
+    this.inscripcion_load();
 
   }
 
@@ -79,7 +80,6 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
             resolve(this.periodo);
             const periodos = <any[]>res['Data'];
             periodos.forEach(element => {
-
               this.periodos.push(element);
             });
           }
@@ -91,15 +91,14 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   }
 
   nivel_load() {
-    this.projectService.get('nivel_formacion?limit=0').subscribe(
-      // (response: NivelFormacion[]) => {
-      (response: any) => {
-        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null)//&& nivel.Nombre === 'Posgrado')
+    this.projectService.get('nivel_formacion?limit=0').subscribe({
+      next: (response: any) => {
+        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.CodigoAbreviacion === 'POS');
       },
-      error => {
+      error: () => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
       },
-    );
+    });
   }
 
   inscripcion_load() {
@@ -107,6 +106,9 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     this.inscripcionService.get('tipo_inscripcion?query=Activo:true&limit=0').subscribe(
       (response: any) => {
         this.tipoinscripcion = response.filter((tipoInscripcion: any) => tipoInscripcion.Nombre != null)
+        if (!this.tipins_selected && this.tipoinscripcion.length > 0) {
+          this.tipins_selected = this.tipoinscripcion[0];
+        }
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
