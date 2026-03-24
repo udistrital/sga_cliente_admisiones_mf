@@ -80,7 +80,6 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
             resolve(this.periodo);
             const periodos = <any[]>res['Data'];
             periodos.forEach(element => {
-
               this.periodos.push(element);
             });
           }
@@ -92,15 +91,14 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   }
 
   nivel_load() {
-    this.projectService.get('nivel_formacion?limit=0').subscribe(
-      // (response: NivelFormacion[]) => {
-      (response: any) => {
-        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null)//&& nivel.Nombre === 'Posgrado')
+    this.projectService.get('nivel_formacion?limit=0').subscribe({
+      next: (response: any) => {
+        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.CodigoAbreviacion === 'POS');
       },
-      error => {
+      error: () => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
       },
-    );
+    });
   }
 
   inscripcion_load() {

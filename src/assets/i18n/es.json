@@ -949,7 +949,6 @@
     "proceso_academico": "Proceso Académico:",
     "proyecto_academico": "Proyecto Curricular:",
     "nivel_academico": "Nivel Académico:"
-
   },
   "evento": {
     "evento": "Evento",
@@ -1685,9 +1684,9 @@
     "titulo_programa_sin_requisitos": "Programa académico sin requisitos",
     "programa_sin_requisitos": "No se encontraron requisitos de evaluación para este programa académico",
     "ver_subcriterios": "Ver subcriterios",
-    "error_porcentaje_invalido" : "Los porcentajes no son válidos porque no suman el 100%.",
-    "crear_subcriterio" : "Crear subcriterio",
-    "vigencia" : "Vigencia de un examen de estado",
+    "error_porcentaje_invalido": "Los porcentajes no son válidos porque no suman el 100%.",
+    "crear_subcriterio": "Crear subcriterio",
+    "vigencia": "Vigencia de un examen de estado",
     "titulo_aspirantes_no_encontrados": "No se encontraron aspirantes",
     "aspirantes_no_oficializados_no_encontrados": "No se encontraron aspirantes no oficializados",
     "filtrar-aspirantes": "Filtrar aspirantes",
@@ -1735,7 +1734,6 @@
     "liberar_cupos": "Liberar cupos",
     "sugerir_usuarios": "Sugerir usuarios",
     "enviar_correos": "Enviar solicitud de correos institucionales"
- 
   },
   "cupos": {
     "aviso_periodo": "Período en el cual se define los cupos de admisión",
@@ -1750,7 +1748,7 @@
     "erro_selec_inscripcion": "Por favor seleccione el tipo de inscripción",
     "error_selec_nivel": "Por favor seleccione el nivel!",
     "erro_selec_proyecto": "Por favor seleccione al menos un proyecto!",
-    "cupos": "Definición de los cupos para el periodo y el/los proyectos curriculares selecionados",
+    "cupos": "Definición de los cupos para el periodo y el proyecto curricular selecionado",
     "asignar": "Asignar cupos",
     "selec_cuenta": "Seleccione la cuenta",
     "cupos_opcionados": "Número de cupos OPCIONADOS",
@@ -1761,7 +1759,9 @@
     "sin_cupos_periodo": "No se ha definido cupos para este periodo o proyecto curricular",
     "tipos_cupo": "Tipos de cupos",
     "crear_tipos_cupo": "Crear tipos de cupos",
+    "erro_selec_nivel": "Por favor, seleccione el nivel",
     "error_recuperar_tipos_cupo": "Error al recuperar los tipos de cupos",
+    "error_cupos_asignados": "Por favor digite un valor válido para los cupos asignados",
     "descripcion_crear_tipos_cupo": "¿Esta seguro/a de continuar con el registro del tipo de cupo?",
     "creacion_tipos_cupo_exito": "Creación exitosa del tipo de cupo",
     "creacion_tipos_cupo_fallo": "Ocurrio un error tratando de crear el tipo de cupo",
@@ -1804,7 +1804,6 @@
     "procesando_inscritos": "Procesando aspirantes inscritos: ",
     "no_aspirantes_inscritos": "No hay aspirantes con estado inscrito",
     "cupos_asignados": "Cupos asignados"
-        
   },
   "calendario": {
     "seguro_continuar_inhabilitar_calendario": "¿Está seguro de inhabilitar este calendario?",
@@ -2052,8 +2051,8 @@
     "tooltip_guargar": "Guardar",
     "tooltip_activar": "Activar tipo de inscripción",
     "seguro_activar_tipo_inscripcion": "¿Esta seguro de activar tipo de inscripción?",
-    "habilitar" : "Habilitar",
-    "deshabilitar" : "Deshabilitar"
+    "habilitar": "Habilitar",
+    "deshabilitar": "Deshabilitar"
   },
   "formacion_academica": {
     "no_data": "No existen datos registrados sobre formación académica",
