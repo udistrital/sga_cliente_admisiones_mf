@@ -89,6 +89,7 @@
           </mat-form-field>
         </section>
 
+        
         <!-- Tag de criterios -->
         <section class="container-tag-criterios">
           <div class="container">
@@ -151,6 +152,15 @@
               }}</span
             >
           </div>
+        </section>
+
+        <!-- Tabla de evaluacion -->
+        <section>
+         <tabla-criterios-estudiantes *ngIf="periodo && proyectos_selected" 
+          [periodo]="periodo.Id" 
+          [proyecto]="proyectos_selected"
+          [key]="key"
+        />
         </section>
       </div>
     </section>

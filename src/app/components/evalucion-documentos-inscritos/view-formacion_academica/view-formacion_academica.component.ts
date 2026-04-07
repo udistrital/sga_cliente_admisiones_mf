@@ -81,7 +81,7 @@ export class ViewFormacionAcademicaComponent implements OnInit {
   }
 
   loadData(): void {
-    this.inscripcionesMidService.get('academico/formacion/?Id=' + this.persona_id)
+    this.inscripcionesMidService.get('academico/formacion?Id=' + this.persona_id)
       .subscribe((response:any) => {
         if (response !== null && response.Status === 200 && (Object.keys(response.Data).length > 0)) {
           const data = <Array<any>>response.Data;

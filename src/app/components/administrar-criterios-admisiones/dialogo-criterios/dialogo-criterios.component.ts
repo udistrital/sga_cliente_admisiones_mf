@@ -51,10 +51,10 @@ export class DialogoCriteriosComponent implements OnInit {
         ExamenEstado: this.data.oldCriterio.ExamenEstado ? this.data.oldCriterio.ExamenEstado : false,
       });
       this.examenEstadoForm.setValue({
-        Saber11: this.data.oldCriterio.Subcriterios.find((subcriterio: any) => subcriterio.Nombre === 'Saber11') !== undefined,
-        SaberPro: this.data.oldCriterio.Subcriterios.find((subcriterio: any) => subcriterio.Nombre === 'SaberPro') !== undefined,
-        SPN: this.data.oldCriterio.Subcriterios.find((subcriterio: any) => subcriterio.Nombre === 'SPN') !== undefined,
-        ArchivoAdjunto: this.data.oldCriterio.Subcriterios.find((subcriterio: any) => subcriterio.Nombre === 'ArchivoAdjunto') !== undefined,
+        Saber11: this.data.oldCriterio?.Subcriterios?.find((subcriterio: any) => subcriterio.Nombre === 'Saber11') !== undefined,
+        SaberPro: this.data.oldCriterio?.Subcriterios?.find((subcriterio: any) => subcriterio.Nombre === 'SaberPro') !== undefined,
+        SPN: this.data.oldCriterio?.Subcriterios?.find((subcriterio: any) => subcriterio.Nombre === 'SPN') !== undefined,
+        ArchivoAdjunto: this.data.oldCriterio?.Subcriterios?.find((subcriterio: any) => subcriterio.Nombre === 'ArchivoAdjunto') !== undefined,
       });
     }
   }

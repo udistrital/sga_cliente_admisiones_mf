@@ -1,0 +1,62 @@
+<div *ngIf="isLoading" class="loading-message">{{ translate.instant('admision.cargando') }}</div>
+
+<div *ngIf="isError" class="error-message">{{ errorMessage }}</div>
+
+<div *ngIf="!isLoading && !isError && evaluaciones.length > 0">
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">{{ translate.instant('admision.aspirante') }}</th>
+          <ng-container *ngFor="let criterio of criterios">
+            <th [attr.colspan]="criterio.Asistencia ? 2 : 1">{{ criterio.Nombre }} ({{criterio.Porcentaje}}%)</th>
+          </ng-container>
+          <th rowspan="2">{{ translate.instant('admision.nota_final') }}</th>
+        </tr>
+        <tr>
+          <ng-container *ngFor="let criterio of criterios">
+            <ng-container *ngIf="criterio.Asistencia">
+              <th>{{ translate.instant('admision.n') }}</th>
+              <th>{{ translate.instant('admision.a') }}</th>
+            </ng-container>
+            <ng-container *ngIf="!criterio.Asistencia">
+              <th>{{ translate.instant('admision.n') }}</th>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let evaluacion of evaluaciones | paginate: { itemsPerPage: pageSize, currentPage: page }">
+          <td>{{ evaluacion.terceroNombre }}</td>
+          <ng-container *ngFor="let criterio of criterios">
+            <ng-container *ngIf="criterio.Asistencia">
+              <td>{{ getNota(evaluacion, criterio.Id) }}</td>
+              <td>{{ getAsistencia(evaluacion, criterio.Id) }}</td>
+            </ng-container>
+            <ng-container *ngIf="!criterio.Asistencia">
+              <td>{{ getNota(evaluacion, criterio.Id) }}</td>
+            </ng-container>
+          </ng-container>
+          <td>{{ evaluacion.notaFinal }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p><strong>{{ translate.instant('admision.nota') }}:</strong> {{ translate.instant('admision.n') }} = {{ translate.instant('admision.nota') }}, {{ translate.instant('admision.a') }} = {{ translate.instant('admision.asistencia') }}</p>
+  </div>
+
+  <div class="paginator">
+    <div class="pagination-controls">
+      <label for="pageSizeSelect">{{ translate.instant('admision.mostrar') }}</label>
+      <select id="pageSizeSelect" (change)="onPageSizeChange($event)">
+        <option *ngFor="let size of pageSizes" [value]="size">{{ size === 10000 ? translate.instant('admision.todos') : size }}</option>
+      </select>
+      <span> {{ translate.instant('admision.registros_por_pagina') }}</span>
+    </div>
+    <pagination-controls (pageChange)="page = $event" previousLabel="{{ translate.instant('admision.anterior') }}" nextLabel="{{ translate.instant('admision.siguiente') }}"></pagination-controls>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && evaluaciones.length === 0 && !isError">{{ translate.instant('admision.no_datos_mostrar') }}</div>

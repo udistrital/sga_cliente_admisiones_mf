@@ -130,7 +130,7 @@ export class CargueSnpComponent {
 
   cargarPeriodos() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           this.periodos = res.Data;
           resolve(res)
@@ -395,7 +395,7 @@ export class CargueSnpComponent {
 
   recuperarDetallesEvaluacion(inscripcionId: any) {
     return new Promise((resolve, reject) => {
-      this.evaluacionInscripcionService.get('detalle_evaluacion/?query=Activo:true,RequisitoProgramaAcademicoId.Id:' + inscripcionId + '&sortby=Id&order=desc&limit=0')
+      this.evaluacionInscripcionService.get('detalle_evaluacion?query=Activo:true,RequisitoProgramaAcademicoId.Id:' + inscripcionId + '&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           resolve(res)
         },

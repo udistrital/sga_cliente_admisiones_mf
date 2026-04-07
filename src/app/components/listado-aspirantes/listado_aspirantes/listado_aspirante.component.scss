@@ -4,6 +4,12 @@ main{
   gap: 1em;
 }
 
+.content-cards{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
 .container-actions{
   display: flex;
   gap: 0.3em;
@@ -47,4 +53,17 @@ main{
 .status-indicator.inactive {
   color: white;
   background-color: var(--danger-base);
+}
+
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5rem; /* Ajusta según sea necesario */
+  width: 100%;
+}
+
+.loading-svg {
+  width: 100px; /* Ajusta el tamaño del SVG */
+  height: 100px; /* Ajusta el tamaño del SVG */
 }

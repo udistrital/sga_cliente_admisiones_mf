@@ -103,7 +103,7 @@ export class AdministradorCriteriosComponent implements OnInit {
     } else {
       // Configuración para pantallas más grandes
       this.dialogConfig.width = "600px";
-      this.dialogConfig.height = "400px";
+      this.dialogConfig.maxHeight = "80%";
     }
     this.dialogConfig.data = {};
     const criterioDialog = this.dialog.open(
@@ -111,49 +111,57 @@ export class AdministradorCriteriosComponent implements OnInit {
       this.dialogConfig
     );
     criterioDialog.afterClosed().subscribe((criterio: Criterio) => {
-      if (criterio !== undefined) {
-        this.admisiones.post('requisito', criterio).pipe(
-          catchError(error => {
-            this.popUpManager.showErrorToast(
-              this.translate.instant('admision.error_registro_criterio')
-            );
-            throw error;
-          })
-        ).subscribe((response: any) => {
-          const subcriteriosRequest: Observable<any>[] = [];
-        
-          if (criterio.Subcriterios && criterio.Subcriterios.length > 0) {
-            criterio.Subcriterios.forEach((subcriterio: any) => {
-              subcriterio.RequisitoPadreId = { Id: response.Id };
-              subcriteriosRequest.push(this.admisiones.post('requisito', subcriterio));
-            });
-          }
-        
-          const updateTable = () => {
-            const newCriterio: Criterio = { ...response, Subcriterios: [] };
-            this.criterios.unshift(newCriterio);
-            this.criterioSource.data = this.criterios;
-            this.cdr.detectChanges();
-            this.popUpManager.showSuccessAlert(this.translate.instant('admision.criterio_exito'));
-          };
-        
-          if (subcriteriosRequest.length > 0) {
-            forkJoin(subcriteriosRequest).pipe(
-              catchError(error => {
-                this.popUpManager.showErrorToast(
-                  this.translate.instant('admision.error_registro_criterio')
+      if (criterio) {
+        this.admisiones
+          .post("requisito", criterio)
+          .pipe(
+            catchError((error) => {
+              this.popUpManager.showErrorToast(
+                this.translate.instant("admision.error_registro_criterio")
+              );
+              throw error;
+            })
+          )
+          .subscribe((response: any) => {
+            const subcriteriosRequest: Observable<any>[] = [];
+
+            if (criterio.Subcriterios && criterio.Subcriterios.length > 0) {
+              criterio.Subcriterios.forEach((subcriterio: any) => {
+                subcriterio.RequisitoPadreId = { Id: response.Id };
+                subcriteriosRequest.push(
+                  this.admisiones.post("requisito", subcriterio)
                 );
-                throw error;
-              })
-            ).subscribe(() => {
+              });
+            }
+
+            const updateTable = () => {
+              const newCriterio: Criterio = { ...response, Subcriterios: [] };
+              this.criterios.unshift(newCriterio);
+              this.criterioSource.data = this.criterios;
+              this.cdr.detectChanges();
+              this.popUpManager.showSuccessAlert(
+                this.translate.instant("admision.criterio_exito")
+              );
+            };
+
+            if (subcriteriosRequest.length > 0) {
+              forkJoin(subcriteriosRequest)
+                .pipe(
+                  catchError((error) => {
+                    this.popUpManager.showErrorToast(
+                      this.translate.instant("admision.error_registro_criterio")
+                    );
+                    throw error;
+                  })
+                )
+                .subscribe(() => {
+                  updateTable();
+                });
+            } else {
+              // Si no hay subcriterios, simplemente actualiza la tabla
               updateTable();
-            });
-          } else {
-            // Si no hay subcriterios, simplemente actualiza la tabla
-            updateTable();
-          }
-        });
-        
+            }
+          });
       }
     });
   }
@@ -165,7 +173,7 @@ export class AdministradorCriteriosComponent implements OnInit {
       this.dialogConfig
     );
     criterioDialog.afterClosed().subscribe((criterio: Criterio) => {
-      if (criterio !== undefined) {
+      if (criterio) {
         this.admisiones.put("requisito", criterio).subscribe(
           (response: any) => {
             const updatedCriterio: Criterio = <Criterio>response;
@@ -192,7 +200,7 @@ export class AdministradorCriteriosComponent implements OnInit {
       .then((willDelete: any) => {
         if (willDelete.value) {
           const criterio = <Criterio>event.data;
-          this.criterios
+          this.criterios;
           criterio.Activo = false;
 
           this.admisiones.put("requisito", criterio).subscribe(
@@ -200,18 +208,20 @@ export class AdministradorCriteriosComponent implements OnInit {
               this.popUpManager.showSuccessAlert(
                 this.translate.instant("admision.criterio_inactivado")
               );
-  
+
               // Actualizar el array `criterios`
-              const index = this.criterios.findIndex(c => c.Id === criterio.Id);
+              const index = this.criterios.findIndex(
+                (c) => c.Id === criterio.Id
+              );
               if (index !== -1) {
                 this.criterios.splice(index, 1); // Eliminamos el criterio del array
               }
-  
+
               // Actualizar el `matTableDataSource`
               this.criterioSource.data = this.criterios;
-  
+
               // Reasignar el paginator para asegurar la actualización
-            this.criterioSource.paginator = this.paginator;
+              this.criterioSource.paginator = this.paginator;
             },
             (error: any) => {
               this.popUpManager.showErrorToast(
@@ -230,12 +240,20 @@ export class AdministradorCriteriosComponent implements OnInit {
       this.dialogConfig
     );
     criterioDialog.afterClosed().subscribe((subCriterio: Criterio) => {
-      if (subCriterio !== undefined) {
+      if (subCriterio) {
         subCriterio.RequisitoPadreId = { Id: criterio.Id };
         this.admisiones.post("requisito", subCriterio).subscribe(
           (response: any) => {
             const newSubcriterio: Criterio = <Criterio>response;
             criterio.Subcriterios.unshift(newSubcriterio);
+            criterio.Subcriterios = criterio.Subcriterios;
+            const foundCriterio = this.criterios.find(
+              (c) => c.Id === criterio.Id
+            );
+            if (foundCriterio) {
+              foundCriterio.Subcriterios = [...criterio.Subcriterios];
+            }
+            this.cdr.detectChanges(); // Forzar la detección de cambios
             this.popUpManager.showSuccessAlert(
               this.translate.instant("admision.criterio_exito")
             );
@@ -263,7 +281,6 @@ export class AdministradorCriteriosComponent implements OnInit {
             this.popUpManager.showSuccessAlert(
               this.translate.instant("admision.criterio_modificado")
             );
-            this.ngOnInit();
           },
           (error: any) => {
             this.popUpManager.showErrorToast(
@@ -273,5 +290,36 @@ export class AdministradorCriteriosComponent implements OnInit {
         );
       }
     });
+  }
+
+  eliminarSubcriterio(criterio: Criterio, subCriterio: Criterio) {
+    subCriterio.Activo = false;
+    this.admisiones.put("requisito", subCriterio).subscribe(
+      (response: any) => {
+        if (response.Id) {
+          // Encuentra el índice del subcriterio a eliminar
+          const index = criterio.Subcriterios.findIndex(sc => sc.Id === subCriterio.Id);
+          if (index > -1) {
+            // Elimina el subcriterio del array
+            criterio.Subcriterios.splice(index, 1);
+          }
+          const foundCriterio = this.criterios.find(
+            (c) => c.Id === criterio.Id
+          );
+          if (foundCriterio) {
+            foundCriterio.Subcriterios = [...criterio.Subcriterios];
+          }
+          this.cdr.detectChanges(); // Forzar la detección de cambios
+          this.popUpManager.showSuccessAlert(
+            this.translate.instant("GLOBAL.confirmarEliminar")
+          );
+        }
+      },
+      (error: any) => {
+        this.popUpManager.showErrorToast(
+          this.translate.instant("GLOBAL.error")
+        );
+      }
+    );
   }
 }

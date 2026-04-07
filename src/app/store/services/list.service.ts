@@ -18,7 +18,7 @@ export class ListService {
       if (!list || list.length === 0) {
         this.tercerosService
           .get(
-            "info_complementaria/?query=GrupoInfoComplementariaId.Id:10,Activo:true&limit=0"
+            "info_complementaria?query=GrupoInfoComplementariaId.Id:10,Activo:true&limit=0"
           )
           .subscribe(
             (result: any) => {

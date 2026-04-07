@@ -55,14 +55,12 @@
       <td>{{ docDiscapacidad ? docDiscapacidad.observacion : "" }}</td>
       <td>
         <button
-          mat-button
-          type="button"
+        mat-icon-button
+        color="accent"
+        type="button"
           (click)="verInfoCaracteristca(docDiscapacidad)"
         >
-          <i
-            class="nb-search"
-            title="{{ 'GLOBAL.tooltip_ver_registro' | translate }}"
-          ></i>
+        <mat-icon>file_open</mat-icon>
         </button>
       </td>
     </tr>
@@ -87,9 +85,9 @@
     *ngIf="(url_editar && gotoEdit) || (updateDocument && canUpdateDocument)"
   >
     <tr>
-      <td colspan="6" style="background-color: lightyellow">
-        <span (click)="editar()" class="link"
-          ><i class="ion-edit"></i> {{ "GLOBAL.actualizar" | translate }}</span
+      <td colspan="6" style="background-color: var(--warning-main)" (click)="editar()">
+        <span  class="link"
+          ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
         >
       </td>
     </tr>

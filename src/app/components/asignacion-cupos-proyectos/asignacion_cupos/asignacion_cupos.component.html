@@ -3,7 +3,7 @@
     <h2>{{ "admision.cupos_proyectos" | translate }}</h2>
 
     <!-- SELECTS -->
-    <div class="form-grid4 margin-y">
+    <div class="form-grid2 margin-y">
       <!-- select periodo -->
       <mat-form-field class="form-field form-col1">
         <mat-label>{{ "calendario.periodo" | translate }}:</mat-label>
@@ -43,7 +43,7 @@
         <mat-select
           [formControl]="Campo1Control"
           [(ngModel)]="proyectos_selected"
-          (selectionChange)="inscripcion_load()"
+          (selectionChange)="perfil_editar('info_cupos')"
           [disabled]="selectprograma"
         >
           <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
@@ -60,41 +60,18 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- select inscripcion -->
-      <mat-form-field class="form-field form-col1">
-        <mat-label>{{ "GLOBAL.tipo_inscripcion" | translate }}</mat-label>
-        <mat-select
-          [formControl]="Campo1Control"
-          [(ngModel)]="tipins_selected"
-          (selectionChange)="perfil_editar('info_cupos')"
-          [disabled]="selectprograma"
-        >
-          <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
-          <mat-option
-            *ngFor="let item of tipoinscripcion"
-            [value]="item"
-            [disabled]="!item.Id"
-          >
-            {{ item.Nombre }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="Campo1Control.hasError('required')">
-          {{ "cupos.erro_selec_inscripcion" | translate }}
-        </mat-error>
-      </mat-form-field>
     </div>
 
     <!-- FORMULARIOS -->
-    <!-- <div [hidden]="!show_cupos"> -->
     <!--Formularios------------------------------------------------------------->
 
-    <crud-asignacion-cupo
-      *ngIf="show_cupos"
-      [info_proyectos]="this.proyectos_selected"
-      [info_periodo]="this.periodo"
-      [info_nivel]="this.esPosgrado"
-      [tipo_inscripcion]="this.tipins_selected"
-    >
-    </crud-asignacion-cupo>
+    <mat-card *ngIf="show_cupos" class="card mt-20">
+      <mat-card-content>
+        <h3>{{ "cupos.cupos" | translate }}</h3>
+        <crud-asignacion-cupo [info_proyectos]="this.proyectos_selected" [info_periodo]="this.periodo"
+          [info_nivel]="this.esPosgrado" [tipo_inscripcion]="this.tipins_selected">
+        </crud-asignacion-cupo>
+      </mat-card-content>
+    </mat-card>
   </mat-card-content>
 </mat-card>

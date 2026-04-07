@@ -13,6 +13,7 @@ import { ImplicitAutenticationService } from 'src/app/services/implicit_autentic
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { TipoInscripcion } from 'src/app/models/inscripcion/tipo_inscripcion';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+import { firstValueFrom } from 'rxjs';
 
 
 @Component({
@@ -55,17 +56,22 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
     this.cargarPeriodo();
     this.nivel_load();
+    this.inscripcion_load();
 
   }
 
   selectPeriodo() {
+    if(this.show_cupos){
+      this.show_cupos = false;
+    }
     this.selectednivel = undefined;
     this.proyectos_selected = undefined;
+    this.tipins_selected = undefined;
   }
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo/?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
@@ -74,7 +80,6 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
             resolve(this.periodo);
             const periodos = <any[]>res['Data'];
             periodos.forEach(element => {
-
               this.periodos.push(element);
             });
           }
@@ -86,21 +91,24 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   }
 
   nivel_load() {
-    this.projectService.get('nivel_formacion?limit=0').subscribe(
-      // (response: NivelFormacion[]) => {
-      (response: any) => {
-        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null)//&& nivel.Nombre === 'Posgrado')
+    this.projectService.get('nivel_formacion?limit=0').subscribe({
+      next: (response: any) => {
+        this.niveles = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null && nivel.CodigoAbreviacion === 'POS');
       },
-      error => {
+      error: () => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
       },
-    );
+    });
   }
 
   inscripcion_load() {
-    this.inscripcionService.get('tipo_inscripcion?limit=0').subscribe(
+    if (this.show_cupos) { this.show_cupos = false; }
+    this.inscripcionService.get('tipo_inscripcion?query=Activo:true&limit=0').subscribe(
       (response: any) => {
         this.tipoinscripcion = response.filter((tipoInscripcion: any) => tipoInscripcion.Nombre != null)
+        if (!this.tipins_selected && this.tipoinscripcion.length > 0) {
+          this.tipins_selected = this.tipoinscripcion[0];
+        }
       },
       error => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
@@ -125,7 +133,9 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
 
   loadProyectos() {
-    this.selectprograma = false;
+    if (this.show_cupos) { this.show_cupos = false; }
+    this.proyectos_selected = undefined;
+    this.tipins_selected = undefined;
     if (!Number.isNaN(this.selectednivel)) {
       this.projectService.get('proyecto_academico_institucion?limit=0').subscribe(
         (response: any) => {
@@ -168,10 +178,11 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
 
 
-  perfil_editar(event: any): void {
+  async perfil_editar(event: any) {
+    this.show_cupos = false;
     switch (event) {
       case 'info_cupos':
-        this.validarNvel();
+        await this.validarNvel();
         this.show_cupos = true;
         break;
       default:
@@ -180,20 +191,17 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     }
   }
 
-  validarNvel() {
+  async validarNvel(): Promise<void> {
     this.esPosgrado = false;
-    this.projectService.get('nivel_formacion?query=Id:' + Number(this.selectednivel)).subscribe(
-      // (response: NivelFormacion[]) => {
-      (response: any) => {
-        this.nivelSelect = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null)
-        if (this.nivelSelect[0].Nombre === 'Posgrado') {
-          this.esPosgrado = true;
-        }
-      },
-      error => {
-        this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-      },
-    );
+    try {
+      const response: any = await firstValueFrom(this.projectService.get('nivel_formacion?query=Id:' + Number(this.selectednivel)));
+      this.nivelSelect = response.filter((nivel: any) => nivel.NivelFormacionPadreId === null);
+      if (this.nivelSelect[0].Nombre === 'Posgrado') {
+        this.esPosgrado = true;
+      }
+    } catch (error) {
+      this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+    }
   }
 
   ngOnInit() {

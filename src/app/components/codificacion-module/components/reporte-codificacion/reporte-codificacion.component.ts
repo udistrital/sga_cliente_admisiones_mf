@@ -128,7 +128,7 @@ export class ReporteCodificacionComponent implements OnInit {
         { Periodo: nombrePeriodo, Facultad: nombreFacultad, Proyecto: nombreProyecto }
       ]
 
-      this.sgaAdmisionesMidService.get(`reporte/?id_periodo=${idPeriodo}&id_proyecto=${idProyecto}`).subscribe(
+      this.sgaAdmisionesMidService.get(`reporte?id_periodo=${idPeriodo}&id_proyecto=${idProyecto}`).subscribe(
         (Response: any) => {
           if (Response.Status == 200 && Response.Success) {
 

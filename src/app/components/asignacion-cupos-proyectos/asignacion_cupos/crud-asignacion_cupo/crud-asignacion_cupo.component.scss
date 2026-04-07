@@ -40,3 +40,34 @@
   margin: auto;
   overflow: overlay;
 }
+
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.5rem;
+}
+
+.loading-svg {
+  /* Ajusta el tamaño del SVG */
+  height: 2.5em;
+  /* Ajusta el tamaño del SVG */
+}
+
+.actions-row {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-label {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.form-item {
+  &.quotas-input {
+    width: 50%;
+  }
+}

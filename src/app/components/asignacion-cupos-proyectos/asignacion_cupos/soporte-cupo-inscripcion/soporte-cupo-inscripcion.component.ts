@@ -1,6 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { PopUpManager } from 'src/app/managers/popUpManager';
 import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service';
 import { DocumentoService } from 'src/app/services/documento.service';
 
@@ -19,7 +21,13 @@ export class SoporteCupoInscripcionComponent {
   constructor(
     public dialogRef: MatDialogRef<AsignacionCupoService>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {}
+    private popUpManager: PopUpManager,
+    private translate: TranslateService,
+  ) {
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+
+    });
+  }
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -42,11 +50,11 @@ export class SoporteCupoInscripcionComponent {
 
   validarInputs() {
     if (this.comentario.invalid) {
-      alert("Agrega un comentario")
+      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('cupos.error_soporte_comentario'));
     }
 
     if (this.base64String === undefined) {
-      alert("Agrega un archivo");
+      this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('cupos.error_soporte_archivo'));
     }
     if (this.base64String != undefined && this.comentario.valid) {
       this.data.comentario = this.comentario.value;
@@ -54,5 +62,4 @@ export class SoporteCupoInscripcionComponent {
       this.dialogRef.close({ result: this.data });
     }
   }
-
 }

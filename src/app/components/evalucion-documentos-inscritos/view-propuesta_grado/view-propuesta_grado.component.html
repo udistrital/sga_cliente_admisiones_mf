@@ -60,9 +60,9 @@
     *ngIf="(url_editar && gotoEdit) || (updateDocument && canUpdateDocument)"
   >
     <tr>
-      <td colspan="2" style="background-color: lightyellow; text-align: center">
-        <span (click)="editar()" class="link"
-          ><i class="ion-edit"></i> {{ "GLOBAL.actualizar" | translate }}</span
+      <td colspan="2" style="background-color: var(--warning-main); text-align: center" (click)="editar()">
+        <span class="link"
+          ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
         >
       </td>
     </tr>

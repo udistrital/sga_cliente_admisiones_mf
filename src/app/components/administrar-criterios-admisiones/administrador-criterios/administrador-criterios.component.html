@@ -230,20 +230,20 @@
                         >
                           <mat-icon fontIcon="edit" color="accent"></mat-icon>
                           <span>{{
-                            "calendario.tooltip_editar" | translate
+                            "GLOBAL.editar" | translate
                           }}</span>
                         </button>
 
                         <button
                           mat-menu-item
-                          (click)="inactivarCriterio($event)"
+                          (click)="eliminarSubcriterio(criterio, row)"
                         >
                           <mat-icon
                             fontIcon="unpublished"
                             color="warn"
                           ></mat-icon>
                           <span>{{
-                            "calendario.tooltip_inactivar" | translate
+                            "GLOBAL.eliminar" | translate
                           }}</span>
                         </button>
                       </mat-menu>
