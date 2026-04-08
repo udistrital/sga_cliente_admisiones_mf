@@ -432,7 +432,7 @@ export class ListadoAspiranteComponent implements OnInit {
                     .subscribe(
                       (respDependencia: any) => {
                         const dependencias = <Number[]>(
-                          respDependencia.Data.DependenciaId
+                          respDependencia.Data.Data.DependenciaId
                         );
                         this.proyectos = <any[]>(
                           response.filter((proyecto: any) =>

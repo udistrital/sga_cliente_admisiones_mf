@@ -35,8 +35,9 @@ import { CreacionTipoInscipcionComponent } from './components/tipo-inscripcion/c
 import { ListaTipoCuposComponent } from './components/tipo-cupos/lista-tipo-cupos/lista-tipo-cupos.component';
 import { CreacionTipoCuposComponent } from './components/tipo-cupos/creacion-tipo-cupos/creacion-tipo-cupos.component';
 import { ReportesComponent } from './components/reportes/reportes.component';
+import { AuthGuard } from 'src/_guards/auth.guard';
 
-const routes: Routes = [
+const rawRoutes: Routes = [
   {
     path: "codificacion", // cambiar la ruta del modulo
     loadChildren: () => import ('./components/codificacion-module/codificacion.module').then(m => m.CodificacionModule),
@@ -157,6 +158,11 @@ const routes: Routes = [
     component: ReportesComponent,
   },
 ];
+
+const routes: Routes = rawRoutes.map((route) => ({
+  ...route,
+  canActivate: [AuthGuard],
+}));
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

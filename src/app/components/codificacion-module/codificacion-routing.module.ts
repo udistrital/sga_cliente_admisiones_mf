@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodificacionComponent } from './components/codificacion/codificacion.component';
 import { ReporteCodificacionComponent } from './components/reporte-codificacion/reporte-codificacion.component';
+import { AuthGuard } from 'src/_guards/auth.guard';
 
-const routes: Routes = [
+const rawRoutes: Routes = [
   {
     path: "codificacion/crear",
     component: CodificacionComponent,
@@ -13,6 +14,11 @@ const routes: Routes = [
     component: ReporteCodificacionComponent
   }
 ];
+
+const routes: Routes = rawRoutes.map((route) => ({
+  ...route,
+  canActivate: [AuthGuard],
+}));
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
