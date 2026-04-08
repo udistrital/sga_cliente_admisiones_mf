@@ -311,7 +311,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
     sessionStorage.setItem("TipoInscripcionId", "");
     if (!Number.isNaN(this.selectednivel)) {
       this.inscripcionService
-        .get("tipo_inscripcion?query=Activo:true&limit=0")
+        .get("tipo_inscripcion?query=Activo:true,CodigoAbreviacion:NUEPOS&limit=0")
         .subscribe(
           (response: any) => {
             this.tipos_inscripcion = <any[]>(
