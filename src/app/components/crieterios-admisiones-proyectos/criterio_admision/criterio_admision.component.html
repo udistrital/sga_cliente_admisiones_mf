@@ -68,23 +68,6 @@
         </mat-error>
       </mat-form-field>
 
-      <section>
-        <h3>{{ "admision.ofertar" | translate }}</h3>
-
-        <div *ngFor="let checkbox of opciones; let i = index">
-          <form [formGroup]="checkbox">
-            <div class="row my-2">
-              <div class="col-12">
-                <mat-checkbox formControlName="opcion">
-                  <mat-label>{{ "admision.ofertar_opcion" | translate }}
-                    {{ i + 2 }} ?</mat-label>
-                </mat-checkbox>
-              </div>
-            </div>
-          </form>
-        </div>
-      </section>
-
       <!-- input adicional -->
       <ng-container *ngIf="criterioEsExamenEstado">
         <h3>{{ "admision.parametrizacion_puntaje" | translate }}</h3>
