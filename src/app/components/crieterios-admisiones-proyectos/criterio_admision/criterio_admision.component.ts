@@ -498,7 +498,7 @@ export class CriterioAdmisionComponent implements OnChanges {
                 .subscribe(
                   (respDependencia: any) => {
                     const dependencias = <Number[]>(
-                      respDependencia.Data.DependenciaId
+                      respDependencia.Data.Data.DependenciaId
                     );
                     this.proyectos = <any[]>(
                       res.filter((proyecto: any) =>
