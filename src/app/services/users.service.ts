@@ -26,19 +26,23 @@ export class UserService {
     return localStorage.getItem(decrypt('persona_id'));
   }
  
-  public async getPersonaId(): Promise<number | null> {
-    return new Promise((resolve, reject) => {
-      const personaId = window.localStorage.getItem('persona_id');
-      if (personaId === null) {
-        resolve(null);
-      } else {
-        try {
-          resolve(decrypt(personaId));
-        } catch (error) {
-          reject(error);
-        }
-      }
-    });
+  public getPersonaId(): number {
+    const personaId = window.localStorage.getItem('persona_id');
+    if (personaId === null) {
+      return 0;
+    }
+
+    try {
+      const decryptedPersonaId = decrypt(personaId);
+      const thirdPartyId =
+        typeof decryptedPersonaId === 'number'
+          ? decryptedPersonaId
+          : Number(decryptedPersonaId);
+
+      return Number.isFinite(thirdPartyId) ? thirdPartyId : 0;
+    } catch {
+      return 0;
+    }
   }
  
   public getUser() {

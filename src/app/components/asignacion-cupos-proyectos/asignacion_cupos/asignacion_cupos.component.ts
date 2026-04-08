@@ -152,7 +152,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
                 const id_tercero = this.userService.getPersonaId();
                 this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
                   (respDependencia: any) => {
-                    const dependencias = <Number[]>respDependencia.Data.DependenciaId;
+                    const dependencias = <Number[]>respDependencia.Data.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(
                       (proyecto: any) => dependencias.includes(proyecto.Id)
                     );
