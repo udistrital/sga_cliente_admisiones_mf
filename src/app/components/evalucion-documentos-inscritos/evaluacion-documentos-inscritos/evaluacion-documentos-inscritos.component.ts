@@ -298,7 +298,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
         .subscribe(
           (response: any) => {
             this.autenticationService.getRole().then((rol: any) => {
-              rol = ["ADMIN_SGA"];
+              
               let r = rol.find(
                 (role: any) =>
                   role == "ADMIN_SGA" ||
