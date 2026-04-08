@@ -177,7 +177,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   cargarTipoInscripcion(){
     return new Promise((resolve, reject) => {
-      this.inscripcionService.get('tipo_inscripcion?query=Activo:true&limit=0')
+      this.inscripcionService.get('tipo_inscripcion?query=Activo:true,CodigoAbreviacion:NUEPOS&limit=0')
         .subscribe((response: any) => {
           if (response != null && response.Status != '404' 
               && Object.keys(response[0]).length > 0) {
