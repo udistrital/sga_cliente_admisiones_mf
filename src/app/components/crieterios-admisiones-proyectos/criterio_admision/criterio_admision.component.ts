@@ -187,9 +187,7 @@ export class CriterioAdmisionComponent implements OnChanges {
         this.parametrosService
           .get(
             "parametro_periodo?query=Activo:true,PeriodoId:" +
-            this.periodo.Id +
-            ",ParametroId:" +
-            response.Data[0].Id
+            this.periodo.Id
           )
           .subscribe(
             (response: any) => {
