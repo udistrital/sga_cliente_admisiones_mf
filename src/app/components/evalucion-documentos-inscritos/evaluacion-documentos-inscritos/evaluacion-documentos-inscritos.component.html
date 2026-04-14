@@ -11,9 +11,9 @@
           <mat-select
             [formControl]="CampoControl"
             [(ngModel)]="selectednivel"
-            (selectionChange)="cambiarSelectPeriodoSegunNivel($event.value)"
+            (selectionChange)="onPeriodoChange($event.value)"
           >
-            <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+            <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
             <mat-option *ngFor="let item of nivel_load" [value]="item.Id">
               {{ item.Nombre }}
             </mat-option>
@@ -29,9 +29,10 @@
           <mat-select
             [formControl]="Campo1Control"
             [(ngModel)]="proyectos_selected"
-            (selectionChange)="consultarPeriodosDoctorado(proyectos_selected)"
+            [disabled]="!selectednivel"
+            (selectionChange)="onProyectoChange()"
           >
-            <mat-option value="">{{
+            <mat-option [value]="null">{{
               "GLOBAL.seleccionar" | translate
             }}</mat-option>
             <mat-option *ngFor="let item of proyectos" [value]="item.Id">
@@ -51,10 +52,11 @@
             [formControl]="Campo2Control"
             [(ngModel)]="periodoMultiple"
             placeholder="2020-I, 2020-II, 2020-III"
+            [disabled]="!proyectos_selected"
             (selectionChange)="loadInscritos()"
             required
           >
-            <mat-option value="" disabled
+            <mat-option [value]="null" disabled
               >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
             >
             <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
@@ -66,6 +68,7 @@
             [formControl]="Campo2Control"
             [(ngModel)]="periodoMultiple"
             placeholder="2020-I, 2020-II, 2020-III"
+            [disabled]="!proyectos_selected"
             required
             multiple
           >
@@ -74,6 +77,12 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+
+        <div *ngIf="loading" class="alert warning margin-y">
+          <mat-icon class="icon">hourglass_top</mat-icon>
+          <span>{{ "GLOBAL.cargando" | translate }}</span>
+        </div>
+
         <!-- Boton para buscar -->
         <button
           mat-flat-button
