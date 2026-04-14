@@ -54,16 +54,7 @@ main{
   color: white;
   background-color: var(--danger-base);
 }
-
-.loading-indicator {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 5rem; /* Ajusta según sea necesario */
-  width: 100%;
-}
-
-.loading-svg {
-  width: 100px; /* Ajusta el tamaño del SVG */
-  height: 100px; /* Ajusta el tamaño del SVG */
+.status-indicator.pending {
+  color: #1f2937;
+  background-color: #facc15;
 }

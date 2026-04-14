@@ -12,7 +12,7 @@
               [(ngModel)]="periodo"
               (selectionChange)="selectPeriodo()"
             >
-              <mat-option
+              <mat-option [value]="null"
                 >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
               >
               <mat-option *ngFor="let item of periodos" [value]="item">
@@ -27,9 +27,10 @@
             <mat-select
               [formControl]="CampoControl"
               [(ngModel)]="selectednivel"
-              (selectionChange)="loadProyectos()"
+              [disabled]="!periodo"
+              (selectionChange)="onNivelChange()"
             >
-              <mat-option
+              <mat-option [value]="null"
                 >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
               >
               <mat-option *ngFor="let item of niveles" [value]="item.Id">
@@ -47,10 +48,10 @@
           <mat-select
             [formControl]="Campo1Control"
             [(ngModel)]="proyectos_selected"
-            (selectionChange)="activar_button()"
-            [disabled]="selectprograma"
+            (selectionChange)="onProyectoChange()"
+            [disabled]="!selectednivel"
           >
-            <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+            <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
             <mat-option
               *ngFor="let item of proyectos"
               [value]="item"
@@ -68,19 +69,9 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Indicador de carga SVG -->
-  <div *ngIf="loading" class="loading-indicator">
-    <svg class="loading-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-      <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="25" y="50">
-        <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate>
-      </rect>
-      <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="85" y="50">
-        <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate>
-      </rect>
-      <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="145" y="50">
-        <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate>
-      </rect>
-    </svg>
+  <div *ngIf="loading" class="alert warning margin-y">
+    <mat-icon class="icon">hourglass_top</mat-icon>
+    <span>{{ "GLOBAL.cargando" | translate }}</span>
   </div>
 
   <div *ngIf="!loading" class="content-cards">
@@ -107,7 +98,7 @@
         <b>{{ cantidad_no_admitidos }}</b></label
       >
       <label
-        >{{ "admision.estado_inscrito" | translate }}:
+        >{{ "admisiox|n.estado_inscrito" | translate }}:
         <b>{{ cantidad_inscritos }}</b></label
       >
       <label
@@ -283,10 +274,17 @@
                 class="status-indicator"
                 [ngClass]="{
                   active: row.EstadoRecibo === 'Pago',
-                  inactive: row.EstadoRecibo !== 'Pago'
+                  pending: row.EstadoRecibo === 'Pendiente pago',
+                  inactive: row.EstadoRecibo !== 'Pago' && row.EstadoRecibo !== 'Pendiente pago'
                 }"
               >
-                {{ row.EstadoRecibo === "Pago" ? "Pago" : "Vencido" }}
+                {{
+                  row.EstadoRecibo === "Pago"
+                    ? "Pago"
+                    : row.EstadoRecibo === "Pendiente pago"
+                      ? "Pendiente pago"
+                      : "Vencido"
+                }}
               </div>
             </td></ng-container
           >

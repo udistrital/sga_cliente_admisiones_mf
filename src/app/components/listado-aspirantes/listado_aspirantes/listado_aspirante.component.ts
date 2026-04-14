@@ -144,8 +144,8 @@ export class ListadoAspiranteComponent implements OnInit {
     ],
   };
 
-  CampoControl = new FormControl("", [Validators.required]);
-  Campo1Control = new FormControl("", [Validators.required]);
+  CampoControl = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  Campo1Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
   Campo2Control = new FormControl("", [Validators.required]);
   cuposAsignados: number = 0;
   constructor(
@@ -200,6 +200,23 @@ export class ListadoAspiranteComponent implements OnInit {
     this.nivel_load();
     this.info_persona_id = await this.usuarioService.getPersonaId();
     this.source_emphasys = new MatTableDataSource([]);
+    this.updateNextSelectAvailability();
+  }
+
+  private updateNextSelectAvailability() {
+    if (this.periodo) {
+      this.CampoControl.enable({ emitEvent: false });
+    } else {
+      this.CampoControl.disable({ emitEvent: false });
+    }
+
+    if (this.selectednivel) {
+      this.Campo1Control.enable({ emitEvent: false });
+      this.selectprograma = false;
+    } else {
+      this.Campo1Control.disable({ emitEvent: false });
+      this.selectprograma = true;
+    }
   }
 
   buttonedit(row: any): void {
@@ -209,12 +226,13 @@ export class ListadoAspiranteComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
             if (res !== null && r.Status === "200") {
               this.periodo = res.Data.find((p: any) => p.Activo);
+              this.updateNextSelectAvailability();
               window.localStorage.setItem(
                 "IdPeriodo",
                 String(this.periodo["Id"])
@@ -236,11 +254,36 @@ export class ListadoAspiranteComponent implements OnInit {
   selectPeriodo() {
     this.selectednivel = undefined;
     this.proyectos_selected = undefined;
+    this.proyectos = [];
+    this.show_listado = false;
+    this.mostrarConteos = false;
+    this.CampoControl.reset(null, { emitEvent: false });
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
   }
 
   changePeriodo() {
-    this.CampoControl.setValue("");
-    this.Campo1Control.setValue("");
+    this.CampoControl.setValue(null);
+    this.Campo1Control.setValue(null);
+    this.updateNextSelectAvailability();
+  }
+
+  onNivelChange() {
+    this.show_listado = false;
+    this.mostrarConteos = false;
+    this.proyectos_selected = undefined;
+    this.proyectos = [];
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
+    if (this.selectednivel) {
+      this.loadProyectos();
+    }
+  }
+
+  onProyectoChange() {
+    if (this.proyectos_selected) {
+      this.activar_button();
+    }
   }
 
   nivel_load() {
@@ -402,8 +445,10 @@ export class ListadoAspiranteComponent implements OnInit {
 
   loadProyectos() {
     this.show_listado = false;
-    this.selectprograma = false;
+    this.proyectos_selected = undefined;
     this.proyectos = [];
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
     if (!Number.isNaN(this.selectednivel) && this.selectednivel !== undefined) {
       this.projectService
         .get("proyecto_academico_institucion?limit=0")
@@ -423,6 +468,7 @@ export class ListadoAspiranteComponent implements OnInit {
                       this.filtrarProyecto(proyecto)
                     )
                   );
+                  this.updateNextSelectAvailability();
                 } else {
                   const id_tercero = this.userService.getPersonaId();
                   this.sgaMidAdmisioens
@@ -447,6 +493,7 @@ export class ListadoAspiranteComponent implements OnInit {
                             )
                           ); 
                         }
+                        this.updateNextSelectAvailability();
                       },
                       (error: any) => {
                         this.popUpManager.showErrorAlert(
