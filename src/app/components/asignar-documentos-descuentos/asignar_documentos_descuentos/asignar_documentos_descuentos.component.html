@@ -12,9 +12,9 @@
           <mat-select
             [(ngModel)]="periodo"
             [disabled]="false"
-            (selectionChange)="cambioPeriodo(periodo)"
+            (selectionChange)="cambioPeriodo()"
           >
-            <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+            <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
             <mat-option *ngFor="let item of periodos" [value]="item">
               {{ item.Nombre }}
             </mat-option>
@@ -29,9 +29,10 @@
           <mat-select
             [formControl]="CampoControl"
             [(ngModel)]="selectednivel"
-            (selectionChange)="filtrarPorNivel(selectednivel)"
+            [disabled]="!periodo"
+            (selectionChange)="onNivelChange()"
           >
-            <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+            <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
             <mat-option *ngFor="let item of nivel_load" [value]="item.Id">
               {{ item.Nombre }}
             </mat-option>
@@ -49,9 +50,10 @@
           <mat-select
             [formControl]="Campo1Control"
             [(ngModel)]="facultad"
-            (selectionChange)="filtrarPorFacultades(facultad)"
+            [disabled]="!selectednivel"
+            (selectionChange)="onFacultadChange()"
           >
-            <mat-option>
+            <mat-option [value]="null">
               {{ "GLOBAL.seleccionar" | translate }}
             </mat-option>
             <mat-option *ngFor="let item of facultades" [value]="item.Id">
@@ -71,9 +73,10 @@
           <mat-select
             [formControl]="Campo2Control"
             [(ngModel)]="proyectos_selected"
-            (selectionChange)="loadTipoInscripcion()"
+            [disabled]="!facultad"
+            (selectionChange)="onProyectoChange()"
           >
-            <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+            <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
             <mat-option
               *ngFor="let item of proyectosFilteredFacultad"
               [value]="item.Id"
@@ -97,9 +100,10 @@
         <mat-select
           [formControl]="Campo3Control"
           [(ngModel)]="tipo_inscripcion_selected"
+          [disabled]="!proyectos_selected"
           (selectionChange)="savePrograma()"
         >
-          <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+          <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
           <mat-option
             *ngFor="let item of tipos_inscripcion"
             [value]="item.Id"
