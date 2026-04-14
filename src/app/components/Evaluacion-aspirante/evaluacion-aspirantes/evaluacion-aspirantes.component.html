@@ -11,10 +11,10 @@
           <mat-form-field style="width: 100%">
             <mat-label>{{ "admision.periodo_" | translate }}:</mat-label>
             <mat-select
-              [(ngModel)]="periodo"
+              [formControl]="PeriodoControl"
               (selectionChange)="selectPeriodo()"
             >
-              <mat-option
+              <mat-option [value]="null"
                 >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
               >
               <mat-option *ngFor="let item of periodos" [value]="item">
@@ -28,10 +28,10 @@
             <mat-label>{{ "admision.aviso_nivel" | translate }}:</mat-label>
             <mat-select
               [formControl]="CampoControl"
-              [(ngModel)]="selectednivel"
-              (selectionChange)="cambiarSelectPeriodoSegunNivel($event.value)"
+              [disabled]="!periodo"
+              (selectionChange)="onNivelChange()"
             >
-              <mat-option value="">{{
+              <mat-option [value]="null">{{
                 "GLOBAL.seleccionar" | translate
               }}</mat-option>
               <mat-option *ngFor="let item of nivel_load" [value]="item.Id">
@@ -48,13 +48,10 @@
             <mat-label>{{ "admision.aviso_proyecto" | translate }}:</mat-label>
             <mat-select
               [formControl]="Campo1Control"
-              [(ngModel)]="proyectos_selected"
-              (selectionChange)="
-                consultarPeriodosDoctorado(proyectos_selected);
-                this.loadCriterios()
-              "
+              [disabled]="!selectednivel"
+              (selectionChange)="onProyectoChange()"
             >
-              <mat-option value="">{{
+              <mat-option [value]="null">{{
                 "GLOBAL.seleccionar" | translate
               }}</mat-option>
               <mat-option *ngFor="let item of proyectos" [value]="item.Id">{{
@@ -71,9 +68,8 @@
             <mat-label>{{ "admision.aviso_criterios" | translate }}:</mat-label>
             <mat-select
               [formControl]="Campo2Control"
-              [(ngModel)]="criterio_selected"
-              (selectionChange)="viewtab()"
-              [disabled]="selectcriterio"
+              (selectionChange)="onCriterioChange()"
+              [disabled]="!proyectos_selected"
               multiple
             >
               <mat-option
@@ -256,7 +252,7 @@
                 <!-- Otras columnas con controles dinámicos -->
                 <ng-container
                   *ngIf="
-                    column.title !== 'acciones' &&
+                    column.title !== 'Acciones' &&
                     column.title !== 'Asistencia' &&
                     column.title !== 'Aspirantes'
                   "
@@ -276,7 +272,7 @@
                 </ng-container>
       
                 <!-- Columna de acciones -->
-                <ng-container *ngIf="column.title === 'acciones'">
+                <ng-container *ngIf="column.title === 'Acciones'">
                   <td
                     mat-cell
                     *matCellDef="let row; let rowIndex = index"
@@ -288,11 +284,11 @@
                         mat-icon-button
                         color="accent"
                         aria-hidden="false"
-                        title="{{ 'admision.tooltip_guargar' | translate }}"
+                        title="{{ 'admision.tooltip_guardar' | translate }}"
                         class="boton-primary"
                         (click)="onEditConfirm(rowIndex, row)"
                       >
-                      <mat-icon [fontIcon]="row.tieneEvaluacion ? 'edit' : 'save'"></mat-icon>
+                      <mat-icon [fontIcon]="'save'"></mat-icon>
                       </button>
                     </div>
                   </td>

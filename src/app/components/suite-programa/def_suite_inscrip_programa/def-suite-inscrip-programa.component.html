@@ -6,10 +6,10 @@
     <mat-form-field style="width: 100%">
       <mat-label>{{ "admision.periodo" | translate }}:</mat-label>
       <mat-select
-        [(ngModel)]="periodo"
-        (selectionChange)="cambioPeriodo(periodo)"
+        [formControl]="periodoControl"
+        (selectionChange)="onPeriodoChange()"
       >
-        <mat-option> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
+        <mat-option [value]="null"> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
         <mat-option *ngFor="let item of periodos" [value]="item.Id">
           {{ item.Nombre }}
         </mat-option>
@@ -20,10 +20,11 @@
     <mat-form-field style="width: 100%">
       <mat-label>{{ "admision.nivel" | translate }}:</mat-label>
       <mat-select
-        [(ngModel)]="nivel"
-        (selectionChange)="filtrarPorNivel(nivel)"
+        [formControl]="nivelControl"
+        [disabled]="!periodo"
+        (selectionChange)="onNivelChange()"
       >
-        <mat-option> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
+        <mat-option [value]="null"> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
         <mat-option *ngFor="let item of niveles" [value]="item.Id">
           {{ item.Nombre }}
         </mat-option>
@@ -34,10 +35,11 @@
     <mat-form-field style="width: 100%">
       <mat-label>{{ "admision.seleccion_facultad" | translate }}</mat-label>
       <mat-select
-        [(ngModel)]="facultad"
-        (selectionChange)="filtrarPorFacultades(facultad)"
+        [formControl]="facultadControl"
+        [disabled]="!nivel"
+        (selectionChange)="onFacultadChange()"
       >
-        <mat-option> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
+        <mat-option [value]="null"> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
         <mat-option *ngFor="let item of facultades" [value]="item.Id">
           {{ item.Nombre }}
         </mat-option>
@@ -48,10 +50,11 @@
     <mat-form-field style="width: 100%">
       <mat-label>{{ "admision.proyecto" | translate }}:</mat-label>
       <mat-select
-        [(ngModel)]="proyecto"
-        (selectionChange)="cambioProyecto(proyecto)"
+        [formControl]="proyectoControl"
+        [disabled]="!facultad"
+        (selectionChange)="onProyectoChange()"
       >
-        <mat-option> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
+        <mat-option [value]="null"> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
         <mat-option
           *ngFor="let item of proyectosFilteredFacultad"
           [value]="item.Id"
@@ -65,10 +68,11 @@
     <mat-form-field style="width: 100%">
       <mat-label>{{ "admision.tipo_inscripcion" | translate }}:</mat-label>
       <mat-select
-        [(ngModel)]="tipoInscrip"
-        (selectionChange)="cambioTipoInscrip(tipoInscrip)"
+        [formControl]="tipoInscripControl"
+        [disabled]="!proyecto"
+        (selectionChange)="onTipoInscripChange()"
       >
-        <mat-option> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
+        <mat-option [value]="null"> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
         <mat-option *ngFor="let item of tiposInscripFiltered" [value]="item.Id">
           {{ item.Nombre }}
         </mat-option>
@@ -77,9 +81,17 @@
   </section>
 
   <div
+    *ngIf="loading && periodo && nivel && facultad && proyecto && tipoInscrip"
+    class="alert warning margin-y"
+  >
+    <mat-icon class="icon loading-inline-icon">hourglass_top</mat-icon>
+    <span>{{ "GLOBAL.cargando" | translate }}</span>
+  </div>
+
+  <div
     class="container"
     align="center"
-    *ngIf="periodo && nivel && facultad && proyecto && tipoInscrip"
+    *ngIf="!loading && periodo && nivel && facultad && proyecto && tipoInscrip"
   >
     <div class="col-12 info-alert">
       {{ "admision.info_uso_select_tags" | translate }}

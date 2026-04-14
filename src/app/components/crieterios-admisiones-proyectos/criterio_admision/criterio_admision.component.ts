@@ -142,9 +142,9 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   numeroOpciones: any;
 
-  CampoControl = new FormControl("", [Validators.required]);
-  Campo1Control = new FormControl("", [Validators.required]);
-  Campo2Control = new FormControl("", [Validators.required]);
+  CampoControl = new FormControl(null, [Validators.required]);
+  Campo1Control = new FormControl(null, [Validators.required]);
+  Campo2Control = new FormControl([], [Validators.required]);
   Campo3Control = new FormControl("", [Validators.required]);
   constructor(
     private popUpManager: PopUpManager,
@@ -178,9 +178,11 @@ export class CriterioAdmisionComponent implements OnChanges {
     this.loadCriterios();
     this.cargarFacultad();
     this.loadProyectos();
+    this.updateNextSelectAvailability();
   }
 
   loadNumeroOpciones() {
+    this.opciones = [];
     this.parametrosService
       .get("parametro?query=CodigoAbreviacion:OPREGRADO,Activo:true")
       .subscribe((response: any) => {
@@ -247,8 +249,6 @@ export class CriterioAdmisionComponent implements OnChanges {
       (response: any) => {
         this.niveles = response.filter(
           (nivel: any) =>
-            (nivel.NivelFormacionPadreId === null &&
-              nivel.Nombre == "Pregrado") ||
             nivel.Nombre == "Posgrado"
         );
       },
@@ -263,12 +263,13 @@ export class CriterioAdmisionComponent implements OnChanges {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
             if (res !== null && r.Status === "200") {
               this.periodo = res.Data.find((p: any) => p.Activo);
+              this.updateNextSelectAvailability();
               window.localStorage.setItem(
                 "IdPeriodo",
                 String(this.periodo["Id"])
@@ -289,9 +290,98 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   selectPeriodo() {
-    this.selectednivel = undefined;
-    this.proyectos_selected = undefined;
+    this.resetSelectsFrom(1);
     this.loadNumeroOpciones();
+  }
+
+  onNivelChange() {
+    this.resetSelectsFrom(2);
+    if (this.selectednivel) {
+      this.loadProyectos();
+    }
+  }
+
+  onFacultadChange() {
+    this.resetSelectsFrom(3);
+    if (this.facultad) {
+      this.filtrarPorFacultades(this.facultad);
+    }
+  }
+
+  onProyectoChange() {
+    this.resetSelectsFrom(4);
+    if (this.proyectos_selected) {
+      this.activeCriterios();
+    }
+  }
+
+  onCriteriosChange() {
+    this.viewtab();
+  }
+
+  private resetSelectsFrom(changedSelect: number) {
+    if (changedSelect < 2) {
+      this.selectednivel = undefined;
+      this.CampoControl.reset(null, { emitEvent: false });
+      this.proyectos = [];
+    }
+
+    if (changedSelect < 3) {
+      this.facultad = undefined;
+    }
+
+    if (changedSelect < 4) {
+      this.proyectos_selected = undefined;
+      this.proyectosFilteredFacultad = [];
+      this.Campo1Control.reset(null, { emitEvent: false });
+    }
+
+    if (changedSelect < 5) {
+      this.resetCriteriosState();
+    }
+
+    this.updateNextSelectAvailability();
+  }
+
+  private updateNextSelectAvailability() {
+    if (this.periodo) {
+      this.CampoControl.enable({ emitEvent: false });
+    } else {
+      this.CampoControl.disable({ emitEvent: false });
+    }
+
+    if (this.facultad) {
+      this.Campo1Control.enable({ emitEvent: false });
+    } else {
+      this.Campo1Control.disable({ emitEvent: false });
+    }
+
+    if (this.proyectos_selected) {
+      this.Campo2Control.enable({ emitEvent: false });
+    } else {
+      this.Campo2Control.disable({ emitEvent: false });
+    }
+  }
+
+  private resetCriteriosState() {
+    this.selectcriterio = true;
+    this.selectTipo = false;
+    this.criterio_selected = [];
+    this.data = [];
+    this.dataSubcriterios = [];
+    this.porcentajeTotal = 0;
+    this.porcentajeSubcriterioTotal = 0;
+    this.criterioEsExamenEstado = false;
+    this.validarExistenciaExamenEstado = false;
+    this.valorMinimo = 0;
+    this.vigencia = 0;
+    this.ofertarOpcion2.controls["opcion"].setValue(false);
+    this.ofertarOpcion3.controls["opcion"].setValue(false);
+    this.Campo2Control.reset([], { emitEvent: false });
+
+    if (this.dataSource) {
+      this.dataSource.data = [];
+    }
   }
 
   setPercentage_info(number: any, tab: string | number) {
@@ -336,6 +426,11 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   activeCriterios() {
+    if (!this.periodo || !this.selectednivel || !this.facultad || !this.proyectos_selected) {
+      this.resetCriteriosState();
+      return;
+    }
+
     this.selectcriterio = false;
     this.criterio_selected = [];
     this.limpiarDatos();
@@ -387,14 +482,18 @@ export class CriterioAdmisionComponent implements OnChanges {
               );
             });
 
-            this.Campo2Control = new FormControl(this.criterio_selected);
+            this.Campo2Control.setValue(this.criterio_selected, {
+              emitEvent: false,
+            });
             this.viewtab();
           } else {
             this.criterio_selected = [];
             this.ofertarOpcion2.controls["opcion"].setValue(false);
             this.ofertarOpcion3.controls["opcion"].setValue(false);
             this.valorMinimo = 0;
-            this.Campo2Control = new FormControl(this.criterio_selected);
+            this.Campo2Control.setValue(this.criterio_selected, {
+              emitEvent: false,
+            });
             // this.viewtab();
             this.selectTipo = false;
           }
@@ -619,7 +718,6 @@ export class CriterioAdmisionComponent implements OnChanges {
 
   viewtab() {
     if (this.criterio_selected.length === 0) {
-      this.Campo2Control = new FormControl(this.criterio_selected);
       this.selectTipo = false;
       this.criterioEsExamenEstado = false;
       this.valorMinimo = 0;

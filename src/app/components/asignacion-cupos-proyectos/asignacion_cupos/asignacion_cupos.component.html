@@ -12,7 +12,7 @@
           [disabled]="false"
           (selectionChange)="selectPeriodo()"
         >
-          <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+          <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
           <mat-option *ngFor="let item of periodos" [value]="item">
             {{ item.Nombre }}
           </mat-option>
@@ -25,9 +25,10 @@
         <mat-select
           [formControl]="CampoControl"
           [(ngModel)]="selectednivel"
-          (selectionChange)="loadProyectos()"
+          [disabled]="!periodo"
+          (selectionChange)="onNivelChange()"
         >
-          <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+          <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
           <mat-option *ngFor="let item of niveles" [value]="item.Id">
             {{ item.Nombre }}
           </mat-option>
@@ -43,10 +44,10 @@
         <mat-select
           [formControl]="Campo1Control"
           [(ngModel)]="proyectos_selected"
-          (selectionChange)="perfil_editar('info_cupos')"
-          [disabled]="selectprograma"
+          (selectionChange)="onProyectoChange()"
+          [disabled]="!selectednivel"
         >
-          <mat-option>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
+          <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
           <mat-option
             *ngFor="let item of proyectos"
             [value]="item"

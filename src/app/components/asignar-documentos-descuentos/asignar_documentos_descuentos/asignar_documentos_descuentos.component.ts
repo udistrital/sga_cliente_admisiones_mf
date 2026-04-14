@@ -45,10 +45,10 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
 
   tipo_cupo: any;
 
-  CampoControl = new FormControl('', [Validators.required]);
-  Campo1Control = new FormControl('', [Validators.required]);
-  Campo2Control = new FormControl('', [Validators.required]);
-  Campo3Control = new FormControl('', [Validators.required]);
+  CampoControl = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  Campo1Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  Campo2Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  Campo3Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
 
   loadingGlobal: boolean = false;
 
@@ -75,7 +75,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
       await this.loadLevel();
       await this.cargarFacultad();
       await this.loadProyectos();
-      await this.loadTipoInscripcion();
+      this.updateNextSelectAvailability();
       this.loadingGlobal = false;
     } catch (error: any) {
       Swal.fire({
@@ -90,7 +90,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -116,16 +116,51 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   }
 
   selectPeriodo() {
-    this.selectednivel = undefined;
-    this.proyectos_selected = undefined;
-    this.tipo_inscripcion_selected = undefined;
+    this.selectednivel = null;
+    this.facultad = null;
+    this.proyectos_selected = null;
+    this.tipo_inscripcion_selected = null;
+    this.proyectosFilteredNivel = [];
+    this.proyectosFilteredFacultad = [];
+    this.tipos_inscripcion = [];
+    this.CampoControl.reset(null, { emitEvent: false });
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.Campo2Control.reset(null, { emitEvent: false });
+    this.Campo3Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
+  }
+
+  private updateNextSelectAvailability() {
+    if (this.periodo) {
+      this.CampoControl.enable({ emitEvent: false });
+    } else {
+      this.CampoControl.disable({ emitEvent: false });
+    }
+
+    if (this.selectednivel) {
+      this.Campo1Control.enable({ emitEvent: false });
+    } else {
+      this.Campo1Control.disable({ emitEvent: false });
+    }
+
+    if (this.facultad) {
+      this.Campo2Control.enable({ emitEvent: false });
+    } else {
+      this.Campo2Control.disable({ emitEvent: false });
+    }
+
+    if (this.proyectos_selected) {
+      this.Campo3Control.enable({ emitEvent: false });
+    } else {
+      this.Campo3Control.disable({ emitEvent: false });
+    }
   }
 
   loadLevel() {
     this.loading = true;
     this.projectService
       .get(
-        "nivel_formacion?query=Activo:true,NivelFormacionPadreId__isnull:true"
+        "nivel_formacion?query=Activo:true,CodigoAbreviacion:POS"
       )
       .subscribe(
         (response: any) => {
@@ -204,9 +239,19 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
         return false;
       }
     });
-    this.facultad = undefined;
-    this.proyectos_selected = undefined;
-    this.tipo_inscripcion_selected = undefined;
+    this.facultad = null;
+    this.proyectos_selected = null;
+    this.tipo_inscripcion_selected = null;
+    this.proyectosFilteredFacultad = [];
+    this.tipos_inscripcion = [];
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.Campo2Control.reset(null, { emitEvent: false });
+    this.Campo3Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
+  }
+
+  onNivelChange() {
+    this.filtrarPorNivel(this.selectednivel);
   }
 
   filtrarPorFacultades(selProyecto: any) {
@@ -223,9 +268,19 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
           }
         }
       );
+    } else {
+      this.proyectosFilteredFacultad = [];
     }
-    this.proyectos_selected = undefined;
-    this.tipo_inscripcion_selected = undefined;
+    this.proyectos_selected = null;
+    this.tipo_inscripcion_selected = null;
+    this.tipos_inscripcion = [];
+    this.Campo2Control.reset(null, { emitEvent: false });
+    this.Campo3Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
+  }
+
+  onFacultadChange() {
+    this.filtrarPorFacultades(this.facultad);
   }
 
   loadProyectos() {
@@ -306,8 +361,16 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   }
 
   loadTipoInscripcion() {
+    if (!this.proyectos_selected) {
+      this.tipos_inscripcion = [];
+      this.tipo_inscripcion_selected = null;
+      this.Campo3Control.reset(null, { emitEvent: false });
+      this.updateNextSelectAvailability();
+      return;
+    }
+
     this.loading = true;
-    this.tipo_inscripcion_selected = undefined;
+    this.tipo_inscripcion_selected = null;
     sessionStorage.setItem("TipoInscripcionId", "");
     if (!Number.isNaN(this.selectednivel)) {
       this.inscripcionService
@@ -319,6 +382,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
                 this.filterTipoInscripcion(tipoInscripcion)
               )
             );
+            this.updateNextSelectAvailability();
             this.loading = false;
           },
           (error) => {
@@ -329,6 +393,13 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
           }
         );
     }
+  }
+
+  onProyectoChange() {
+    this.tipo_inscripcion_selected = null;
+    this.Campo3Control.reset(null, { emitEvent: false });
+    this.loadTipoInscripcion();
+    this.updateNextSelectAvailability();
   }
 
   useLanguage(language: string) {
@@ -352,10 +423,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
     this.dialogService.open(SelectDescuentoProyectoComponent);
   }
 
-  cambioPeriodo(selPeriodo: any) {
-    this.selectednivel = undefined;
-    this.facultad = undefined;
-    this.proyectos_selected = undefined;
-    this.tipo_inscripcion_selected = undefined;
+  cambioPeriodo() {
+    this.selectPeriodo();
   }
 }

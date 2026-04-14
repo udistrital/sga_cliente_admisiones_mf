@@ -38,8 +38,8 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
   tipins_selected!:any;
   proyectos_selected!: any[] | undefined;
  tipo_inscirpcion: any;
-  CampoControl = new FormControl('', [Validators.required]);
-  Campo1Control = new FormControl('', [Validators.required]);
+  CampoControl = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  Campo1Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
   Campo2Control = new FormControl('', [Validators.required]);
 
 
@@ -57,6 +57,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     this.cargarPeriodo();
     this.nivel_load();
     this.inscripcion_load();
+    this.updateNextSelectAvailability();
 
   }
 
@@ -67,6 +68,24 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     this.selectednivel = undefined;
     this.proyectos_selected = undefined;
     this.tipins_selected = undefined;
+    this.proyectos = [];
+    this.CampoControl.reset(null, { emitEvent: false });
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
+  }
+
+  onNivelChange() {
+    if (this.show_cupos) { this.show_cupos = false; }
+    this.proyectos_selected = undefined;
+    this.tipins_selected = undefined;
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.loadProyectos();
+    this.updateNextSelectAvailability();
+  }
+
+  async onProyectoChange() {
+    await this.perfil_editar('info_cupos');
+    this.updateNextSelectAvailability();
   }
 
   cargarPeriodo() {
@@ -76,6 +95,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
             this.periodo = res.Data.find((p: any) => p.Activo);
+            this.updateNextSelectAvailability();
             window.localStorage.setItem('IdPeriodo', String(this.periodo['Id']));
             resolve(this.periodo);
             const periodos = <any[]>res['Data'];
@@ -136,6 +156,8 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
     if (this.show_cupos) { this.show_cupos = false; }
     this.proyectos_selected = undefined;
     this.tipins_selected = undefined;
+    this.proyectos = [];
+    this.updateNextSelectAvailability();
     if (!Number.isNaN(this.selectednivel)) {
       this.projectService.get('proyecto_academico_institucion?limit=0').subscribe(
         (response: any) => {
@@ -147,6 +169,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
                 this.proyectos = <any[]>response.filter(
                   (proyecto: any) => this.filtrarProyecto(proyecto),
                 );
+                this.updateNextSelectAvailability();
 
               } else {
                 const id_tercero = this.userService.getPersonaId();
@@ -156,6 +179,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
                     this.proyectos = <any[]>response.filter(
                       (proyecto: any) => dependencias.includes(proyecto.Id)
                     );
+                    this.updateNextSelectAvailability();
                     if (dependencias.length > 1) {
                       this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
                       //this.proyectos.forEach(p => { p.Id = undefined })
@@ -210,6 +234,22 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
 
+  }
+
+  private updateNextSelectAvailability() {
+    if (this.periodo) {
+      this.CampoControl.enable({ emitEvent: false });
+    } else {
+      this.CampoControl.disable({ emitEvent: false });
+    }
+
+    if (this.selectednivel) {
+      this.Campo1Control.enable({ emitEvent: false });
+      this.selectprograma = false;
+    } else {
+      this.Campo1Control.disable({ emitEvent: false });
+      this.selectprograma = true;
+    }
   }
 
 }

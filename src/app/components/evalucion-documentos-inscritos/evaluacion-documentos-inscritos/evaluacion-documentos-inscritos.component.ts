@@ -42,9 +42,9 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   loading: boolean = false;
-  CampoControl = new FormControl("", [Validators.required]);
-  Campo1Control = new FormControl("", [Validators.required]);
-  Campo2Control = new FormControl("", [Validators.required]);
+  CampoControl = new FormControl(null, [Validators.required]);
+  Campo1Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  Campo2Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
   settings: any;
   dataSourceColumn = [
     "credencial",
@@ -58,7 +58,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   periodo: any;
   nivel_load: any;
   selectednivel: any;
-  proyectos_selected: any = [];
+  proyectos_selected: any = null;
   inscripcion_id: any;
   showProfile: boolean;
   proyecto: any;
@@ -119,6 +119,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.createTable();
     });
+    this.updateNextSelectAvailability();
   }
 
   applyFilterProces(event: Event) {
@@ -140,6 +141,20 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     localStorage.setItem("goToEdit", String(false));
   }
 
+  private updateNextSelectAvailability() {
+    if (this.selectednivel) {
+      this.Campo1Control.enable({ emitEvent: false });
+    } else {
+      this.Campo1Control.disable({ emitEvent: false });
+    }
+
+    if (this.proyectos_selected) {
+      this.Campo2Control.enable({ emitEvent: false });
+    } else {
+      this.Campo2Control.disable({ emitEvent: false });
+    }
+  }
+
   async loadData() {
     try {
       this.info_persona_id = this.userService.getPersonaId();
@@ -155,7 +170,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -172,6 +187,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                 "IdPeriodo",
                 String(this.periodo["Id"])
               );
+              this.updateNextSelectAvailability();
               resolve(this.periodo);
               const periodos = <any[]>res["Data"];
               periodos.forEach((element) => {
@@ -190,15 +206,23 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   selectPeriodo() {
     this.selectednivel = undefined;
     this.proyectos_selected = undefined;
+    this.periodoMultiple = undefined;
+    this.proyectos = [];
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.Campo2Control.reset(null, { emitEvent: false });
+    this.mostrarConteos = false;
+    this.updateNextSelectAvailability();
   }
 
   changePeriodo() {
-    this.CampoControl.setValue("");
-    this.Campo1Control.setValue("");
+    this.CampoControl.setValue(null);
+    this.Campo1Control.setValue(null);
+    this.Campo2Control.setValue(null);
+    this.updateNextSelectAvailability();
   }
 
   loadLevel() {
-    this.projectService.get("nivel_formacion?limit=0").subscribe(
+    this.projectService.get("nivel_formacion?query=codigo_abreviacion:POS&limit=0").subscribe(
       (response: any) => {
         if (response !== null || response !== undefined) {
           this.nivel_load = <any>response;
@@ -206,6 +230,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
             this.selectednivel = this.nivel_load.find(
               (p: any) => p.Id == window.localStorage.getItem("Nivel")
             ).Id;
+            this.updateNextSelectAvailability();
             this.loadProyectos();
             window.localStorage.removeItem("Nivel");
           }
@@ -237,15 +262,36 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     }
   }
 
-  cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {
-    const nivelDoctorado = this.nivel_load.find(
-      (nivel: any) => nivel.Nombre === "Doctorado"
-    );
-    this.nivelEsDoctorado = nivelDoctorado.Id === nivelSeleccionado;
+  onPeriodoChange(nivelSeleccionado: any) {
+    // const nivelDoctorado = this.nivel_load.find(
+    //   (nivel: any) => nivel.Nombre === "Doctorado"
+    // );
+    // this.nivelEsDoctorado = nivelDoctorado.Id === nivelSeleccionado;
     this.selectMultipleNivel = this.nivelEsDoctorado;
     this.mostrarBoton = this.nivelEsDoctorado;
     this.mostrarMensajeInicial = this.nivelEsDoctorado;
+    this.proyectos_selected = undefined;
+    this.periodoMultiple = undefined;
+    this.proyectos = [];
+    this.Aspirantes = [];
+    this.mostrarConteos = false;
+    this.nombresPeriodos = "";
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.Campo2Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
     this.loadProyectos();
+  }
+
+  onProyectoChange() {
+    this.periodoMultiple = undefined;
+    this.mostrarConteos = false;
+    this.nombresPeriodos = "";
+    this.Campo2Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
+
+    if (this.proyectos_selected) {
+      this.consultarPeriodosDoctorado(this.proyectos_selected);
+    }
   }
 
   consultarPeriodosDoctorado(idProyecto: number) {
@@ -272,8 +318,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
               (error: any) => {
                 this.popUpManager.showErrorAlert(
                   this.translate.instant("calendario.sin_calendario") +
-                    ". " +
-                    this.translate.instant("GLOBAL.comunicar_OAS_error")
+                  ". " +
+                  this.translate.instant("GLOBAL.comunicar_OAS_error")
                 );
               }
             );
@@ -281,8 +327,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
           (error: any) => {
             this.popUpManager.showErrorAlert(
               this.translate.instant("calendario.sin_calendario") +
-                ". " +
-                this.translate.instant("GLOBAL.comunicar_OAS_error")
+              ". " +
+              this.translate.instant("GLOBAL.comunicar_OAS_error")
             );
           }
         );
@@ -292,6 +338,11 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   loadProyectos() {
     this.dataSource = new MatTableDataSource();
     this.Aspirantes = [];
+    this.proyectos_selected = undefined;
+    this.periodoMultiple = undefined;
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.Campo2Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
     if (!Number.isNaN(this.selectednivel)) {
       this.projectService
         .get("proyecto_academico_institucion?limit=0")
@@ -305,7 +356,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                   role == "VICERRECTOR" ||
                   role == "ASESOR_VICE"
               ); // rol admin o vice
-              if (r) {
+              if (r) {      
                 this.proyectos = <any[]>(
                   response.filter((proyecto: any) =>
                     this.filtrarProyecto(proyecto)
@@ -319,10 +370,15 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                   );
                   if (proyecto) {
                     this.proyectos_selected = proyecto.Id;
+                    this.Campo1Control.setValue(this.proyectos_selected, {
+                      emitEvent: false,
+                    });
+                    this.updateNextSelectAvailability();
                     this.loadInscritos();
                   }
                 }
                 window.localStorage.removeItem("IdProyecto");
+                this.updateNextSelectAvailability();
               } else {
                 const id_tercero = this.userService.getPersonaId();
                 this.sgaMiAdmisiones
@@ -346,14 +402,15 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                         ); //+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
                         //this.proyectos.forEach(p => { p.Id = undefined })
                       }
+                      this.updateNextSelectAvailability();
                     },
                     (error: any) => {
                       this.popUpManager.showErrorAlert(
                         this.translate.instant(
                           "admision.no_vinculacion_no_rol"
                         ) +
-                          ". " +
-                          this.translate.instant("GLOBAL.comunicar_OAS_error")
+                        ". " +
+                        this.translate.instant("GLOBAL.comunicar_OAS_error")
                       );
                     }
                   );
@@ -379,10 +436,10 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
         await this.sgaMiAdmisiones
           .get(
             "admision/aspirantespor?id_periodo=" +
-              periodo +
-              "&id_proyecto=" +
-              this.proyectos_selected +
-              "&tipo_lista=1"
+            periodo +
+            "&id_proyecto=" +
+            this.proyectos_selected +
+            "&tipo_lista=1"
           )
           .subscribe(
             (response: any) => {
@@ -429,10 +486,10 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
       this.sgaMiAdmisiones
         .get(
           "admision/aspirantespor?id_periodo=" +
-            this.Campo2Control.value +
-            "&id_proyecto=" +
-            this.proyectos_selected +
-            "&tipo_lista=1"
+          this.Campo2Control.value +
+          "&id_proyecto=" +
+          this.proyectos_selected +
+          "&tipo_lista=1"
         )
         .subscribe(
           (response: any) => {
@@ -528,7 +585,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     this.tercerosService
       .get(
         "datos_identificacion?query=Activo:true,numero:" +
-          event.data.Identificacion
+        event.data.Identificacion
       )
       .subscribe(
         (response: any) => {
@@ -547,11 +604,13 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                       this.evaluacionInscripcionService
                         .get(
                           "tags_por_dependencia?query=Activo:true,PeriodoId:" +
-                            this.aspirante.IdPeriodo +
-                            ",DependenciaId:" +
-                            this.proyectos_selected +
-                            ",TipoInscripcionId:" +
-                            resp[0].TipoInscripcionId.Id
+                          (this.selectMultipleNivel
+                            ? this.aspirante?.IdPeriodo || this.Campo2Control.value
+                            : this.Campo2Control.value) +
+                          ",DependenciaId:" +
+                          this.proyectos_selected +
+                          ",TipoInscripcionId:" +
+                          resp[0].TipoInscripcionId.Id
                         )
                         .subscribe(
                           (respSuite: any) => {
@@ -587,10 +646,10 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                                     this.translate.instant(
                                       "ERROR.sin_informacion_en"
                                     ) +
-                                      ': "inscripcion.PersonaId".<br><br>' +
-                                      this.translate.instant(
-                                        "ERROR.persiste_error_comunique_OAS"
-                                      ),
+                                    ': "inscripcion.PersonaId".<br><br>' +
+                                    this.translate.instant(
+                                      "ERROR.persiste_error_comunique_OAS"
+                                    ),
                                     MODALS.ERROR,
                                     false
                                   );
@@ -749,7 +808,6 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                 this.popUpManager.showSuccessAlert(
                   this.translate.instant("admision.registro_exito")
                 );
-                console.log("folderTagtoReload", data);
                 this.folderTagtoReload = data.folderOrTag;
                 if (
                   !data.metadata.aprobado &&
@@ -829,7 +887,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
       this.inscripcionesMidService
         .get(
           "inscripciones/informacion-complementaria/tercero/" +
-            this.info_persona_id
+          this.info_persona_id
         )
         .subscribe(
           (resp: any) => {
@@ -913,7 +971,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
               }
             }
           },
-          (error: HttpErrorResponse) => {}
+          (error: HttpErrorResponse) => { }
         );
     }
   }
@@ -929,7 +987,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
             this.nombreRevisor = data.NombreCompleto;
           }
         },
-        (error: HttpErrorResponse) => {}
+        (error: HttpErrorResponse) => { }
       );
   }
 
@@ -946,7 +1004,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
             }
           }
         },
-        (error: HttpErrorResponse) => {}
+        (error: HttpErrorResponse) => { }
       );
   }
 }

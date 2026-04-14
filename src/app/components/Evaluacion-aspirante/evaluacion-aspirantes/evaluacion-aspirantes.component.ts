@@ -118,9 +118,13 @@ export class EvaluacionAspirantesComponent implements OnInit {
   periodoMultiple: any;
   nombresPeriodos: string = "";
 
-  CampoControl = new FormControl("", [Validators.required]);
-  Campo1Control = new FormControl("", [Validators.required]);
-  Campo2Control = new FormControl("", [Validators.required]);
+  PeriodoControl = new FormControl(null, [Validators.required]);
+  CampoControl = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  Campo1Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  Campo2Control = new FormControl<any[] | null>(
+    { value: null, disabled: true },
+    [Validators.required]
+  );
 
   dataSourceTable = new MatTableDataSource<any>([]);
   columnsTable: [] | any = [];
@@ -182,7 +186,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -195,6 +199,9 @@ export class EvaluacionAspirantesComponent implements OnInit {
               } else {
                 this.periodo = res.Data.find((p: any) => p.Activo);
               }
+
+              this.PeriodoControl.setValue(this.periodo, { emitEvent: false });
+              this.updateNextSelectAvailability();
 
               window.localStorage.setItem(
                 "IdPeriodo",
@@ -216,17 +223,100 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   selectPeriodo() {
-    this.selectednivel = undefined;
-    this.proyectos_selected = undefined;
+    this.periodo = this.PeriodoControl.value;
+    this.selectednivel = null;
+    this.proyectos_selected = null;
+    this.criterio_selected = [];
+    this.proyectos = [];
+    this.criterios = [];
+    this.notas = false;
+    this.selectcriterio = true;
+    this.btnCalculo = true;
+    this.selectMultipleNivel = false;
+    this.mostrarBoton = false;
+    this.mostrarMensajeInicial = false;
+    this.nombresPeriodos = "";
+
+    this.CampoControl.reset(null, { emitEvent: false });
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.Campo2Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
   }
 
   changePeriodo() {
-    this.CampoControl.setValue("");
-    this.Campo1Control.setValue("");
+    this.CampoControl.setValue(null);
+    this.Campo1Control.setValue(null);
+    this.Campo2Control.setValue(null); 
+    this.updateNextSelectAvailability();
+  }
+
+  private updateNextSelectAvailability() {
+    if (this.periodo) {
+      this.CampoControl.enable({ emitEvent: false });
+    } else {
+      this.CampoControl.disable({ emitEvent: false });
+    }
+
+    if (this.selectednivel) {
+      this.Campo1Control.enable({ emitEvent: false });
+    } else {
+      this.Campo1Control.disable({ emitEvent: false });
+    }
+
+    if (this.proyectos_selected) {
+      this.Campo2Control.enable({ emitEvent: false });
+    } else {
+      this.Campo2Control.disable({ emitEvent: false });
+    }
+  }
+
+  onNivelChange() {
+    this.selectednivel = this.CampoControl.value;
+    this.proyectos_selected = null;
+    this.criterio_selected = [];
+    this.proyectos = [];
+    this.criterios = [];
+    this.notas = false;
+    this.selectcriterio = true;
+    this.btnCalculo = true;
+    this.nombresPeriodos = "";
+
+    this.Campo1Control.reset(null, { emitEvent: false });
+    this.Campo2Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
+
+    if (this.selectednivel) {
+      this.cambiarSelectPeriodoSegunNivel(this.selectednivel);
+    } else {
+      this.selectMultipleNivel = false;
+      this.mostrarBoton = false;
+      this.mostrarMensajeInicial = false;
+    }
+  }
+
+  onProyectoChange() {
+    this.proyectos_selected = this.Campo1Control.value;
+    this.criterio_selected = [];
+    this.criterios = [];
+    this.notas = false;
+    this.selectcriterio = true;
+    this.btnCalculo = true;
+    this.Campo2Control.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
+
+    if (this.proyectos_selected) {
+      this.consultarPeriodosDoctorado(this.proyectos_selected);
+      this.loadCriterios();
+    }
+  }
+
+  onCriterioChange() {
+    this.criterio_selected = this.Campo2Control.value || [];
+    this.viewtab();
   }
 
   loadLevel() {
-    this.projectService.get("nivel_formacion?limit=0").subscribe(
+    this.projectService.get("nivel_formacion?query=codigoAbreviacion:POS&limit=0").subscribe(
       (response: any) => {
         if (response !== null || response !== undefined) {
           this.nivel_load = <any>response;
@@ -234,6 +324,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
             this.selectednivel = this.nivel_load.find(
               (p: any) => p.Id == window.localStorage.getItem("Nivel")
             ).Id;
+              this.CampoControl.setValue(this.selectednivel, { emitEvent: false });
+              this.updateNextSelectAvailability();
             this.loadProyectos();
             window.localStorage.removeItem("Nivel");
           }
@@ -331,7 +423,11 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.notas = false;
     this.selectprograma = false;
     this.criterio_selected = [];
-    if (!Number.isNaN(this.selectednivel)) {
+    if (
+      this.selectednivel !== null &&
+      this.selectednivel !== undefined &&
+      !Number.isNaN(this.selectednivel)
+    ) {
       this.projectService
         .get("proyecto_academico_institucion?limit=0")
         .subscribe(
@@ -356,6 +452,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
                   );
                   if (proyecto) {
                     this.proyectos_selected = proyecto.Id;
+                    this.Campo1Control.setValue(this.proyectos_selected, { emitEvent: false });
+                    this.updateNextSelectAvailability();
                     this.loadCriterios();
                   }
                 }
@@ -429,6 +527,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
             this.criterios.forEach(async (element: any) => {
               await this.criterio_selected.push(element.RequisitoId);
             });
+            this.Campo2Control.setValue(this.criterio_selected, { emitEvent: false });
             this.viewtab();
           } else {
             const Criterios = [];
@@ -440,6 +539,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
             };
             this.criterios = <any>Criterios;
             this.criterio_selected = [];
+            this.Campo2Control.setValue([], { emitEvent: false });
             this.notas = false;
             this.popUpManager.showToast(
               "info",
@@ -511,8 +611,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
 
       // Agregar la columna 'acciones'
       this.columns.push({
-        key: "acciones",
-        title: "acciones",
+        key: "Acciones",
+        title: "Acciones",
       });
 
       // Añadir cada FormGroup al FormArray
@@ -523,7 +623,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
     this.formGroupTable.setControl("rows", formArray);
 
     // Agregar columna de acciones
-    this.columnsTable.push("acciones");
+    this.columnsTable.push("Acciones");
 
     // Establecer el paginador y el ordenamiento
     setTimeout(() => {
@@ -569,7 +669,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
           aspiranteData.Asistencia = value === "true" || value === true;
         } else if (key === "Aspirantes") {
           // No es necesario asignar, ya lo tenemos en row.Aspirantes
-        } else if (key === "acciones") {
+        } else if (key === "Acciones") {
           // No hacemos nada
         } else if (key === "Puntuacion") {
           aspiranteData.puntaje =
