@@ -11,6 +11,7 @@ import { UserService } from 'src/app/services/users.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { OikosService } from 'src/app/services/oikos.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'def-suite-inscrip-programa',
@@ -34,6 +35,12 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   tiposInscrip!: any[];
   tiposInscripFiltered!: any[];
   facultades: any[] = [];
+
+  periodoControl = new FormControl(null, [Validators.required]);
+  nivelControl = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  facultadControl = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  proyectoControl = new FormControl({ value: null, disabled: true }, [Validators.required]);
+  tipoInscripControl = new FormControl({ value: null, disabled: true }, [Validators.required]);
 
   tagsObject:any = undefined;
   nuevaSuite: boolean = false;
@@ -65,6 +72,8 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
       await this.cargarFacultad();
       await this.cargarProyectos();
       await this.cargarTipoInscripcion();
+      this.periodoControl.setValue(this.periodo, { emitEvent: false });
+      this.updateNextSelectAvailability();
       this.loading = false;
     } catch (error) {
       this.popUpManager.showErrorToast(this.translate.instant('Error.general'));
@@ -76,7 +85,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   cargarPeriodo(){
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0')
         .subscribe((response: any) => {
           if (response != null && response.Status == '200') {
             this.periodo = response.Data.find((p:any) => p.Activo).Id;
@@ -94,7 +103,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   cargarNivel(){
     return new Promise((resolve, reject) => {
-      this.projectService.get('nivel_formacion?query=Activo:true,NivelFormacionPadreId__isnull:true')
+      this.projectService.get('nivel_formacion?query=Activo:true,codigoAbreviacion:POS&limit=0')
         .subscribe((response: any) => {
           if (response != null && response.Status != '404' 
               && Object.keys(response[0]).length > 0) {
@@ -194,14 +203,69 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   }
 
   cambioPeriodo(selPeriodo:any) {
-    this.nivel = undefined;
-    this.facultad = undefined;
-    this.proyecto = undefined;
-    this.tipoInscrip = undefined;
+    this.periodo = selPeriodo;
+    this.nivel = null;
+    this.facultad = null;
+    this.proyecto = null;
+    this.tipoInscrip = null;
+    this.proyectosFilteredNivel = [];
+    this.proyectosFilteredFacultad = [];
+    this.tiposInscripFiltered = [];
+    this.nivelControl.reset(null, { emitEvent: false });
+    this.facultadControl.reset(null, { emitEvent: false });
+    this.proyectoControl.reset(null, { emitEvent: false });
+    this.tipoInscripControl.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
     this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
+  }
+
+  private updateNextSelectAvailability() {
+    if (this.periodo) {
+      this.nivelControl.enable({ emitEvent: false });
+    } else {
+      this.nivelControl.disable({ emitEvent: false });
+    }
+
+    if (this.nivel) {
+      this.facultadControl.enable({ emitEvent: false });
+    } else {
+      this.facultadControl.disable({ emitEvent: false });
+    }
+
+    if (this.facultad) {
+      this.proyectoControl.enable({ emitEvent: false });
+    } else {
+      this.proyectoControl.disable({ emitEvent: false });
+    }
+
+    if (this.proyecto) {
+      this.tipoInscripControl.enable({ emitEvent: false });
+    } else {
+      this.tipoInscripControl.disable({ emitEvent: false });
+    }
+  }
+
+  onPeriodoChange() {
+    this.cambioPeriodo(this.periodoControl.value);
   }
   
   filtrarPorNivel(selNivel:any) {
+    this.nivel = selNivel;
+    if (!selNivel) {
+      this.facultad = null;
+      this.proyecto = null;
+      this.tipoInscrip = null;
+      this.proyectosFilteredNivel = [];
+      this.proyectosFilteredFacultad = [];
+      this.tiposInscripFiltered = [];
+      this.facultadControl.reset(null, { emitEvent: false });
+      this.proyectoControl.reset(null, { emitEvent: false });
+      this.tipoInscripControl.reset(null, { emitEvent: false });
+      this.updateNextSelectAvailability();
+      this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
+      return;
+    }
+
     this.proyectosFilteredNivel = this.proyectos.filter(
       (proyect) => {
         if (proyect.NivelFormacionId.Id == selNivel) {
@@ -222,13 +286,34 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
         return (tipo.NivelId == selNivel);
       }
     );
-    this.facultad = undefined;
-    this.proyecto = undefined;
-    this.tipoInscrip = undefined;
+    this.facultad = null;
+    this.proyecto = null;
+    this.tipoInscrip = null;
+    this.proyectosFilteredFacultad = [];
+    this.facultadControl.reset(null, { emitEvent: false });
+    this.proyectoControl.reset(null, { emitEvent: false });
+    this.tipoInscripControl.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
     this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
   }
 
+  onNivelChange() {
+    this.filtrarPorNivel(this.nivelControl.value);
+  }
+
   filtrarPorFacultades(selProyecto:any) {
+    this.facultad = selProyecto;
+    if (!selProyecto) {
+      this.proyectosFilteredFacultad = [];
+      this.proyecto = null;
+      this.tipoInscrip = null;
+      this.proyectoControl.reset(null, { emitEvent: false });
+      this.tipoInscripControl.reset(null, { emitEvent: false });
+      this.updateNextSelectAvailability();
+      this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
+      return;
+    }
+
     if (this.proyectosFilteredNivel != undefined && this.proyectosFilteredNivel.length > 0) {
       this.proyectosFilteredFacultad = this.proyectosFilteredNivel.filter(
         (proyect) => {
@@ -239,18 +324,39 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
           }
         }      
       );
+    } else {
+      this.proyectosFilteredFacultad = [];
     }
-    this.proyecto = undefined;
-    this.tipoInscrip = undefined;
+    this.proyecto = null;
+    this.tipoInscrip = null;
+    this.proyectoControl.reset(null, { emitEvent: false });
+    this.tipoInscripControl.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
     this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
+  }
+
+  onFacultadChange() {
+    this.filtrarPorFacultades(this.facultadControl.value);
   }
 
   cambioProyecto(selProyecto:any) {
-    this.tipoInscrip = undefined;
+    this.proyecto = selProyecto;
+    this.tipoInscrip = null;
+    this.tipoInscripControl.reset(null, { emitEvent: false });
+    this.updateNextSelectAvailability();
     this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
   }
 
+  onProyectoChange() {
+    this.cambioProyecto(this.proyectoControl.value);
+  }
+
+  onTipoInscripChange() {
+    this.cambioTipoInscrip(this.tipoInscripControl.value);
+  }
+
   cambioTipoInscrip(selTipoInscrip:any) {
+    this.tipoInscrip = selTipoInscrip;
     this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
     if (this.periodo && this.nivel && this.facultad && this.proyecto && this.tipoInscrip) {
       this.loading = true;

@@ -39,6 +39,26 @@ mat-icon{
     border-radius: 0.4rem;
 }
 
+.alert.warning.margin-y {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1rem 0;
+    padding: 0.85rem 1rem;
+    border-radius: 0.4rem;
+    color: #6b4f00;
+    background-color: #fff3cd;
+    border: 1px solid #ffe08a;
+}
+
+.alert.warning.margin-y .loading-inline-icon {
+    display: inline-flex;
+    width: auto;
+    height: auto;
+    font-size: 1.35rem;
+    color: #a87400;
+}
+
 
 :host ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
     background-color: transparent !important;
