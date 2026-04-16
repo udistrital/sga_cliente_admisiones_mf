@@ -40,6 +40,10 @@ export class PerfilComponent implements OnInit {
 
   @Input('reloadTagComponent') reloadTagComponent: string = "";
 
+  @Input('periodo_id') periodo_id: number | null = null;
+
+  @Input('periodo_nombre') periodo_nombre: string = "";
+
   hasObservations: boolean = false;
   canUpdateDocument: boolean = false;
 

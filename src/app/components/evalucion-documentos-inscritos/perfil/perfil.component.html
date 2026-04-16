@@ -47,6 +47,8 @@
             <mat-panel-description></mat-panel-description>
           </mat-expansion-panel-header>
           <ngx-view-inscripcion
+            [periodo_id]="periodo_id"
+            [periodo_nombre]="periodo_nombre"
             (estadoCarga)="manageLoading($event, 'inscripcion')"
             *ngIf="renderInscripcion"
           >
@@ -247,6 +249,7 @@
               SuiteTags.documento_programa.observacion = $event;
               checkZeroObservations()
             "
+            [periodo_id]="periodo_id"
             inscripcion_id="{{ info_inscripcion_id }}"
             persona_id="{{ info_persona_id }}"
             *ngIf="SuiteTags.documento_programa.render"
@@ -282,6 +285,7 @@
               SuiteTags.descuento_matricula.observacion = $event;
               checkZeroObservations()
             "
+            [periodo_id]="periodo_id"
             inscripcion_id="{{ info_inscripcion_id }}"
             persona_id="{{ info_persona_id }}"
             *ngIf="SuiteTags.descuento_matricula.render"

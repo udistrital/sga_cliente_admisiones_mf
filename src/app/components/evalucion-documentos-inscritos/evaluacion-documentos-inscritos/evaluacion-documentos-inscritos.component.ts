@@ -90,6 +90,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   periodoMultiple: any;
   listaPeriodos: any[] = [];
   nivelEsDoctorado: boolean = false;
+  periodoSeleccionadoId: number | null = null;
+  periodoSeleccionadoNombre: string = "";
 
   constructor(
     private translate: TranslateService,
@@ -427,6 +429,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   loadInscritos() {
+    this.mostrarConteos = false;
     if (this.selectMultipleNivel) {
       let selectPeriodo: any[] = this.periodoMultiple;
       this.Aspirantes = [];
@@ -576,12 +579,23 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   activateTab() {
+    this.loading = false;
     this.showProfile = true;
-    this.loadInscritos();
   }
 
   loadPerfil(event: any) {
     this.aspirante = event.data;
+    const periodoIdSeleccionado = this.selectMultipleNivel
+      ? this.aspirante?.IdPeriodo || this.Campo2Control.value
+      : this.Campo2Control.value;
+    this.periodoSeleccionadoId = periodoIdSeleccionado
+      ? Number(periodoIdSeleccionado)
+      : Number(this.periodo?.Id);
+    const periodoEncontrado = this.periodos.find(
+      (p: any) => Number(p.Id) === this.periodoSeleccionadoId
+    );
+    this.periodoSeleccionadoNombre = periodoEncontrado?.Nombre || this.periodo?.Nombre || "";
+
     this.tercerosService
       .get(
         "datos_identificacion?query=Activo:true,numero:" +
@@ -604,9 +618,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                       this.evaluacionInscripcionService
                         .get(
                           "tags_por_dependencia?query=Activo:true,PeriodoId:" +
-                          (this.selectMultipleNivel
-                            ? this.aspirante?.IdPeriodo || this.Campo2Control.value
-                            : this.Campo2Control.value) +
+                          this.periodoSeleccionadoId +
                           ",DependenciaId:" +
                           this.proyectos_selected +
                           ",TipoInscripcionId:" +
@@ -663,7 +675,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                                   ProgramaAcademicoId:
                                     this.proyectos_selected.toString(),
                                   ProgramaAcademico: res.Nombre,
-                                  IdPeriodo: this.periodo.Id,
+                                  IdPeriodo: this.periodoSeleccionadoId,
                                 });
                                 sessionStorage.setItem(
                                   "TerceroId",
@@ -683,7 +695,11 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
                                 );
                                 sessionStorage.setItem(
                                   "IdPeriodo",
-                                  this.periodo.Id
+                                  String(this.periodo?.Id)
+                                );
+                                sessionStorage.setItem(
+                                  "PeriodoNombre",
+                                  this.periodoSeleccionadoNombre
                                 );
                                 sessionStorage.setItem(
                                   "IdTipoInscripcion",

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { ParametrosService } from 'src/app/services/parametros.service';
@@ -16,9 +16,20 @@ export class ViewInscripcionComponent implements OnInit {
 
   persona_id!: string | null;
   periodo_id!: number;
+  periodo_nombre: string = '';
   programa_id!: number;
   inscripcion_id!: number;
   inscripcion: any;
+
+  @Input('periodo_id')
+  set infoPeriodoId(info: any) {
+    this.periodo_id = info ? Number(info) : 0;
+  }
+
+  @Input('periodo_nombre')
+  set infoPeriodoNombre(info: any) {
+    this.periodo_nombre = info || '';
+  }
 
   @Output('estadoCarga') estadoCarga: EventEmitter<any> = new EventEmitter(true);
   infoCarga: any = {
@@ -51,7 +62,7 @@ export class ViewInscripcionComponent implements OnInit {
     this.programa_id = parseInt(sessionStorage.getItem('ProgramaAcademicoId')!);
     this.persona_id = this.userService.getId();
     this.inscripcion_id = parseInt(sessionStorage.getItem('IdInscripcion')!);
-    this.periodo_id = this.userService.getPeriodo();
+    this.periodo_id = this.periodo_id || this.userService.getPeriodo();
     this.loadInscripcion();
   }
 
@@ -89,16 +100,21 @@ export class ViewInscripcionComponent implements OnInit {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.' + error.status));
       },
     );
-    this.parametrosService.get('periodo/' + this.periodo_id).subscribe(
-      (resp: any) => {
-        this.inscripcion.Periodo = resp.Data.Nombre;
-        this.addCargado(1);
-      },
-      (error: HttpErrorResponse) => {
-        this.infoFalla();
-        this.popUpManager.showErrorToast(this.translate.instant('ERROR.' + error.status));
-      },
-    )
+    if (this.periodo_nombre && this.periodo_nombre.trim() !== '') {
+      this.inscripcion.Periodo = this.periodo_nombre;
+      this.addCargado(1);
+    } else {
+      this.parametrosService.get('periodo/' + this.periodo_id).subscribe(
+        (resp: any) => {
+          this.inscripcion.Periodo = resp.Data.Nombre;
+          this.addCargado(1);
+        },
+        (error: HttpErrorResponse) => {
+          this.infoFalla();
+          this.popUpManager.showErrorToast(this.translate.instant('ERROR.' + error.status));
+        },
+      )
+    }
   }
 
   addCargado(carga: number) {

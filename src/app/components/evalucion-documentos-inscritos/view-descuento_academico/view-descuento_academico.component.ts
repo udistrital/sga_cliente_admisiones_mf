@@ -46,6 +46,12 @@ export class ViewDescuentoAcademicoComponent implements OnInit {
     this.checkLoadData();
   }
 
+  @Input("periodo_id")
+  set info3(info3: any) {
+    this.periodo = info3 ? Number(info3) : 0;
+    this.checkLoadData();
+  }
+
   @Output("url_editar") url_editar: EventEmitter<boolean> = new EventEmitter();
   @Output("revisar_doc") revisar_doc: EventEmitter<any> = new EventEmitter();
   @Output("estadoCarga") estadoCarga: EventEmitter<any> = new EventEmitter(
@@ -101,7 +107,7 @@ export class ViewDescuentoAcademicoComponent implements OnInit {
           "&DependenciaId=" +
           sessionStorage.getItem("ProgramaAcademicoId") +
           "&PeriodoId=" +
-          sessionStorage.getItem("IdPeriodo")
+          this.periodo
       )
       .subscribe(
         (result: any) => {
@@ -215,7 +221,9 @@ export class ViewDescuentoAcademicoComponent implements OnInit {
       this.persona.toString() !== "" &&
       this.inscripcion !== undefined &&
       this.inscripcion !== 0 &&
-      this.inscripcion.toString() !== ""
+      this.inscripcion.toString() !== "" &&
+      this.periodo !== undefined &&
+      this.periodo !== 0
     ) {
       this.loadData();
     }

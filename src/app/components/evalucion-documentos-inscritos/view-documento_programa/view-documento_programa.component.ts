@@ -39,6 +39,13 @@ export class ViewDocumentoProgramaComponent implements OnInit {
     this.inscripcion_id = info2;
   }
 
+  @Input('periodo_id')
+  set info3(info3: any) {
+    this.periodo_id = info3 ? Number(info3) : 0;
+  }
+
+  
+
   tipoInscripcion_id = parseInt(sessionStorage.getItem('IdTipoInscripcion')!, 10)
 
   // tslint:disable-next-line: no-output-rename
@@ -88,9 +95,11 @@ export class ViewDocumentoProgramaComponent implements OnInit {
   }
 
   loadData(): void {
+    const periodoIdConsulta =
+      this.periodo_id || parseInt(sessionStorage.getItem('IdPeriodo')!, 10);
     this.info_documento_programa = <any>[];
     this.inscripcionService.get('soporte_documento_programa?query=InscripcionId.Id:' +
-      this.inscripcion_id + ',DocumentoProgramaId.ProgramaId:' + this.programa_id + ',DocumentoProgramaId.TipoInscripcionId:' + this.tipoInscripcion_id + ',DocumentoProgramaId.PeriodoId:' + parseInt(sessionStorage.getItem('IdPeriodo')!, 10) + ',DocumentoProgramaId.Activo:true&limit=0').subscribe(
+      this.inscripcion_id + ',DocumentoProgramaId.ProgramaId:' + this.programa_id + ',DocumentoProgramaId.TipoInscripcionId:' + this.tipoInscripcion_id + ',DocumentoProgramaId.PeriodoId:' + periodoIdConsulta + ',DocumentoProgramaId.Activo:true&limit=0').subscribe(
         // (response: any[]) => {
           (response: any) => {
           if (response !== null && Object.keys(response[0]).length > 0 && response[0] != '{}') {
