@@ -249,6 +249,8 @@
           <ngx-perfil
             [SuiteTags]="tagsObject"
             [en_revision]="true"
+            [periodo_id]="periodoSeleccionadoId"
+            [periodo_nombre]="periodoSeleccionadoNombre"
             info_persona_id="{{ info_persona_id }}"
             inscripcion_id="{{ inscripcion_id }}"
             (revisar_doc)="revisarDocumento($event)"
