@@ -429,6 +429,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   loadInscritos() {
+    this.mostrarConteos = false;
     if (this.selectMultipleNivel) {
       let selectPeriodo: any[] = this.periodoMultiple;
       this.Aspirantes = [];
@@ -578,8 +579,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   activateTab() {
+    this.loading = false;
     this.showProfile = true;
-    this.loadInscritos();
   }
 
   loadPerfil(event: any) {
