@@ -144,6 +144,8 @@ export class ViewExperienciaLaboralComponent implements OnInit {
                 //this.popUpManager.showErrorToast(this.translate.instant('ERROR' + error.status));
               }
               );
+          } else {
+            this.infoFalla();
           }
 
           /* this.newNuxeoService.get(soportes).subscribe(
