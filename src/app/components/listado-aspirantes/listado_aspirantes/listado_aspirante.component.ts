@@ -83,6 +83,7 @@ export class ListadoAspiranteComponent implements OnInit {
     "Telefono",
     "correoelectronico",
     "Puntaje",
+    "Fecha_inscripcion",
     "tipo_de_inscripcion",
     "enfasis",
     "estado",
@@ -777,6 +778,43 @@ async asignacionDeCuposPorPrioridad() {
       .subscribe((list) => {
         this.InfoContacto = list.listInfoContacto[0];
       });
+  }
+
+  downloadCSV(): void {
+    const headers = [
+      'Documento', 'Nombre','Teléfono','Correo','Puntaje','Fecha generación',
+      'Tipo inscripción','Énfasis','Estado','Estado recibo'
+    ];
+
+    const rows = this.Aspirantes.map((a: any) => [
+      a.NumeroDocumento,
+      a.NombreAspirante,
+      a.Telefono,
+      a.Email,
+      a.NotaFinal,
+      a.Inscripcion?.FechaCreacion?.split(' ')[0] ?? '',
+      a.TipoInscripcion,
+      a.Enfasis,
+      a.EstadoInscripcionId?.Nombre,
+      a.EstadoRecibo
+    ]);
+
+    const csvContent = [headers, ...rows].map(row => row
+      .map(value => `"${String(value ?? '').replace(/"/g, '""')}"`)
+      .join(',')
+    ).join('\n');
+
+    const blob = new Blob(
+      ['\uFEFF' + csvContent],
+      { type: 'text/csv;charset=utf-8;' }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `aspirantes_${this.periodo.Nombre}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   notificar_cambio_estado(data: any) {
