@@ -55,8 +55,10 @@ export class RepotesInscripcionesComponent {
       facultad: ["", Validators.required],
       proyectoCurricular: ["", Validators.required],
       tipoReporte: ["", Validators.required],
-      selectColumnas: ["", Validators.required],
-      selectTipoInscripcion: ["", Validators.required],
+      // selectColumnas: ["", Validators.required],
+      // selectTipoInscripcion: ["", Validators.required],
+      selectColumnas: [""], // required eliminado: se envian todas las columnas por defecto
+      selectTipoInscripcion: [15], // required eliminado: valor fijo 15 (nueva) mientras no haya selector
       selectNiveles: [""],
       selectEstado: [""],
     });
@@ -69,7 +71,7 @@ export class RepotesInscripcionesComponent {
   }
 
   caragarPeriodos() {
-    this.sgaParametrosService.get('periodo?query=&limit=0&sortby=Nombre&order=asc').subscribe(
+    this.sgaParametrosService.get('periodo?query=CodigoAbreviacion:PA&limit=0&sortby=Nombre&order=asc').subscribe(
       (Response: any) => {
         this.periodosAcademicos = Response.Data
       }
@@ -130,8 +132,11 @@ export class RepotesInscripcionesComponent {
       this.isTranferenciaOrReintegro = false
       this.generalReport = false
     }
-    this.reporteForm.get('selectColumnas')?.setValue([])
-    this.columnas = this.tipoReporte[event.value - 1].Columnas
+    // this.reporteForm.get('selectColumnas')?.setValue([])
+    // this.columnas = this.tipoReporte[event.value - 1].Columnas
+    this.columnas = (this.tipoReporte.find(r => r.Codigo === event.value)?.Columnas) || []
+    // Se preseleccionan todas las columnas
+    this.reporteForm.get('selectColumnas')?.setValue(this.columnas.map(c => c.Valor))
   }
 
   downloadFile(base64: string, fileName: string) {
@@ -174,11 +179,15 @@ export class RepotesInscripcionesComponent {
 
       this.isDocuments = false
 
+      const reporteSeleccionado = this.tipoReporte.find(r => r.Codigo === this.reporteForm.get('tipoReporte')?.value)
+      const todasColumnas = reporteSeleccionado ? reporteSeleccionado.Columnas.map((c: any) => c.Valor) : []
+
       const dataReporte = {
         "Proyecto": this.reporteForm.get('proyectoCurricular')?.value,
         "Periodo": this.reporteForm.get('periodoAcademico')?.value,
         "Reporte": this.reporteForm.get('tipoReporte')?.value,
-        "Columnas": this.reporteForm.get('selectColumnas')?.value,
+        // "Columnas": this.reporteForm.get('selectColumnas')?.value,
+        "Columnas": todasColumnas, // se envian todas; anteriormente se usaba selectColumnas del form
         "TipoInscripcion": this.reporteForm.get('selectTipoInscripcion')?.value,
         "EstadoInscripcion": this.reporteForm.get('selectEstado')?.value
       }
