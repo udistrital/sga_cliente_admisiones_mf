@@ -1,4 +1,42 @@
 export const tipoReporteInscritos = [{
+    "Nombre": "Listar todas las inscripciones",
+    "Codigo": 0,
+    "Columnas": [{
+        "Nombre": "#",
+        "Valor": "A"
+      },
+      {
+        "Nombre": "Documento",
+        "Valor": "B"
+      },
+      {
+        "Nombre": "Nombre",
+        "Valor": "C"
+      },
+      {
+        "Nombre": "Teléfono",
+        "Valor": "D"
+      }, {
+        "Nombre": "Correo",
+        "Valor": "E"
+      },
+      {
+        "Nombre": "Tipo de inscripción",
+        "Valor": "F"
+      },
+      {
+        "Nombre": "Estado inscripción",
+        "Valor": "G"
+      },
+      {
+        "Nombre": "Secuencia del recibo",
+        "Valor": "H"
+      },
+      {
+        "Nombre": "Fecha de Pago",
+        "Valor": "I"
+      }]
+  },/* {
     "Nombre": "Inscritos por programa",
     "Codigo": 1,
     "Columnas": [{
@@ -262,4 +300,4 @@ export const tipoReporteInscritos = [{
         "Nombre": "Estado inscripción",
         "Valor": "I"
       }]
-  }]
+  }*/]
