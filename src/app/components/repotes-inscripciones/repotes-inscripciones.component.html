@@ -17,8 +17,8 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <div *ngIf="!generalReport; else selectNivel">
-                        <mat-form-field class="grid-3">
+                    <div *ngIf="!generalReport; else selectNivel" class="grid-2">
+                        <mat-form-field class="full-width">
                             <mat-label>{{ 'reportes.SelectFacultad' | translate }}</mat-label>
                             <mat-select formControlName="facultad" (selectionChange)="onFacultadChange($event)">
                                 <mat-option *ngFor="let facultad of facultades" [value]="facultad.Id">
@@ -26,8 +26,19 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-    
-                        <mat-form-field class="grid-3">
+                    </div>
+                    <ng-template #selectNivel>
+                        <mat-form-field class="grid-2">
+                            <mat-label>{{ 'reportes.SelectNivel' | translate }}</mat-label>
+                            <mat-select formControlName="selectNiveles" (selectionChange)="onNivelAcademicoChange($event)">
+                                <mat-option *ngFor="let nivel of niveles" [value]="nivel.Id">
+                                    {{ nivel.Nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-template>
+                    <div *ngIf="!generalReport" class="grid-1">
+                        <mat-form-field class="full-width">
                             <mat-label>{{ 'reportes.SelectProyecto' | translate }}</mat-label>
                             <mat-select formControlName="proyectoCurricular">
                                 <mat-option *ngFor="let proyecto of proyectos" [value]="proyecto.Id">
@@ -36,17 +47,7 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <ng-template #selectNivel>
-                        <mat-form-field class="grid-3">
-                          <mat-label>{{ 'reportes.SelectNivel' | translate }}</mat-label>
-                          <mat-select formControlName="selectNiveles" (selectionChange)="onNivelAcademicoChange($event)">
-                              <mat-option *ngFor="let nivel of niveles" [value]="nivel.Id">
-                                  {{ nivel.Nombre }}
-                              </mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                      </ng-template>
-                    <mat-form-field class="grid-3">
+                    <mat-form-field class="grid-1">
                         <mat-label>{{ 'reportes.SelectReporte' | translate }}</mat-label>
                         <mat-select formControlName="tipoReporte" (selectionChange)="onReporteChange($event)">
                             <mat-option *ngFor="let reporte of tipoReporte" [value]="reporte.Codigo">
@@ -54,6 +55,7 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <!-- SELECTOR DE COLUMNAS COMENTADO: se envian todas por defecto
                     <mat-form-field class="grid-3">
                         <mat-label>{{ 'reportes.SelectDatos' | translate }}</mat-label>
                         <mat-select formControlName="selectColumnas" multiple>
@@ -62,6 +64,7 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                    -->
                     <div  *ngIf="isTranferenciaOrReintegro">
                         <mat-form-field class="grid-3">
                             <mat-label>{{ 'reportes.SelectEstadoInscripcion' | translate }}</mat-label>
@@ -72,6 +75,7 @@
                             </mat-select>
                           </mat-form-field>
                     </div>
+                    <!-- SELECTOR DE TIPO DE INSCRIPCIÓN COMENTADO: se usa valor fijo 15 (nueva)
                     <mat-form-field class="grid-3">
                         <mat-label>{{ 'reportes.SelectTipoInscripcion' | translate }}</mat-label>
                         <mat-select formControlName="selectTipoInscripcion">
@@ -80,6 +84,7 @@
                             </mat-option>
                         </mat-select>
                       </mat-form-field>
+                      -->
                     
                 </div>
                 <div class="centrar">

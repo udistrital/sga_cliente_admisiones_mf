@@ -15,6 +15,20 @@
     margin: 1vw;
 }
 
+.grid-2{
+    flex: 1 1 calc(66.666% - 10px);
+    margin: 1vw;
+}
+
+.grid-1{
+    flex: 1 1 100%;
+    margin: 1vw;
+}
+
+.full-width{
+    width: 100%;
+}
+
 @media screen and (max-width: 800px) {
   .grid-3 {
     flex-basis: calc(50% - 10px); // Dos columnas en pantallas medianas
