@@ -34,6 +34,7 @@ export class RepotesInscripcionesComponent {
   estados = estadosReintegrosTransferencias
   generalReport: boolean = false
   isTranferenciaOrReintegro = false
+  reportePdfBlobUrl: string = "";
 
   displayedColumns: string[] = ['Periodo', 'Facultad', 'Proyecto', 'Acciones'];
   dataSource: { Periodo: string, Facultad: string, Proyecto: string }[] = [];
@@ -157,13 +158,26 @@ export class RepotesInscripcionesComponent {
   }
 
   openDialog(): void {
+    const byteCharacters = atob(this.reportePdf);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const pdfBlob = new Blob([byteArray], { type: 'application/pdf' });
+    this.reportePdfBlobUrl = window.URL.createObjectURL(pdfBlob);
+
     const dialogRef = this.dialog.open(ReporteVisualizerComponent, {
       width: '80vw',   // Set width to 60 percent of view port width
       height: '90vh',
-      data: "data:application/pdf;base64," + this.reportePdf
+      data: this.reportePdfBlobUrl
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (this.reportePdfBlobUrl) {
+        window.URL.revokeObjectURL(this.reportePdfBlobUrl);
+        this.reportePdfBlobUrl = "";
+      }
     });
   }
 
