@@ -516,7 +516,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   actualizarTags(dataJson: any) {
     return new Promise((resolve, reject) => {
       const id = dataJson.Id;
-      this.sgaMidAdmisiones.put('admision/suite/'+ id, dataJson)
+      this.sgaMidAdmisiones.put('admision/suite/', dataJson)
         .subscribe({
           next: (response: any) => {
             if (response != null && response.Success && response.Status == 200 && response.Data) {
