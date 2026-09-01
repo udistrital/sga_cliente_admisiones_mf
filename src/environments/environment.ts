@@ -28,7 +28,7 @@ export const environment = {
   SGA_ADMISIONES_MID: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/admisiones_mid/v1/',
   // SGA_ADMISIONES_MID: 'http://localhost:8900/v1/',
 
-  SGA_CALENDARIO_MID: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/',
+  SGA_CALENDARIO_MID: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v2/',
   SGA_INSCRIPCION_MID_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_mid/v1/',
   INSCRIPCION_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/inscripcion_crud/v2/',
   IDIOMA_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/idiomas_crud/v2/',
@@ -37,10 +37,5 @@ export const environment = {
   EVALUACION_INSCRIPCION_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/evaluacion_inscripcion_crud/v2/',
   PARAMETROS_SERVICE: 'https://autenticacion.portaloas.udistrital.edu.co/apioas/parametros/v1/',
   LIQUIDACION_SERVICE: 'http://localhost:8080/v1/',
-  SGA_TERCERO_MID_SERVICE: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8123/v1/',
-  NOTIFICACION_MID: 'http://pruebasapi.intranetoas.udistrital.edu.co:8527/v1/',
-  CALENDARIO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v1/",
-  SOLICITUDES_ADMISIONES: 'http://pruebasapi2.intranetoas.udistrital.edu.co:8117/v1/',
-  PLANES_ESTUDIOS_CRUD: "http://pruebasapi.intranetoas.udistrital.edu.co:8537/v1/",
-  SOLICITUDES_ADMINISTRACION:'http://pruebasapi2.intranetoas.udistrital.edu.co:8117/v1/',
+  CALENDARIO_MID_SERVICE: "https://autenticacion.portaloas.udistrital.edu.co/apioas/calendario_mid/v2/",
 };
