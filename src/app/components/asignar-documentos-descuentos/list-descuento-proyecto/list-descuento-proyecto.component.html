@@ -12,6 +12,7 @@
       mat-flat-button
       color="accent"
       type="button"
+      *ngIf="hasPermission"
       (click)="onCreate()"
     >
       <mat-icon>add</mat-icon> {{ "GLOBAL.crear" | translate }}
@@ -54,6 +55,7 @@
                 title="{{ 'admision.tooltip_eliminar' | translate }}"
                 (click)="onDelete({ data: row })"
                 class="table-button icon"
+                *ngIf="hasPermission"
               >
                 <mat-icon fontIcon="delete"></mat-icon>
               </button>
