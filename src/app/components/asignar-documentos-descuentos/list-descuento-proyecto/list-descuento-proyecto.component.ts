@@ -143,8 +143,8 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
 
         this.descuentoService
           .put("tipo_descuento", this.info_desc_programa)
-          .subscribe(
-            (res: any) => {
+          .subscribe({
+            next: (res: any) => {
               if (res.Type !== "error") {
                 const opt1: any = {
                   title: this.translate.instant("GLOBAL.eliminar"),
@@ -171,14 +171,14 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
                 );
               }
             },
-            () => {
+            error: () => {
               this.popUpManager.showErrorToast(
                 this.translate.instant(
                   "descuento_academico.descuento_no_eliminado"
                 )
               );
             }
-          );
+        });
       }
     });
   }
