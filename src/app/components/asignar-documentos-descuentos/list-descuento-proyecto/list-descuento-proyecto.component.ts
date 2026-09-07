@@ -17,6 +17,7 @@ import { TipoDescuento } from "src/app/models/descuento/tipo_descuento";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
+import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
 
 @Component({
   selector: "ngx-list-descuento-proyecto",
@@ -34,6 +35,7 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   cambiotab: boolean = false;
   loading: boolean;
   info_desc_programa!: TipoDescuento;
+  hasPermission: boolean = false;
 
   descuentos: any = [];
   administrar_descuentos: boolean = true;
@@ -53,13 +55,15 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
     private translate: TranslateService,
     private descuentoService: DescuentoAcademicoService,
     private dialogRef: MatDialogRef<ListDescuentoProyectoComponent>,
-    private popUpManager: PopUpManager
+    private popUpManager: PopUpManager,
+    private autenticationService: ImplicitAutenticationService
   ) {
     this.loading = true;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
   }
 
   ngOnInit() {
+    this.obtenerPermisos();
     this.loadData();
   }
 
@@ -117,6 +121,9 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   }
 
   onDelete(event: any): void {
+    if (!this.hasPermission) {
+      return;
+    }
     const opt: any = {
       title: this.translate.instant("GLOBAL.eliminar"),
       text: this.translate.instant(
@@ -177,8 +184,17 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   }
 
   onCreate(event: any = null): void {
+    if (!this.hasPermission) {
+      return;
+    }
     this.uid = 0;
     this.activetab();
+  }
+
+  obtenerPermisos() {
+    this.autenticationService.getRole().then((rol: any) => {
+      this.hasPermission = Array.isArray(rol) && rol.includes('ADMIN_SGA');
+    });
   }
 
   activetab(): void {
