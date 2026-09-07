@@ -65,11 +65,14 @@ export class UserService {
     return new Promise((resolve, reject) => {
       this.getUser().subscribe(
         (user: any) => {
-          if (user && user.user && user['user'].role) {
-            const roles = [
-              ...new Set([...user['user'].role]),
-              ...user['userService'].role,
-            ];
+          if (user) {
+            const tokenRoles = Array.isArray(user.user?.role)
+              ? user.user.role
+              : [];
+            const serviceRoles = Array.isArray(user.userService?.role)
+              ? user.userService.role
+              : [];
+            const roles = [...new Set([...tokenRoles, ...serviceRoles])];
             const isAuthorized = requiredRoles.some((role) =>
               roles.includes(role)
             );
