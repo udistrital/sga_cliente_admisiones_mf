@@ -72,7 +72,7 @@ export class RepotesInscripcionesComponent {
   }
 
   caragarPeriodos() {
-    this.sgaParametrosService.get('periodo?query=CodigoAbreviacion:PA&limit=0&sortby=Nombre&order=asc').subscribe(
+    this.sgaParametrosService.get('periodo?query=CodigoAbreviacion:PA&limit=0&sortby=Nombre&order=desc').subscribe(
       (Response: any) => {
         this.periodosAcademicos = Response.Data
       }
