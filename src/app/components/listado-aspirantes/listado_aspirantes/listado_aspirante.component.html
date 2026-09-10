@@ -151,6 +151,38 @@
   <!-- TABLA -->
   <mat-card *ngIf="show_listado && mostrarConteos">
     <mat-card-content>
+      <div class="filters-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Estado de inscripción</mat-label>
+          <mat-select [(ngModel)]="estadoFiltro" (selectionChange)="aplicarFiltrosTabla()">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let estado of estadosFiltro" [value]="estado">
+              {{ estado }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estado de recibo</mat-label>
+          <mat-select [(ngModel)]="estadoReciboFiltro" (selectionChange)="aplicarFiltrosTabla()">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let estado of estadosReciboFiltro" [value]="estado">
+              {{ estado }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo de inscripción</mat-label>
+          <mat-select [(ngModel)]="tipoInscripcionFiltro" (selectionChange)="aplicarFiltrosTabla()">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let tipo of tiposInscripcionFiltro" [value]="tipo">
+              {{ tipo }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
       <div class="table">
         <table mat-table [dataSource]="source_emphasys" matSort>
           <ng-container matColumnDef="#">

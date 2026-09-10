@@ -172,13 +172,13 @@ export class CodificacionComponent {
           next: (data: any) => {
             this.boolListado = true
             this.openSnackBar('Información encontrada')
-            this.dataSource = data.data
-            if (data.data[0].codigo != "") {
+            this.dataSource = data.Data
+            if (data.Data[0].codigo != "") {
               this.isCodigos = true
               this.isGenerarCodigos = false
             }
 
-            if (data.data[0].PuntajeFinal == 0) {
+            if (data.Data[0].PuntajeFinal == 0) {
               this.openSnackBar('Recuerda asignar los puntajes de los estudiantes')
             }
           },
@@ -192,9 +192,9 @@ export class CodificacionComponent {
   generarCodigos() {
     this.codificacionService.postGenerarCodigos(this.dataSource, 1).subscribe({
       next: (data: any) => {
-        if (data.data) {
+        if (data.Data) {
           this.openSnackBar('Codigos generados')
-          this.dataSource = data.data
+          this.dataSource = data.Data
           this.isGenerarCodigos = true
         }
       },
@@ -205,7 +205,7 @@ export class CodificacionComponent {
   asignarCodificacion() {
     this.codificacionService.postGuardarCodigos(this.dataSource).subscribe({
       next: (data: any) => {
-        if (data.data) {
+        if (data.Data) {
           this.openSnackBar('Codificación asignada')
           this.getAdmitidos()
         }
@@ -216,6 +216,49 @@ export class CodificacionComponent {
 
   descargarListado() {
     // Lógica para descargar el listado
+    if (!this.dataSource || this.dataSource.length === 0) {
+      this.openSnackBar('No hay datos para descargar');
+      return;
+    }
+
+    const headers = [
+      '#',
+      'Apellidos',
+      'Nombres',
+      'Estado admisión',
+      'Énfasis',
+      'Número documento',
+      'Puntaje',
+      'Código'
+    ];
+
+    const rows = this.dataSource.map((item: any, index: number) => [
+      index + 1,
+      `${item.PrimerApellido ?? ''} ${item.SegundoApellido ?? ''}`.trim(),
+      `${item.PrimerNombre ?? ''} ${item.SegundoNombre ?? ''}`.trim(),
+      item.EstadoInscripcion ?? '',
+      item.Enfasis ?? '',
+      item.NumeroDocumento ?? '',
+      item.PuntajeFinal ?? '',
+      item.codigo ?? ''
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map(row =>
+        row.map(value => `"${String(value ?? '').replace(/"/g, '""')}"`).join(',')
+      )
+      .join('\n');
+
+    const blob = new Blob(['\uFEFF' + csvContent], {
+      type: 'text/csv;charset=utf-8;'
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `codificacion_${this.selectionForm.get('codigoProyectoCurricular')?.value || 'listado'}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   //HELPERS

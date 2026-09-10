@@ -6,7 +6,12 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <form [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
+            <div *ngIf="loadingAcceso" class="alert warning margin-y">
+                <mat-icon class="icon">hourglass_top</mat-icon>
+                <span>{{ 'GLOBAL.cargando' | translate }}</span>
+            </div>
+
+            <form *ngIf="!loadingAcceso && puedeAcceder" [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
                 <div class="grid">
 
                     <mat-form-field appearance="fill" class="grid-3">
@@ -65,7 +70,7 @@
                         </mat-select>
                     </mat-form-field>
                     -->
-                    <div  *ngIf="isTranferenciaOrReintegro">
+                    <!-- <div  *ngIf="isTranferenciaOrReintegro">
                         <mat-form-field class="grid-3">
                             <mat-label>{{ 'reportes.SelectEstadoInscripcion' | translate }}</mat-label>
                             <mat-select formControlName="selectEstado">
@@ -74,7 +79,7 @@
                                 </mat-option>
                             </mat-select>
                           </mat-form-field>
-                    </div>
+                    </div> -->
                     <!-- SELECTOR DE TIPO DE INSCRIPCIÓN COMENTADO: se usa valor fijo 15 (nueva)
                     <mat-form-field class="grid-3">
                         <mat-label>{{ 'reportes.SelectTipoInscripcion' | translate }}</mat-label>
@@ -92,6 +97,12 @@
                 </div>
             </form>
         </mat-card-content>
+
+        <div *ngIf="loading" class="alert warning margin-y">
+            <mat-icon class="icon">hourglass_top</mat-icon>
+            <span>{{ 'GLOBAL.cargando' | translate }}</span>
+        </div>
+
         <div *ngIf="isDocuments">
             <div class="table-reporte">
 
