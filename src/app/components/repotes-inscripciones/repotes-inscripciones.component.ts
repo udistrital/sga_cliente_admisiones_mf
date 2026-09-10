@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,6 +9,8 @@ import { saveAs } from 'file-saver';
 import { MatDialog } from '@angular/material/dialog';
 import { ReporteVisualizerComponent } from '../reporte-visualizer/reporte-visualizer.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
 import { tipoReporteInscritos } from 'src/app/models/reportes/tipo-reportes-inscripciones';
 import { estadosReintegrosTransferencias } from 'src/app/models/reportes/estados-reintegros-transferencias';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
@@ -28,6 +31,7 @@ export class RepotesInscripcionesComponent {
   reportePdf: string = "";
   reporteExcel: string = "";
   isDocuments: boolean = false
+  loading: boolean = false
   blobPdf: Blob = new Blob;
   columnas: any[] = []
   tipoReporte = tipoReporteInscritos
@@ -186,12 +190,59 @@ export class RepotesInscripcionesComponent {
     this._snackBar.open(message, action);
   }
 
+  private mostrarErrorReporte(titulo: string, texto: string) {
+    Swal.fire({
+      icon: 'error',
+      title: titulo,
+      text: texto,
+      confirmButtonText: 'Aceptar',
+    });
+  }
+
+  private obtenerMensajeReporteFallido(response: any): string {
+    return (
+      response?.Message ||
+      response?.message ||
+      response?.Error ||
+      response?.error?.Message ||
+      response?.error?.message ||
+      'No fue posible generar el reporte para los parámetros seleccionados.'
+    );
+  }
+
+  private mostrarErrorSegunRespuesta(response: any) {
+    const status = Number(response?.Status ?? response?.status ?? 0)
+    const mensaje = this.obtenerMensajeReporteFallido(response)
+
+    if (status === 404) {
+      this.mostrarErrorReporte(
+        'No hay datos para mostrar',
+        mensaje || 'No hay datos para los parámetros seleccionados.'
+      )
+      return
+    }
+
+    if (status >= 500) {
+      this.mostrarErrorReporte(
+        'Error del servicio',
+        mensaje || 'Ocurrió un error en el servicio al generar el reporte.'
+      )
+      return
+    }
+
+    this.mostrarErrorReporte(
+      'No fue posible generar el reporte',
+      mensaje
+    )
+  }
+
   onSubmit() {
     if (this.reporteForm.valid) {
 
       this.openSnackBar("Generando reporte porfavor espera", "Aceptar")
 
       this.isDocuments = false
+      this.loading = true
 
       const reporteSeleccionado = this.tipoReporte.find(r => r.Codigo === this.reporteForm.get('tipoReporte')?.value)
       const todasColumnas = reporteSeleccionado ? reporteSeleccionado.Columnas.map((c: any) => c.Valor) : []
@@ -224,19 +275,45 @@ export class RepotesInscripcionesComponent {
         { Periodo: nombrePeriodo, Facultad: nombreFacultad, Proyecto: nombreProyecto }
       ]
 
-      this.sgaAdmisionesMidService.post('reporte', dataReporte).subscribe(
-        (Response: any) => {
+      this.sgaAdmisionesMidService.post('reporte', dataReporte).subscribe({
+        next: (Response: any) => {
+          this.loading = false
           if (Response.Status == 200 && Response.Success) {
-
             this.reporteExcel = Response.Data.Excel
             this.reportePdf = Response.Data.Pdf
-            this.openSnackBar("Reporte Generado", "Aceptar")
+            this.openSnackBar('Reporte Generado', 'Aceptar')
             this.isDocuments = true
           } else {
-            this.openSnackBar("Ocurrio un error", "Aceptar")
+            this.mostrarErrorSegunRespuesta(Response)
           }
+        },
+        error: (error: HttpErrorResponse) => {
+          this.loading = false
+          const response = error?.error ?? error
+          const status = Number(error?.status ?? response?.Status ?? 0)
+
+          if (status === 404) {
+            this.mostrarErrorReporte(
+              'No hay datos para mostrar',
+              this.obtenerMensajeReporteFallido(response)
+            )
+            return
+          }
+
+          if (status >= 500) {
+            this.mostrarErrorReporte(
+              'Error del servicio',
+              this.obtenerMensajeReporteFallido(response)
+            )
+            return
+          }
+
+          this.mostrarErrorReporte(
+            'No fue posible generar el reporte',
+            this.obtenerMensajeReporteFallido(response)
+          )
         }
-      )
+      })
 
     } else {
       // Display an error message or handle invalid form state

@@ -92,6 +92,12 @@
                 </div>
             </form>
         </mat-card-content>
+
+        <div *ngIf="loading" class="alert warning margin-y">
+            <mat-icon class="icon">hourglass_top</mat-icon>
+            <span>{{ 'GLOBAL.cargando' | translate }}</span>
+        </div>
+
         <div *ngIf="isDocuments">
             <div class="table-reporte">
 
