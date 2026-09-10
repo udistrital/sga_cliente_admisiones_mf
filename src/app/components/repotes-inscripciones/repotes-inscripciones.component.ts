@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,9 +9,14 @@ import { saveAs } from 'file-saver';
 import { MatDialog } from '@angular/material/dialog';
 import { ReporteVisualizerComponent } from '../reporte-visualizer/reporte-visualizer.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2';
+import { firstValueFrom } from 'rxjs';
 import { tipoReporteInscritos } from 'src/app/models/reportes/tipo-reportes-inscripciones';
 import { estadosReintegrosTransferencias } from 'src/app/models/reportes/estados-reintegros-transferencias';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
+import { UserService } from 'src/app/services/users.service';
+import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 
 @Component({
   selector: 'app-repotes-inscripciones',
@@ -28,6 +34,8 @@ export class RepotesInscripcionesComponent {
   reportePdf: string = "";
   reporteExcel: string = "";
   isDocuments: boolean = false
+  loading: boolean = false
+  loadingAcceso: boolean = true
   blobPdf: Blob = new Blob;
   columnas: any[] = []
   tipoReporte = tipoReporteInscritos
@@ -35,6 +43,12 @@ export class RepotesInscripcionesComponent {
   generalReport: boolean = false
   isTranferenciaOrReintegro = false
   reportePdfBlobUrl: string = "";
+  puedeAcceder: boolean = false;
+  IsAdmin: boolean = false;
+  rolesUsuario: string[] = [];
+  dependenciasUsuario: number[] = [];
+  facultadesFull: any[] = [];
+  proyectosFull: any[] = [];
 
   displayedColumns: string[] = ['Periodo', 'Facultad', 'Proyecto', 'Acciones'];
   dataSource: { Periodo: string, Facultad: string, Proyecto: string }[] = [];
@@ -49,6 +63,8 @@ export class RepotesInscripcionesComponent {
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private sgaInscripcionService: InscripcionService,
+    private userService: UserService,
+    private autenticationService: ImplicitAutenticationService,
 
   ) {
     this.reporteForm = this.fb.group({
@@ -65,34 +81,109 @@ export class RepotesInscripcionesComponent {
     });
   }
 
-  ngOnInit(): void {
-    this.caragarPeriodos()
-    this.caragarFacultades()
-    this.caragarTipoInscripcion()
+  async ngOnInit(): Promise<void> {
+    await this.cargarPermisosAcceso();
+    if (!this.puedeAcceder) {
+      this.loadingAcceso = false;
+      return;
+    }
+
+    await Promise.all([
+      this.caragarPeriodos(),
+      this.caragarFacultades(),
+      this.caragarProyectosAcademicosCompletos(),
+      this.caragarTipoInscripcion(),
+    ]);
+
+    this.loadingAcceso = false;
+    this.aplicarFiltrosAcceso();
   }
 
-  caragarPeriodos() {
-    this.sgaParametrosService.get('periodo?query=CodigoAbreviacion:PA&limit=0&sortby=Nombre&order=asc').subscribe(
-      (Response: any) => {
-        this.periodosAcademicos = Response.Data
+  async cargarPermisosAcceso(): Promise<void> {
+    const roles = await this.autenticationService.getRole();
+    this.rolesUsuario = Array.isArray(roles) ? roles : [];
+    this.IsAdmin = this.rolesUsuario.some((role: string) =>
+      ['ADMIN_SGA', 'VICERRECTOR', 'ASESOR_VICE', 'ADMISIONES_REG'].includes(role)
+    );
+
+    if (this.IsAdmin) {
+      this.puedeAcceder = true;
+      return;
+    }
+
+    try {
+      const idTercero = this.userService.getPersonaId();
+      const respDependencia: any = await firstValueFrom(
+        this.sgaAdmisionesMidService.get('admision/dependencia_vinculacion_tercero/' + idTercero)
+      );
+      const dependencias =
+        respDependencia?.Data?.Data?.DependenciaId ||
+        respDependencia?.Data?.DependenciaId ||
+        respDependencia?.DependenciaId ||
+        [];
+      this.dependenciasUsuario = Array.isArray(dependencias)
+        ? dependencias.map((dep: any) => Number(dep)).filter((dep: number) => dep > 0)
+        : [];
+
+      this.puedeAcceder = this.dependenciasUsuario.length > 0;
+      if (!this.puedeAcceder) {
+        this.mostrarErrorReporte(
+          'Acceso restringido',
+          'No se encontraron vinculaciones activas para tu usuario. Comunicate con soporte.'
+        );
+      } else if (this.dependenciasUsuario.length > 1) {
+        this.openSnackBar('Tienes mas de una vinculacion activa; se aplicaran las opciones permitidas', 'Aceptar');
       }
-    )
+    } catch (error) {
+      this.puedeAcceder = false;
+      this.mostrarErrorReporte(
+        'Acceso restringido',
+        'No fue posible validar tu vinculacion con terceros. Comunicate con soporte.'
+      );
+    }
   }
 
-  caragarFacultades() {
-    this.sgaOikosService.get('dependencia?query=DependenciaTipoDependencia__TipoDependenciaId__Nombre:FACULTAD&limit=0&sortby=Nombre&order=asc').subscribe(
-      (Response: any) => {
-        this.facultades = Response
-      }
-    )
+  caragarPeriodos(): Promise<void> {
+    return new Promise((resolve) => {
+      this.sgaParametrosService.get('periodo?query=CodigoAbreviacion:PA&limit=0&sortby=Nombre&order=desc').subscribe(
+        (Response: any) => {
+          this.periodosAcademicos = Response.Data
+          resolve();
+        },
+        () => resolve()
+      )
+    })
+  }
+
+  caragarFacultades(): Promise<void> {
+    return new Promise((resolve) => {
+      this.sgaOikosService.get('dependencia?query=DependenciaTipoDependencia__TipoDependenciaId__Nombre:FACULTAD&limit=0&sortby=Nombre&order=asc').subscribe(
+        (Response: any) => {
+          this.facultadesFull = this.normalizarListaRespuesta(Response)
+          this.aplicarFiltrosAcceso()
+          resolve();
+        },
+        () => resolve()
+      )
+    })
+  }
+
+  caragarProyectosAcademicosCompletos(): Promise<void> {
+    return new Promise((resolve) => {
+      this.sgaProyectoAcademicoService.get('proyecto_academico_institucion?query=Activo:true&limit=0&sortby=Nombre&order=asc').subscribe(
+        (Response: any) => {
+          this.proyectosFull = this.normalizarListaRespuesta(Response)
+          this.aplicarFiltrosAcceso()
+          resolve();
+        },
+        () => resolve()
+      )
+    })
   }
 
   caragarProyectosAcademicos(idFacultad: number) {
-    this.sgaProyectoAcademicoService.get(`proyecto_academico_institucion?query=FacultadId:${idFacultad}&limit=0&sortby=Nombre&order=asc`).subscribe(
-      (Response: any) => {
-        this.proyectos = Response
-      }
-    )
+    this.reporteForm.get('proyectoCurricular')?.setValue('')
+    this.proyectos = this.filtrarProyectosPermitidosPorFacultad(idFacultad)
   }
 
   caragarNivelesAcademicos() {
@@ -103,12 +194,81 @@ export class RepotesInscripcionesComponent {
     )
   }
 
-  caragarTipoInscripcion() {
-    this.sgaInscripcionService.get(`tipo_inscripcion?query=Activo:true&limit=0&sortby=Nombre&order=asc`).subscribe(
-      (Response: any) => {
-        this.tiposInscripcion = Response
-      }
-    )
+  caragarTipoInscripcion(): Promise<void> {
+    return new Promise((resolve) => {
+      this.sgaInscripcionService.get(`tipo_inscripcion?query=Activo:true&limit=0&sortby=Nombre&order=asc`).subscribe(
+        (Response: any) => {
+          this.tiposInscripcion = Response
+          resolve();
+        },
+        () => resolve()
+      )
+    })
+  }
+
+  private aplicarFiltrosAcceso() {
+    if (this.loadingAcceso || !this.puedeAcceder) {
+      return;
+    }
+
+    const proyectosPermitidos = this.IsAdmin
+      ? [...this.proyectosFull]
+      : this.proyectosFull.filter((proyecto: any) =>
+          this.dependenciasUsuario.includes(Number(proyecto?.Id))
+        );
+
+    const facultadesPermitidasIds = Array.from(
+      new Set(
+        proyectosPermitidos
+          .map((proyecto: any) => Number(proyecto?.FacultadId?.Id || proyecto?.FacultadId))
+          .filter((id: number) => id > 0)
+      )
+    );
+
+    this.facultades = this.IsAdmin
+      ? [...this.facultadesFull]
+      : this.facultadesFull.filter((facultad: any) =>
+          facultadesPermitidasIds.includes(Number(facultad?.Id))
+        );
+
+    const facultadSeleccionada = Number(this.reporteForm.get('facultad')?.value || 0);
+    this.proyectos = facultadSeleccionada
+      ? proyectosPermitidos.filter((proyecto: any) =>
+          Number(proyecto?.FacultadId?.Id || proyecto?.FacultadId) === facultadSeleccionada
+        )
+      : proyectosPermitidos;
+  }
+
+  private limitarSeleccionActual(): void {
+    const facultadActual = Number(this.reporteForm.get('facultad')?.value || 0);
+    if (facultadActual > 0) {
+      this.proyectos = this.filtrarProyectosPermitidosPorFacultad(facultadActual);
+    }
+  }
+
+  private filtrarProyectosPermitidosPorFacultad(idFacultad: number): any[] {
+    const proyectosPermitidos = this.IsAdmin
+      ? [...this.proyectosFull]
+      : this.proyectosFull.filter((proyecto: any) =>
+          this.dependenciasUsuario.includes(Number(proyecto?.Id))
+        );
+
+    return proyectosPermitidos.filter((proyecto: any) =>
+      Number(proyecto?.FacultadId?.Id || proyecto?.FacultadId) === Number(idFacultad)
+    );
+  }
+
+  private normalizarListaRespuesta(response: any): any[] {
+    if (Array.isArray(response)) {
+      return response;
+    }
+    if (Array.isArray(response?.Data?.Data)) {
+      return response.Data.Data;
+    }
+    if (Array.isArray(response?.Data)) {
+      return response.Data;
+    }
+    return [];
   }
 
   onFacultadChange(event: any) {
@@ -186,12 +346,59 @@ export class RepotesInscripcionesComponent {
     this._snackBar.open(message, action);
   }
 
+  private mostrarErrorReporte(titulo: string, texto: string) {
+    Swal.fire({
+      icon: 'error',
+      title: titulo,
+      text: texto,
+      confirmButtonText: 'Aceptar',
+    });
+  }
+
+  private obtenerMensajeReporteFallido(response: any): string {
+    return (
+      response?.Message ||
+      response?.message ||
+      response?.Error ||
+      response?.error?.Message ||
+      response?.error?.message ||
+      'No fue posible generar el reporte para los parámetros seleccionados.'
+    );
+  }
+
+  private mostrarErrorSegunRespuesta(response: any) {
+    const status = Number(response?.Status ?? response?.status ?? 0)
+    const mensaje = this.obtenerMensajeReporteFallido(response)
+
+    if (status === 404) {
+      this.mostrarErrorReporte(
+        'No hay datos para mostrar',
+        mensaje || 'No hay datos para los parámetros seleccionados.'
+      )
+      return
+    }
+
+    if (status >= 500) {
+      this.mostrarErrorReporte(
+        'Error del servicio',
+        mensaje || 'Ocurrió un error en el servicio al generar el reporte.'
+      )
+      return
+    }
+
+    this.mostrarErrorReporte(
+      'No fue posible generar el reporte',
+      mensaje
+    )
+  }
+
   onSubmit() {
     if (this.reporteForm.valid) {
 
       this.openSnackBar("Generando reporte porfavor espera", "Aceptar")
 
       this.isDocuments = false
+      this.loading = true
 
       const reporteSeleccionado = this.tipoReporte.find(r => r.Codigo === this.reporteForm.get('tipoReporte')?.value)
       const todasColumnas = reporteSeleccionado ? reporteSeleccionado.Columnas.map((c: any) => c.Valor) : []
@@ -224,19 +431,45 @@ export class RepotesInscripcionesComponent {
         { Periodo: nombrePeriodo, Facultad: nombreFacultad, Proyecto: nombreProyecto }
       ]
 
-      this.sgaAdmisionesMidService.post('reporte', dataReporte).subscribe(
-        (Response: any) => {
+      this.sgaAdmisionesMidService.post('reporte', dataReporte).subscribe({
+        next: (Response: any) => {
+          this.loading = false
           if (Response.Status == 200 && Response.Success) {
-
             this.reporteExcel = Response.Data.Excel
             this.reportePdf = Response.Data.Pdf
-            this.openSnackBar("Reporte Generado", "Aceptar")
+            this.openSnackBar('Reporte Generado', 'Aceptar')
             this.isDocuments = true
           } else {
-            this.openSnackBar("Ocurrio un error", "Aceptar")
+            this.mostrarErrorSegunRespuesta(Response)
           }
+        },
+        error: (error: HttpErrorResponse) => {
+          this.loading = false
+          const response = error?.error ?? error
+          const status = Number(error?.status ?? response?.Status ?? 0)
+
+          if (status === 404) {
+            this.mostrarErrorReporte(
+              'No hay datos para mostrar',
+              this.obtenerMensajeReporteFallido(response)
+            )
+            return
+          }
+
+          if (status >= 500) {
+            this.mostrarErrorReporte(
+              'Error del servicio',
+              this.obtenerMensajeReporteFallido(response)
+            )
+            return
+          }
+
+          this.mostrarErrorReporte(
+            'No fue posible generar el reporte',
+            this.obtenerMensajeReporteFallido(response)
+          )
         }
-      )
+      })
 
     } else {
       // Display an error message or handle invalid form state

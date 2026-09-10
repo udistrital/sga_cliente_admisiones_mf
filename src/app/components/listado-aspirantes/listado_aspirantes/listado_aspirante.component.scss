@@ -32,6 +32,19 @@ main{
   justify-content: space-around;
 }
 
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 800px) {
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 800px) {
   .card-content{
     flex-direction: column;
