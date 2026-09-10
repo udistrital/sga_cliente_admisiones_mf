@@ -6,7 +6,12 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <form [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
+            <div *ngIf="loadingAcceso" class="alert warning margin-y">
+                <mat-icon class="icon">hourglass_top</mat-icon>
+                <span>{{ 'GLOBAL.cargando' | translate }}</span>
+            </div>
+
+            <form *ngIf="!loadingAcceso && puedeAcceder" [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
                 <div class="grid">
 
                     <mat-form-field appearance="fill" class="grid-3">
