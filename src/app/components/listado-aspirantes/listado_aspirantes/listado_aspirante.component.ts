@@ -110,6 +110,12 @@ export class ListadoAspiranteComponent implements OnInit {
   cantidad_inscritos_obs: number = 0;
   mostrarConteos: boolean = false;
   info_persona_id: any;
+  estadoFiltro: string = '';
+  estadoReciboFiltro: string = '';
+  tipoInscripcionFiltro: string = '';
+  estadosFiltro: string[] = [];
+  estadosReciboFiltro: string[] = [];
+  tiposInscripcionFiltro: string[] = [];
 
   stateTransitions: Record<State, State[]> = {
     "Inscripción solicitada": [],
@@ -258,6 +264,7 @@ export class ListadoAspiranteComponent implements OnInit {
     this.proyectos = [];
     this.show_listado = false;
     this.mostrarConteos = false;
+    this.limpiarFiltrosTabla();
     this.CampoControl.reset(null, { emitEvent: false });
     this.Campo1Control.reset(null, { emitEvent: false });
     this.updateNextSelectAvailability();
@@ -524,6 +531,7 @@ export class ListadoAspiranteComponent implements OnInit {
     this.Aspirantes = [];
     this.inscritos = [];
     this.admitidos = [];
+    this.limpiarFiltrosTabla();
 
     this.loading = true;
     this.sgaMidAdmisioens
@@ -538,6 +546,7 @@ export class ListadoAspiranteComponent implements OnInit {
         (response: any) => {
           if (response.Success == true && response.Status == 200) {
             this.Aspirantes = response.Data;
+            this.cargarOpcionesFiltros();
             this.ordenarTabla();
             this.calcularMetaDatos();
             this.loading = false;
@@ -615,9 +624,59 @@ export class ListadoAspiranteComponent implements OnInit {
         }
     });
 
-    this.source_emphasys.data = this.Aspirantes;
+    this.aplicarFiltrosTabla();
     this.source_emphasys.paginator = this.paginator;
     this.source_emphasys.sort = this.sort;
+  }
+
+  cargarOpcionesFiltros() {
+    this.estadosFiltro = this.obtenerValoresUnicos((aspirante: any) =>
+      aspirante?.EstadoInscripcionId?.Nombre
+    );
+    this.estadosReciboFiltro = this.obtenerValoresUnicos((aspirante: any) =>
+      aspirante?.EstadoRecibo
+    );
+    this.tiposInscripcionFiltro = this.obtenerValoresUnicos((aspirante: any) =>
+      aspirante?.TipoInscripcion
+    );
+  }
+
+  private obtenerValoresUnicos(selector: (aspirante: any) => any): string[] {
+    return Array.from(
+      new Set(
+        this.Aspirantes
+          .map(selector)
+          .filter((valor: any) => valor !== null && valor !== undefined && valor !== '')
+          .map((valor: any) => String(valor))
+      )
+    ).sort();
+  }
+
+  aplicarFiltrosTabla() {
+    this.source_emphasys.data = this.Aspirantes.filter((aspirante: any) => {
+      const estado = String(aspirante?.EstadoInscripcionId?.Nombre || '');
+      const estadoRecibo = String(aspirante?.EstadoRecibo || '');
+      const tipoInscripcion = String(aspirante?.TipoInscripcion || '');
+
+      return (
+        (!this.estadoFiltro || estado === this.estadoFiltro) &&
+        (!this.estadoReciboFiltro || estadoRecibo === this.estadoReciboFiltro) &&
+        (!this.tipoInscripcionFiltro || tipoInscripcion === this.tipoInscripcionFiltro)
+      );
+    });
+
+    if (this.source_emphasys.paginator) {
+      this.source_emphasys.paginator.firstPage();
+    }
+  }
+
+  limpiarFiltrosTabla() {
+    this.estadoFiltro = '';
+    this.estadoReciboFiltro = '';
+    this.tipoInscripcionFiltro = '';
+    this.estadosFiltro = [];
+    this.estadosReciboFiltro = [];
+    this.tiposInscripcionFiltro = [];
   }
 
   enfasis(idEnf: any) {

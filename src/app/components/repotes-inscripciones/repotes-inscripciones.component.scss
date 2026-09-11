@@ -72,3 +72,19 @@
 .red-snackbar {
   background: #da0e3e;
 }
+
+.alert.warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+}
+
+.alert.warning .icon {
+  color: #856404;
+}

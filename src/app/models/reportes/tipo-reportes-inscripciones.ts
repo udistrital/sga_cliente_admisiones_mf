@@ -36,7 +36,8 @@ export const tipoReporteInscritos = [{
         "Nombre": "Fecha de Pago",
         "Valor": "I"
       }]
-  },/* {
+  },
+  {
     "Nombre": "Inscritos por programa",
     "Codigo": 1,
     "Columnas": [{
@@ -59,7 +60,7 @@ export const tipoReporteInscritos = [{
       "Valor": "E"
     },
     {
-      "Nombre": "Credencial",
+      "Nombre": "Tipo de inscripción",
       "Valor": "F"
     },
     {
@@ -67,10 +68,10 @@ export const tipoReporteInscritos = [{
       "Valor": "G"
     },
     {
-      "Nombre": "Descuentos",
+      "Nombre": "Estado",
       "Valor": "H"
     }, {
-      "Nombre": "Estado",
+      "Nombre": "Fecha de Pago",
       "Valor": "I"
     }]
   }, {
@@ -96,7 +97,7 @@ export const tipoReporteInscritos = [{
         "Valor": "E"
       },
       {
-        "Nombre": "Credencial",
+        "Nombre": "Tipo de inscripción",
         "Valor": "F"
       },
       {
@@ -107,10 +108,11 @@ export const tipoReporteInscritos = [{
         "Nombre": "Estado",
         "Valor": "H"
       }, {
-        "Nombre": "Puntaje",
+        "Nombre": "Fecha de Pago",
         "Valor": "I"
       }]
-  }, {
+  },
+  /*{
     "Nombre": "Aspirantes por programa",
     "Codigo": 3,
     "Columnas": [{
@@ -261,9 +263,9 @@ export const tipoReporteInscritos = [{
         "Nombre": "Estado inscripción",
         "Valor": "I"
       }]
-  },
+  },*/
   {
-    "Nombre": "Listar reintegros",
+    "Nombre": "Listar reingresos",
     "Codigo": 7,
     "Columnas": [{
         "Nombre": "#",
@@ -283,21 +285,31 @@ export const tipoReporteInscritos = [{
       }, {
         "Nombre": "Correo",
         "Valor": "E"
-      },
+      },/*
       {
         "Nombre": "Puntaje",
         "Valor": "F"
-      },
+      }*/,
       {
         "Nombre": "Tipo de inscripción",
-        "Valor": "G"
-      },
+        "Valor": "F"
+      },/*
       {
         "Nombre": "Enfasis",
         "Valor": "H"
-      },
+      }*/,
       {
         "Nombre": "Estado inscripción",
+        "Valor": "G"
+      },
+      {
+        "Nombre": "Secuencia del recibo",
+        "Valor": "H"
+      },
+      {
+        "Nombre": "Fecha de Pago",
         "Valor": "I"
-      }]
-  }*/]
+      }
+    ]
+  }
+]
