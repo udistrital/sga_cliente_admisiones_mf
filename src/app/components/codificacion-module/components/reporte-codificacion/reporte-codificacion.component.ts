@@ -52,7 +52,7 @@ export class ReporteCodificacionComponent implements OnInit {
   }
 
   caragarPeriodos() {
-    this.sgaParametrosService.get('periodo?query=&limit=0&sortby=Nombre&order=asc').subscribe(
+    this.sgaParametrosService.get('periodo?query=&limit=0&sortby=InicioVigencia,Id&order=desc,desc').subscribe(
       (Response: any) => {
         this.periodosAcademicos = Response.Data
       }

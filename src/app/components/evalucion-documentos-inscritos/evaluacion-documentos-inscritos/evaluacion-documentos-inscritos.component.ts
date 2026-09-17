@@ -28,8 +28,12 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { SgaAdmisionesMid } from "src/app/services/sga_admisiones_mid.service";
 import { InscripcionMidService } from "src/app/services/sga_inscripcion_mid.service";
+import { DependenciasVinculacionTercero } from "src/app/models/admision/dependencia_vinculacion_tercero";
+import { RespFormat } from "src/app/models/respuesta/response-format";
 import { CalendarioMidService } from "src/app/services/calendario_mid.service";
 import { EventosService } from "src/app/services/eventos.service";
+
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -172,7 +176,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -205,6 +209,30 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
     });
   }
 
+  private revisionFiltros = 0;
+  seleccionFiltros: SeleccionPrograma | null = null;
+  programaInicial = Number(window.localStorage.getItem('IdProyecto')) || null;
+
+  seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.seleccionFiltros = seleccion;
+    this.revisionFiltros++;
+    this.loading = false;
+    this.periodo = seleccion.periodo;
+    this.selectPeriodo();
+    this.Aspirantes = [];
+    this.dataSource = new MatTableDataSource();
+    this.selectednivel = seleccion.nivel?.Id;
+    this.proyectos_selected = seleccion.programa?.Id;
+    this.proyectos = seleccion.programa ? [seleccion.programa] : [];
+    this.updateNextSelectAvailability();
+    if (seleccion.programa) {
+      this.onProyectoChange();
+      this.periodoMultiple = seleccion.periodo.Id;
+      this.Campo2Control.setValue(this.periodoMultiple, { emitEvent: false });
+      if (!this.selectMultipleNivel) { this.loadInscritos(); }
+    }
+  }
+
   selectPeriodo() {
     this.selectednivel = undefined;
     this.proyectos_selected = undefined;
@@ -229,12 +257,8 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
         if (response !== null || response !== undefined) {
           this.nivel_load = <any>response;
           if (window.localStorage.getItem("Nivel")) {
-            this.selectednivel = this.nivel_load.find(
-              (p: any) => p.Id == window.localStorage.getItem("Nivel")
-            ).Id;
-            this.updateNextSelectAvailability();
-            this.loadProyectos();
             window.localStorage.removeItem("Nivel");
+            window.localStorage.removeItem("IdProyecto");
           }
         }
       },
@@ -384,15 +408,13 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
               } else {
                 const id_tercero = this.userService.getPersonaId();
                 this.sgaMiAdmisiones
-                  .get("admision/dependencia_vinculacion_tercero/" + id_tercero)
+                  .get<RespFormat<DependenciasVinculacionTercero>>("admision/dependencia_vinculacion_tercero/" + id_tercero)
                   .subscribe(
-                    (respDependencia: any) => {
-                      const dependencias = <Number[]>(
-                        respDependencia.Data.Data.DependenciaId
-                      );
+                    (respDependencia) => {
+                      const dependencias = respDependencia.Data.DependenciaId;
                       this.proyectos = <any[]>(
                         response.filter((proyecto: any) =>
-                          dependencias.includes(proyecto.Id)
+                          dependencias.includes(proyecto.DependenciaId)
                         )
                       );
                       if (dependencias.length > 1) {
@@ -429,6 +451,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
   }
 
   loadInscritos() {
+    const revision = this.revisionFiltros;
     this.mostrarConteos = false;
     if (this.selectMultipleNivel) {
       let selectPeriodo: any[] = this.periodoMultiple;
@@ -446,6 +469,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
           )
           .subscribe(
             (response: any) => {
+              if (revision !== this.revisionFiltros) { return; }
               if (response.Success == true && response.Status == 200) {
                 response.Data.forEach((aspirante: any) => {
                   aspirante.IdPeriodo = periodo;
@@ -496,6 +520,7 @@ export class EvaluacionDocumentosInscritosComponent implements OnInit {
         )
         .subscribe(
           (response: any) => {
+            if (revision !== this.revisionFiltros) { return; }
             if (response.Success == true && response.Status == 200) {
               this.Aspirantes = response.Data;
               this.Aspirantes.forEach((aspirante: any) => {

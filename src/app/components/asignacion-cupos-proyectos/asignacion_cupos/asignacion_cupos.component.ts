@@ -14,7 +14,11 @@ import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { TipoInscripcion } from 'src/app/models/inscripcion/tipo_inscripcion';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { firstValueFrom } from 'rxjs';
+import { DependenciasVinculacionTercero } from 'src/app/models/admision/dependencia_vinculacion_tercero';
+import { RespFormat } from 'src/app/models/respuesta/response-format';
 
+
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -61,6 +65,19 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
   }
 
+  private revisionFiltros = 0;
+
+  seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.revisionFiltros++;
+    this.periodo = seleccion.periodo;
+    this.selectPeriodo();
+    this.selectednivel = seleccion.nivel?.Id;
+    this.proyectos_selected = seleccion.programa;
+    this.proyectos = seleccion.programa ? [seleccion.programa] : [];
+    this.updateNextSelectAvailability();
+    if (seleccion.programa) { this.onProyectoChange(); }
+  }
+
   selectPeriodo() {
     if(this.show_cupos){
       this.show_cupos = false;
@@ -90,7 +107,7 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
@@ -173,11 +190,11 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
-                  (respDependencia: any) => {
-                    const dependencias = <Number[]>respDependencia.Data.Data.DependenciaId;
+                this.sgaAdmisiones.get<RespFormat<DependenciasVinculacionTercero>>('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                  (respDependencia) => {
+                    const dependencias = respDependencia.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(
-                      (proyecto: any) => dependencias.includes(proyecto.Id)
+                      (proyecto: any) => dependencias.includes(proyecto.DependenciaId)
                     );
                     this.updateNextSelectAvailability();
                     if (dependencias.length > 1) {
@@ -203,10 +220,12 @@ export class AsignacionCuposComponent implements OnInit, OnChanges {
 
 
   async perfil_editar(event: any) {
+    const revision = this.revisionFiltros;
     this.show_cupos = false;
     switch (event) {
       case 'info_cupos':
         await this.validarNvel();
+        if (revision !== this.revisionFiltros) { return; }
         this.show_cupos = true;
         break;
       default:

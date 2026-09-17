@@ -4,62 +4,8 @@
 
     <!-- SELECTS -->
     <div class="form-grid2 margin-y">
-      <!-- select periodo -->
-      <mat-form-field class="form-field form-col1">
-        <mat-label>{{ "calendario.periodo" | translate }}:</mat-label>
-        <mat-select
-          [(ngModel)]="periodo"
-          [disabled]="false"
-          (selectionChange)="selectPeriodo()"
-        >
-          <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
-          <mat-option *ngFor="let item of periodos" [value]="item">
-            {{ item.Nombre }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- select Nivel -->
-      <mat-form-field class="form-field form-col1">
-        <mat-label>{{ "GLOBAL.nivel" | translate }}:</mat-label>
-        <mat-select
-          [formControl]="CampoControl"
-          [(ngModel)]="selectednivel"
-          [disabled]="!periodo"
-          (selectionChange)="onNivelChange()"
-        >
-          <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
-          <mat-option *ngFor="let item of niveles" [value]="item.Id">
-            {{ item.Nombre }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="CampoControl.hasError('required')">{{
-          "cupos.erro_selec_nivel" | translate
-        }}</mat-error>
-      </mat-form-field>
-
-      <!-- select proyectos -->
-      <mat-form-field class="form-field form-col1">
-        <mat-label>{{ "GLOBAL.proyecto_academico" | translate }}:</mat-label>
-        <mat-select
-          [formControl]="Campo1Control"
-          [(ngModel)]="proyectos_selected"
-          (selectionChange)="onProyectoChange()"
-          [disabled]="!selectednivel"
-        >
-          <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
-          <mat-option
-            *ngFor="let item of proyectos"
-            [value]="item"
-            [disabled]="!item.Id"
-          >
-            {{ item.Nombre }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="Campo1Control.hasError('required')">
-          {{ "cupos.erro_selec_proyecto" | translate }}
-        </mat-error>
-      </mat-form-field>
+      <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
+        (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
 
     </div>
 

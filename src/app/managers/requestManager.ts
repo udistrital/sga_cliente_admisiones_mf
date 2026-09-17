@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { HttpErrorManager } from './errorManager'
+import { Observable } from 'rxjs';
 
 /**
  * This class manage the http connections with internal REST services. Use the response format {
@@ -16,7 +17,7 @@ import { HttpErrorManager } from './errorManager'
 })
 export class RequestManager {
   private path!: any;
-  public httpOptions: any;
+  public httpOptions?: { headers: HttpHeaders };
   constructor(private http: HttpClient, private errManager: HttpErrorManager) {
     const acces_token = window.localStorage.getItem('access_token');
     if (acces_token !== null) {
@@ -45,17 +46,8 @@ export class RequestManager {
    * @param params (an Key, Value object with que query params for the request)
    * @returns Observable<any>
    */
-  get(endpoint: any) {
-    return this.http.get<any>(`${this.path}${endpoint}`, this.httpOptions).pipe(
-      map(
-        (res) => {
-          if (res.hasOwnProperty('Body')) {
-            return res;
-          } else {
-            return res;
-          }
-        },
-      ),
+  get<T = any>(endpoint: any): Observable<T> {
+    return this.http.get<T>(`${this.path}${endpoint}`, this.httpOptions).pipe(
       catchError(this.errManager.handleError.bind(this)),
     );
   }

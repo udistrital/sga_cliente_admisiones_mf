@@ -1,4 +1,5 @@
 import { NgModule } from "@angular/core";
+import { FiltrosProgramaComponent } from '../../shared/filtros-programa/filtros-programa.component';
 import { CommonModule } from "@angular/common";
 
 import { CodificacionRoutingModule } from "./codificacion-routing.module";
@@ -27,6 +28,7 @@ import { RepotesInscripcionesComponent } from "../repotes-inscripciones/repotes-
 @NgModule({
   declarations: [ReporteCodificacionComponent, CodificacionComponent, RepotesInscripcionesComponent, SafeUrlPipe, ReporteVisualizerComponent],
   imports: [
+    FiltrosProgramaComponent,
     CommonModule,
     CodificacionRoutingModule,
     HttpClientModule,

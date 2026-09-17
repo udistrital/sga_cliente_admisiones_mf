@@ -1,3 +1,4 @@
+import { FiltrosProgramaComponent } from './shared/filtros-programa/filtros-programa.component';
 import { AsignarDocumentosDescuentosComponent } from './components/asignar-documentos-descuentos/asignar_documentos_descuentos/asignar_documentos_descuentos.component';
 import { DocProgramaObligatorioComponent } from './components/asignar-documentos-descuentos/doc-programa-obligatorio/doc-programa-obligatorio.component';
 import { SelectDescuentoProyectoComponent } from './components/asignar-documentos-descuentos/select-descuento-proyecto/select-descuento-proyecto.component';
@@ -226,6 +227,7 @@ export function createTranslateLoader(http: HttpClient) {
     
   ],
   imports: [
+    FiltrosProgramaComponent,
     NgxPaginationModule,
     CodificacionModule,
     NgxDocViewerModule,

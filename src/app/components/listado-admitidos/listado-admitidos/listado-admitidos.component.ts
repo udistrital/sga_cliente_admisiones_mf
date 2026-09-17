@@ -13,6 +13,9 @@ import { ParametrosService } from 'src/app/services/parametros.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
+import { idAcademico } from 'src/app/services/filtros-programa.service';
+
 @Component({
   selector: 'app-listado-admitidos',
   templateUrl: './listado-admitidos.component.html',
@@ -89,13 +92,12 @@ export class ListadoAdmitidosComponent {
     this.loading = true;
     await this.cargarPeriodo();
     await this.loadLevel();
-    await this.cargarProyectosPregrado();
     this.loading = false;
   }
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
@@ -165,12 +167,43 @@ export class ListadoAdmitidosComponent {
     });
   }
 
+  get codigosNivelesPermitidos(): string[] {
+    return this.nivel_load.map((n: any) => n.CodigoAbreviacion).filter(Boolean);
+  }
+
+  private revisionFiltros = 0;
+
+  async seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.revisionFiltros++;
+    this.loading = false;
+    const cambioPeriodo = idAcademico(this.periodo) !== idAcademico(seleccion.periodo);
+    this.periodo = seleccion.periodo?.Id;
+    this.select_nivel = seleccion.nivel?.Id;
+    this.selectedcurricular = seleccion.programa?.Id;
+    this.viewFacultades = this.viewCurriculares = this.viewAspirantesTables = false;
+    this.aspirantesAdmitidos = [];
+    this.aspirantesNoAdmitidos = [];
+    if (cambioPeriodo) {
+      this.tipoCupo = null;
+      this.tipoCupoControl.reset();
+      this.tipoCupos = [];
+      if (this.periodo) {
+        const periodo = this.periodo;
+        const cupos: any = await this.cargarTipoCuposPorPeriodo(periodo);
+        if (this.periodo !== periodo) { return; }
+        this.tipoCupos = (cupos || []).filter((c: any) => c.ParametroId?.Id);
+      }
+      this.mostrarSelectorCupos = this.tipoCupos.length > 0;
+    }
+  }
+
   async generarBusqueda() {
+    if (!this.periodo || !this.selectedcurricular) { return; }
     this.loading = true;
     this.viewFacultades = false;
     this.viewCurriculares = false;
     this.viewAspirantesTables = false;
-    await this.cargarFacultades();
+    await this.consultarproyecto(this.selectedcurricular);
     this.loading = false;
   }
 
@@ -274,11 +307,16 @@ export class ListadoAdmitidosComponent {
   }
 
   async loadCriterios() {
+    const revision = this.revisionFiltros;
+    const programa = this.selectedcurricular;
+    const periodo = this.periodo;
     let admitidos: any[] = [];
     let noAdmitidos: any[] = [];
-    await this.recuperarrequisitosProgramaAcademico(this.selectedcurricular, this.periodo);
-    const response: any = await this.recuperarInscripciones(this.selectedcurricular, this.periodo)
-    if (Object.keys(response[0]).length != 0) {
+    await this.recuperarrequisitosProgramaAcademico(programa, periodo);
+    if (revision !== this.revisionFiltros) { return; }
+    const response: any = await this.recuperarInscripciones(programa, periodo);
+    if (revision !== this.revisionFiltros) { return; }
+    if (Array.isArray(response) && response[0]?.Id) {
       for (const element of response) {
         if (element.EstadoInscripcionId.Id == 2 || element.EstadoInscripcionId.Id == 3) {
           admitidos.push(element);

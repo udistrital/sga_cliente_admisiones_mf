@@ -1,6 +1,7 @@
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { RequestManager } from '../managers/requestManager';
 
@@ -20,9 +21,9 @@ export class SgaAdmisionesMid {
     this.requestManager.setPath('SGA_ADMISIONES_MID');
   }
 
-  get(endpoint: any): any {
+  get<T = any>(endpoint: any): Observable<T> {
     this.requestManager.setPath('SGA_ADMISIONES_MID');
-    return this.requestManager.get(endpoint);
+    return this.requestManager.get<T>(endpoint);
   }
 
   post(endpoint: any, element: any) {

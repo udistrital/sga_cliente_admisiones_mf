@@ -1,6 +1,6 @@
-export interface RespFormat {
+export interface RespFormat<T = any> {
     Success: boolean;
     Status: number | string;
     Message: any;
-    Data: any;
+    Data: T;
 }

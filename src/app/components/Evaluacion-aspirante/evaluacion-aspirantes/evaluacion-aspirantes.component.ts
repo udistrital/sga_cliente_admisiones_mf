@@ -26,6 +26,10 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { CalendarioMidService } from "src/app/services/calendario_mid.service";
 import { EventosService } from "src/app/services/eventos.service";
+import { DependenciasVinculacionTercero } from "src/app/models/admision/dependencia_vinculacion_tercero";
+import { RespFormat } from "src/app/models/respuesta/response-format";
+
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
   selector: "evaluacion-aspirantes",
@@ -186,7 +190,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -220,6 +224,27 @@ export class EvaluacionAspirantesComponent implements OnInit {
           }
         );
     });
+  }
+
+  private revisionFiltros = 0;
+  seleccionFiltros: SeleccionPrograma | null = null;
+  programaInicial = Number(window.localStorage.getItem('IdProyecto')) || null;
+
+  seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.seleccionFiltros = seleccion;
+    this.revisionFiltros++;
+    this.loading = false;
+    this.PeriodoControl.setValue(seleccion.periodo, { emitEvent: false });
+    this.selectPeriodo();
+    this.selectednivel = seleccion.nivel?.Id;
+    this.proyectos = seleccion.programa ? [seleccion.programa] : [];
+    this.CampoControl.setValue(this.selectednivel, { emitEvent: false });
+    this.Campo1Control.setValue(seleccion.programa?.Id ?? null, { emitEvent: false });
+    this.selectMultipleNivel = seleccion.nivel?.Nombre === 'Doctorado';
+    this.mostrarBoton = this.selectMultipleNivel;
+    this.mostrarMensajeInicial = this.selectMultipleNivel;
+    this.updateNextSelectAvailability();
+    if (seleccion.programa) { this.onProyectoChange(); }
   }
 
   selectPeriodo() {
@@ -321,13 +346,8 @@ export class EvaluacionAspirantesComponent implements OnInit {
         if (response !== null || response !== undefined) {
           this.nivel_load = <any>response;
           if (window.localStorage.getItem("Nivel")) {
-            this.selectednivel = this.nivel_load.find(
-              (p: any) => p.Id == window.localStorage.getItem("Nivel")
-            ).Id;
-              this.CampoControl.setValue(this.selectednivel, { emitEvent: false });
-              this.updateNextSelectAvailability();
-            this.loadProyectos();
             window.localStorage.removeItem("Nivel");
+            window.localStorage.removeItem("IdProyecto");
           }
         }
       },
@@ -461,15 +481,13 @@ export class EvaluacionAspirantesComponent implements OnInit {
               } else {
                 const id_tercero = this.userService.getPersonaId();
                 this.sgaMidAdmisiones
-                  .get("admision/dependencia_vinculacion_tercero/" + id_tercero)
+                  .get<RespFormat<DependenciasVinculacionTercero>>("admision/dependencia_vinculacion_tercero/" + id_tercero)
                   .subscribe(
-                    (respDependencia: any) => {
-                      const dependencias = <Number[]>(
-                        respDependencia.Data.Data.DependenciaId
-                      );
+                    (respDependencia) => {
+                      const dependencias = respDependencia.Data.DependenciaId;
                       this.proyectos = <any[]>(
                         response.filter((proyecto: any) =>
-                          dependencias.includes(proyecto.Id)
+                          dependencias.includes(proyecto.DependenciaId)
                         )
                       );
                       if (dependencias.length > 1) {
@@ -505,6 +523,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
   }
 
   loadCriterios() {
+    const revision = this.revisionFiltros;
     this.evaluacionService
       .get(
         "requisito_programa_academico?query=ProgramaAcademicoId:" +
@@ -514,6 +533,7 @@ export class EvaluacionAspirantesComponent implements OnInit {
       )
       .subscribe(
         (response: any) => {
+          if (revision !== this.revisionFiltros) { return; }
           if (response[0].Id !== undefined && response[0] !== "{}") {
             this.criterios = <any>response;
             this.criterios = this.criterios.filter(

@@ -16,6 +16,10 @@ import { UserService } from "src/app/services/users.service";
 import { SgaAdmisionesMid } from "src/app/services/sga_admisiones_mid.service";
 import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
 import { OikosService } from "src/app/services/oikos.service";
+import { DependenciasVinculacionTercero } from "src/app/models/admision/dependencia_vinculacion_tercero";
+import { RespFormat } from "src/app/models/respuesta/response-format";
+
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
   selector: "ngx-asignar_documentos_descuentos",
@@ -73,8 +77,6 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
       this.loadingGlobal = true;
       await this.cargarPeriodo();
       await this.loadLevel();
-      await this.cargarFacultad();
-      await this.loadProyectos();
       this.updateNextSelectAvailability();
       this.loadingGlobal = false;
     } catch (error: any) {
@@ -90,7 +92,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -113,6 +115,23 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
           }
         );
     });
+  }
+
+  private revisionFiltros = 0;
+
+  seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.revisionFiltros++;
+    this.loading = false;
+    this.periodo = seleccion.periodo;
+    this.selectPeriodo();
+    this.selectednivel = seleccion.nivel?.Id;
+    this.facultad = seleccion.facultad?.Id;
+    this.proyectos_selected = seleccion.programa?.Id;
+    this.proyectos = seleccion.programa ? [seleccion.programa] : [];
+    sessionStorage.removeItem('ProgramaAcademicoId');
+    sessionStorage.removeItem('TipoInscripcionId');
+    this.updateNextSelectAvailability();
+    if (seleccion.programa) { this.onProyectoChange(); }
   }
 
   selectPeriodo() {
@@ -307,18 +326,16 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
                   this.proyectos = response;
                 } else {
                   const id_tercero = this.userService.getPersonaId();
-                  this.sgaMidAdmisiones
-                    .get(
+                    this.sgaMidAdmisiones
+                    .get<RespFormat<DependenciasVinculacionTercero>>(
                       "admision/dependencia_vinculacion_tercero/" + id_tercero
                     )
                     .subscribe(
-                      (respDependencia: any) => {
-                        const dependencias = <Number[]>(
-                          respDependencia.Data.Data.DependenciaId
-                        );
+                      (respDependencia) => {
+                        const dependencias = respDependencia.Data.DependenciaId;
                         this.proyectos = <any[]>(
                           response.filter((proyecto: any) =>
-                            dependencias.includes(proyecto.Id)
+                            dependencias.includes(proyecto.DependenciaId)
                           )
                         );
                         if (dependencias.length > 1) {
@@ -361,6 +378,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   }
 
   loadTipoInscripcion() {
+    const revision = this.revisionFiltros;
     if (!this.proyectos_selected) {
       this.tipos_inscripcion = [];
       this.tipo_inscripcion_selected = null;
@@ -377,6 +395,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
         .get("tipo_inscripcion?query=Activo:true,CodigoAbreviacion:NUEPOS&limit=0")
         .subscribe(
           (response: any) => {
+            if (revision !== this.revisionFiltros) { return; }
             this.tipos_inscripcion = <any[]>(
               response.filter((tipoInscripcion: any) =>
                 this.filterTipoInscripcion(tipoInscripcion)
