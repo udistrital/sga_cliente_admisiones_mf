@@ -3,66 +3,8 @@
 
   <!-- FORMULARIO -->
   <section>
-    <mat-form-field style="width: 100%">
-      <mat-label>{{ "admision.periodo" | translate }}:</mat-label>
-      <mat-select
-        [formControl]="periodoControl"
-        (selectionChange)="onPeriodoChange()"
-      >
-        <mat-option [value]="null"> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
-        <mat-option *ngFor="let item of periodos" [value]="item.Id">
-          {{ item.Nombre }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <!-- select Nivel -->
-    <mat-form-field style="width: 100%">
-      <mat-label>{{ "admision.nivel" | translate }}:</mat-label>
-      <mat-select
-        [formControl]="nivelControl"
-        [disabled]="!periodo"
-        (selectionChange)="onNivelChange()"
-      >
-        <mat-option [value]="null"> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
-        <mat-option *ngFor="let item of niveles" [value]="item.Id">
-          {{ item.Nombre }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <!-- select Facultad -->
-    <mat-form-field style="width: 100%">
-      <mat-label>{{ "admision.seleccion_facultad" | translate }}</mat-label>
-      <mat-select
-        [formControl]="facultadControl"
-        [disabled]="!nivel"
-        (selectionChange)="onFacultadChange()"
-      >
-        <mat-option [value]="null"> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
-        <mat-option *ngFor="let item of facultades" [value]="item.Id">
-          {{ item.Nombre }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <!-- select Proyectos -->
-    <mat-form-field style="width: 100%">
-      <mat-label>{{ "admision.proyecto" | translate }}:</mat-label>
-      <mat-select
-        [formControl]="proyectoControl"
-        [disabled]="!facultad"
-        (selectionChange)="onProyectoChange()"
-      >
-        <mat-option [value]="null"> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
-        <mat-option
-          *ngFor="let item of proyectosFilteredFacultad"
-          [value]="item.Id"
-        >
-          {{ item.Nombre }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
+      (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
 
     <!-- select Tipo Inscripcion -->
     <mat-form-field style="width: 100%">

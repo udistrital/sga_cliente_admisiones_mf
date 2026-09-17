@@ -17,33 +17,8 @@
                 <br><br>
 
                 <div>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>
-                            {{ 'evaluacionPregrado.periodo' | translate }}:
-                        </mat-label>
-                        <mat-select [(ngModel)]="periodo" [disabled]='false' [formControl]="periodoControl">
-                            <mat-option>
-                                --{{ 'GLOBAL.seleccionar' | translate }}--
-                            </mat-option>
-                            <mat-option *ngFor="let item of periodos" [value]="item.Id">
-                                {{ item.Nombre }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>
-                            {{ 'evaluacionPregrado.criterio_consultar' | translate }}:
-                        </mat-label>
-                        <mat-select [formControl]="nivelControl" [(ngModel)]="select_nivel" [disabled]='selectcriterio'>
-                            <mat-option *ngFor="let item of nivel_load" [value]="item.Id">
-                                {{ item.Nombre }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="criterioControl.hasError('required')">
-                            {{ 'admision.erro_selec_criterio' | translate }}
-                        </mat-error>
-                    </mat-form-field>
+                    <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="codigosNivelesPermitidos"
+                        (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
 
                     <mat-card-content *ngIf="mostrarSelectorCupos">
                             <mat-form-field style="width: 100%;">
@@ -63,7 +38,7 @@
 
                 </div>
                 <div class="contenedor-botones">
-                    <button mat-stroked-button class="boton-general btn boton-primary" (click)="generarBusqueda()">{{ 'GLOBAL.buscar' | translate }}</button>
+                    <button mat-stroked-button class="boton-general btn boton-primary" [disabled]="!selectedcurricular || loading" (click)="generarBusqueda()">{{ 'GLOBAL.buscar' | translate }}</button>
                 </div>
             </div>
         </div>

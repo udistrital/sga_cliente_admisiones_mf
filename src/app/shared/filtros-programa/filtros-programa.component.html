@@ -1,0 +1,33 @@
+<div class="filtros">
+  <mat-form-field>
+    <mat-label>{{ 'calendario.periodo' | translate }}</mat-label>
+    <mat-select [(ngModel)]="periodoId" [ngModelOptions]="{standalone: true}" (selectionChange)="cambiar('periodo')" required>
+      <mat-option [value]="null">{{ 'GLOBAL.seleccionar' | translate }}</mat-option>
+      <mat-option *ngFor="let p of periodos" [value]="p.Id">{{ p.Nombre }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>{{ 'admision.seleccion_facultad' | translate }}</mat-label>
+    <mat-select [(ngModel)]="facultadId" [ngModelOptions]="{standalone: true}" [disabled]="!periodoId || cargando || error" (selectionChange)="cambiar('facultad')" required>
+      <mat-option [value]="null">{{ 'GLOBAL.seleccionar' | translate }}</mat-option>
+      <mat-option *ngFor="let f of facultades" [value]="f.Id">{{ f.Nombre }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>{{ 'GLOBAL.nivel' | translate }}</mat-label>
+    <mat-select [(ngModel)]="nivelId" [ngModelOptions]="{standalone: true}" [disabled]="!facultadId" (selectionChange)="cambiar('nivel')" required>
+      <mat-option [value]="null">{{ 'GLOBAL.seleccionar' | translate }}</mat-option>
+      <mat-option *ngFor="let n of niveles" [value]="n.Id">{{ n.Nombre }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}</mat-label>
+    <mat-select [(ngModel)]="programaId" [ngModelOptions]="{standalone: true}" [disabled]="!nivelId" (selectionChange)="cambiar('programa')" required>
+      <mat-option [value]="null">{{ 'GLOBAL.seleccionar' | translate }}</mat-option>
+      <mat-option *ngFor="let p of proyectos" [value]="p.Id">{{ p.Nombre }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<p *ngIf="cargando" role="status">{{ 'GLOBAL.cargando' | translate }}</p>
+<p *ngIf="error" role="alert">{{ 'inscripcion.error_cargar_informacion' | translate }}</p>
+<p *ngIf="!cargando && !error && !programasPermitidos.length" role="status">{{ 'admision.no_vinculacion_no_rol' | translate }}</p>

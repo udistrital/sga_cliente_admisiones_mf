@@ -11,6 +11,10 @@ import { ImplicitAutenticationService } from 'src/app/services/implicit_autentic
 import { OikosService } from 'src/app/services/oikos.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { FormControl, Validators } from '@angular/forms';
+import { DependenciasVinculacionTercero } from 'src/app/models/admision/dependencia_vinculacion_tercero';
+import { RespFormat } from 'src/app/models/respuesta/response-format';
+
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
   selector: 'def-suite-inscrip-programa',
@@ -67,8 +71,6 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
       this.loading = true;
       await this.cargarPeriodo();
       await this.cargarNivel();
-      await this.cargarFacultad();
-      await this.cargarProyectos();
       await this.cargarTipoInscripcion();
       this.periodoControl.setValue(this.periodo, { emitEvent: false });
       this.updateNextSelectAvailability();
@@ -81,9 +83,25 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   
 
+  private revisionFiltros = 0;
+
+  seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.revisionFiltros++;
+    this.loading = false;
+    this.cambioPeriodo(seleccion.periodo?.Id ?? null);
+    this.nivel = seleccion.nivel?.Id;
+    this.facultad = seleccion.facultad?.Id;
+    this.proyecto = seleccion.programa?.Id;
+    this.proyectos = seleccion.programa ? [seleccion.programa] : [];
+    this.tiposInscripFiltered = (this.tiposInscrip || []).filter(t => t.NivelId === this.nivel);
+    this.proyectoControl.setValue(this.proyecto, { emitEvent: false });
+    this.updateNextSelectAvailability();
+    if (seleccion.programa) { this.onProyectoChange(); }
+  }
+
   cargarPeriodo(){
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0')
         .subscribe((response: any) => {
           if (response != null && response.Status == '200') {
             this.periodo = response.Data.find((p:any) => p.Activo).Id;
@@ -142,7 +160,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   cargarProyectos(){
     return new Promise((resolve, reject) => {
-      this.projectService.get('proyecto_academico_institucion?query=Activo:true&limit=0&fields=Id,Nombre,NivelFormacionId,FacultadId')
+      this.projectService.get('proyecto_academico_institucion?query=Activo:true&limit=0&fields=Id,Nombre,NivelFormacionId,FacultadId,DependenciaId')
         .subscribe((response: any) => {
           if (response != null && response.Status != '404' 
               && Object.keys(response[0]).length > 0) {
@@ -153,11 +171,11 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
                       this.proyectos = response;
                     } else {
                       const id_tercero = this.userService.getPersonaId();
-                      this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/'+id_tercero).subscribe(
-                        (respDependencia: any) => {
-                          const dependencias = <Number[]>respDependencia.Data.Data.DependenciaId;
+                      this.sgaMidAdmisiones.get<RespFormat<DependenciasVinculacionTercero>>('admision/dependencia_vinculacion_tercero/'+id_tercero).subscribe(
+                        (respDependencia) => {
+                          const dependencias = respDependencia.Data.DependenciaId;
                           this.proyectos = <any[]>response.filter(
-                            (proyecto:any) => dependencias.includes(proyecto.Id)
+                            (proyecto:any) => dependencias.includes(proyecto.DependenciaId)
                           );
                           if (dependencias.length > 1) {
                             this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'),this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
@@ -354,12 +372,14 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   }
 
   cambioTipoInscrip(selTipoInscrip:any) {
+    const revision = ++this.revisionFiltros;
     this.tipoInscrip = selTipoInscrip;
     this.tagsObject = {...TAGS_INSCRIPCION_PROGRAMA};
     if (this.periodo && this.nivel && this.facultad && this.proyecto && this.tipoInscrip) {
       this.loading = true;
       this.sgaMidAdmisiones.get('admision/suite?periodo_id='+this.periodo+'&dependencia_id='+this.proyecto+'&tipo_inscripcion_id='+this.tipoInscrip)
         .subscribe((response: any) => {
+          if (revision !== this.revisionFiltros) { return; }
           if (response && response.Success && response.Status === 200 && Array.isArray(response.Data) 
             && response.Data.length > 0 && response.Data[0] &&
             Object.keys(response.Data[0]).length > 0

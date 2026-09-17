@@ -28,10 +28,14 @@ import {
 } from "../../../models/notificaciones_mid/email_templated";
 import { NotificacionesMidService } from "src/app/services/notificaciones_mid.service";
 import { MatTableDataSource } from "@angular/material/table";
+import { DependenciasVinculacionTercero } from "src/app/models/admision/dependencia_vinculacion_tercero";
+import { RespFormat } from "src/app/models/respuesta/response-format";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { State } from "./estado-inscripcion";
 import { InscripcionMidService } from "src/app/services/sga_inscripcion_mid.service";
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
+
 @Component({
   // tslint:disable-next-line: component-selector
   selector: "ngx-listado-aspirante",
@@ -233,7 +237,7 @@ export class ListadoAspiranteComponent implements OnInit {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -256,6 +260,20 @@ export class ListadoAspiranteComponent implements OnInit {
           }
         );
     });
+  }
+
+  private revisionFiltros = 0;
+
+  seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.revisionFiltros++;
+    this.loading = false;
+    this.periodo = seleccion.periodo;
+    this.selectPeriodo();
+    this.selectednivel = seleccion.nivel?.Id;
+    this.proyectos_selected = seleccion.programa;
+    this.proyectos = seleccion.programa ? [seleccion.programa] : [];
+    this.updateNextSelectAvailability();
+    if (seleccion.programa) { this.onProyectoChange(); }
   }
 
   selectPeriodo() {
@@ -311,6 +329,7 @@ export class ListadoAspiranteComponent implements OnInit {
   }
 
   cargarCantidadCupos() {
+    const revision = this.revisionFiltros;
     this.evaluacionInscripcionService
       .get(
         "cupos_por_dependencia?query=DependenciaId:" +
@@ -326,6 +345,7 @@ export class ListadoAspiranteComponent implements OnInit {
             response !== undefined &&
             response[0].Id !== undefined
           ) {
+            if (revision !== this.revisionFiltros) { return; }
             this.cuposProyecto = response[0].CuposHabilitados;
             this.cuposOpcionados = response[0].CuposOpcionados;
           } else {
@@ -480,17 +500,15 @@ export class ListadoAspiranteComponent implements OnInit {
                 } else {
                   const id_tercero = this.userService.getPersonaId();
                   this.sgaMidAdmisioens
-                    .get(
+                    .get<RespFormat<DependenciasVinculacionTercero>>(
                       "admision/dependencia_vinculacion_tercero/" + id_tercero
                     )
                     .subscribe(
-                      (respDependencia: any) => {
-                        const dependencias = <Number[]>(
-                          respDependencia.Data.Data.DependenciaId
-                        );
+                      (respDependencia) => {
+                        const dependencias = respDependencia.Data.DependenciaId;
                         this.proyectos = <any[]>(
                           response.filter((proyecto: any) =>
-                            dependencias.includes(proyecto.Id)
+                            dependencias.includes(proyecto.DependenciaId)
                           )
                         );
                         if (dependencias.length > 1) {
@@ -527,6 +545,7 @@ export class ListadoAspiranteComponent implements OnInit {
   }
 
   mostrartabla() {
+    const revision = this.revisionFiltros;
     this.show_listado = true;
     this.Aspirantes = [];
     this.inscritos = [];
@@ -544,6 +563,7 @@ export class ListadoAspiranteComponent implements OnInit {
       )
       .subscribe(
         (response: any) => {
+          if (revision !== this.revisionFiltros) { return; }
           if (response.Success == true && response.Status == 200) {
             this.Aspirantes = response.Data;
             this.cargarOpcionesFiltros();

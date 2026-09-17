@@ -5,64 +5,13 @@
 
       <!-- FORMULARIO -->
       <div *ngIf="showProfile" class="margin-y">
-        <!-- Nivel -->
-        <mat-form-field class="form-field">
-          <mat-label>{{ "admision.nivel" | translate }}:</mat-label>
-          <mat-select
-            [formControl]="CampoControl"
-            [(ngModel)]="selectednivel"
-            (selectionChange)="onPeriodoChange($event.value)"
-          >
-            <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
-            <mat-option *ngFor="let item of nivel_load" [value]="item.Id">
-              {{ item.Nombre }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="CampoControl.hasError('required')">{{
-            "admision.erro_selec_nivel" | translate
-          }}</mat-error>
-        </mat-form-field>
-
-        <!-- Proyecto académico -->
-        <mat-form-field class="form-field">
-          <mat-label>{{ "admision.proyecto" | translate }}:</mat-label>
-          <mat-select
-            [formControl]="Campo1Control"
-            [(ngModel)]="proyectos_selected"
-            [disabled]="!selectednivel"
-            (selectionChange)="onProyectoChange()"
-          >
-            <mat-option [value]="null">{{
-              "GLOBAL.seleccionar" | translate
-            }}</mat-option>
-            <mat-option *ngFor="let item of proyectos" [value]="item.Id">
-              {{ item.Nombre }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="Campo1Control.hasError('required')">
-            {{ "admision.error_proyecto" | translate }}
-          </mat-error>
-        </mat-form-field>
+        <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
+          [seleccionActual]="seleccionFiltros" [programaInicial]="programaInicial"
+          (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
 
         <!--Periodo académico-->
-        <mat-form-field class="form-field">
+        <mat-form-field *ngIf="selectMultipleNivel" class="form-field">
           <mat-label>{{ "admision.periodo_" | translate }}:</mat-label>
-          <mat-select
-            *ngIf="!selectMultipleNivel"
-            [formControl]="Campo2Control"
-            [(ngModel)]="periodoMultiple"
-            placeholder="2020-I, 2020-II, 2020-III"
-            [disabled]="!proyectos_selected"
-            (selectionChange)="loadInscritos()"
-            required
-          >
-            <mat-option [value]="null" disabled
-              >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
-            >
-            <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
-              {{ periodo.Nombre }}
-            </mat-option>
-          </mat-select>
           <mat-select
             *ngIf="selectMultipleNivel"
             [formControl]="Campo2Control"

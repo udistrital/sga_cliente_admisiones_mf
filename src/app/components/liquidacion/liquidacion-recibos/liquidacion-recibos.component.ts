@@ -246,7 +246,7 @@ export class LiquidacionRecibosComponent {
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {
@@ -741,7 +741,6 @@ export class LiquidacionRecibosComponent {
   }
 
 }
-
 
 
 

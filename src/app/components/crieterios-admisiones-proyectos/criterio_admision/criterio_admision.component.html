@@ -2,58 +2,9 @@
   <mat-card-content>
     <h2>{{ "admision.criterios_proyectos" | translate }}</h2>
     <div *ngIf="!(show_profile || show_icfes)">
-      <!-- select periodo -->
-      <mat-form-field class="form-field">
-        <mat-label>{{ "admision.aviso_periodo" | translate }}:</mat-label>
-        <mat-select [(ngModel)]="periodo" [disabled]="false" (selectionChange)="selectPeriodo()">
-          <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
-          <mat-option *ngFor="let item of periodos" [value]="item">
-            {{ item.Nombre }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- select Nivel -->
-      <mat-form-field class="form-field">
-        <mat-label>{{ "admision.aviso_nivel" | translate }}:</mat-label>
-        <mat-select [formControl]="CampoControl" [(ngModel)]="selectednivel" [disabled]="!periodo"
-          (selectionChange)="onNivelChange()">
-          <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
-          <mat-option *ngFor="let item of niveles" [value]="item.Id">
-            {{ item.Nombre }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="CampoControl.hasError('required')">
-          {{ "admision.erro_selec_nivel" | translate }}
-        </mat-error>
-      </mat-form-field>
-
-      <!-- select Facultad -->
-      <mat-form-field class="form-field">
-        <mat-label>{{ "admision.seleccion_facultad" | translate }}</mat-label>
-        <mat-select [(ngModel)]="facultad" [disabled]="!selectednivel" (selectionChange)="onFacultadChange()">
-          <mat-option [value]="null">
-            {{ "GLOBAL.seleccionar" | translate }}
-          </mat-option>
-          <mat-option *ngFor="let item of facultades" [value]="item.Id">
-            {{ item.Nombre }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- select proyectos -->
-      <mat-form-field class="form-field">
-        <mat-label>{{ "admision.aviso_proyecto" | translate }}:</mat-label>
-        <mat-select [formControl]="Campo1Control" [(ngModel)]="proyectos_selected"
-          [disabled]="!facultad" (selectionChange)="onProyectoChange()">
-          <mat-option [value]="null">--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
-          <mat-option *ngFor="let project of proyectosFilteredFacultad" [value]="project.Id" [disabled]="!project.Id">{{
-            project.Nombre }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="Campo1Control.hasError('required')">
-          {{ "admision.erro_selec_proyecto" | translate }}
-        </mat-error>
-      </mat-form-field>
+      <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
+        [seleccionActual]="seleccionFiltros"
+        (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
 
       <!-- select criterios -->
       <mat-form-field class="form-field">
