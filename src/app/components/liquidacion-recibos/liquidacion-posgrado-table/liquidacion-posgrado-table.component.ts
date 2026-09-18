@@ -18,6 +18,8 @@ import * as JSZip from 'jszip';
 import * as saveAs from 'file-saver';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.service';
+import { DependenciasVinculacionTercero } from 'src/app/models/admision/dependencia_vinculacion_tercero';
+import { RespFormat } from 'src/app/models/respuesta/response-format';
 
 
 interface Food {
@@ -213,11 +215,11 @@ export class LiquidacionPosgradoTableComponent {
               );
             } else {
               const id_tercero = this.userService.getPersonaId();
-              this.sgaAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
-                (respDependencia: any) => {
-                  const dependencias = <Number[]>respDependencia.Data.DependenciaId;
+              this.sgaAdmisiones.get<RespFormat<DependenciasVinculacionTercero>>('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                (respDependencia) => {
+                  const dependencias = respDependencia.Data.DependenciaId;
                   this.proyectos = <any[]>response.filter(
-                    (proyecto: any) => dependencias.includes(proyecto.Id)
+                    (proyecto: any) => dependencias.includes(proyecto.DependenciaId)
                   );
                   if (dependencias.length > 1) {
                     this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
@@ -254,7 +256,7 @@ export class LiquidacionPosgradoTableComponent {
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+      this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0')
         .subscribe((res: any) => {
           const r = <any>res;
           if (res !== null && r.Status === '200') {

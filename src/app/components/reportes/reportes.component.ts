@@ -23,6 +23,8 @@ export interface Estudiante {
   sexo: string;
   estado_inscripcion: string;
 }
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
+
 @Component({
   selector: 'app-reportes',
   templateUrl: './reportes.component.html',
@@ -95,7 +97,7 @@ export class ReportesComponent implements OnInit {
   }
 
   cargarPeriodo() {
-    return this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0').toPromise().then((res: any) => {
+    return this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0').toPromise().then((res: any) => {
       this.periodos = res.Data;
     }).catch((error: HttpErrorResponse) => {
       console.error('Error cargando periodos', error);
@@ -106,6 +108,17 @@ export class ReportesComponent implements OnInit {
     this.projectService.get('nivel_formacion?limit=0').subscribe((response: any) => {
       this.nivel_load = response;
     });
+  }
+
+  seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.Campo2Control.setValue(seleccion.periodo?.Id ?? '', { emitEvent: false });
+    this.CampoControl.setValue(seleccion.nivel?.Id ?? '', { emitEvent: false });
+    this.Campo1Control.setValue(seleccion.programa?.Id ?? '', { emitEvent: false });
+    this.proyectos = seleccion.programa ? [seleccion.programa] : [];
+  }
+
+  get codigosNivelesPermitidos(): string[] {
+    return this.nivel_load.map(n => n.CodigoAbreviacion).filter(Boolean);
   }
 
   cambiarSelectPeriodoSegunNivel(nivelSeleccionado: any) {

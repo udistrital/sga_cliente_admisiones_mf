@@ -10,6 +10,8 @@ import { ParametrosService } from "src/app/services/parametros.service";
 import { ProyectoAcademicoService } from "src/app/services/proyecto_academico.service";
 import { UserService } from "src/app/services/users.service";
 import { SgaAdmisionesMid } from "src/app/services/sga_admisiones_mid.service";
+import { DependenciasVinculacionTercero } from "src/app/models/admision/dependencia_vinculacion_tercero";
+import { RespFormat } from "src/app/models/respuesta/response-format";
 
 @Component({
   selector: "app-administracion-cuenta-bancaria",
@@ -112,7 +114,7 @@ export class AdministracionCuentaBancariaComponent {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -198,18 +200,16 @@ export class AdministracionCuentaBancariaComponent {
                   );
                 } else {
                   const id_tercero = this.userService.getPersonaId();
-                  this.sgaAdmisionesMid
-                    .get(
+                    this.sgaAdmisionesMid
+                    .get<RespFormat<DependenciasVinculacionTercero>>(
                       "admision/dependencia_vinculacion_tercero/" + id_tercero
                     )
                     .subscribe(
-                      (respDependencia: any) => {
-                        const dependencias = <Number[]>(
-                          respDependencia.Data.DependenciaId
-                        );
+                      (respDependencia) => {
+                        const dependencias = respDependencia.Data.DependenciaId;
                         this.proyectos = <any[]>(
                           response.filter((proyecto: any) =>
-                            dependencias.includes(proyecto.Id)
+                            dependencias.includes(proyecto.DependenciaId)
                           )
                         );
                         if (dependencias.length > 1) {

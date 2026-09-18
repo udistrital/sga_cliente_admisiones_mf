@@ -7,61 +7,9 @@
       <div *ngIf="!(show_profile || show_icfes)">
         <!-- FORMULARIO DE SELECTS -->
         <section>
-          <!--Periodo académico-->
-          <mat-form-field style="width: 100%">
-            <mat-label>{{ "admision.periodo_" | translate }}:</mat-label>
-            <mat-select
-              [formControl]="PeriodoControl"
-              (selectionChange)="selectPeriodo()"
-            >
-              <mat-option [value]="null"
-                >--{{ "GLOBAL.seleccionar" | translate }}--</mat-option
-              >
-              <mat-option *ngFor="let item of periodos" [value]="item">
-                {{ item.Nombre }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <!-- select Nivel -->
-          <mat-form-field style="width: 100%">
-            <mat-label>{{ "admision.aviso_nivel" | translate }}:</mat-label>
-            <mat-select
-              [formControl]="CampoControl"
-              [disabled]="!periodo"
-              (selectionChange)="onNivelChange()"
-            >
-              <mat-option [value]="null">{{
-                "GLOBAL.seleccionar" | translate
-              }}</mat-option>
-              <mat-option *ngFor="let item of nivel_load" [value]="item.Id">
-                {{ item.Nombre }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="CampoControl.hasError('required')">
-              {{ "admision.erro_selec_nivel" | translate }}
-            </mat-error>
-          </mat-form-field>
-
-          <!-- select Proyectos -->
-          <mat-form-field style="width: 100%">
-            <mat-label>{{ "admision.aviso_proyecto" | translate }}:</mat-label>
-            <mat-select
-              [formControl]="Campo1Control"
-              [disabled]="!selectednivel"
-              (selectionChange)="onProyectoChange()"
-            >
-              <mat-option [value]="null">{{
-                "GLOBAL.seleccionar" | translate
-              }}</mat-option>
-              <mat-option *ngFor="let item of proyectos" [value]="item.Id">{{
-                item.Nombre
-              }}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="Campo1Control.hasError('required')">
-              {{ "admision.erro_selec_proyecto" | translate }}
-            </mat-error>
-          </mat-form-field>
+          <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
+            [seleccionActual]="seleccionFiltros" [programaInicial]="programaInicial"
+            (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
 
           <!-- select criterios -->
           <mat-form-field style="width: 100%">

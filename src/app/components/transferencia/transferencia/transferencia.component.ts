@@ -22,7 +22,11 @@ import { ImplicitAutenticationService } from 'src/app/services/implicit_autentic
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
+import { DependenciasVinculacionTercero } from 'src/app/models/admision/dependencia_vinculacion_tercero';
+import { RespFormat } from 'src/app/models/respuesta/response-format';
 
+
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
   selector: 'transferencia',
@@ -132,6 +136,20 @@ export class TransferenciaComponent implements OnInit {
   }
 
 
+  private revisionFiltros = 0;
+
+  seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.revisionFiltros++;
+    this.periodo = seleccion.periodo;
+    this.selectPeriodo();
+    this.listadoSolicitudes = false;
+    this.dataSource = new MatTableDataSource();
+    this.selectednivel = seleccion.nivel?.Id;
+    this.proyectos_selected = seleccion.programa;
+    this.proyectos = seleccion.programa ? [seleccion.programa] : [];
+    if (seleccion.programa) { this.cargarSolicitudesSegunProyecto(seleccion.programa); }
+  }
+
   selectPeriodo() {
     this.selectednivel = undefined;
     this.proyectos_selected = undefined;
@@ -186,11 +204,11 @@ export class TransferenciaComponent implements OnInit {
                 );
               } else {
                 const id_tercero = this.userService.getPersonaId();
-                this.sgaMidAdmisiones.get('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
-                  (respDependencia: any) => {
-                    const dependencias = <Number[]>respDependencia.Data.Data.DependenciaId;
+                this.sgaMidAdmisiones.get<RespFormat<DependenciasVinculacionTercero>>('admision/dependencia_vinculacion_tercero/' + id_tercero).subscribe(
+                  (respDependencia) => {
+                    const dependencias = respDependencia.Data.DependenciaId;
                     this.proyectos = <any[]>response.filter(
-                      (proyecto: any) => dependencias.includes(proyecto.Id)
+                      (proyecto: any) => dependencias.includes(proyecto.DependenciaId)
                     );
                     if (dependencias.length > 1) {
                       this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('admision.multiple_vinculacion'));//+". "+this.translate.instant('GLOBAL.comunicar_OAS_error'));
@@ -238,7 +256,7 @@ export class TransferenciaComponent implements OnInit {
 
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
-        this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=Id&order=desc&limit=0')
+        this.parametrosService.get('periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0')
             .subscribe((res: any) => {
                 const r = <any>res;
                 if (res !== null && r.Status === '200') {
@@ -295,9 +313,11 @@ export class TransferenciaComponent implements OnInit {
   }
 
   cargarSolicitudesSegunProyecto(proyecto:any) {
+    const revision = this.revisionFiltros;
     this.listadoSolicitudes = false
     this.inscripcionMidService.get('transferencia/solicitudes/programa/'+proyecto.Id)
       .subscribe((response: any) => {
+        if (revision !== this.revisionFiltros) { return; }
         if (response !== null && response.Status == '400') {
           this.popUpManager.showErrorToast(this.translate.instant('inscripcion.error'));
         } else if (response != null && response.Status == '404') {
@@ -309,6 +329,7 @@ export class TransferenciaComponent implements OnInit {
           inscripciones.forEach((element: any) => {
             this.projectService.get('proyecto_academico_institucion/' + element.Programa).subscribe(
               (res: any) => {
+                if (revision !== this.revisionFiltros) { return; }
                 const auxRecibo = element.Recibo;
                 const NumRecibo = auxRecibo.split('/', 1);
                 element.Recibo = NumRecibo[0];

@@ -27,6 +27,10 @@ import { forEach } from "lodash";
 import { SgaAdmisionesMid } from "src/app/services/sga_admisiones_mid.service";
 import { MatDialog } from "@angular/material/dialog";
 import { SubcriteriosDialogComponent } from "../subcriterios-dialog/subcriterios-dialog.component";
+import { DependenciasVinculacionTercero } from "src/app/models/admision/dependencia_vinculacion_tercero";
+import { RespFormat } from "src/app/models/respuesta/response-format";
+
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
   selector: "criterio-admision",
@@ -176,8 +180,6 @@ export class CriterioAdmisionComponent implements OnChanges {
     this.nivel_load();
     this.loadData();
     this.loadCriterios();
-    this.cargarFacultad();
-    this.loadProyectos();
     this.updateNextSelectAvailability();
   }
 
@@ -263,7 +265,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   cargarPeriodo() {
     return new Promise((resolve, reject) => {
       this.parametrosService
-        .get("periodo?query=CodigoAbreviacion:PA&sortby=Nombre&order=desc&limit=0")
+        .get("periodo?query=CodigoAbreviacion:PA&sortby=InicioVigencia,Id&order=desc,desc&limit=0")
         .subscribe(
           (res: any) => {
             const r = <any>res;
@@ -287,6 +289,24 @@ export class CriterioAdmisionComponent implements OnChanges {
           }
         );
     });
+  }
+
+  private revisionFiltros = 0;
+  seleccionFiltros: SeleccionPrograma | null = null;
+
+  seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.seleccionFiltros = seleccion;
+    this.revisionFiltros++;
+    const cambioPeriodo = this.periodo?.Id !== seleccion.periodo?.Id;
+    this.periodo = seleccion.periodo;
+    this.resetSelectsFrom(1);
+    this.selectednivel = seleccion.nivel?.Id;
+    this.facultad = seleccion.facultad?.Id;
+    this.proyectos_selected = seleccion.programa?.Id;
+    this.proyectos = seleccion.programa ? [seleccion.programa] : [];
+    this.updateNextSelectAvailability();
+    if (cambioPeriodo && this.periodo) { this.loadNumeroOpciones(); }
+    if (seleccion.programa) { this.onProyectoChange(); }
   }
 
   selectPeriodo() {
@@ -426,6 +446,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   activeCriterios() {
+    const revision = this.revisionFiltros;
     if (!this.periodo || !this.selectednivel || !this.facultad || !this.proyectos_selected) {
       this.resetCriteriosState();
       return;
@@ -443,6 +464,7 @@ export class CriterioAdmisionComponent implements OnChanges {
       )
       .subscribe(
         (response) => {
+          if (revision !== this.revisionFiltros) { return; }
           const r = <any>response;
           if (r[0].Id !== undefined && r[0] !== "{}" && r.Type !== "error") {
             r.forEach((element: any) => {
@@ -591,15 +613,13 @@ export class CriterioAdmisionComponent implements OnChanges {
             } else {
               const id_tercero = this.userService.getPersonaId();
               this.sgaMidAdmisiones
-                .get("admision/dependencia_vinculacion_tercero/" + id_tercero)
+                .get<RespFormat<DependenciasVinculacionTercero>>("admision/dependencia_vinculacion_tercero/" + id_tercero)
                 .subscribe(
-                  (respDependencia: any) => {
-                    const dependencias = <Number[]>(
-                      respDependencia.Data.Data.DependenciaId
-                    );
+                  (respDependencia) => {
+                    const dependencias = respDependencia.Data.DependenciaId;
                     this.proyectos = <any[]>(
                       res.filter((proyecto: any) =>
-                        dependencias.includes(proyecto.Id)
+                        dependencias.includes(proyecto.DependenciaId)
                       )
                     );
                     if (dependencias.length > 1) {

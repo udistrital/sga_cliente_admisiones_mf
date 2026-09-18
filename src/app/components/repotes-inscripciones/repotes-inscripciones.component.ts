@@ -17,6 +17,11 @@ import { estadosReintegrosTransferencias } from 'src/app/models/reportes/estados
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { UserService } from 'src/app/services/users.service';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
+import { DependenciasVinculacionTercero } from 'src/app/models/admision/dependencia_vinculacion_tercero';
+import { RespFormat } from 'src/app/models/respuesta/response-format';
+
+import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
+import { esAdministradorProgramas } from 'src/app/services/filtros-programa.service';
 
 @Component({
   selector: 'app-repotes-inscripciones',
@@ -82,6 +87,7 @@ export class RepotesInscripcionesComponent {
   }
 
   async ngOnInit(): Promise<void> {
+    this.caragarNivelesAcademicos();
     await this.cargarPermisosAcceso();
     if (!this.puedeAcceder) {
       this.loadingAcceso = false;
@@ -102,9 +108,7 @@ export class RepotesInscripcionesComponent {
   async cargarPermisosAcceso(): Promise<void> {
     const roles = await this.autenticationService.getRole();
     this.rolesUsuario = Array.isArray(roles) ? roles : [];
-    this.IsAdmin = this.rolesUsuario.some((role: string) =>
-      ['ADMIN_SGA', 'VICERRECTOR', 'ASESOR_VICE', 'ADMISIONES_REG'].includes(role)
-    );
+    this.IsAdmin = esAdministradorProgramas(this.rolesUsuario);
 
     if (this.IsAdmin) {
       this.puedeAcceder = true;
@@ -113,17 +117,10 @@ export class RepotesInscripcionesComponent {
 
     try {
       const idTercero = this.userService.getPersonaId();
-      const respDependencia: any = await firstValueFrom(
-        this.sgaAdmisionesMidService.get('admision/dependencia_vinculacion_tercero/' + idTercero)
+      const respDependencia = await firstValueFrom(
+        this.sgaAdmisionesMidService.get<RespFormat<DependenciasVinculacionTercero>>('admision/dependencia_vinculacion_tercero/' + idTercero)
       );
-      const dependencias =
-        respDependencia?.Data?.Data?.DependenciaId ||
-        respDependencia?.Data?.DependenciaId ||
-        respDependencia?.DependenciaId ||
-        [];
-      this.dependenciasUsuario = Array.isArray(dependencias)
-        ? dependencias.map((dep: any) => Number(dep)).filter((dep: number) => dep > 0)
-        : [];
+      this.dependenciasUsuario = respDependencia.Data.DependenciaId;
 
       this.puedeAcceder = this.dependenciasUsuario.length > 0;
       if (!this.puedeAcceder) {
@@ -145,7 +142,7 @@ export class RepotesInscripcionesComponent {
 
   caragarPeriodos(): Promise<void> {
     return new Promise((resolve) => {
-      this.sgaParametrosService.get('periodo?query=CodigoAbreviacion:PA&limit=0&sortby=Nombre&order=desc').subscribe(
+      this.sgaParametrosService.get('periodo?query=CodigoAbreviacion:PA&limit=0&sortby=InicioVigencia,Id&order=desc,desc').subscribe(
         (Response: any) => {
           this.periodosAcademicos = Response.Data
           resolve();
@@ -214,7 +211,7 @@ export class RepotesInscripcionesComponent {
     const proyectosPermitidos = this.IsAdmin
       ? [...this.proyectosFull]
       : this.proyectosFull.filter((proyecto: any) =>
-          this.dependenciasUsuario.includes(Number(proyecto?.Id))
+          this.dependenciasUsuario.includes(Number(proyecto?.DependenciaId))
         );
 
     const facultadesPermitidasIds = Array.from(
@@ -250,7 +247,7 @@ export class RepotesInscripcionesComponent {
     const proyectosPermitidos = this.IsAdmin
       ? [...this.proyectosFull]
       : this.proyectosFull.filter((proyecto: any) =>
-          this.dependenciasUsuario.includes(Number(proyecto?.Id))
+          this.dependenciasUsuario.includes(Number(proyecto?.DependenciaId))
         );
 
     return proyectosPermitidos.filter((proyecto: any) =>
@@ -271,6 +268,33 @@ export class RepotesInscripcionesComponent {
     return [];
   }
 
+  seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.limpiarSeleccionReporte();
+    this.reporteForm.patchValue({
+      periodoAcademico: seleccion.periodo?.Id ?? '',
+      facultad: seleccion.facultad?.Id ?? '',
+      selectNiveles: seleccion.nivel?.Id ?? '',
+      proyectoCurricular: seleccion.programa?.Id ?? '',
+    });
+    this.proyectos = seleccion.programa ? [seleccion.programa] : [];
+  }
+
+  get codigosNivelesPermitidos(): string[] {
+    return this.niveles.map(n => n.CodigoAbreviacion).filter(Boolean);
+  }
+
+  private revisionFiltros = 0;
+
+  limpiarSeleccionReporte() {
+    this.revisionFiltros++;
+    this.loading = false;
+    this.reporteForm.patchValue({ facultad: '', selectNiveles: '', proyectoCurricular: '' });
+    this.isDocuments = false;
+    this.reportePdf = '';
+    this.reporteExcel = '';
+    this.dataSource = [];
+  }
+
   onFacultadChange(event: any) {
     const facultadId = event.value;
     this.caragarProyectosAcademicos(facultadId)
@@ -282,6 +306,7 @@ export class RepotesInscripcionesComponent {
   }
 
   onReporteChange(event: any) {
+    const eraGeneral = this.generalReport;
     if (event.value == 4) {
       this.caragarNivelesAcademicos()
       this.generalReport = true
@@ -292,6 +317,10 @@ export class RepotesInscripcionesComponent {
     }else {
       this.isTranferenciaOrReintegro = false
       this.generalReport = false
+    }
+    if (eraGeneral !== this.generalReport) {
+      this.limpiarSeleccionReporte();
+      this.reporteForm.get('periodoAcademico')?.reset('');
     }
     // this.reporteForm.get('selectColumnas')?.setValue([])
     // this.columnas = this.tipoReporte[event.value - 1].Columnas
@@ -393,6 +422,7 @@ export class RepotesInscripcionesComponent {
   }
 
   onSubmit() {
+    const revision = ++this.revisionFiltros;
     if (this.reporteForm.valid) {
 
       this.openSnackBar("Generando reporte porfavor espera", "Aceptar")
@@ -433,6 +463,7 @@ export class RepotesInscripcionesComponent {
 
       this.sgaAdmisionesMidService.post('reporte', dataReporte).subscribe({
         next: (Response: any) => {
+          if (revision !== this.revisionFiltros) { return; }
           this.loading = false
           if (Response.Status == 200 && Response.Success) {
             this.reporteExcel = Response.Data.Excel
@@ -444,6 +475,7 @@ export class RepotesInscripcionesComponent {
           }
         },
         error: (error: HttpErrorResponse) => {
+          if (revision !== this.revisionFiltros) { return; }
           this.loading = false
           const response = error?.error ?? error
           const status = Number(error?.status ?? response?.Status ?? 0)
