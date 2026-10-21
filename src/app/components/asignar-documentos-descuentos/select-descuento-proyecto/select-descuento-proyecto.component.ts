@@ -28,7 +28,7 @@ export class SelectDescuentoProyectoComponent implements OnInit {
   settings: any;
   Campo2Control = new FormControl("", [Validators.required]);
   // sourceColumns = ["nombre", "porcentaje", "eliminar"];
-  sourceColumns = ["nombre", "porcentaje", "eliminar"];
+  sourceColumns = ["nombre", "porcentaje"];
   source: MatTableDataSource<any> = new MatTableDataSource();
   @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
     if (paginator) {
@@ -80,6 +80,9 @@ export class SelectDescuentoProyectoComponent implements OnInit {
         "JEFE_DEPENDENCIA",
         "ADMISIONES_REG",
       ].some((rol) => rolesUsuario.includes(rol));
+      this.sourceColumns = this.puedeModificarAsignaciones
+        ? ["nombre", "porcentaje", "eliminar"]
+        : ["nombre", "porcentaje"];
       this.puedeAdministrarCatalogo = ["ADMIN_SGA", "ADMISIONES_REG"].some(
         (rol) => rolesUsuario.includes(rol)
       );
