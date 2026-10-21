@@ -55,6 +55,7 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   Campo3Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
 
   loadingGlobal: boolean = false;
+  puedeVerDocumentos: boolean = false;
 
   constructor(
     private translate: TranslateService,
@@ -70,6 +71,16 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   ) {
     this.translate = translate;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
+    this.cargarPermisos();
+  }
+
+  private cargarPermisos(): void {
+    this.autenticationService.getRole().then((roles: any) => {
+      this.puedeVerDocumentos =
+        Array.isArray(roles) && !roles.includes("ADMISIONES_REG");
+    }).catch(() => {
+      this.puedeVerDocumentos = false;
+    });
   }
 
   async ngOnInit() {
