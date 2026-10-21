@@ -30,7 +30,7 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  PAGINATOR_OPTIONS: number[] = [3, 6, 9];
+  PAGINATOR_OPTIONS: number[] = [5, 10, 25];
   uid!: number;
   cambiotab: boolean = false;
   loading: boolean;
@@ -116,6 +116,9 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   itemselec(event: any) {}
 
   onEdit(event: any): void {
+    if (!this.hasPermission) {
+      return;
+    }
     this.uid = event.data.Id;
     this.activetab();
   }
@@ -193,7 +196,9 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
 
   obtenerPermisos() {
     this.autenticationService.getRole().then((rol: any) => {
-      this.hasPermission = Array.isArray(rol) && rol.includes('ADMIN_SGA');
+      this.hasPermission =
+        Array.isArray(rol) &&
+        (rol.includes('ADMIN_SGA') || rol.includes('ADMISIONES_REG'));
     });
   }
 
