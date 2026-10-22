@@ -394,6 +394,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
                   this.tagsObject[key] = tagsCompletos[key];
               }
             }
+            this.configurarTagsFijos();
             
             this.respuestaTagsOriginal = suite;
             this.loading = false;
@@ -438,8 +439,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
         this.tagsObject.documento_programa.required = this.tagsObject.documento_programa.selected;
         break;
       case 'descuento_matricula':
-        this.tagsObject.descuento_matricula.selected = !this.tagsObject.descuento_matricula.selected;
-        this.tagsObject.descuento_matricula.required = this.tagsObject.descuento_matricula.selected;
+        this.configurarTagsFijos();
         break;
       case 'propuesta_grado':
         this.tagsObject.propuesta_grado.selected = !this.tagsObject.propuesta_grado.selected;
@@ -468,6 +468,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   }
 
   async guardar() {
+    this.configurarTagsFijos();
     if (this.periodo && this.nivel && this.facultad && this.proyecto && this.tipoInscrip) {
       if (this.nuevaSuite) {
         let postData = {
@@ -484,6 +485,22 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
         await this.putTags(putData);
       }
     }
+  }
+
+  private configurarTagsFijos(): void {
+    const required = this.tagsObject.descuento_matricula?.required === true;
+    this.tagsObject.info_persona = {
+      selected: true,
+      required: true,
+    };
+    this.tagsObject.perfil = {
+      selected: true,
+      required: true,
+    };
+    this.tagsObject.descuento_matricula = {
+      selected: true,
+      required,
+    };
   }
 
   async postTags(dataJson:any) {
@@ -506,6 +523,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
               this.nuevaSuite = false;
               this.respuestaTagsOriginal = response.Data;
               this.tagsObject = JSON.parse(response.Data.ListaTags);
+              this.configurarTagsFijos();
               this.popUpManager.showSuccessAlert(this.translate.instant('admision.guardado_existoso_suite'));
               resolve(response);
             } else {
@@ -543,6 +561,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
               this.loading = false;
               this.respuestaTagsOriginal = response.Data;
               this.tagsObject = JSON.parse(response.Data.ListaTags);
+              this.configurarTagsFijos();
               this.popUpManager.showSuccessAlert(this.translate.instant('admision.guardado_existoso_suite'));
               resolve(response);
             } else {
