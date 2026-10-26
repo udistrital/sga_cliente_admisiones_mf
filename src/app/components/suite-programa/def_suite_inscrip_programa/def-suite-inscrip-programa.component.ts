@@ -468,36 +468,48 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   }
 
   async guardar() {
-    this.configurarTagsFijos();
     if (this.periodo && this.nivel && this.facultad && this.proyecto && this.tipoInscrip) {
+      const tagsPayload = this.prepararTagsParaGuardar();
       if (this.nuevaSuite) {
         let postData = {
           Activo: true,
           DependenciaId: this.proyecto,
-          ListaTags: JSON.stringify(this.tagsObject),
+          ListaTags: JSON.stringify(tagsPayload),
           PeriodoId: this.periodo,
           TipoInscripcionId: this.tipoInscrip,
         };
+        console.log(postData);
         await this.postTags(postData);
       } else {
         let putData = {...this.respuestaTagsOriginal};
-        putData.ListaTags = JSON.stringify(this.tagsObject);
+        putData.ListaTags = JSON.stringify(tagsPayload);
         await this.putTags(putData);
       }
     }
   }
 
-  private configurarTagsFijos(): void {
-    const required = this.tagsObject.descuento_matricula?.required === true;
-    this.tagsObject.info_persona = {
+  private prepararTagsParaGuardar(): any {
+    const tags = JSON.parse(JSON.stringify(this.tagsObject));
+    this.configurarTagsFijos(tags);
+    for (const key in tags) {
+      const tag = tags[key];
+      tag.selected = tag.selected === true;
+      tag.required = tag.selected && tag.required === true;
+    }
+    return tags;
+  }
+
+  private configurarTagsFijos(tags: any = this.tagsObject): void {
+    const required = tags.descuento_matricula?.required === true;
+    tags.info_persona = {
       selected: true,
       required: true,
     };
-    this.tagsObject.perfil = {
+    tags.perfil = {
       selected: true,
       required: true,
     };
-    this.tagsObject.descuento_matricula = {
+    tags.descuento_matricula = {
       selected: true,
       required,
     };
