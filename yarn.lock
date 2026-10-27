@@ -133,7 +133,7 @@
     ora "5.4.1"
     rxjs "7.8.1"
 
-"@angular/animations@^18.0.0 || ^19.0.0", "@angular/animations@^19.2.25", "@angular/animations@19.2.25":
+"@angular/animations@^19.2.25", "@angular/animations@19.2.25":
   version "19.2.25"
   resolved "https://registry.npmjs.org/@angular/animations/-/animations-19.2.25.tgz"
   integrity sha512-1IE7wuC3ecAumb7ZQHCugV1jsSl93j0omX7BAWwwmM8C7Xo//fZcO/ad/IFfn0zV/VCBAhOAFBUKUIVAGpsylw==
@@ -174,14 +174,13 @@
   optionalDependencies:
     lmdb "3.2.6"
 
-"@angular/cdk@^18.2.14", "@angular/cdk@18.2.14":
-  version "18.2.14"
-  resolved "https://registry.npmjs.org/@angular/cdk/-/cdk-18.2.14.tgz"
-  integrity sha512-vDyOh1lwjfVk9OqoroZAP8pf3xxKUvyl+TVR8nJxL4c5fOfUFkD7l94HaanqKSRwJcI2xiztuu92IVoHn8T33Q==
+"@angular/cdk@^19.2.19", "@angular/cdk@19.2.19":
+  version "19.2.19"
+  resolved "https://registry.npmjs.org/@angular/cdk/-/cdk-19.2.19.tgz"
+  integrity sha512-PCpJagurPBqciqcq4Z8+3OtKLb7rSl4w/qBJoIMua8CgnrjvA1i+SWawhdtfI1zlY8FSwhzLwXV0CmWWfFzQPg==
   dependencies:
-    tslib "^2.3.0"
-  optionalDependencies:
     parse5 "^7.1.2"
+    tslib "^2.3.0"
 
 "@angular/cli@^19.2.27":
   version "19.2.27"
@@ -206,7 +205,7 @@
     symbol-observable "4.0.0"
     yargs "17.7.2"
 
-"@angular/common@^18.0.0 || ^19.0.0", "@angular/common@^19.2.25", "@angular/common@>= 10.0.0", "@angular/common@>=13.0.0", "@angular/common@>=16.0.0", "@angular/common@>=17.0.0 <20.0.0", "@angular/common@19.2.25":
+"@angular/common@^19.0.0 || ^20.0.0", "@angular/common@^19.2.25", "@angular/common@>= 10.0.0", "@angular/common@>=13.0.0", "@angular/common@>=16.0.0", "@angular/common@>=17.0.0 <20.0.0", "@angular/common@19.2.25":
   version "19.2.25"
   resolved "https://registry.npmjs.org/@angular/common/-/common-19.2.25.tgz"
   integrity sha512-WteFLyfDPvilzpSGHk64bqowa4NnHdbjNl1xXeGr038fgTjp0l0NdiUPqeDtYT4pf5lWl6477pPoQN7o//NyyQ==
@@ -234,24 +233,24 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/core@^18.0.0 || ^19.0.0", "@angular/core@^19.0.0", "@angular/core@^19.2.25", "@angular/core@>= 10.0.0", "@angular/core@>=13.0.0", "@angular/core@>=16.0.0", "@angular/core@>=17.0.0 <20.0.0", "@angular/core@19.2.25":
+"@angular/core@^19.0.0", "@angular/core@^19.0.0 || ^20.0.0", "@angular/core@^19.2.25", "@angular/core@>= 10.0.0", "@angular/core@>=13.0.0", "@angular/core@>=16.0.0", "@angular/core@>=17.0.0 <20.0.0", "@angular/core@19.2.25":
   version "19.2.25"
   resolved "https://registry.npmjs.org/@angular/core/-/core-19.2.25.tgz"
   integrity sha512-j7/irbbdO4rmZfRXS+sphCerzgcRlpGFwxHc/76Ual+ckwJG0MPsNFkllz2SIEZzE1EZkmIunGrHbjeRBJjyvg==
   dependencies:
     tslib "^2.3.0"
 
-"@angular/forms@^18.0.0 || ^19.0.0", "@angular/forms@^19.2.25":
+"@angular/forms@^19.0.0 || ^20.0.0", "@angular/forms@^19.2.25":
   version "19.2.25"
   resolved "https://registry.npmjs.org/@angular/forms/-/forms-19.2.25.tgz"
   integrity sha512-lbuhZiuNKy8vcIHFSP7sOW5kfHSVDiVsXh2/+rWjqGklscfUG5cTK9F9d+k60CH24OhK0NgRKoCHiAK5zPQi2g==
   dependencies:
     tslib "^2.3.0"
 
-"@angular/material@^18.2.14":
-  version "18.2.14"
-  resolved "https://registry.npmjs.org/@angular/material/-/material-18.2.14.tgz"
-  integrity sha512-28pxzJP49Mymt664WnCtPkKeg7kXUsQKTKGf/Kl95rNTEdTJLbnlcc8wV0rT0yQNR7kXgpfBnG7h0ETLv/iu5Q==
+"@angular/material@^19.2.19":
+  version "19.2.19"
+  resolved "https://registry.npmjs.org/@angular/material/-/material-19.2.19.tgz"
+  integrity sha512-auIE6JUzTIA3LyYklh9J/T7u64crmphxUBgAa0zcOMDog6SYfwbNe9YeLQqua5ek4OUAOdK/BHHfVl5W5iaUoQ==
   dependencies:
     tslib "^2.3.0"
 
@@ -262,7 +261,7 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/platform-browser@^18.0.0 || ^19.0.0", "@angular/platform-browser@^19.2.25", "@angular/platform-browser@>= 10.0.0", "@angular/platform-browser@19.2.25":
+"@angular/platform-browser@^19.0.0 || ^20.0.0", "@angular/platform-browser@^19.2.25", "@angular/platform-browser@>= 10.0.0", "@angular/platform-browser@19.2.25":
   version "19.2.25"
   resolved "https://registry.npmjs.org/@angular/platform-browser/-/platform-browser-19.2.25.tgz"
   integrity sha512-UF7cyBnMF3puA/cGy3MXbiPB2Rlw0Umf78XH664Iwqsb37A+TxqzOPaByXsNTIbpV6/h28yO3dMvDVFT3aOvOA==
@@ -5905,12 +5904,12 @@ setprototypeof@~1.2.0, setprototypeof@1.2.0:
   resolved "file:"
   dependencies:
     "@angular/animations" "^19.2.25"
-    "@angular/cdk" "^18.2.14"
+    "@angular/cdk" "^19.2.19"
     "@angular/common" "^19.2.25"
     "@angular/compiler" "^19.2.25"
     "@angular/core" "^19.2.25"
     "@angular/forms" "^19.2.25"
-    "@angular/material" "^18.2.14"
+    "@angular/material" "^19.2.19"
     "@angular/platform-browser" "^19.2.25"
     "@angular/platform-browser-dynamic" "^19.2.25"
     "@angular/router" "^19.2.25"

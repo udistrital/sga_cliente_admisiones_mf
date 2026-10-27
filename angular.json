@@ -92,13 +92,13 @@
           "builder": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "sga-cliente-admisiones-mf:build:production"
+              "buildTarget": "sga-cliente-admisiones-mf:build:production"
             },
             "development": {
-              "browserTarget": "sga-cliente-admisiones-mf:build:development"
+              "buildTarget": "sga-cliente-admisiones-mf:build:development"
             },
             "local": {
-              "browserTarget": "sga-cliente-admisiones-mf:build:local"
+              "buildTarget": "sga-cliente-admisiones-mf:build:local"
             }
           },
           "defaultConfiguration": "local"

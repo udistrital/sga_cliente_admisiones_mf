@@ -10,7 +10,8 @@ import { ParametrosService } from 'src/app/services/parametros.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TranslateService } from '@ngx-translate/core';
-import * as saveAs from 'file-saver';
+import { saveAs } from 'file-saver';
+
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { SolicitudesAdmisiones } from 'src/app/services/solicitudes_admisiones.service';
 import { MatSort } from '@angular/material/sort';

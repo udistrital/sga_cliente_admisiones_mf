@@ -4,7 +4,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
-import * as saveAs from 'file-saver';
+import { saveAs } from 'file-saver';
+
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
