@@ -82,7 +82,6 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@a
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { environment } from "src/environments/environment";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { SpinnerUtilInterceptor, SpinnerUtilModule } from "spinner-util";
 import { HttpClient } from "@angular/common/http";
 import { SgaAdmisionesMid } from "./services/sga_admisiones_mid.service";
 import { FormsModule } from "@angular/forms";
@@ -271,8 +270,7 @@ export function createTranslateLoader(http: HttpClient) {
                 deps: [HttpClient],
             },
         }),
-        CodificacionModule,
-        SpinnerUtilModule], providers: [
+        CodificacionModule], providers: [
         MatSnackBar,
         TerceroMidService,
         InscripcionMidService,

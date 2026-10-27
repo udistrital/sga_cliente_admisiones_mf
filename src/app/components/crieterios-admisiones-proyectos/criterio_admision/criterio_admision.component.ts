@@ -1,4 +1,3 @@
-import { async } from "@angular/core/testing";
 import { Criterio } from "src/app/models/admision/criterio";
 import { Component, OnChanges } from "@angular/core";
 import { Input, Output, EventEmitter } from "@angular/core";

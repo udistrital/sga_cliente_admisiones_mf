@@ -6,7 +6,8 @@ describe("EvaluacionAspirantesComponent", () => {
   let component: EvaluacionAspirantesComponent;
   let fixture: ComponentFixture<EvaluacionAspirantesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
+
     TestBed.configureTestingModule({
       declarations: [EvaluacionAspirantesComponent],
     }).compileComponents();

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DialogPreviewFileComponent } from './dialog-preview-file.component';
 
@@ -6,7 +6,8 @@ describe('DialogPreviewFileComponent', () => {
   let component: DialogPreviewFileComponent;
   let fixture: ComponentFixture<DialogPreviewFileComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
+
     TestBed.configureTestingModule({
       declarations: [ DialogPreviewFileComponent ]
     })
