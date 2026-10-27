@@ -13,9 +13,10 @@ import { PopUpManager } from '../../../managers/popUpManager';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 
 @Component({
-  selector: 'ngx-view-formacion-academica',
-  templateUrl: './view-formacion_academica.component.html',
-  styleUrls: ['./view-formacion_academica.component.scss'],
+    selector: 'ngx-view-formacion-academica',
+    templateUrl: './view-formacion_academica.component.html',
+    styleUrls: ['./view-formacion_academica.component.scss'],
+    standalone: false
 })
 export class ViewFormacionAcademicaComponent implements OnInit {
   info_formacion_academica_id!: number;

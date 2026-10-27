@@ -15,9 +15,10 @@ import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 
 @Component({
-  selector: 'solicitud-transferencia',
-  templateUrl: './solicitud-transferencia.component.html',
-  styleUrls: ['./solicitud-transferencia.component.scss']
+    selector: 'solicitud-transferencia',
+    templateUrl: './solicitud-transferencia.component.html',
+    styleUrls: ['./solicitud-transferencia.component.scss'],
+    standalone: false
 })
 export class SolicitudTransferenciaComponent implements OnInit {
   formTransferencia: any;

@@ -8,9 +8,10 @@ import { TipoParametro } from 'src/app/models/parametro/tipo_parametro';
 import { ParametrosService } from 'src/app/services/parametros.service';
 
 @Component({
-  selector: 'app-creacion-tipo-cupos',
-  templateUrl: './creacion-tipo-cupos.component.html',
-  styleUrls: ['./creacion-tipo-cupos.component.scss']
+    selector: 'app-creacion-tipo-cupos',
+    templateUrl: './creacion-tipo-cupos.component.html',
+    styleUrls: ['./creacion-tipo-cupos.component.scss'],
+    standalone: false
 })
 export class CreacionTipoCuposComponent {
   data: any;

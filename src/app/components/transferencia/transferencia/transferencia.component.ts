@@ -29,9 +29,10 @@ import { RespFormat } from 'src/app/models/respuesta/response-format';
 import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
-  selector: 'transferencia',
-  templateUrl: './transferencia.component.html',
-  styleUrls: ['./transferencia.component.scss']
+    selector: 'transferencia',
+    templateUrl: './transferencia.component.html',
+    styleUrls: ['./transferencia.component.scss'],
+    standalone: false
 })
 export class TransferenciaComponent implements OnInit {
 

@@ -29,9 +29,10 @@ interface Food {
 
 
 @Component({
-  selector: 'app-liquidacion-posgrado-table',
-  templateUrl: './liquidacion-posgrado-table.component.html',
-  styleUrls: ['./liquidacion-posgrado-table.component.scss']
+    selector: 'app-liquidacion-posgrado-table',
+    templateUrl: './liquidacion-posgrado-table.component.html',
+    styleUrls: ['./liquidacion-posgrado-table.component.scss'],
+    standalone: false
 })
 export class LiquidacionPosgradoTableComponent {
 

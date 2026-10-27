@@ -17,9 +17,10 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-  selector: "ngx-select-descuento-proyecto",
-  templateUrl: "./select-descuento-proyecto.component.html",
-  styleUrls: ["./select-descuento-proyecto.component.scss"],
+    selector: "ngx-select-descuento-proyecto",
+    templateUrl: "./select-descuento-proyecto.component.html",
+    styleUrls: ["./select-descuento-proyecto.component.scss"],
+    standalone: false
 })
 export class SelectDescuentoProyectoComponent implements OnInit {
   uid!: number;

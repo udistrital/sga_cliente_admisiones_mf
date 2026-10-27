@@ -4,9 +4,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'dialogo-documentos-transferencias',
-  templateUrl: './dialogo-documentos-transferencias.component.html',
-  styleUrls: ['./dialogo-documentos-transferencias.component.scss']
+    selector: 'dialogo-documentos-transferencias',
+    templateUrl: './dialogo-documentos-transferencias.component.html',
+    styleUrls: ['./dialogo-documentos-transferencias.component.scss'],
+    standalone: false
 })
 export class DialogoDocumentosTransferenciasComponent implements OnInit {
 

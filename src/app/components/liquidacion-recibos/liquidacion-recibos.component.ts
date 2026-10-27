@@ -28,9 +28,10 @@ interface Food {
 }
 
 @Component({
-  selector: 'udistrital-liquidacion-recibos',
-  templateUrl: './liquidacion-recibos.component.html',
-  styleUrls: ['./liquidacion-recibos.component.scss']
+    selector: 'udistrital-liquidacion-recibos',
+    templateUrl: './liquidacion-recibos.component.html',
+    styleUrls: ['./liquidacion-recibos.component.scss'],
+    standalone: false
 })
 export class LiquidacionRecibosComponent {
   dataSource = new MatTableDataSource<any>();

@@ -20,9 +20,10 @@ import { MatSort } from "@angular/material/sort";
 import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
 
 @Component({
-  selector: "ngx-list-descuento-proyecto",
-  templateUrl: "./list-descuento-proyecto.component.html",
-  styleUrls: ["./list-descuento-proyecto.component.scss"],
+    selector: "ngx-list-descuento-proyecto",
+    templateUrl: "./list-descuento-proyecto.component.html",
+    styleUrls: ["./list-descuento-proyecto.component.scss"],
+    standalone: false
 })
 export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   @Input() asDialog!: boolean;

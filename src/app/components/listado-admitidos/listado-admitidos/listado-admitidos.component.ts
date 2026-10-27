@@ -17,9 +17,10 @@ import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-pro
 import { idAcademico } from 'src/app/services/filtros-programa.service';
 
 @Component({
-  selector: 'app-listado-admitidos',
-  templateUrl: './listado-admitidos.component.html',
-  styleUrls: ['./listado-admitidos.component.scss']
+    selector: 'app-listado-admitidos',
+    templateUrl: './listado-admitidos.component.html',
+    styleUrls: ['./listado-admitidos.component.scss'],
+    standalone: false
 })
 export class ListadoAdmitidosComponent {
 

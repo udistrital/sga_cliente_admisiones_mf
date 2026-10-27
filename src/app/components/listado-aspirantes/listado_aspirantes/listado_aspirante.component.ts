@@ -37,10 +37,11 @@ import { InscripcionMidService } from "src/app/services/sga_inscripcion_mid.serv
 import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
-  // tslint:disable-next-line: component-selector
-  selector: "ngx-listado-aspirante",
-  templateUrl: "./listado_aspirante.component.html",
-  styleUrls: ["./listado_aspirante.component.scss"],
+    // tslint:disable-next-line: component-selector
+    selector: "ngx-listado-aspirante",
+    templateUrl: "./listado_aspirante.component.html",
+    styleUrls: ["./listado_aspirante.component.scss"],
+    standalone: false
 })
 export class ListadoAspiranteComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;

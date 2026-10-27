@@ -7,9 +7,10 @@ import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service'
 import { DocumentoService } from 'src/app/services/documento.service';
 
 @Component({
-  selector: 'app-soporte-cupo-inscripcion',
-  templateUrl: './soporte-cupo-inscripcion.component.html',
-  styleUrls: ['./soporte-cupo-inscripcion.component.scss']
+    selector: 'app-soporte-cupo-inscripcion',
+    templateUrl: './soporte-cupo-inscripcion.component.html',
+    styleUrls: ['./soporte-cupo-inscripcion.component.scss'],
+    standalone: false
 })
 export class SoporteCupoInscripcionComponent {
 
