@@ -188,7 +188,7 @@
     symbol-observable "4.0.0"
     yargs "17.7.2"
 
-"@angular/common@^17.0.0", "@angular/common@^17.0.0 || ^18.0.0", "@angular/common@^17.3.12", "@angular/common@>= 10.0.0", "@angular/common@>=13.0.0", "@angular/common@>=16.0.0", "@angular/common@>=16.0.0 <18.0.0", "@angular/common@17.3.12":
+"@angular/common@^17.0.0", "@angular/common@^17.0.0 || ^18.0.0", "@angular/common@^17.3.12", "@angular/common@>= 10.0.0", "@angular/common@>=13.0.0", "@angular/common@>=16.0.0", "@angular/common@>=16.0.0 <19.0.0", "@angular/common@17.3.12":
   version "17.3.12"
   resolved "https://registry.npmjs.org/@angular/common/-/common-17.3.12.tgz"
   integrity sha512-vabJzvrx76XXFrm1RJZ6o/CyG32piTB/1sfFfKHdlH1QrmArb8It4gyk9oEjZ1IkAD0HvBWlfWmn+T6Vx3pdUw==
@@ -216,7 +216,7 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/core@^17.0.0", "@angular/core@^17.0.0 || ^18.0.0", "@angular/core@^17.3.12", "@angular/core@>= 10.0.0", "@angular/core@>=13.0.0", "@angular/core@>=16.0.0", "@angular/core@>=16.0.0 <18.0.0", "@angular/core@17.3.12":
+"@angular/core@^17.0.0", "@angular/core@^17.0.0 || ^18.0.0", "@angular/core@^17.3.12", "@angular/core@>= 10.0.0", "@angular/core@>=13.0.0", "@angular/core@>=16.0.0", "@angular/core@>=16.0.0 <19.0.0", "@angular/core@17.3.12":
   version "17.3.12"
   resolved "https://registry.npmjs.org/@angular/core/-/core-17.3.12.tgz"
   integrity sha512-MuFt5yKi161JmauUta4Dh0m8ofwoq6Ino+KoOtkYMBGsSx+A7dSm+DUxxNwdj7+DNyg3LjVGCFgBFnq4g8z06A==
@@ -5272,10 +5272,10 @@ ngx-doc-viewer@^15.0.1:
     docviewhelper ">= 0.0.1"
     tslib "^2.3.0"
 
-ngx-extended-pdf-viewer@^19.3.0:
-  version "19.3.0"
-  resolved "https://registry.npmjs.org/ngx-extended-pdf-viewer/-/ngx-extended-pdf-viewer-19.3.0.tgz"
-  integrity sha512-tX7n2oGYWjqnd8MrawrbUdfeq3fBE+FGrkXZV2Q/fk2mFdFplIwEhHGHbNOSkpNeZRCh0tYSWvnwW2kawdg1jQ==
+ngx-extended-pdf-viewer@20.5.0:
+  version "20.5.0"
+  resolved "https://registry.npmjs.org/ngx-extended-pdf-viewer/-/ngx-extended-pdf-viewer-20.5.0.tgz"
+  integrity sha512-YCy92VOsxG7hUmW0De2UoqcEcLaUZRFnawQbOPvDymje10JrOUvWHM1FqljK9p9RwQQwy1Nax0fWoZluD4XO9g==
   dependencies:
     lodash.deburr "^4.1.0"
     tslib "^2.3.0"
@@ -6159,7 +6159,7 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
-"rxjs@^6.5.3 || ^7.4.0", "rxjs@^6.5.3 || ^7.5.0", "rxjs@^6.5.5 || ^7.4.0", rxjs@^7.8.1, rxjs@>=7.0.0, rxjs@~7.8.0, rxjs@7.8.1:
+"rxjs@^6.5.3 || ^7.4.0", "rxjs@^6.5.3 || ^7.5.0", "rxjs@^6.5.5 || ^7.4.0", rxjs@^7.8.1, rxjs@>=6.0.0, rxjs@~7.8.0, rxjs@7.8.1:
   version "7.8.1"
   resolved "https://registry.npmjs.org/rxjs/-/rxjs-7.8.1.tgz"
   integrity sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==

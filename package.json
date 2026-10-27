@@ -37,7 +37,7 @@
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
     "ngx-doc-viewer": "^15.0.1",
-    "ngx-extended-pdf-viewer": "^19.3.0",
+    "ngx-extended-pdf-viewer": "20.5.0",
     "ngx-pagination": "^6.0.3",
     "rxjs": "~7.8.0",
     "sga-cliente-admisiones-mf": "file:",
