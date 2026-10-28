@@ -4,7 +4,7 @@
   #fform="ngForm"
   (ngSubmit)="enviarCriterio()"
   class="form-horizontal"
->
+  >
   <h1 mat-dialog-title>
     {{ "admision.nuevo_criterio" | translate }}
   </h1>
@@ -17,15 +17,16 @@
         formControlName="Nombre"
         placeholder="*{{ 'GLOBAL.nombre' | translate }} "
         required
-      />
-      <mat-error
-        *ngIf="
-          criterioForm.get('Nombre')?.hasError('required') &&
-          criterioForm.get('Nombre')?.touched
-        "
-      >
-        {{ "admision.error_nombre_criterio" | translate }}
-      </mat-error>
+        />
+      @if (
+        criterioForm.get('Nombre')?.hasError('required') &&
+        criterioForm.get('Nombre')?.touched
+        ) {
+        <mat-error
+          >
+          {{ "admision.error_nombre_criterio" | translate }}
+        </mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field style="width: 100%">
@@ -34,15 +35,16 @@
         type="text"
         formControlName="Descripcion"
         placeholder="*{{ 'GLOBAL.descripcion' | translate }} "
-      />
-      <mat-error
-        *ngIf="
-          criterioForm.get('Descripcion')?.hasError('required') &&
-          criterioForm.get('Descripcion')?.touched
-        "
-      >
-        {{ "admision.error_desc_criterio" | translate }}
-      </mat-error>
+        />
+      @if (
+        criterioForm.get('Descripcion')?.hasError('required') &&
+        criterioForm.get('Descripcion')?.touched
+        ) {
+        <mat-error
+          >
+          {{ "admision.error_desc_criterio" | translate }}
+        </mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field style="width: 100%">
@@ -51,82 +53,93 @@
         type="text"
         formControlName="CodigoAbreviacion"
         placeholder="*{{ 'GLOBAL.codigo_abreviacion' | translate }} "
-      />
-      <mat-error
-        *ngIf="
-          criterioForm.get('CodigoAbreviacion')?.hasError('required') &&
-          criterioForm.get('CodigoAbreviacion')?.touched
-        "
-      >
-        {{ "admision.error_codigo_criterio" | translate }}
-      </mat-error>
+        />
+      @if (
+        criterioForm.get('CodigoAbreviacion')?.hasError('required') &&
+        criterioForm.get('CodigoAbreviacion')?.touched
+        ) {
+        <mat-error
+          >
+          {{ "admision.error_codigo_criterio" | translate }}
+        </mat-error>
+      }
     </mat-form-field>
 
-    <mat-checkbox *ngIf="!subcriterio" formControlName="Asistencia"
-      ><mat-label>
+    @if (!subcriterio) {
+      <mat-checkbox formControlName="Asistencia"
+        ><mat-label>
         {{ "admision.requiere_asistencia" | translate }}</mat-label
-      ></mat-checkbox
-    >
+        ></mat-checkbox
+        >
+      }
 
-    <mat-checkbox *ngIf="!subcriterio" formControlName="ExamenEstado"
-      ><mat-label>
-        {{ "admision.examen_de_estado" | translate }}</mat-label
-      ></mat-checkbox
-    >
-
-    <!-- Formulario adicional si se va a parametrizar un examen de estado -->
-    <form [formGroup]="examenEstadoForm">
-      <div *ngIf="criterioForm.get('ExamenEstado')?.value">
-        <div class="row my-2" *ngIf="!subcriterio">
-          <h5 class="margin-y">
-            {{ "admision.titulo_form_examen" | translate }}
-          </h5>
-          <mat-checkbox formControlName="Saber11"
-            ><mat-label>
-              {{ "admision.saber_11" | translate }}</mat-label
-            ></mat-checkbox
+      @if (!subcriterio) {
+        <mat-checkbox formControlName="ExamenEstado"
+          ><mat-label>
+          {{ "admision.examen_de_estado" | translate }}</mat-label
+          ></mat-checkbox
           >
-          <mat-checkbox formControlName="SaberPro"
-            ><mat-label>
-              {{ "admision.saber_pro" | translate }}</mat-label
-            ></mat-checkbox
-          >
-        </div>
+        }
 
-        <div *ngIf="!subcriterio" class="margin-y">
-          <h5>SPN</h5>
-          <mat-checkbox formControlName="SPN"
-            ><mat-label>
-              {{ "admision.spn" | translate }}</mat-label
-            ></mat-checkbox
-          >
-        </div>
+        <!-- Formulario adicional si se va a parametrizar un examen de estado -->
+        <form [formGroup]="examenEstadoForm">
+          @if (criterioForm.get('ExamenEstado')?.value) {
+            <div>
+              @if (!subcriterio) {
+                <div class="row my-2">
+                  <h5 class="margin-y">
+                    {{ "admision.titulo_form_examen" | translate }}
+                  </h5>
+                  <mat-checkbox formControlName="Saber11"
+                    ><mat-label>
+                    {{ "admision.saber_11" | translate }}</mat-label
+                    ></mat-checkbox
+                    >
+                    <mat-checkbox formControlName="SaberPro"
+                      ><mat-label>
+                      {{ "admision.saber_pro" | translate }}</mat-label
+                      ></mat-checkbox
+                      >
+                    </div>
+                  }
+                  @if (!subcriterio) {
+                    <div class="margin-y">
+                      <h5>SPN</h5>
+                      <mat-checkbox formControlName="SPN"
+                        ><mat-label>
+                        {{ "admision.spn" | translate }}</mat-label
+                        ></mat-checkbox
+                        >
+                      </div>
+                    }
+                    @if (!subcriterio) {
+                      <div class="margin-y">
+                        <h5>{{ "admision.archivo_soporte" | translate }}</h5>
+                        <mat-checkbox formControlName="ArchivoAdjunto"
+                          ><mat-label>
+                          {{ "admision.archivo" | translate }}</mat-label
+                          ></mat-checkbox
+                          >
+                        </div>
+                      }
+                    </div>
+                  }
+                </form>
+              </div>
 
-        <div *ngIf="!subcriterio" class="margin-y">
-          <h5>{{ "admision.archivo_soporte" | translate }}</h5>
-          <mat-checkbox formControlName="ArchivoAdjunto"
-            ><mat-label>
-              {{ "admision.archivo" | translate }}</mat-label
-            ></mat-checkbox
-          >
-        </div>
-      </div>
-    </form>
-  </div>
+              <div mat-dialog-actions>
+                <button mat-flat-button color="warn" mat-dialog-close>
+                  {{ "GLOBAL.cancelar" | translate }}
+                </button>
+                <button
+                  mat-flat-button
+                  color="accent"
+                  cdkFocusInitial
+                  type="submit"
+                  [disabled]="criterioForm.invalid"
+                  >
+                  {{ "GLOBAL.guardar" | translate }}
+                </button>
 
-  <div mat-dialog-actions>
-      <button mat-flat-button color="warn" mat-dialog-close>
-        {{ "GLOBAL.cancelar" | translate }}
-      </button>
-      <button
-        mat-flat-button
-        color="accent"
-        cdkFocusInitial
-        type="submit"
-        [disabled]="criterioForm.invalid"
-      >
-        {{ "GLOBAL.guardar" | translate }}
-      </button>
-    
-  </div>
-</form>
+              </div>
+            </form>

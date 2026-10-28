@@ -1,24 +1,26 @@
 <mat-card>
-    <mat-card-content>
-        <form (ngSubmit)="submitForm()" #cuposForm="ngForm" class="row">
-            <div class="col-12 col-md-6 center-content">
-                <mat-form-field class="form-item quotas-input">
-                    <mat-label class="form-label">{{ 'GLOBAL.cupos_asignados' | translate }}</mat-label>
-                    <input matInput type="number" min="0" max="999" name="CuposAsignados"
-                        [(ngModel)]="formModel.CuposAsignados"
-                        #CuposAsignados="ngModel"
-                        required
-                        [placeholder]="'GLOBAL.placeholder_cupos_asignados' | translate">
-                </mat-form-field>
-                <small class="text-danger" *ngIf="CuposAsignados.invalid && CuposAsignados.touched">
-                    {{ 'cupos.error_cupos_asignados' | translate }}
-                </small>
-            </div>
-            <div class="col-12 actions-row">
-                <button mat-flat-button color="accent" type="submit" [disabled]="cuposForm.invalid">
-                    {{ 'GLOBAL.guardar' | translate }}
-                </button>
-            </div>
-        </form>
-    </mat-card-content>
+  <mat-card-content>
+    <form (ngSubmit)="submitForm()" #cuposForm="ngForm" class="row">
+      <div class="col-12 col-md-6 center-content">
+        <mat-form-field class="form-item quotas-input">
+          <mat-label class="form-label">{{ 'GLOBAL.cupos_asignados' | translate }}</mat-label>
+          <input matInput type="number" min="0" max="999" name="CuposAsignados"
+            [(ngModel)]="formModel.CuposAsignados"
+            #CuposAsignados="ngModel"
+            required
+            [placeholder]="'GLOBAL.placeholder_cupos_asignados' | translate">
+        </mat-form-field>
+        @if (CuposAsignados.invalid && CuposAsignados.touched) {
+          <small class="text-danger">
+            {{ 'cupos.error_cupos_asignados' | translate }}
+          </small>
+        }
+      </div>
+      <div class="col-12 actions-row">
+        <button mat-flat-button color="accent" type="submit" [disabled]="cuposForm.invalid">
+          {{ 'GLOBAL.guardar' | translate }}
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
 </mat-card>

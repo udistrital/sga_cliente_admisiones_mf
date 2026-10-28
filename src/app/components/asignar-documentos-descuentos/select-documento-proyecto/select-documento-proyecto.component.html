@@ -1,157 +1,156 @@
 <mat-card>
   <!-- DOCUMENTOS DE PROYECTO -->
-  <mat-card-content *ngIf="!administrar_documentos">
-    <header class="header">
-      <h3>{{ "documento_proyecto.documento" | translate }}</h3>
-      <button mat-icon-button (click)="close()">
-        <mat-icon color="warn">close</mat-icon>
-      </button>
-    </header>
-    <main>
-      <section>
-        {{ "documento_proyecto.seleccione_documentos" | translate }}
-
-        <mat-form-field style="width: 100%; justify-self: center">
-          <mat-label>{{
-            "documento_proyecto.documento_proyecto" | translate
-          }}</mat-label>
-
-          <mat-select
-            [formControl]="Campo2Control"
-            (selectionChange)="onCreateDocument($event)"
-          >
-            <mat-option>--</mat-option>
-            <mat-option
-              *ngFor="let documento of documentos"
-              [value]="documento"
-            >
-              {{ documento.Nombre }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="Campo2Control.hasError('required')">{{
-            "documento_proyecto.erro_selec_documento" | translate
-          }}</mat-error>
-        </mat-form-field>
-      </section>
-      <section>
-        <!-- TITLE SECTION -->
-        <b
-          ><p class="margin-y">
+  @if (!administrar_documentos) {
+    <mat-card-content>
+      <header class="header">
+        <h3>{{ "documento_proyecto.documento" | translate }}</h3>
+        <button mat-icon-button (click)="close()">
+          <mat-icon color="warn">close</mat-icon>
+        </button>
+      </header>
+      <main>
+        <section>
+          {{ "documento_proyecto.seleccione_documentos" | translate }}
+          <mat-form-field style="width: 100%; justify-self: center">
+            <mat-label>{{
+              "documento_proyecto.documento_proyecto" | translate
+            }}</mat-label>
+            <mat-select
+              [formControl]="Campo2Control"
+              (selectionChange)="onCreateDocument($event)"
+              >
+              <mat-option>--</mat-option>
+              @for (documento of documentos; track documento) {
+                <mat-option
+                  [value]="documento"
+                  >
+                  {{ documento.Nombre }}
+                </mat-option>
+              }
+            </mat-select>
+            @if (Campo2Control.hasError('required')) {
+              <mat-error>{{
+                "documento_proyecto.erro_selec_documento" | translate
+              }}</mat-error>
+            }
+          </mat-form-field>
+        </section>
+        <section>
+          <!-- TITLE SECTION -->
+          <b
+            ><p class="margin-y">
             {{ "documento_proyecto.documentos_seleccionados" | translate }}
           </p></b
-        >
-
-        <!-- BUSCADOR -->
-        <mat-form-field appearance="outline" class="form-field">
-          <input
-            matInput
-            placeholder="{{ 'GLOBAL.buscar' | translate }}"
-            (keyup)="applyFilter($event)"
-            #input
-          />
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-
-        <!-- TABLA DE DOCUMENTOS SOLICITADOS-->
-        <div class="table">
-          <table mat-table [dataSource]="source" matSort>
-            <ng-container matColumnDef="nombre">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header
-                style="width: 80%"
-              >
-                {{ "GLOBAL.nombre" | translate }}
-              </th>
-              <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="obligatorio">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header
-                style="width: 15%"
-              >
-                {{ "documento_proyecto.obligatorio" | translate }}
-              </th>
-              <td mat-cell *matCellDef="let row">
-                <doc-programa-obligatorio
-                  [value]="row.Obligatorio"
-                  [rowData]="row"
-                  (checkboxVal)="handleCheckboxChange($event)"
-                />
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="eliminar">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header
-                style="width: 5%"
-              >
-                {{ "GLOBAL.eliminar" | translate }}
-              </th>
-              <td mat-cell *matCellDef="let row">
-                <button
-                  mat-icon-button
-                  color="warn"
-                  (click)="onDeleteDocument({ data: row })"
-                >
-                  <mat-icon fontIcon="delete"></mat-icon>
-                </button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="sourceColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: sourceColumns"></tr>
-
-            <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="4">
-                {{ "calendario.sin_procesos" | translate }}
-              </td>
-            </tr>
-          </table>
-          <mat-paginator
-            #paginator
-            [pageSize]="2"
-            [pageSizeOptions]="[2, 5, 10, 25]"
-            [showFirstLastButtons]="true"
           >
-          </mat-paginator>
-        </div>
-
-        <!-- BOTON -->
-        <button
-          class="boton-primary m-20"
-          mat-flat-button
-          color="primary"
-          (click)="openListDocumentoComponent()"
-          type="submit"
-          status="success"
-        >
-          {{ "documento_proyecto.administrar_documento" | translate }}
-        </button>
-      </section>
-    </main>
-  </mat-card-content>
+          <!-- BUSCADOR -->
+          <mat-form-field appearance="outline" class="form-field">
+            <input
+              matInput
+              placeholder="{{ 'GLOBAL.buscar' | translate }}"
+              (keyup)="applyFilter($event)"
+              #input
+              />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          <!-- TABLA DE DOCUMENTOS SOLICITADOS-->
+          <div class="table">
+            <table mat-table [dataSource]="source" matSort>
+              <ng-container matColumnDef="nombre">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  style="width: 80%"
+                  >
+                  {{ "GLOBAL.nombre" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
+              </ng-container>
+              <ng-container matColumnDef="obligatorio">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  style="width: 15%"
+                  >
+                  {{ "documento_proyecto.obligatorio" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <doc-programa-obligatorio
+                    [value]="row.Obligatorio"
+                    [rowData]="row"
+                    (checkboxVal)="handleCheckboxChange($event)"
+                    />
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="eliminar">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  style="width: 5%"
+                  >
+                  {{ "GLOBAL.eliminar" | translate }}
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="onDeleteDocument({ data: row })"
+                    >
+                    <mat-icon fontIcon="delete"></mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="sourceColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: sourceColumns"></tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">
+                  {{ "calendario.sin_procesos" | translate }}
+                </td>
+              </tr>
+            </table>
+            <mat-paginator
+              #paginator
+              [pageSize]="2"
+              [pageSizeOptions]="[2, 5, 10, 25]"
+              [showFirstLastButtons]="true"
+              >
+            </mat-paginator>
+          </div>
+          <!-- BOTON -->
+          <button
+            class="boton-primary m-20"
+            mat-flat-button
+            color="primary"
+            (click)="openListDocumentoComponent()"
+            type="submit"
+            status="success"
+            >
+            {{ "documento_proyecto.administrar_documento" | translate }}
+          </button>
+        </section>
+      </main>
+    </mat-card-content>
+  }
 
   <!-- LISTA DE DOCUMENTOS DE PROYECTO -->
-  <mat-card-content *ngIf="administrar_documentos">
-    <ngx-list-documento-proyecto
-      (retorno)="retorno($event)"
-    >
-    </ngx-list-documento-proyecto>
-
-    <button
-      *ngIf="boton_retornar"
-      mat-flat-button
-      color="primary"
-      (click)="activetab()"
-    >
-      <mat-icon fontIcon="arrow_back"></mat-icon>
-      {{ "GLOBAL.regresar" | translate }}
-    </button>
-  </mat-card-content>
+  @if (administrar_documentos) {
+    <mat-card-content>
+      <ngx-list-documento-proyecto
+        (retorno)="retorno($event)"
+        >
+      </ngx-list-documento-proyecto>
+      @if (boton_retornar) {
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="activetab()"
+          >
+          <mat-icon fontIcon="arrow_back"></mat-icon>
+          {{ "GLOBAL.regresar" | translate }}
+        </button>
+      }
+    </mat-card-content>
+  }
 </mat-card>

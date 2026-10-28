@@ -90,6 +90,11 @@
         },
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "headers": {
+              "Access-Control-Allow-Origin": "http://localhost:4200"
+            }
+          },
           "configurations": {
             "production": {
               "buildTarget": "sga-cliente-admisiones-mf:build:production"

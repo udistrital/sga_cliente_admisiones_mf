@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -9,7 +9,7 @@ import { OpcionPrograma, SeleccionPrograma } from '../../models/proyecto_academi
 
 @Component({
     selector: 'app-filtros-programa',
-    imports: [CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, TranslateModule],
+    imports: [FormsModule, MatFormFieldModule, MatSelectModule, TranslateModule],
     templateUrl: './filtros-programa.component.html',
     styles: [':host { display: block; width: 100%; grid-column: 1 / -1; } .filtros { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }']
 })
