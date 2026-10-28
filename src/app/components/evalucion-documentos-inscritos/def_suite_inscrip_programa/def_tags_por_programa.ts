@@ -24,7 +24,7 @@ export const TAGS_INSCRIPCION_PROGRAMA = {
       required: false,
     },
     descuento_matricula: {
-      selected: false,
+      selected: true,
       required: false,
     },
     propuesta_grado: {

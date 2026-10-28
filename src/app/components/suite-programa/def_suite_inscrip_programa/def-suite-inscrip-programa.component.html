@@ -61,12 +61,12 @@
           <mat-card-footer>
             <mat-checkbox
               color="primary"
-              (click)="$event.preventDefault()"
+              [disabled]="true"
               [(ngModel)]="tagsObject.info_persona.required"
-              ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-              >
-            </mat-card-footer>
-          </mat-card>
+              ><b>{{ "GLOBAL.obligatorio" | translate }}</b>
+            </mat-checkbox>
+          </mat-card-footer>
+        </mat-card>
           <mat-card
             class="exp-card"
             align="center"
@@ -85,16 +85,12 @@
             <mat-card-footer>
               <mat-checkbox
                 color="primary"
-            (click)="
-              !tagsObject.formacion_academica.selected
-                ? $event.preventDefault()
-                : ''
-            "
+                [disabled]="!tagsObject.formacion_academica.selected"
                 [(ngModel)]="tagsObject.formacion_academica.required"
                 ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                 >
               </mat-card-footer>
-            </mat-card>
+          </mat-card>
             <mat-card
               class="exp-card"
               align="center"
@@ -113,14 +109,12 @@
               <mat-card-footer>
                 <mat-checkbox
                   color="primary"
-            (click)="
-              !tagsObject.idiomas.selected ? $event.preventDefault() : ''
-            "
+                  [disabled]="!tagsObject.idiomas.selected"
                   [(ngModel)]="tagsObject.idiomas.required"
                   ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                   >
                 </mat-card-footer>
-              </mat-card>
+            </mat-card>
               <mat-card
                 class="exp-card"
                 align="center"
@@ -139,11 +133,7 @@
                 <mat-card-footer>
                   <mat-checkbox
                     color="primary"
-            (click)="
-              !tagsObject.experiencia_laboral.selected
-                ? $event.preventDefault()
-                : ''
-            "
+                    [disabled]="!tagsObject.experiencia_laboral.selected"
                     [(ngModel)]="tagsObject.experiencia_laboral.required"
                     ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                     >
@@ -167,11 +157,7 @@
                   <mat-card-footer>
                     <mat-checkbox
                       color="primary"
-            (click)="
-              !tagsObject.produccion_academica.selected
-                ? $event.preventDefault()
-                : ''
-            "
+                      [disabled]="!tagsObject.produccion_academica.selected"
                       [(ngModel)]="tagsObject.produccion_academica.required"
                       ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                       >
@@ -195,11 +181,7 @@
                     <mat-card-footer>
                       <mat-checkbox
                         color="primary"
-            (click)="
-              !tagsObject.documento_programa.selected
-                ? $event.preventDefault()
-                : ''
-            "
+                        [disabled]="!tagsObject.documento_programa.selected"
                         [(ngModel)]="tagsObject.documento_programa.required"
                         ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                         >
@@ -215,7 +197,7 @@
                       }}</mat-card-header>
                       <mat-card-content
                         class="icon-form"
-                        (click)="clickTag('descuento_matricula')"
+                        (click)="clickTag('Yes_descuento_matricula')"
                         title="{{ 'GLOBAL.seleccionar' | translate }}"
                         >
                         <mat-icon class="icon" fontIcon="attach_money"></mat-icon>
@@ -223,11 +205,6 @@
                       <mat-card-footer>
                         <mat-checkbox
                           color="primary"
-            (click)="
-              !tagsObject.descuento_matricula.selected
-                ? $event.preventDefault()
-                : ''
-            "
                           [(ngModel)]="tagsObject.descuento_matricula.required"
                           ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                           >
@@ -251,11 +228,7 @@
                         <mat-card-footer>
                           <mat-checkbox
                             color="primary"
-            (click)="
-              !tagsObject.propuesta_grado.selected
-                ? $event.preventDefault()
-                : ''
-            "
+                            [disabled]="!tagsObject.propuesta_grado.selected"
                             [(ngModel)]="tagsObject.propuesta_grado.required"
                             ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                             >
@@ -278,7 +251,7 @@
                           <mat-card-footer>
                             <mat-checkbox
                               color="primary"
-                              (click)="$event.preventDefault()"
+                              [disabled]="true"
                               [(ngModel)]="tagsObject.perfil.required"
                               ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                               >

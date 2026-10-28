@@ -42,22 +42,26 @@
           <section
             class="container"
             >
-            <div id="info_basica">
-              <mat-card
-                class="exp-card"
-                (click)="openSelectDocumentoProyectoComponent()"
+            @if (puedeVerDocumentos) {
+              <div id="info_basica">
+                <mat-card
+                  class="exp-card"
+                  (click)="openSelectDocumentoProyectoComponent()"
                 >
-                <mat-card-header class="exp-card-header"><b>{{
-                  "documento_proyecto.documentos" | translate
-                }}</b></mat-card-header>
-                <mat-card-content class="exp-card-content">
-                  <mat-icon class="exp-card-content-icon">picture_as_pdf</mat-icon>
-                </mat-card-content>
-              </mat-card>
-            </div>
+                  <mat-card-header class="exp-card-header">
+                    <b>{{ "documento_proyecto.documentos" | translate }}</b>
+                  </mat-card-header>
+                  <mat-card-content class="exp-card-content">
+                    <mat-icon class="exp-card-content-icon">
+                      picture_as_pdf
+                    </mat-icon>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            }
             <div
               id="info_basica"
-              *isGranted="['ADMIN_SGA', 'VICERRECTOR', 'ASESOR_VICE', 'ASIS_PROYECTO', 'JEFE_DEPENDENCIA']"
+              *isGranted="['ADMIN_SGA', 'VICERRECTOR', 'ASESOR_VICE', 'ASIS_PROYECTO', 'JEFE_DEPENDENCIA', 'ADMISIONES_REG']"
               >
               <mat-card
                 class="exp-card"

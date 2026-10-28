@@ -395,6 +395,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
                   this.tagsObject[key] = tagsCompletos[key];
               }
             }
+            this.configurarTagsFijos();
             
             this.respuestaTagsOriginal = suite;
             this.loading = false;
@@ -439,8 +440,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
         this.tagsObject.documento_programa.required = this.tagsObject.documento_programa.selected;
         break;
       case 'descuento_matricula':
-        this.tagsObject.descuento_matricula.selected = !this.tagsObject.descuento_matricula.selected;
-        this.tagsObject.descuento_matricula.required = this.tagsObject.descuento_matricula.selected;
+        this.configurarTagsFijos();
         break;
       case 'propuesta_grado':
         this.tagsObject.propuesta_grado.selected = !this.tagsObject.propuesta_grado.selected;
@@ -470,21 +470,50 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
 
   async guardar() {
     if (this.periodo && this.nivel && this.facultad && this.proyecto && this.tipoInscrip) {
+      const tagsPayload = this.prepararTagsParaGuardar();
       if (this.nuevaSuite) {
         let postData = {
           Activo: true,
           DependenciaId: this.proyecto,
-          ListaTags: JSON.stringify(this.tagsObject),
+          ListaTags: JSON.stringify(tagsPayload),
           PeriodoId: this.periodo,
           TipoInscripcionId: this.tipoInscrip,
         };
+        console.log(postData);
         await this.postTags(postData);
       } else {
         let putData = {...this.respuestaTagsOriginal};
-        putData.ListaTags = JSON.stringify(this.tagsObject);
+        putData.ListaTags = JSON.stringify(tagsPayload);
         await this.putTags(putData);
       }
     }
+  }
+
+  private prepararTagsParaGuardar(): any {
+    const tags = JSON.parse(JSON.stringify(this.tagsObject));
+    this.configurarTagsFijos(tags);
+    for (const key in tags) {
+      const tag = tags[key];
+      tag.selected = tag.selected === true;
+      tag.required = tag.selected && tag.required === true;
+    }
+    return tags;
+  }
+
+  private configurarTagsFijos(tags: any = this.tagsObject): void {
+    const required = tags.descuento_matricula?.required === true;
+    tags.info_persona = {
+      selected: true,
+      required: true,
+    };
+    tags.perfil = {
+      selected: true,
+      required: true,
+    };
+    tags.descuento_matricula = {
+      selected: true,
+      required,
+    };
   }
 
   async postTags(dataJson:any) {
@@ -507,6 +536,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
               this.nuevaSuite = false;
               this.respuestaTagsOriginal = response.Data;
               this.tagsObject = JSON.parse(response.Data.ListaTags);
+              this.configurarTagsFijos();
               this.popUpManager.showSuccessAlert(this.translate.instant('admision.guardado_existoso_suite'));
               resolve(response);
             } else {
@@ -544,6 +574,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
               this.loading = false;
               this.respuestaTagsOriginal = response.Data;
               this.tagsObject = JSON.parse(response.Data.ListaTags);
+              this.configurarTagsFijos();
               this.popUpManager.showSuccessAlert(this.translate.instant('admision.guardado_existoso_suite'));
               resolve(response);
             } else {

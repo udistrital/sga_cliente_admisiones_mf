@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChild } from "@angular/core";
 // import { LocalDataSource } from 'ng2-smart-table';
 // import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
@@ -15,6 +15,8 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { DescuentoDependencia } from "src/app/models/descuento/descuento_dependencia";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatDialogRef } from "@angular/material/dialog";
+import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
+import { MatPaginator } from "@angular/material/paginator";
 
 @Component({
     selector: "ngx-select-descuento-proyecto",
@@ -27,10 +29,17 @@ export class SelectDescuentoProyectoComponent implements OnInit {
   settings: any;
   Campo2Control = new FormControl("", [Validators.required]);
   // sourceColumns = ["nombre", "porcentaje", "eliminar"];
-  sourceColumns = ["nombre", "porcentaje", "eliminar"];
+  sourceColumns = ["nombre", "porcentaje"];
   source: MatTableDataSource<any> = new MatTableDataSource();
+  @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
+    if (paginator) {
+      this.source.paginator = paginator;
+    }
+  }
   administrar_descuentos: boolean = false;
   boton_retornar: boolean = false;
+  puedeModificarAsignaciones: boolean = false;
+  puedeAdministrarCatalogo: boolean = false;
   loading: boolean;
 
   descuentos: any = [];
@@ -41,9 +50,11 @@ export class SelectDescuentoProyectoComponent implements OnInit {
     private translate: TranslateService,
     private descuentoService: DescuentoAcademicoService,
     private dialogRef: MatDialogRef<SelectDescuentoProyectoComponent>,
-    private popUpManager: PopUpManager
+    private popUpManager: PopUpManager,
+    private autenticationService: ImplicitAutenticationService
   ) {
     this.loading = true;
+    this.cargarPermisos();
     this.loadData();
     this.loadDataProyecto();
 
@@ -60,6 +71,25 @@ export class SelectDescuentoProyectoComponent implements OnInit {
 
   ngOnInit() {}
 
+  private cargarPermisos(): void {
+    this.autenticationService.getRole().then((roles: any) => {
+      const rolesUsuario = Array.isArray(roles) ? roles : [];
+      this.puedeModificarAsignaciones = [
+        "ADMIN_SGA",
+        "VICERRECTOR",
+        "ASESOR_VICE",
+        "JEFE_DEPENDENCIA",
+        "ADMISIONES_REG",
+      ].some((rol) => rolesUsuario.includes(rol));
+      this.sourceColumns = this.puedeModificarAsignaciones
+        ? ["nombre", "porcentaje", "eliminar"]
+        : ["nombre", "porcentaje"];
+      this.puedeAdministrarCatalogo = ["ADMIN_SGA", "ADMISIONES_REG"].some(
+        (rol) => rolesUsuario.includes(rol)
+      );
+    });
+  }
+
   activetab(): void {
     this.administrar_descuentos = !this.administrar_descuentos;
     this.boton_retornar = !this.boton_retornar;
@@ -74,6 +104,9 @@ export class SelectDescuentoProyectoComponent implements OnInit {
   }
 
   onCreateDescuento(event: any) {
+    if (!this.puedeModificarAsignaciones) {
+      return;
+    }
     const descuento = <TipoDescuento>event.value;
     if (
       !this.descuento_proyecto.find(
@@ -197,6 +230,9 @@ export class SelectDescuentoProyectoComponent implements OnInit {
   }
 
   onDeleteDescuento(event: any) {
+    if (!this.puedeModificarAsignaciones) {
+      return;
+    }
     const descuento = <TipoDescuento>event;
 
     const opt: any = {
@@ -277,6 +313,9 @@ export class SelectDescuentoProyectoComponent implements OnInit {
   }
 
   openListDescuentoComponent() {
+    if (!this.puedeAdministrarCatalogo) {
+      return;
+    }
     this.administrar_descuentos = true;
     this.boton_retornar = true;
   }
@@ -312,6 +351,7 @@ export class SelectDescuentoProyectoComponent implements OnInit {
   loadDataProyecto() {
     this.loading = true;
     this.descuento_proyecto = [];
+    this.source.data = [];
     this.descuentoService
       .get(
         "descuentos_dependencia?limit=0&query=Activo:true,DependenciaId:" +
@@ -324,11 +364,9 @@ export class SelectDescuentoProyectoComponent implements OnInit {
               this.loading = true;
               this.loadInfoDescuento(descuento).then((aux: any) => {
                 this.descuento_proyecto.push(aux[0]);
-                this.source = new MatTableDataSource(this.descuento_proyecto);
+                this.source.data = [...this.descuento_proyecto];
               });
               this.loading = false;
-            }else {
-              this.source = new MatTableDataSource(this.descuento_proyecto);
             }
           });
         },
