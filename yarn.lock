@@ -332,7 +332,7 @@
     yargs "18.0.0"
     zod "4.6.6"
 
-"@angular/common@^20.0.0 || ^21.0.0", "@angular/common@^20.3.34", "@angular/common@>= 10.0.0", "@angular/common@>=13.0.0", "@angular/common@>=16.0.0", "@angular/common@>=17.0.0 <21.0.0", "@angular/common@20.3.34":
+"@angular/common@^20.0.0 || ^21.0.0", "@angular/common@^20.3.34", "@angular/common@>= 10.0.0", "@angular/common@>=13.0.0", "@angular/common@>=16.0.0", "@angular/common@>=19.0.0 <22.0.0", "@angular/common@20.3.34":
   version "20.3.34"
   resolved "https://registry.npmjs.org/@angular/common/-/common-20.3.34.tgz"
   integrity sha512-OhB/l0cNldOvQeICqbWqRUzK5fF6zNYy44Q4cIGJZql8HXL/invGiqWLE9f+kU8z4jRisofHIGTBtyJQYYOudg==
@@ -360,7 +360,7 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/core@^20.0.0", "@angular/core@^20.0.0 || ^21.0.0", "@angular/core@^20.3.34", "@angular/core@>= 10.0.0", "@angular/core@>=13.0.0", "@angular/core@>=16.0.0", "@angular/core@>=17.0.0 <21.0.0", "@angular/core@20.3.34":
+"@angular/core@^20.0.0", "@angular/core@^20.0.0 || ^21.0.0", "@angular/core@^20.3.34", "@angular/core@>= 10.0.0", "@angular/core@>=13.0.0", "@angular/core@>=16.0.0", "@angular/core@>=19.0.0 <22.0.0", "@angular/core@20.3.34":
   version "20.3.34"
   resolved "https://registry.npmjs.org/@angular/core/-/core-20.3.34.tgz"
   integrity sha512-xOvSmGoao3SVPz//R7zTrq7+WdrIGi+WNpAdxJEvJJXuSpLGS3kSUqukjY4kOMochg2v0NCEPIdCyH+yPs8JSw==
@@ -5150,10 +5150,10 @@ ngx-doc-viewer@^15.0.1:
     docviewhelper ">= 0.0.1"
     tslib "^2.3.0"
 
-ngx-extended-pdf-viewer@23.0.0:
-  version "23.0.0"
-  resolved "https://registry.npmjs.org/ngx-extended-pdf-viewer/-/ngx-extended-pdf-viewer-23.0.0.tgz"
-  integrity sha512-fIVVghVQ3Ut05wancBgkmIqM8hD4142r6Wu0+ipf3j4DobNQmlq4HyNWjTW5QY6GirhH1m7w6WiOArhCvbX78Q==
+ngx-extended-pdf-viewer@26.0.10:
+  version "26.0.10"
+  resolved "https://registry.npmjs.org/ngx-extended-pdf-viewer/-/ngx-extended-pdf-viewer-26.0.10.tgz"
+  integrity sha512-JNQszixOzFunJ0p81rMGn7KBFt2HIsrm+ICj7CjWCPQt6QGjRoqM454aSc1ROsO/o7yq+xOZWmKr9eqxuW/VHg==
   dependencies:
     tslib "^2.3.0"
 
@@ -6157,7 +6157,7 @@ setprototypeof@~1.2.0, setprototypeof@1.2.0:
     ngx-pagination "^6.0.3"
     rxjs "~7.8.0"
     sga-cliente-admisiones-mf "file:"
-    single-spa ">=4.0.0"
+    single-spa "6.0.3"
     single-spa-angular "^9.0.1"
     ts-md5 "^1.3.1"
     tslib "^2.6.2"
