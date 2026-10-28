@@ -6153,7 +6153,7 @@ setprototypeof@~1.2.0, setprototypeof@1.2.0:
     moment "^2.30.1"
     moment-timezone "^0.5.45"
     ngx-doc-viewer "^15.0.1"
-    ngx-extended-pdf-viewer "23.0.0"
+    ngx-extended-pdf-viewer "26.0.10"
     ngx-pagination "^6.0.3"
     rxjs "~7.8.0"
     sga-cliente-admisiones-mf "file:"

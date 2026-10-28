@@ -69,5 +69,10 @@
     "style-loader": "^3.3.1",
     "typescript": "~5.8.3",
     "webpack": "^5.92.1"
+  },
+  "overrides": {
+    "@angular/build@21": {
+      "vitest": "4.1.11"
+    }
   }
 }
