@@ -14,8 +14,9 @@ import { UserService } from 'src/app/services/users.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSelectChange } from '@angular/material/select';
 import { LiquidacionService } from 'src/app/services/liquidacion.service';
-import * as JSZip from 'jszip';
-import * as saveAs from 'file-saver';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.service';
 import { DependenciasVinculacionTercero } from 'src/app/models/admision/dependencia_vinculacion_tercero';
@@ -29,9 +30,10 @@ interface Food {
 
 
 @Component({
-  selector: 'app-liquidacion-posgrado-table',
-  templateUrl: './liquidacion-posgrado-table.component.html',
-  styleUrls: ['./liquidacion-posgrado-table.component.scss']
+    selector: 'app-liquidacion-posgrado-table',
+    templateUrl: './liquidacion-posgrado-table.component.html',
+    styleUrls: ['./liquidacion-posgrado-table.component.scss'],
+    standalone: false
 })
 export class LiquidacionPosgradoTableComponent {
 

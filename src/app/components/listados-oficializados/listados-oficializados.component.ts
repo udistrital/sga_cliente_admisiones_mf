@@ -8,9 +8,10 @@ import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-listados-oficializados',
-  templateUrl: './listados-oficializados.component.html',
-  styleUrls: ['./listados-oficializados.component.scss']
+    selector: 'app-listados-oficializados',
+    templateUrl: './listados-oficializados.component.html',
+    styleUrls: ['./listados-oficializados.component.scss'],
+    standalone: false
 })
 export class ListadosOficializadosComponent implements OnInit, AfterViewInit {
 

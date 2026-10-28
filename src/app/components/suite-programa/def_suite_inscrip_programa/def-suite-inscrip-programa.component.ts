@@ -17,9 +17,10 @@ import { RespFormat } from 'src/app/models/respuesta/response-format';
 import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
-  selector: 'def-suite-inscrip-programa',
-  templateUrl: './def-suite-inscrip-programa.component.html',
-  styleUrls: ['./def-suite-inscrip-programa.component.scss']
+    selector: 'def-suite-inscrip-programa',
+    templateUrl: './def-suite-inscrip-programa.component.html',
+    styleUrls: ['./def-suite-inscrip-programa.component.scss'],
+    standalone: false
 })
 export class DefSuiteInscripProgramaComponent implements OnInit {
 

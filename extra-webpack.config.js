@@ -12,6 +12,7 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 
 module.exports = (config, options) => {
   const singleSpaWebpackConfig = singleSpaAngularWebpack(config, options);
+  singleSpaWebpackConfig.devtool = false;
 
   // Agregar DefinePlugin a los plugins existentes
   singleSpaWebpackConfig.plugins.push(

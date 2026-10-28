@@ -3,9 +3,10 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-soporte-configuracion',
-  templateUrl: './soporte-configuracion.component.html',
-  styleUrls: ['./soporte-configuracion.component.scss']
+    selector: 'app-soporte-configuracion',
+    templateUrl: './soporte-configuracion.component.html',
+    styleUrls: ['./soporte-configuracion.component.scss'],
+    standalone: false
 })
 export class SoporteConfiguracionComponent {
 

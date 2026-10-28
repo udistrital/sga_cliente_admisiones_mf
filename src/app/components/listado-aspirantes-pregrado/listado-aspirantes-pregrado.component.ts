@@ -24,9 +24,10 @@ interface Tile {
 
 
 @Component({
-  selector: 'ngx-listado-aspirantes-pregrado',
-  templateUrl: './listado-aspirantes-pregrado.component.html',
-  styleUrls: ['./listado-aspirantes-pregrado.component.scss']
+    selector: 'ngx-listado-aspirantes-pregrado',
+    templateUrl: './listado-aspirantes-pregrado.component.html',
+    styleUrls: ['./listado-aspirantes-pregrado.component.scss'],
+    standalone: false
 })
 export class ListadoAspirantesPregradoComponent {
 

@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { CrudAsignacionCupoComponent } from './crud-asignacion_cupo.component';
@@ -8,7 +8,8 @@ describe('CrudAsignacionCupoComponent', () => {
   let component: CrudAsignacionCupoComponent;
   let fixture: ComponentFixture<CrudAsignacionCupoComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
+
     TestBed.configureTestingModule({
       declarations: [CrudAsignacionCupoComponent],
     })

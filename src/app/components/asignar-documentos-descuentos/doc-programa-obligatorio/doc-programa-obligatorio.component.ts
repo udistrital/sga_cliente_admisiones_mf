@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'doc-programa-obligatorio',
-  templateUrl: './doc-programa-obligatorio.component.html',
-  styleUrls: ['./doc-programa-obligatorio.component.scss']
+    selector: 'doc-programa-obligatorio',
+    templateUrl: './doc-programa-obligatorio.component.html',
+    styleUrls: ['./doc-programa-obligatorio.component.scss'],
+    standalone: false
 })
 export class DocProgramaObligatorioComponent implements  OnInit {
 

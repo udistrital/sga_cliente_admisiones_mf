@@ -1,70 +1,77 @@
 <table class="table-responsive">
   <thead></thead>
-  <tbody *ngIf="info_propuesta_grado">
-    <tr>
-      <td>
-        <p *ngIf="info_propuesta_grado.GrupoInvestigacion">
-          <b>{{ "GLOBAL.grupo_investigacion" | translate }}:</b>
-          {{ info_propuesta_grado.GrupoInvestigacion.name }}
-        </p>
-        <p *ngIf="info_propuesta_grado.LineaInvestigacion">
-          <b>{{ "GLOBAL.linea_investigacion" | translate }}:</b>
-          {{ info_propuesta_grado.LineaInvestigacion.st_name }}
-        </p>
-        <p>
-          <b>{{ "GLOBAL.tipo_proyecto" | translate }}:</b>
-          {{ info_propuesta_grado.TipoProyectoId.Nombre }}
-        </p>
-      </td>
-      <td>
-        <p>
-          <b>{{ "GLOBAL.titulo_proyecto" | translate }}:</b>
-          {{ info_propuesta_grado.Nombre }}
-        </p>
-        <p>
-          <b>{{ "GLOBAL.formato_proyecto" | translate }}:</b>
-        </p>
-        <p>
-          <b>{{ "GLOBAL.resumen" | translate }}:</b>
-          {{ info_propuesta_grado.Resumen }}
-        </p>
-        <br />
-        <p>
-          <b>{{ "admision.estado" | translate }}:</b>
-          {{
+  @if (info_propuesta_grado) {
+    <tbody>
+      <tr>
+        <td>
+          @if (info_propuesta_grado.GrupoInvestigacion) {
+            <p>
+              <b>{{ "GLOBAL.grupo_investigacion" | translate }}:</b>
+              {{ info_propuesta_grado.GrupoInvestigacion.name }}
+            </p>
+          }
+          @if (info_propuesta_grado.LineaInvestigacion) {
+            <p>
+              <b>{{ "GLOBAL.linea_investigacion" | translate }}:</b>
+              {{ info_propuesta_grado.LineaInvestigacion.st_name }}
+            </p>
+          }
+          <p>
+            <b>{{ "GLOBAL.tipo_proyecto" | translate }}:</b>
+            {{ info_propuesta_grado.TipoProyectoId.Nombre }}
+          </p>
+        </td>
+        <td>
+          <p>
+            <b>{{ "GLOBAL.titulo_proyecto" | translate }}:</b>
+            {{ info_propuesta_grado.Nombre }}
+          </p>
+          <p>
+            <b>{{ "GLOBAL.formato_proyecto" | translate }}:</b>
+          </p>
+          <p>
+            <b>{{ "GLOBAL.resumen" | translate }}:</b>
+            {{ info_propuesta_grado.Resumen }}
+          </p>
+          <br />
+          <p>
+            <b>{{ "admision.estado" | translate }}:</b>
+            {{
             info_propuesta_grado.Soporte
-              ? info_propuesta_grado.Soporte.estadoObservacion
-              : ""
-          }}
-        </p>
-        <p>
-          <b>{{ "admision.observacion" | translate }}:</b>
-          {{
+            ? info_propuesta_grado.Soporte.estadoObservacion
+            : ""
+            }}
+          </p>
+          <p>
+            <b>{{ "admision.observacion" | translate }}:</b>
+            {{
             info_propuesta_grado.Soporte
-              ? info_propuesta_grado.Soporte.observacion
-              : ""
-          }}
-        </p>
-        <button
-          mat-flat-button
-          color="accent"
-          type="button"
-          (click)="verPropuesta(info_propuesta_grado.Soporte)"
-        >
-          <mat-icon>file_open</mat-icon>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-  <tfoot
-    *ngIf="(url_editar && gotoEdit) || (updateDocument && canUpdateDocument)"
-  >
-    <tr>
-      <td colspan="2" style="background-color: var(--warning-main); text-align: center" (click)="editar()">
-        <span class="link"
-          ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
-        >
-      </td>
-    </tr>
-  </tfoot>
-</table>
+            ? info_propuesta_grado.Soporte.observacion
+            : ""
+            }}
+          </p>
+          <button
+            mat-flat-button
+            color="accent"
+            type="button"
+            (click)="verPropuesta(info_propuesta_grado.Soporte)"
+            >
+            <mat-icon>file_open</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  }
+  @if ((url_editar && gotoEdit) || (updateDocument && canUpdateDocument)) {
+    <tfoot
+      >
+      <tr>
+        <td colspan="2" style="background-color: var(--warning-main); text-align: center" (click)="editar()">
+          <span class="link"
+            ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
+            >
+          </td>
+        </tr>
+      </tfoot>
+    }
+  </table>

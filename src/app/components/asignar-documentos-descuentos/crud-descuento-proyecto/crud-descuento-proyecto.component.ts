@@ -8,9 +8,10 @@ import { DescuentoAcademicoService } from "src/app/services/descuento_academico.
 import { PopUpManager } from "src/app/managers/popUpManager";
 
 @Component({
-  selector: "ngx-crud-descuento-proyecto",
-  templateUrl: "./crud-descuento-proyecto.component.html",
-  styleUrls: ["./crud-descuento-proyecto.component.scss"],
+    selector: "ngx-crud-descuento-proyecto",
+    templateUrl: "./crud-descuento-proyecto.component.html",
+    styleUrls: ["./crud-descuento-proyecto.component.scss"],
+    standalone: false
 })
 export class CrudDescuentoProyectoComponent implements OnInit {
   descuento_id!: number;

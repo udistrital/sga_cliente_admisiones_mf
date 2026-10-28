@@ -6,9 +6,10 @@ import { PopUpManager } from '../../../managers/popUpManager';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
-  selector: 'dialogo-documentos',
-  templateUrl: './dialogo-documentos.component.html',
-  styleUrls: ['./dialogo-documentos.component.scss'],
+    selector: 'dialogo-documentos',
+    templateUrl: './dialogo-documentos.component.html',
+    styleUrls: ['./dialogo-documentos.component.scss'],
+    standalone: false
 })
 export class DialogoDocumentosComponent implements OnInit {
   @ViewChild('formElement') formElement!: ElementRef;

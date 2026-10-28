@@ -13,9 +13,10 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service';
 
 @Component({
-  selector: 'app-comentarios-cupos',
-  templateUrl: './comentarios-cupos.component.html',
-  styleUrls: ['./comentarios-cupos.component.scss']
+    selector: 'app-comentarios-cupos',
+    templateUrl: './comentarios-cupos.component.html',
+    styleUrls: ['./comentarios-cupos.component.scss'],
+    standalone: false
 })
 export class ComentariosCuposComponent {
   dataSource: any;

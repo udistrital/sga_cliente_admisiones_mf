@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DialogoDocumentosTransferenciasComponent } from './dialogo-documentos-transferencias.component';
 
@@ -6,7 +6,8 @@ describe('DialogoDocumentosTransferenciasComponent', () => {
   let component: DialogoDocumentosTransferenciasComponent;
   let fixture: ComponentFixture<DialogoDocumentosTransferenciasComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
+
     TestBed.configureTestingModule({
       declarations: [ DialogoDocumentosTransferenciasComponent ]
     })

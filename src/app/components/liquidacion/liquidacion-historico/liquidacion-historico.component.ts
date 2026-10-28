@@ -11,9 +11,10 @@ import { NivelFormacion } from 'src/app/models/proyecto_academico/nivel_formacio
 
 
 @Component({
-  selector: 'app-liquidacion-historico',
-  templateUrl: './liquidacion-historico.component.html',
-  styleUrls: ['./liquidacion-historico.component.scss']
+    selector: 'app-liquidacion-historico',
+    templateUrl: './liquidacion-historico.component.html',
+    styleUrls: ['./liquidacion-historico.component.scss'],
+    standalone: false
 })
 export class LiquidacionHistoricoComponent {
   datosTabla: any;

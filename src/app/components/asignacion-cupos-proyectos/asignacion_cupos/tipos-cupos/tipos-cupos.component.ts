@@ -8,9 +8,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service';
 
 @Component({
-  selector: 'app-tipos-cupos',
-  templateUrl: './tipos-cupos.component.html',
-  styleUrls: ['./tipos-cupos.component.scss']
+    selector: 'app-tipos-cupos',
+    templateUrl: './tipos-cupos.component.html',
+    styleUrls: ['./tipos-cupos.component.scss'],
+    standalone: false
 })
 export class TiposCuposComponent {
 

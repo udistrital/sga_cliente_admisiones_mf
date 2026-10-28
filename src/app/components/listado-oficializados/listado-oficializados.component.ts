@@ -10,7 +10,8 @@ import { ParametrosService } from 'src/app/services/parametros.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TranslateService } from '@ngx-translate/core';
-import * as saveAs from 'file-saver';
+import { saveAs } from 'file-saver';
+
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { SolicitudesAdmisiones } from 'src/app/services/solicitudes_admisiones.service';
 import { MatSort } from '@angular/material/sort';
@@ -20,9 +21,10 @@ import { SolicitudesCorreosService } from 'src/app/services/solicitudes_correos.
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 
 @Component({
-  selector: 'app-listado-oficializados',
-  templateUrl: './listado-oficializados.component.html',
-  styleUrls: ['./listado-oficializados.component.scss']
+    selector: 'app-listado-oficializados',
+    templateUrl: './listado-oficializados.component.html',
+    styleUrls: ['./listado-oficializados.component.scss'],
+    standalone: false
 })
 export class ListadoOficializadosComponent {
 

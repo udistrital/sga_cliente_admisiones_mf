@@ -13,9 +13,10 @@ import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.se
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 @Component({
-  selector: 'app-lista-proyectos-aspirantes',
-  templateUrl: './lista-proyectos-aspirantes.component.html',
-  styleUrls: ['./lista-proyectos-aspirantes.component.scss']
+    selector: 'app-lista-proyectos-aspirantes',
+    templateUrl: './lista-proyectos-aspirantes.component.html',
+    styleUrls: ['./lista-proyectos-aspirantes.component.scss'],
+    standalone: false
 })
 export class ListaProyectosAspirantesComponent implements OnDestroy{
   @ViewChildren(MatPaginator) paginators!: QueryList<MatPaginator>;
