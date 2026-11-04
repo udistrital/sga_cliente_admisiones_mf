@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { PivotDocument } from '../../../../utils/pivot_document.service';
 import { debounceTime, of, Subject, Subscription, switchMap, delay, timer, tap } from 'rxjs';
@@ -13,7 +13,7 @@ import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.serv
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.scss'],
 })
-export class PerfilComponent implements OnInit {
+export class PerfilComponent implements OnInit, OnDestroy {
   private onDestroy$ = new Subject<void>();
 
   info_persona_id!: number;
@@ -63,6 +63,20 @@ export class PerfilComponent implements OnInit {
   selectedTags: string[] = [];
   maxTags: number = 0;
   contTag: number = 0;
+  sectionLabels: { [key: string]: string } = {
+    info_persona: "inscripcion.info_basica",
+    formacion_academica: "inscripcion.formacion_academica",
+    idiomas: "inscripcion.idiomas",
+    experiencia_laboral: "inscripcion.experiencia_laboral",
+    produccion_academica: "inscripcion.produccion_academica",
+    documento_programa: "inscripcion.documento_programa",
+    descuento_matricula: "inscripcion.descuento_matricula",
+    propuesta_grado: "inscripcion.propuesta_grado",
+  };
+  private sectionStatus: { [key: string]: string } = {};
+  private sectionTimers: { [key: string]: any } = {};
+  private expansionStarted: boolean = false;
+  private readonly sectionTimeoutMs: number = 20000;
   //reduceWhenloading: number = 0.9;
   data = {
     "INSCRIPCION": {},
@@ -71,7 +85,6 @@ export class PerfilComponent implements OnInit {
     "DOCUMENTACION": {}
   };
   showErrors = false;
-  checkComplete: boolean = false;
   progressDownloadDocs: number = 0;
   triggeredDownload: boolean = false;
   private loadingSubject: Subject<boolean> = new Subject<boolean>();
@@ -121,6 +134,10 @@ export class PerfilComponent implements OnInit {
     this.canUpdateDocument = <string>(sessionStorage.getItem('IdEstadoInscripcion') || "").toUpperCase() === "INSCRITO CON OBSERVACIÓN";
   }
 
+  ngOnDestroy() {
+    this.clearSectionTimers();
+  }
+
   ngOnChanges() {
     this.imprimir = this.imprimir.toString() === 'true';
     this.en_revision = this.en_revision.toString() === 'true';
@@ -140,16 +157,23 @@ export class PerfilComponent implements OnInit {
       if (Suite == undefined) {
         this.suiteLoaded = false;
       } else {
+        this.clearSectionTimers();
+        this.selectedTags = [];
+        this.sectionStatus = {};
+        this.contTag = 0;
+        this.expansionStarted = false;
         Object.keys(Suite).forEach((tag: string) => {
           Suite[tag]["render"] = false;
+          Suite[tag]["reload"] = false;
           Suite[tag]["observacion"] = false;
-          if (Suite[tag].selected) {
+          if (Suite[tag].selected && this.sectionLabels[tag]) {
             this.selectedTags = this.selectedTags.concat(tag);
           }
         })
         this.SuiteTags = Suite;
         this.maxTags = this.selectedTags.length;
         this.suiteLoaded = true;
+        this.startExpansion();
       }
     }
   }
@@ -161,10 +185,10 @@ export class PerfilComponent implements OnInit {
       const cleanedTagName = tagName.split('/')[0].trim();
       // Verificar si el tag existe en SuiteTags
       if (this.SuiteTags[cleanedTagName]) {
-        this.SuiteTags[cleanedTagName].render = false;
+        this.SuiteTags[cleanedTagName].reload = true;
         this.renderInscripcion = false;
         setTimeout(() => {
-          this.SuiteTags[cleanedTagName].render = true;
+          this.SuiteTags[cleanedTagName].reload = false;
           this.renderInscripcion = true;
         }, 1);
       } else {
@@ -291,34 +315,103 @@ export class PerfilComponent implements OnInit {
     document.body.removeChild(download);
   }
 
-  siguienteTagDesde(actualTag: string) {
-    if (this.contTag < this.maxTags - 1) {
-      this.SuiteTags[this.selectedTags[this.contTag]].render = true;
-      this.properlyCont(actualTag);
-    } else if (this.contTag < this.maxTags) {
-      this.properlyCont(actualTag);
-      this.descargar_archivos();
-      if (this.imprimir) {
-        this.descargar_comprobante_inscription();
+  private startExpansion() {
+    if (this.expansionStarted || this.selectedTags.length === 0) {
+      return;
+    }
+    this.expansionStarted = true;
+    this.selectedTags.forEach((tag: string) => this.armSectionTimer(tag));
+    this.SuiteTags[this.selectedTags[0]].render = true;
+  }
+
+  private advanceExpansion() {
+    if (!this.expansionStarted) {
+      return;
+    }
+    while (this.contTag < this.selectedTags.length) {
+      const tag = this.selectedTags[this.contTag];
+      const status = this.sectionStatus[tag];
+      if (status !== "completed" && status !== "failed") {
+        return;
+      }
+      this.contTag++;
+      if (this.contTag < this.selectedTags.length) {
+        this.SuiteTags[this.selectedTags[this.contTag]].render = true;
+      } else {
+        this.onAllSectionsFinished();
       }
     }
   }
 
-  
+  private onAllSectionsFinished() {
+    this.descargar_archivos();
+    if (this.imprimir) {
+      this.descargar_comprobante_inscription();
+    }
+  }
 
-  properlyCont(actualTag: any) {
-    if (this.contTag > 0) {
-      if (this.selectedTags[this.contTag - 1] == actualTag) {
-        this.contTag++;
+  private armSectionTimer(tag: string) {
+    this.clearSectionTimer(tag);
+    this.sectionTimers[tag] = setTimeout(() => {
+      if (
+        this.sectionStatus[tag] === "completed" ||
+        this.sectionStatus[tag] === "failed"
+      ) {
+        return;
       }
-    } else {
-      this.contTag++;
+      console.warn("[perfil] Tiempo de espera agotado en la sección:", tag);
+      this.updateSectionStatus(tag, "failed");
+    }, this.sectionTimeoutMs);
+  }
+
+  private clearSectionTimer(tag: string) {
+    if (this.sectionTimers[tag]) {
+      clearTimeout(this.sectionTimers[tag]);
+      delete this.sectionTimers[tag];
+    }
+  }
+
+  private clearSectionTimers() {
+    Object.keys(this.sectionTimers).forEach((tag: string) =>
+      this.clearSectionTimer(tag)
+    );
+    this.sectionTimers = {};
+  }
+
+  private updateSectionStatus(tag: string, status: string) {
+    if (!this.sectionLabels[tag]) {
+      return;
+    }
+    const previousStatus = this.sectionStatus[tag];
+    this.sectionStatus[tag] = status;
+    if (status === "failed" && previousStatus !== "failed") {
+      this.notifySectionFailure(tag);
+    }
+    if (status === "completed" || status === "failed") {
+      this.clearSectionTimer(tag);
+      this.advanceExpansion();
+    }
+  }
+
+  private notifySectionFailure(tag: string) {
+    console.error("[perfil] No se pudo cargar la sección:", tag);
+    if (this.showErrors || this.en_revision) {
+      if (tag != "inscripcion") {
+        if (this.SuiteTags[tag] && this.SuiteTags[tag].required) {
+          this.popUpManager.showErrorAlert(
+            tag + " - " + this.translate.instant("inscripcion.fallo_carga_mensaje")
+          );
+        }
+      } else {
+        this.popUpManager.showErrorAlert(
+          this.translate.instant("inscripcion.fallo_carga_mensaje")
+        );
+      }
     }
   }
 
   manageLoading(infoCarga: any, actualTag: string) {
     if (infoCarga.status == "start") {
-      this.checkComplete = false;
       this.loadingSubject.next(true);
     }
     if (infoCarga.status == "completed") {
@@ -331,34 +424,38 @@ export class PerfilComponent implements OnInit {
       }
     }
 
-    if ((actualTag == "inscripcion") && infoCarga.EstadoInscripcion) {
-      this.estado_inscripcion = infoCarga.EstadoInscripcion
-      this.showErrors = infoCarga.EstadoInscripcion != "Inscripción solicitada";
+    if (actualTag == "inscripcion" && infoCarga.EstadoInscripcion) {
+      this.estado_inscripcion = infoCarga.EstadoInscripcion;
+      this.showErrors =
+        infoCarga.EstadoInscripcion != "Inscripción solicitada";
     }
 
     if (infoCarga.status == "failed") {
       this.loadingSubject.next(false);
-      if (this.showErrors || this.en_revision) {
-        if (actualTag != "inscripcion") {
-          if (this.SuiteTags[actualTag].required) {
-            this.popUpManager.showErrorAlert(actualTag + " - " + this.translate.instant('inscripcion.fallo_carga_mensaje'));
-          }
-        } else {
-          this.popUpManager.showErrorAlert(this.translate.instant('inscripcion.fallo_carga_mensaje'));
-        }
-      }
-      if (!this.checkComplete) {
-        this.checkComplete = true;
-        this.siguienteTagDesde(actualTag);
-      }
     }
 
-
-    if (infoCarga.status == "completed" && !this.checkComplete) {
-      this.checkComplete = true;
-      this.siguienteTagDesde(actualTag);
+    if (actualTag == "inscripcion") {
+      if (
+        infoCarga.status == "failed" &&
+        (this.showErrors || this.en_revision)
+      ) {
+        this.notifySectionFailure("inscripcion");
+      }
+      return;
     }
 
+    if (!this.sectionLabels[actualTag]) {
+      return;
+    }
+
+    if (infoCarga.status == "start") {
+      this.sectionStatus[actualTag] = "loading";
+      return;
+    }
+
+    if (infoCarga.status == "completed" || infoCarga.status == "failed") {
+      this.updateSectionStatus(actualTag, infoCarga.status);
+    }
   }
 
   notificar_observaciones_aspirante() {
