@@ -84,7 +84,7 @@
               checkZeroObservations()
             "
             persona_id="{{ info_persona_id }}"
-            *ngIf="SuiteTags.info_persona.render"
+            *ngIf="!SuiteTags.info_persona.reload"
           >
           </ngx-view-info-persona>
         </mat-expansion-panel>
@@ -118,7 +118,7 @@
               checkZeroObservations()
             "
             persona_id="{{ info_persona_id }}"
-            *ngIf="SuiteTags.formacion_academica.render"
+            *ngIf="!SuiteTags.formacion_academica.reload"
           >
           </ngx-view-formacion-academica>
         </mat-expansion-panel>
@@ -148,7 +148,7 @@
             (estadoCarga)="manageLoading($event, 'idiomas')"
             persona_id="{{ info_persona_id }}"
             inscripcion_id="{{ info_inscripcion_id }}"
-            *ngIf="SuiteTags.idiomas.render"
+            *ngIf="!SuiteTags.idiomas.reload"
           >
           </ngx-view-idiomas>
         </mat-expansion-panel>
@@ -182,7 +182,7 @@
               checkZeroObservations()
             "
             persona_id="{{ info_persona_id }}"
-            *ngIf="SuiteTags.experiencia_laboral.render"
+            *ngIf="!SuiteTags.experiencia_laboral.reload"
           >
           </ngx-view-experiencia-laboral>
         </mat-expansion-panel>
@@ -216,7 +216,7 @@
               checkZeroObservations()
             "
             persona_id="{{ info_persona_id }}"
-            *ngIf="SuiteTags.produccion_academica.render"
+            *ngIf="!SuiteTags.produccion_academica.reload"
           >
           </ngx-view-produccion-academica>
         </mat-expansion-panel>
@@ -252,7 +252,7 @@
             [periodo_id]="periodo_id"
             inscripcion_id="{{ info_inscripcion_id }}"
             persona_id="{{ info_persona_id }}"
-            *ngIf="SuiteTags.documento_programa.render"
+            *ngIf="!SuiteTags.documento_programa.reload"
           >
           </ngx-view-documento-programa>
         </mat-expansion-panel>
@@ -288,7 +288,7 @@
             [periodo_id]="periodo_id"
             inscripcion_id="{{ info_inscripcion_id }}"
             persona_id="{{ info_persona_id }}"
-            *ngIf="SuiteTags.descuento_matricula.render"
+            *ngIf="!SuiteTags.descuento_matricula.reload"
           >
           </ngx-view-descuento-academico>
         </mat-expansion-panel>
@@ -323,7 +323,7 @@
             "
             inscripcion_id="{{ info_inscripcion_id }}"
             persona_id="{{ info_persona_id }}"
-            *ngIf="SuiteTags.propuesta_grado.render"
+            *ngIf="!SuiteTags.propuesta_grado.reload"
           >
           </ngx-view-propuesta-grado>
         </mat-expansion-panel>
