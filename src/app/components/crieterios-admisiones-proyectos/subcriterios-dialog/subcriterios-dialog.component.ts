@@ -5,9 +5,10 @@ import { TranslateService } from "@ngx-translate/core";
 import { PopUpManager } from "src/app/managers/popUpManager";
 
 @Component({
-  selector: "app-subcriterios-dialog",
-  templateUrl: "./subcriterios-dialog.component.html",
-  styleUrls: ["./subcriterios-dialog.component.scss"],
+    selector: "app-subcriterios-dialog",
+    templateUrl: "./subcriterios-dialog.component.html",
+    styleUrls: ["./subcriterios-dialog.component.scss"],
+    standalone: false
 })
 export class SubcriteriosDialogComponent {
   dataSourceSubCriterio: MatTableDataSource<any>;

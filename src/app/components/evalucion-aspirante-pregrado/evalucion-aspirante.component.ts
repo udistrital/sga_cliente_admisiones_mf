@@ -20,9 +20,10 @@ import { TercerosService } from 'src/app/services/terceros.service';
 
 
 @Component({
-  selector: 'udistrital-evalucion-aspirante',
-  templateUrl: './evalucion-aspirante.component.html',
-  styleUrls: ['./evalucion-aspirante.component.scss']
+    selector: 'udistrital-evalucion-aspirante',
+    templateUrl: './evalucion-aspirante.component.html',
+    styleUrls: ['./evalucion-aspirante.component.scss'],
+    standalone: false
 })
 
 

@@ -3,7 +3,7 @@ import { FiltrosProgramaComponent } from '../../shared/filtros-programa/filtros-
 import { CommonModule } from "@angular/common";
 
 import { CodificacionRoutingModule } from "./codificacion-routing.module";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { CodificacionComponent } from "./components/codificacion/codificacion.component";
 import { ReporteCodificacionComponent } from "./components/reporte-codificacion/reporte-codificacion.component";
 
@@ -25,23 +25,17 @@ import { SafeUrlPipe } from "src/app/core/pipes/safe-url.pipe";
 import { ReporteVisualizerComponent } from "../reporte-visualizer/reporte-visualizer.component";
 import { RepotesInscripcionesComponent } from "../repotes-inscripciones/repotes-inscripciones.component";
 
-@NgModule({
-  declarations: [ReporteCodificacionComponent, CodificacionComponent, RepotesInscripcionesComponent, SafeUrlPipe, ReporteVisualizerComponent],
-  imports: [
-    FiltrosProgramaComponent,
-    CommonModule,
-    CodificacionRoutingModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatInputModule,
-    MatTableModule,
-    MatCardModule,
-    TranslateModule,
-    MatDialogModule,
-    MatIconModule,
-    MatTooltipModule,
-  ],
-})
+@NgModule({ declarations: [ReporteCodificacionComponent, CodificacionComponent, RepotesInscripcionesComponent, SafeUrlPipe, ReporteVisualizerComponent], imports: [FiltrosProgramaComponent,
+        CommonModule,
+        CodificacionRoutingModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatInputModule,
+        MatTableModule,
+        MatCardModule,
+        TranslateModule,
+        MatDialogModule,
+        MatIconModule,
+        MatTooltipModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class CodificacionModule { }

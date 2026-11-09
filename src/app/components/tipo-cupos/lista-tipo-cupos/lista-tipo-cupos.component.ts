@@ -9,9 +9,10 @@ import { MODALS } from 'src/app/models/diccionario/diccionario';
 import { ParametrosService } from 'src/app/services/parametros.service';
 
 @Component({
-  selector: 'app-lista-tipo-cupos',
-  templateUrl: './lista-tipo-cupos.component.html',
-  styleUrls: ['./lista-tipo-cupos.component.scss']
+    selector: 'app-lista-tipo-cupos',
+    templateUrl: './lista-tipo-cupos.component.html',
+    styleUrls: ['./lista-tipo-cupos.component.scss'],
+    standalone: false
 })
 export class ListaTipoCuposComponent {
   displayedColumns: string[] = ['id', 'nombre', 'descripcion', 'estado', 'acciones'];

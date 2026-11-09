@@ -22,9 +22,10 @@ import { RespFormat } from "src/app/models/respuesta/response-format";
 import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
-  selector: "ngx-asignar_documentos_descuentos",
-  templateUrl: "./asignar_documentos_descuentos.component.html",
-  styleUrls: ["./asignar_documentos_descuentos.component.scss"],
+    selector: "ngx-asignar_documentos_descuentos",
+    templateUrl: "./asignar_documentos_descuentos.component.html",
+    styleUrls: ["./asignar_documentos_descuentos.component.scss"],
+    standalone: false
 })
 export class AsignarDocumentosDescuentosComponent implements OnInit {
   toasterService: any;

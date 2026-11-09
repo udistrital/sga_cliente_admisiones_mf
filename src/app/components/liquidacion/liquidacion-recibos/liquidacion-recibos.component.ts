@@ -17,8 +17,9 @@ import { LiquidacionService } from 'src/app/services/liquidacion.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSelectChange } from '@angular/material/select';
 import { elementAt } from 'rxjs';
-import * as JSZip from 'jszip';
-import * as saveAs from 'file-saver';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { NotificacionesMidService } from 'src/app/services/notificaciones_mid.service';
 import { OikosService } from 'src/app/services/oikos.service';
@@ -26,9 +27,10 @@ import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service'
 import { TercerosService } from 'src/app/services/terceros.service';
 
 @Component({
-  selector: 'app-liquidacion-recibos',
-  templateUrl: './liquidacion-recibos.component.html',
-  styleUrls: ['./liquidacion-recibos.component.scss']
+    selector: 'app-liquidacion-recibos',
+    templateUrl: './liquidacion-recibos.component.html',
+    styleUrls: ['./liquidacion-recibos.component.scss'],
+    standalone: false
 })
 
 export class LiquidacionRecibosComponent {

@@ -15,9 +15,10 @@ import { ZipManagerService } from 'src/utils/zip-manager.service';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 @Component({
-  selector: 'ngx-view-produccion-academica',
-  templateUrl: './view-produccion_academica.component.html',
-  styleUrls: ['./view-produccion_academica.component.scss'],
+    selector: 'ngx-view-produccion-academica',
+    templateUrl: './view-produccion_academica.component.html',
+    styleUrls: ['./view-produccion_academica.component.scss'],
+    standalone: false
 })
 export class ViewProduccionAcademicaComponent implements OnInit {
   info_produccion_academica!: any;

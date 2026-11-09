@@ -7,34 +7,41 @@
       <th>{{ "solicitudes.soporte" | translate }}</th>
     </tr>
   </thead>
-  <tbody *ngIf="info_documento_programa">
-    <tr *ngFor="let documento of info_documento_programa">
-      <td>
-        {{ documento.DocumentoProgramaId.TipoDocumentoProgramaId.Nombre }}
-      </td>
-      <td>{{ documento.estadoObservacion }}</td>
-      <td>{{ documento.observacion }}</td>
-      <td *ngIf="documento.DocumentoId !== undefined">
-        <button
-          mat-icon-button
-          color="accent"
-          type="button"
-          (click)="abrirDocumento(documento)"
-        >
-          <mat-icon>file_open</mat-icon>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-  <tfoot
-    *ngIf="(url_editar && gotoEdit) || (updateDocument && canUpdateDocument)"
-  >
-    <tr>
-      <td colspan="4" style="background-color: var(--warning-main)" (click)="editar()">
-        <span  class="link"
-          ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
-        >
-      </td>
-    </tr>
-  </tfoot>
-</table>
+  @if (info_documento_programa) {
+    <tbody>
+      @for (documento of info_documento_programa; track documento) {
+        <tr>
+          <td>
+            {{ documento.DocumentoProgramaId.TipoDocumentoProgramaId.Nombre }}
+          </td>
+          <td>{{ documento.estadoObservacion }}</td>
+          <td>{{ documento.observacion }}</td>
+          @if (documento.DocumentoId !== undefined) {
+            <td>
+              <button
+                mat-icon-button
+                color="accent"
+                type="button"
+                (click)="abrirDocumento(documento)"
+                >
+                <mat-icon>file_open</mat-icon>
+              </button>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  }
+  @if ((url_editar && gotoEdit) || (updateDocument && canUpdateDocument)) {
+    <tfoot
+      >
+      <tr>
+        <td colspan="4" style="background-color: var(--warning-main)" (click)="editar()">
+          <span  class="link"
+            ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
+            >
+          </td>
+        </tr>
+      </tfoot>
+    }
+  </table>

@@ -1,6 +1,8 @@
 <mat-card>
   <div [class.loader-div]="loading">
-    <mat-spinner *ngIf="loading" diameter="100" color="primary"></mat-spinner>
+    @if (loading) {
+      <mat-spinner diameter="100" color="primary"></mat-spinner>
+    }
   </div>
   <mat-card-header>
     <mat-card-title>{{ "tipo_inscripcion.titulo" | translate }}</mat-card-title>
@@ -13,7 +15,7 @@
         (keyup)="applyFilter($event)"
         placeholder="Ex. Mia"
         #input
-      />
+        />
     </mat-form-field>
 
     <!-- BARRA DE HERRAMIENTAS -->
@@ -23,7 +25,7 @@
         color="accent"
         type="button"
         (click)="navigateToCrearTipoInscripcion()"
-      >
+        >
         {{ "tipo_inscripcion.tooltip_crear" | translate }}
       </button>
     </mat-toolbar>
@@ -69,11 +71,11 @@
                 active: row.Activo,
                 inactive: !row.Activo
               }"
-            >
+              >
               {{
-                row.Activo
-                  ? ("GLOBAL.activo" | translate)
-                  : ("GLOBAL.inactivo" | translate)
+              row.Activo
+              ? ("GLOBAL.activo" | translate)
+              : ("GLOBAL.inactivo" | translate)
               }}
             </div>
           </td>
@@ -90,34 +92,36 @@
                 [matMenuTriggerFor]="menu"
                 class="boton-acciones"
                 aria-label="Example icon-button with a menu"
-              >
+                >
                 <mat-icon color="primary">more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
                 <button
                   mat-menu-item
                   (click)="navigateToEditarTipoInscripcion(row)"
-                >
+                  >
                   <mat-icon color="accent">edit</mat-icon>
                   <span>{{ "GLOBAL.editar" | translate }}</span>
                 </button>
-                <button
-                  mat-menu-item
-                  (click)="eliminar(row)"
-                  *ngIf="row.Activo"
-                >
-                  <mat-icon class="icon-delete">delete</mat-icon>
-                  <span>{{ "tipo_inscripcion.deshabilitar" | translate }}</span>
-                </button>
-                <button
-                  mat-menu-item
-                  (click)="activar(row)"
-                  *ngIf="!row.Activo"
-                  color="accent"
-                >
-                  <mat-icon class="icon-enable">check</mat-icon>
-                  <span>{{ "tipo_inscripcion.habilitar" | translate }}</span>
-                </button>
+                @if (row.Activo) {
+                  <button
+                    mat-menu-item
+                    (click)="eliminar(row)"
+                    >
+                    <mat-icon class="icon-delete">delete</mat-icon>
+                    <span>{{ "tipo_inscripcion.deshabilitar" | translate }}</span>
+                  </button>
+                }
+                @if (!row.Activo) {
+                  <button
+                    mat-menu-item
+                    (click)="activar(row)"
+                    color="accent"
+                    >
+                    <mat-icon class="icon-enable">check</mat-icon>
+                    <span>{{ "tipo_inscripcion.habilitar" | translate }}</span>
+                  </button>
+                }
               </mat-menu>
             </div>
           </td>

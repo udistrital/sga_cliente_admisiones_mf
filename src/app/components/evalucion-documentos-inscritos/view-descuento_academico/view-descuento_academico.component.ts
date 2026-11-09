@@ -15,9 +15,10 @@ import { InscripcionMidService } from "src/app/services/sga_inscripcion_mid.serv
 import { UserService } from "src/app/services/users.service";
 
 @Component({
-  selector: "ngx-view-descuento-academico",
-  templateUrl: "./view-descuento_academico.component.html",
-  styleUrls: ["./view-descuento_academico.component.scss"],
+    selector: "ngx-view-descuento-academico",
+    templateUrl: "./view-descuento_academico.component.html",
+    styleUrls: ["./view-descuento_academico.component.scss"],
+    standalone: false
 })
 export class ViewDescuentoAcademicoComponent implements OnInit {
   persona!: number;

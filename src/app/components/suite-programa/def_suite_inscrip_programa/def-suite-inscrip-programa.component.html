@@ -4,7 +4,7 @@
   <!-- FORMULARIO -->
   <section>
     <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
-      (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
+    (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
 
     <!-- select Tipo Inscripcion -->
     <mat-form-field style="width: 100%">
@@ -13,351 +13,343 @@
         [formControl]="tipoInscripControl"
         [disabled]="!proyecto"
         (selectionChange)="onTipoInscripChange()"
-      >
+        >
         <mat-option [value]="null"> {{ "GLOBAL.seleccionar" | translate }} </mat-option>
-        <mat-option *ngFor="let item of tiposInscripFiltered" [value]="item.Id">
-          {{ item.Nombre }}
-        </mat-option>
+        @for (item of tiposInscripFiltered; track item) {
+          <mat-option [value]="item.Id">
+            {{ item.Nombre }}
+          </mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </section>
 
-  <div
-    *ngIf="loading && periodo && nivel && facultad && proyecto && tipoInscrip"
-    class="alert warning margin-y"
-  >
-    <mat-icon class="icon loading-inline-icon">hourglass_top</mat-icon>
-    <span>{{ "GLOBAL.cargando" | translate }}</span>
-  </div>
-
-  <div
-    class="container"
-    align="center"
-    *ngIf="!loading && periodo && nivel && facultad && proyecto && tipoInscrip"
-  >
-    <div class="col-12 info-alert">
-      {{ "admision.info_uso_select_tags" | translate }}
+  @if (loading && periodo && nivel && facultad && proyecto && tipoInscrip) {
+    <div
+      class="alert warning margin-y"
+      >
+      <mat-icon class="icon loading-inline-icon">hourglass_top</mat-icon>
+      <span>{{ "GLOBAL.cargando" | translate }}</span>
     </div>
-    <br />
-    <div class="container-suite-cards">
-      <mat-card
-        class="exp-card"
-        align="center"
-        [ngClass]="{ isSelected: tagsObject.info_persona.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.info_basica" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('Yes_info_persona')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="account_circle"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
-            [disabled]="true"
-            [(ngModel)]="tagsObject.info_persona.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card>
+  }
 
-      <mat-card
-        class="exp-card"
-        align="center"
-        [ngClass]="{ isSelected: tagsObject.formacion_academica.selected }"
+  @if (!loading && periodo && nivel && facultad && proyecto && tipoInscrip) {
+    <div
+      class="container"
+      align="center"
       >
-        <mat-card-header>{{
-          "inscripcion.formacion_academica" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('formacion_academica')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="school"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
-            [disabled]="!tagsObject.formacion_academica.selected"
-            [(ngModel)]="tagsObject.formacion_academica.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+      <div class="col-12 info-alert">
+        {{ "admision.info_uso_select_tags" | translate }}
+      </div>
+      <br />
+      <div class="container-suite-cards">
+        <mat-card
+          class="exp-card"
+          align="center"
+          [ngClass]="{ isSelected: tagsObject.info_persona.selected }"
           >
-        </mat-card-footer>
-      </mat-card>
-
-      <mat-card
-        class="exp-card"
-        align="center"
-        [ngClass]="{ isSelected: tagsObject.idiomas.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.idiomas" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('idiomas')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="public"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
-            [disabled]="!tagsObject.idiomas.selected"
-            [(ngModel)]="tagsObject.idiomas.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card>
-
-      <mat-card
-        class="exp-card"
-        align="center"
-        [ngClass]="{ isSelected: tagsObject.experiencia_laboral.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.experiencia_laboral" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('experiencia_laboral')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="work"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
-            [disabled]="!tagsObject.experiencia_laboral.selected"
-            [(ngModel)]="tagsObject.experiencia_laboral.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card>
-
-      <mat-card
-        class="exp-card"
-        align="center"
-        [ngClass]="{ isSelected: tagsObject.produccion_academica.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.produccion_academica" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('produccion_academica')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="book"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
-            [disabled]="!tagsObject.produccion_academica.selected"
-            [(ngModel)]="tagsObject.produccion_academica.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card>
-
-      <mat-card
-        class="exp-card"
-        align="center"
-        [ngClass]="{ isSelected: tagsObject.documento_programa.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.documento_programa" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('documento_programa')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="description"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
-            [disabled]="!tagsObject.documento_programa.selected"
-            [(ngModel)]="tagsObject.documento_programa.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card>
-
-      <mat-card
-        class="exp-card"
-        align="center"
-        [ngClass]="{ isSelected: tagsObject.descuento_matricula.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.descuento_matricula" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('Yes_descuento_matricula')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="attach_money"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
-            [(ngModel)]="tagsObject.descuento_matricula.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card>
-
-      <mat-card
-        class="exp-card"
-        align="center"
-        [ngClass]="{ isSelected: tagsObject.propuesta_grado.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.propuesta_grado" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('propuesta_grado')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="insert_drive_file"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
-            [disabled]="!tagsObject.propuesta_grado.selected"
-            [(ngModel)]="tagsObject.propuesta_grado.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card>
-
-      <mat-card
-        class="exp-card"
-        [ngClass]="{ isSelected: tagsObject.perfil.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.perfil" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('Yes_perfil')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="person"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
-            [disabled]="true"
-            [(ngModel)]="tagsObject.perfil.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card>
-
-      <!-- <mat-card
-        class="exp-card"
-        [ngClass]="{ isSelected: tagsObject.examen_estado.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.examen_estado" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('examen_estado')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="article"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
+          <mat-card-header>{{
+            "inscripcion.info_basica" | translate
+          }}</mat-card-header>
+          <mat-card-content
+            class="icon-form"
+            (click)="clickTag('Yes_info_persona')"
+            title="{{ 'GLOBAL.seleccionar' | translate }}"
+            >
+            <mat-icon class="icon" fontIcon="account_circle"></mat-icon>
+          </mat-card-content>
+          <mat-card-footer>
+            <mat-checkbox
+              color="primary"
+              [disabled]="true"
+              [(ngModel)]="tagsObject.info_persona.required"
+              ><b>{{ "GLOBAL.obligatorio" | translate }}</b>
+            </mat-checkbox>
+          </mat-card-footer>
+        </mat-card>
+          <mat-card
+            class="exp-card"
+            align="center"
+            [ngClass]="{ isSelected: tagsObject.formacion_academica.selected }"
+            >
+            <mat-card-header>{{
+              "inscripcion.formacion_academica" | translate
+            }}</mat-card-header>
+            <mat-card-content
+              class="icon-form"
+              (click)="clickTag('formacion_academica')"
+              title="{{ 'GLOBAL.seleccionar' | translate }}"
+              >
+              <mat-icon class="icon" fontIcon="school"></mat-icon>
+            </mat-card-content>
+            <mat-card-footer>
+              <mat-checkbox
+                color="primary"
+                [disabled]="!tagsObject.formacion_academica.selected"
+                [(ngModel)]="tagsObject.formacion_academica.required"
+                ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                >
+              </mat-card-footer>
+          </mat-card>
+            <mat-card
+              class="exp-card"
+              align="center"
+              [ngClass]="{ isSelected: tagsObject.idiomas.selected }"
+              >
+              <mat-card-header>{{
+                "inscripcion.idiomas" | translate
+              }}</mat-card-header>
+              <mat-card-content
+                class="icon-form"
+                (click)="clickTag('idiomas')"
+                title="{{ 'GLOBAL.seleccionar' | translate }}"
+                >
+                <mat-icon class="icon" fontIcon="public"></mat-icon>
+              </mat-card-content>
+              <mat-card-footer>
+                <mat-checkbox
+                  color="primary"
+                  [disabled]="!tagsObject.idiomas.selected"
+                  [(ngModel)]="tagsObject.idiomas.required"
+                  ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                  >
+                </mat-card-footer>
+            </mat-card>
+              <mat-card
+                class="exp-card"
+                align="center"
+                [ngClass]="{ isSelected: tagsObject.experiencia_laboral.selected }"
+                >
+                <mat-card-header>{{
+                  "inscripcion.experiencia_laboral" | translate
+                }}</mat-card-header>
+                <mat-card-content
+                  class="icon-form"
+                  (click)="clickTag('experiencia_laboral')"
+                  title="{{ 'GLOBAL.seleccionar' | translate }}"
+                  >
+                  <mat-icon class="icon" fontIcon="work"></mat-icon>
+                </mat-card-content>
+                <mat-card-footer>
+                  <mat-checkbox
+                    color="primary"
+                    [disabled]="!tagsObject.experiencia_laboral.selected"
+                    [(ngModel)]="tagsObject.experiencia_laboral.required"
+                    ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                    >
+                  </mat-card-footer>
+                </mat-card>
+                <mat-card
+                  class="exp-card"
+                  align="center"
+                  [ngClass]="{ isSelected: tagsObject.produccion_academica.selected }"
+                  >
+                  <mat-card-header>{{
+                    "inscripcion.produccion_academica" | translate
+                  }}</mat-card-header>
+                  <mat-card-content
+                    class="icon-form"
+                    (click)="clickTag('produccion_academica')"
+                    title="{{ 'GLOBAL.seleccionar' | translate }}"
+                    >
+                    <mat-icon class="icon" fontIcon="book"></mat-icon>
+                  </mat-card-content>
+                  <mat-card-footer>
+                    <mat-checkbox
+                      color="primary"
+                      [disabled]="!tagsObject.produccion_academica.selected"
+                      [(ngModel)]="tagsObject.produccion_academica.required"
+                      ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                      >
+                    </mat-card-footer>
+                  </mat-card>
+                  <mat-card
+                    class="exp-card"
+                    align="center"
+                    [ngClass]="{ isSelected: tagsObject.documento_programa.selected }"
+                    >
+                    <mat-card-header>{{
+                      "inscripcion.documento_programa" | translate
+                    }}</mat-card-header>
+                    <mat-card-content
+                      class="icon-form"
+                      (click)="clickTag('documento_programa')"
+                      title="{{ 'GLOBAL.seleccionar' | translate }}"
+                      >
+                      <mat-icon class="icon" fontIcon="description"></mat-icon>
+                    </mat-card-content>
+                    <mat-card-footer>
+                      <mat-checkbox
+                        color="primary"
+                        [disabled]="!tagsObject.documento_programa.selected"
+                        [(ngModel)]="tagsObject.documento_programa.required"
+                        ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                        >
+                      </mat-card-footer>
+                    </mat-card>
+                    <mat-card
+                      class="exp-card"
+                      align="center"
+                      [ngClass]="{ isSelected: tagsObject.descuento_matricula.selected }"
+                      >
+                      <mat-card-header>{{
+                        "inscripcion.descuento_matricula" | translate
+                      }}</mat-card-header>
+                      <mat-card-content
+                        class="icon-form"
+                        (click)="clickTag('Yes_descuento_matricula')"
+                        title="{{ 'GLOBAL.seleccionar' | translate }}"
+                        >
+                        <mat-icon class="icon" fontIcon="attach_money"></mat-icon>
+                      </mat-card-content>
+                      <mat-card-footer>
+                        <mat-checkbox
+                          color="primary"
+                          [(ngModel)]="tagsObject.descuento_matricula.required"
+                          ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                          >
+                        </mat-card-footer>
+                      </mat-card>
+                      <mat-card
+                        class="exp-card"
+                        align="center"
+                        [ngClass]="{ isSelected: tagsObject.propuesta_grado.selected }"
+                        >
+                        <mat-card-header>{{
+                          "inscripcion.propuesta_grado" | translate
+                        }}</mat-card-header>
+                        <mat-card-content
+                          class="icon-form"
+                          (click)="clickTag('propuesta_grado')"
+                          title="{{ 'GLOBAL.seleccionar' | translate }}"
+                          >
+                          <mat-icon class="icon" fontIcon="insert_drive_file"></mat-icon>
+                        </mat-card-content>
+                        <mat-card-footer>
+                          <mat-checkbox
+                            color="primary"
+                            [disabled]="!tagsObject.propuesta_grado.selected"
+                            [(ngModel)]="tagsObject.propuesta_grado.required"
+                            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                            >
+                          </mat-card-footer>
+                        </mat-card>
+                        <mat-card
+                          class="exp-card"
+                          [ngClass]="{ isSelected: tagsObject.perfil.selected }"
+                          >
+                          <mat-card-header>{{
+                            "inscripcion.perfil" | translate
+                          }}</mat-card-header>
+                          <mat-card-content
+                            class="icon-form"
+                            (click)="clickTag('Yes_perfil')"
+                            title="{{ 'GLOBAL.seleccionar' | translate }}"
+                            >
+                            <mat-icon class="icon" fontIcon="person"></mat-icon>
+                          </mat-card-content>
+                          <mat-card-footer>
+                            <mat-checkbox
+                              color="primary"
+                              [disabled]="true"
+                              [(ngModel)]="tagsObject.perfil.required"
+                              ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                              >
+                            </mat-card-footer>
+                          </mat-card>
+                          <!-- <mat-card
+                          class="exp-card"
+                          [ngClass]="{ isSelected: tagsObject.examen_estado.selected }"
+                          >
+                          <mat-card-header>{{
+                            "inscripcion.examen_estado" | translate
+                          }}</mat-card-header>
+                          <mat-card-content
+                            class="icon-form"
+                            (click)="clickTag('examen_estado')"
+                            title="{{ 'GLOBAL.seleccionar' | translate }}"
+                            >
+                            <mat-icon class="icon" fontIcon="article"></mat-icon>
+                          </mat-card-content>
+                          <mat-card-footer>
+                            <mat-checkbox
+                              color="primary"
             (click)="
               !tagsObject.examen_estado.selected ? $event.preventDefault() : ''
             "
-            [(ngModel)]="tagsObject.examen_estado.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card> -->
-
-      <!-- <mat-card
-        class="exp-card"
-        [ngClass]="{ isSelected: tagsObject.informacion_academica.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.informacion_academica" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('informacion_academica')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="school"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
+                              [(ngModel)]="tagsObject.examen_estado.required"
+                              ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                              >
+                            </mat-card-footer>
+                          </mat-card> -->
+                          <!-- <mat-card
+                          class="exp-card"
+                          [ngClass]="{ isSelected: tagsObject.informacion_academica.selected }"
+                          >
+                          <mat-card-header>{{
+                            "inscripcion.informacion_academica" | translate
+                          }}</mat-card-header>
+                          <mat-card-content
+                            class="icon-form"
+                            (click)="clickTag('informacion_academica')"
+                            title="{{ 'GLOBAL.seleccionar' | translate }}"
+                            >
+                            <mat-icon class="icon" fontIcon="school"></mat-icon>
+                          </mat-card-content>
+                          <mat-card-footer>
+                            <mat-checkbox
+                              color="primary"
             (click)="
               !tagsObject.informacion_academica.selected
                 ? $event.preventDefault()
                 : ''
             "
-            [(ngModel)]="tagsObject.informacion_academica.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card> -->
-
-      <!-- <mat-card
-        class="exp-card"
-        [ngClass]="{ isSelected: tagsObject.datos_acudiente.selected }"
-      >
-        <mat-card-header>{{
-          "inscripcion.datos_acudiente" | translate
-        }}</mat-card-header>
-        <mat-card-content
-          class="icon-form"
-          (click)="clickTag('datos_acudiente')"
-          title="{{ 'GLOBAL.seleccionar' | translate }}"
-        >
-          <mat-icon class="icon" fontIcon="family_restroom"></mat-icon>
-        </mat-card-content>
-        <mat-card-footer>
-          <mat-checkbox
-            color="primary"
+                              [(ngModel)]="tagsObject.informacion_academica.required"
+                              ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                              >
+                            </mat-card-footer>
+                          </mat-card> -->
+                          <!-- <mat-card
+                          class="exp-card"
+                          [ngClass]="{ isSelected: tagsObject.datos_acudiente.selected }"
+                          >
+                          <mat-card-header>{{
+                            "inscripcion.datos_acudiente" | translate
+                          }}</mat-card-header>
+                          <mat-card-content
+                            class="icon-form"
+                            (click)="clickTag('datos_acudiente')"
+                            title="{{ 'GLOBAL.seleccionar' | translate }}"
+                            >
+                            <mat-icon class="icon" fontIcon="family_restroom"></mat-icon>
+                          </mat-card-content>
+                          <mat-card-footer>
+                            <mat-checkbox
+                              color="primary"
             (click)="
               !tagsObject.datos_acudiente.selected
                 ? $event.preventDefault()
                 : ''
             "
-            [(ngModel)]="tagsObject.datos_acudiente.required"
-            ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
-          >
-        </mat-card-footer>
-      </mat-card> -->
-    </div>
-
-    <br />
-    <div class="container" style="padding: 2%">
-      <div class="row justify-content-md-center">
-        <button
-          class="boton-primary"
-          mat-raised-button
-          color="primary"
-          (click)="guardar()"
-        >
-          {{ "GLOBAL.guardar" | translate }}
-        </button>
-      </div>
-    </div>
-  </div>
-</main>
+                              [(ngModel)]="tagsObject.datos_acudiente.required"
+                              ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
+                              >
+                            </mat-card-footer>
+                          </mat-card> -->
+                        </div>
+                        <br />
+                        <div class="container" style="padding: 2%">
+                          <div class="row justify-content-md-center">
+                            <button
+                              class="boton-primary"
+                              mat-raised-button
+                              color="primary"
+                              (click)="guardar()"
+                              >
+                              {{ "GLOBAL.guardar" | translate }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </main>

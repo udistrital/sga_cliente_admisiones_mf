@@ -12,9 +12,10 @@ import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.se
 import { TercerosService } from 'src/app/services/terceros.service';
 
 @Component({
-  selector: 'app-preinscripcion-proyectos-curriculares',
-  templateUrl: './preinscripcion-proyectos-curriculares.component.html',
-  styleUrls: ['./preinscripcion-proyectos-curriculares.component.scss']
+    selector: 'app-preinscripcion-proyectos-curriculares',
+    templateUrl: './preinscripcion-proyectos-curriculares.component.html',
+    styleUrls: ['./preinscripcion-proyectos-curriculares.component.scss'],
+    standalone: false
 })
 export class PreinscripcionProyectosCurricularesComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;

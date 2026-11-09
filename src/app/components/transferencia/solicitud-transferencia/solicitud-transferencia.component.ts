@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PopUpManager } from '../../../managers/popUpManager';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { UserService } from 'src/app/services/users.service';
- import * as moment from 'moment';
+ import moment from 'moment';
 import { HttpErrorResponse } from '@angular/common/http';
 // @ts-ignore
 import Swal from 'sweetalert2/dist/sweetalert2';
@@ -15,9 +15,10 @@ import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 
 @Component({
-  selector: 'solicitud-transferencia',
-  templateUrl: './solicitud-transferencia.component.html',
-  styleUrls: ['./solicitud-transferencia.component.scss']
+    selector: 'solicitud-transferencia',
+    templateUrl: './solicitud-transferencia.component.html',
+    styleUrls: ['./solicitud-transferencia.component.scss'],
+    standalone: false
 })
 export class SolicitudTransferenciaComponent implements OnInit {
   formTransferencia: any;

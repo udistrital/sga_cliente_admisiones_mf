@@ -10,9 +10,10 @@ import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { TipoDocumentoPrograma } from 'src/app/models/documento/tipo_documento_programa';
 
 @Component({
-  selector: 'ngx-crud-documento-proyecto',
-  templateUrl: './crud-documento-proyecto.component.html',
-  styleUrls: ['./crud-documento-proyecto.component.scss'],
+    selector: 'ngx-crud-documento-proyecto',
+    templateUrl: './crud-documento-proyecto.component.html',
+    styleUrls: ['./crud-documento-proyecto.component.scss'],
+    standalone: false
 })
 export class CrudDocumentoProyectoComponent implements OnInit {
 

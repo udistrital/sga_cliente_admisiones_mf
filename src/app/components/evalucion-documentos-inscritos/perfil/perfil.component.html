@@ -1,84 +1,98 @@
 <!-- Indicador de carga SVG -->
-<div *ngIf="loading" class="loading-indicator">
-  <svg class="loading-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-    <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="25" y="50">
-      <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate>
-    </rect>
-    <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="85" y="50">
-      <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate>
-    </rect>
-    <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="145" y="50">
-      <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate>
-    </rect>
-  </svg>
-</div>
+@if (loading) {
+  <div class="loading-indicator">
+    <svg class="loading-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+      <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="25" y="50">
+        <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate>
+      </rect>
+      <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="85" y="50">
+        <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate>
+      </rect>
+      <rect fill="#03678F" stroke="#03678F" stroke-width="15" width="30" height="30" x="145" y="50">
+        <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate>
+      </rect>
+    </svg>
+  </div>
+}
 <div [class.hidden]="loading">
-<mat-card class="margin-y">
-  <mat-card-content>
-    <div class="row">
-      <div class="col-md-1"></div>
-      <div class="col-md-10 margin-y">
-        <h3 *ngIf="imprimir" class="text-center">
-          {{ "inscripcion.comprobante_inscripcion" | translate }}
-        </h3>
-        <h3 *ngIf="!imprimir" class="text-center">
-          {{ "inscripcion.perfil" | translate }}
-        </h3>
+  <mat-card class="margin-y">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 margin-y">
+          @if (imprimir) {
+            <h3 class="text-center">
+              {{ "inscripcion.comprobante_inscripcion" | translate }}
+            </h3>
+          }
+          @if (!imprimir) {
+            <h3 class="text-center">
+              {{ "inscripcion.perfil" | translate }}
+            </h3>
+          }
+        </div>
+        <div class="col-md-1">
+          @if (!en_revision && !imprimir) {
+            <h2>
+              <button
+                class="btn btn-primary btn-icon input-group-text btn-tn"
+                (click)="editar($event, 'salir_perfil')"
+                >
+                X
+              </button>
+            </h2>
+          }
+        </div>
       </div>
-      <div class="col-md-1">
-        <h2 *ngIf="!en_revision && !imprimir">
-          <button
-            class="btn btn-primary btn-icon input-group-text btn-tn"
-            (click)="editar($event, 'salir_perfil')"
-          >
-            X
-          </button>
-        </h2>
-      </div>
-    </div>
 
-    <div *ngIf="suiteLoaded">
-      <mat-accordion multi>
-        <mat-expansion-panel [expanded]="true" hideToggle>
-          <mat-expansion-panel-header [expandedHeight]="'32px'">
-            <mat-panel-title>{{
-              "inscripcion.inscripcion" | translate
-            }}</mat-panel-title>
-            <mat-panel-description></mat-panel-description>
-          </mat-expansion-panel-header>
-          <ngx-view-inscripcion
-            [periodo_id]="periodo_id"
-            [periodo_nombre]="periodo_nombre"
-            (estadoCarga)="manageLoading($event, 'inscripcion')"
-            *ngIf="renderInscripcion"
-          >
-          </ngx-view-inscripcion>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel
-          id="info_persona"
-          *ngIf="SuiteTags.info_persona.selected"
-          hideToggle
-          [disabled]="!SuiteTags.info_persona.render"
-          [expanded]="SuiteTags.info_persona.render"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              "inscripcion.info_basica" | translate
-            }}</mat-panel-title>
-            <mat-panel-description>
-              <div *ngIf="SuiteTags.info_persona.required">
-                {{ "GLOBAL.obligatorio" | translate }}
-              </div>
-              <div *ngIf="!SuiteTags.info_persona.required">
-                {{ "GLOBAL.opcional" | translate }}
-              </div>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <ngx-view-info-persona
-            (url_editar)="editar($event, 'info_persona')"
-            (revisar_doc)="abrirDocumento($event)"
-            (estadoCarga)="manageLoading($event, 'info_persona')"
+      @if (suiteLoaded) {
+        <div>
+          <mat-accordion multi>
+            <mat-expansion-panel [expanded]="true" hideToggle>
+              <mat-expansion-panel-header [expandedHeight]="'32px'">
+                <mat-panel-title>{{
+                  "inscripcion.inscripcion" | translate
+                }}</mat-panel-title>
+                <mat-panel-description></mat-panel-description>
+              </mat-expansion-panel-header>
+              @if (renderInscripcion) {
+                <ngx-view-inscripcion
+                  [periodo_id]="periodo_id"
+                  [periodo_nombre]="periodo_nombre"
+                  (estadoCarga)="manageLoading($event, 'inscripcion')"
+                  >
+                </ngx-view-inscripcion>
+              }
+            </mat-expansion-panel>
+            @if (SuiteTags.info_persona.selected) {
+              <mat-expansion-panel
+                id="info_persona"
+                hideToggle
+                [disabled]="!SuiteTags.info_persona.render"
+                [expanded]="SuiteTags.info_persona.render"
+                >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{
+                    "inscripcion.info_basica" | translate
+                  }}</mat-panel-title>
+                  <mat-panel-description>
+                    @if (SuiteTags.info_persona.required) {
+                      <div>
+                        {{ "GLOBAL.obligatorio" | translate }}
+                      </div>
+                    }
+                    @if (!SuiteTags.info_persona.required) {
+                      <div>
+                        {{ "GLOBAL.opcional" | translate }}
+                      </div>
+                    }
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                @if (SuiteTags.info_persona.render) {
+                  <ngx-view-info-persona
+                    (url_editar)="editar($event, 'info_persona')"
+                    (revisar_doc)="abrirDocumento($event)"
+                    (estadoCarga)="manageLoading($event, 'info_persona')"
             (docs_editados)="
               SuiteTags.info_persona.observacion = $event;
               checkZeroObservations()
@@ -330,74 +344,87 @@
       </mat-accordion>
     </div>
 
-    <br />
-    <div class="preinscription-alert" *ngIf="imprimir">
-      <div class="col-md-12">
-        {{ "inscripcion.info_impresion_auto" | translate }}
-      </div>
-    </div>
-    <div class="info-comprobante" *ngIf="imprimir">
-      {{ "inscripcion.info_comprobante" | translate }}
-    </div>
-    <br />
-    <div class="col-12" *ngIf="!en_revision && canUpdateDocument">
-      <button
-        mat-flat-button
-        type="button"
-        color="primary"
-        (click)="changeToInscritoAgain()"
-        [disabled]="hasObservations"
-      >
-        {{ "inscripcion.confirmar_ajuste_documentos_observacion" | translate }}
-      </button>
-    </div>
-    <br />
-    <div class="preinscription-alert" *ngIf="!en_revision && canUpdateDocument">
-      <div class="col-12">
-        {{ "inscripcion.nota_confirmar_ajuste" | translate }}
-      </div>
-    </div>
-    <div
-      class="col-md-12"
-      *ngIf="progressDownloadDocs >= 100"
-      style="column-gap: 10px; display: flex; justify-content: center"
-    >
-      <button
-        *ngIf="en_revision"
-        mat-flat-button
-        color="accent"
-        (click)="descargar_compilado_zip()"
-      >
-        {{ "admision.descargar_zip" | translate }}
-      </button>
-      <button
-        *ngIf="estado_inscripcion == 'INSCRITO con Observación' && en_revision"
-        class="boton-primary"
-        mat-flat-button
-        color="accent"
-        (click)="notificar_observaciones_aspirante()"
-      >
-        {{ "admision.notificar_observaciones" | translate }}
-      </button>
-      <button
-        *ngIf="imprimir"
-        class="boton-primary"
-        mat-flat-button
-        color="accent"
-        (click)="editar($event, 'salir_preinscripcion')"
-      >
-        {{ "GLOBAL.regresar" | translate }}
-      </button>
-      <button
-        *ngIf="imprimir"
-        class="boton-primary"
-        mat-raised-button
-        color="link"
-        (click)="descargar_comprobante_inscription()"
-      >
-        {{ "inscripcion.generar_comprobante" | translate }}
-      </button>
-    </div>
-  </mat-card-content>
-</mat-card>
+      <br />
+      @if (imprimir) {
+        <div class="preinscription-alert">
+          <div class="col-md-12">
+            {{ "inscripcion.info_impresion_auto" | translate }}
+          </div>
+        </div>
+      }
+      @if (imprimir) {
+        <div class="info-comprobante">
+          {{ "inscripcion.info_comprobante" | translate }}
+        </div>
+      }
+      <br />
+      @if (!en_revision && canUpdateDocument) {
+        <div class="col-12">
+          <button
+            mat-flat-button
+            type="button"
+            color="primary"
+            (click)="changeToInscritoAgain()"
+            [disabled]="hasObservations"
+            >
+            {{ "inscripcion.confirmar_ajuste_documentos_observacion" | translate }}
+          </button>
+        </div>
+      }
+      <br />
+      @if (!en_revision && canUpdateDocument) {
+        <div class="preinscription-alert">
+          <div class="col-12">
+            {{ "inscripcion.nota_confirmar_ajuste" | translate }}
+          </div>
+        </div>
+      }
+      @if (progressDownloadDocs >= 100) {
+        <div
+          class="col-md-12"
+          style="column-gap: 10px; display: flex; justify-content: center"
+          >
+          @if (en_revision) {
+            <button
+              mat-flat-button
+              color="accent"
+              (click)="descargar_compilado_zip()"
+              >
+              {{ "admision.descargar_zip" | translate }}
+            </button>
+          }
+          @if (estado_inscripcion == 'INSCRITO con Observación' && en_revision) {
+            <button
+              class="boton-primary"
+              mat-flat-button
+              color="accent"
+              (click)="notificar_observaciones_aspirante()"
+              >
+              {{ "admision.notificar_observaciones" | translate }}
+            </button>
+          }
+          @if (imprimir) {
+            <button
+              class="boton-primary"
+              mat-flat-button
+              color="accent"
+              (click)="editar($event, 'salir_preinscripcion')"
+              >
+              {{ "GLOBAL.regresar" | translate }}
+            </button>
+          }
+          @if (imprimir) {
+            <button
+              class="boton-primary"
+              mat-raised-button
+              color="link"
+              (click)="descargar_comprobante_inscription()"
+              >
+              {{ "inscripcion.generar_comprobante" | translate }}
+            </button>
+          }
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
 </div>
