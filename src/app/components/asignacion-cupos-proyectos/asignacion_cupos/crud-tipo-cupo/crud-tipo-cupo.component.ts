@@ -5,9 +5,10 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SgaParametrosService } from 'src/app/services/sga_parametros.service';
 
 @Component({
-  selector: 'app-crud-tipo-cupo',
-  templateUrl: './crud-tipo-cupo.component.html',
-  styleUrls: ['./crud-tipo-cupo.component.scss']
+    selector: 'app-crud-tipo-cupo',
+    templateUrl: './crud-tipo-cupo.component.html',
+    styleUrls: ['./crud-tipo-cupo.component.scss'],
+    standalone: false
 })
 export class CrudTipoCupoComponent {
 

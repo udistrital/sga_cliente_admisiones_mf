@@ -6,9 +6,10 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { Criterio } from 'src/app/models/admision/criterio';
 
 @Component({
-  selector: 'ngx-dialogo-criterios',
-  templateUrl: './dialogo-criterios.component.html',
-  styleUrls: ['./dialogo-criterios.component.scss']
+    selector: 'ngx-dialogo-criterios',
+    templateUrl: './dialogo-criterios.component.html',
+    styleUrls: ['./dialogo-criterios.component.scss'],
+    standalone: false
 })
 export class DialogoCriteriosComponent implements OnInit {
 

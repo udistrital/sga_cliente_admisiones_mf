@@ -19,9 +19,10 @@ import { MatSort } from '@angular/material/sort';
 import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 
 @Component({
-  selector: 'ngx-select-documento-proyecto',
-  templateUrl: './select-documento-proyecto.component.html',
-  styleUrls: ['./select-documento-proyecto.component.scss'],
+    selector: 'ngx-select-documento-proyecto',
+    templateUrl: './select-documento-proyecto.component.html',
+    styleUrls: ['./select-documento-proyecto.component.scss'],
+    standalone: false
 })
 export class SelectDocumentoProyectoComponent implements OnInit {
 

@@ -15,9 +15,10 @@ import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscri
 
 
 @Component({
-  selector: "crud-asignacion-cupo",
-  templateUrl: "./crud-asignacion_cupo.component.html",
-  styleUrls: ["./crud-asignacion_cupo.component.scss"],
+    selector: "crud-asignacion-cupo",
+    templateUrl: "./crud-asignacion_cupo.component.html",
+    styleUrls: ["./crud-asignacion_cupo.component.scss"],
+    standalone: false
 })
 export class CrudAsignacionCupoComponent implements AfterViewInit {
 

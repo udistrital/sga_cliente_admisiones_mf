@@ -4,211 +4,215 @@
       <h2>{{ "admision.inscripcion" | translate }}</h2>
 
       <!-- FORMULARIO -->
-      <div *ngIf="showProfile" class="margin-y">
-        <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
-          [seleccionActual]="seleccionFiltros" [programaInicial]="programaInicial"
+      @if (showProfile) {
+        <div class="margin-y">
+          <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
+            [seleccionActual]="seleccionFiltros" [programaInicial]="programaInicial"
           (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
-
-        <!--Periodo académico-->
-        <mat-form-field *ngIf="selectMultipleNivel" class="form-field">
-          <mat-label>{{ "admision.periodo_" | translate }}:</mat-label>
-          <mat-select
-            *ngIf="selectMultipleNivel"
-            [formControl]="Campo2Control"
-            [(ngModel)]="periodoMultiple"
-            placeholder="2020-I, 2020-II, 2020-III"
-            [disabled]="!proyectos_selected"
-            required
-            multiple
-          >
-            <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">
-              {{ periodo.Nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <div *ngIf="loading" class="alert warning margin-y">
-          <mat-icon class="icon">hourglass_top</mat-icon>
-          <span>{{ "GLOBAL.cargando" | translate }}</span>
-        </div>
-
-        <!-- Boton para buscar -->
-        <button
-          mat-flat-button
-          color="accent"
-          type="button"
-          *ngIf="mostrarBoton"
-          (click)="loadInscritos()"
-        >
-          <mat-icon>search</mat-icon>
-          {{ "GLOBAL.buscar" | translate }}
-        </button>
-        <!-- Mensaje -->
-        <div *ngIf="mostrarMensajeInicial" class="alert warning margin-y">
-          <mat-icon class="icon">info</mat-icon>
-          <span
-            >{{ "gestion_horarios.mensaje_doctorado" | translate }} :
-            {{ nombresPeriodos }}
-            {{ "gestion_horarios.mensaje_doctorado_mensaje" | translate }}</span
-          >
-        </div>
-
-        <!-- RESUMEN DE LA TABLA -->
-        <mat-card status="success" *ngIf="mostrarConteos">
-          <mat-card-header class="card-header">
-            <mat-card-title>
-              {{ "admision.resumen_estados_inscripcion" | translate }}
-            </mat-card-title>
-          </mat-card-header>
-          <mat-card-content class="card-content">
-            <label
-              >{{ "admision.estado_inscrito" | translate }}:
-              <b>{{ cantidad_inscritos }}</b></label
-            >
-            <label
-              >{{ "admision.estado_inscrito_observacion" | translate }}:
-              <b>{{ cantidad_inscritos_obs }}</b></label
-            >
-            <label
-              >{{ "admision.estado_admitido" | translate }}:
-              <b>{{ cantidad_admitidos }}</b></label
-            >
-            <label
-              >{{ "admision.total_aspirantes" | translate }}:
-              <b>{{ cantidad_aspirantes }}</b></label
-            >
-          </mat-card-content>
-        </mat-card>
-
-        <!-- BUSCADOR DE LA TABLA -->
-        <mat-card-content *ngIf="mostrarConteos">
-          <div class="margin-y">
+          <!--Periodo académico-->
+          @if (selectMultipleNivel) {
             <mat-form-field class="form-field">
-              <mat-label>{{ "GLOBAL.buscar" | translate }}</mat-label>
-              <input
-                class="search-input"
-                matInput
-                placeholder="{{ 'GLOBAL.buscar' | translate }}"
-                (keyup)="applyFilterProces($event)"
-                matInput
-              />
-              <button mat-icon-button matSuffix color="primary">
-                <mat-icon>search</mat-icon>
-              </button>
-            </mat-form-field>
-          </div>
-
-          <!-- TABLA -->
-          <div class="table table-container">
-            <table mat-table [dataSource]="dataSource" matSort class="">
-              <ng-container matColumnDef="credencial">
-                <th
-                  mat-header-cell
-                  *matHeaderCellDef
-                  mat-sort-header
-                  style="width: 20%"
-                >
-                  {{ "admision.credencial" | translate }}
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.Credencial }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="identificacion">
-                <th
-                  mat-header-cell
-                  *matHeaderCellDef
-                  mat-sort-header
-                  style="width: 20%"
-                >
-                  {{ "admision.id" | translate }}
-                </th>
-                <td mat-cell *matCellDef="let row">{{ row.Identificacion }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="nombre">
-                <th
-                  mat-header-cell
-                  *matHeaderCellDef
-                  mat-sort-header
-                  style="width: 20%"
-                >
-                  {{ "admision.nombre" | translate }}
-                </th>
-
-                <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="estado">
-                <th
-                  mat-header-cell
-                  *matHeaderCellDef
-                  mat-sort-header
-                  style="width: 20%"
-                >
-                  {{ "admision.estado" | translate }}
-                </th>
-
-                <td mat-cell *matCellDef="let row">{{ row.Estado }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="acciones">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                  {{ "GLOBAL.acciones" | translate }}
-                </th>
-                <td mat-cell *matCellDef="let row">
-                  <button
-                    mat-icon-button
-                    title="{{ 'admision.revisar_docs' | translate }}"
-                    (click)="loadPerfil({ data: row })"
-                    matTooltip="{{ 'admision.revisar_docs' | translate }}"
-                    color="accent"
+              <mat-label>{{ "admision.periodo_" | translate }}:</mat-label>
+              @if (selectMultipleNivel) {
+                <mat-select
+                  [formControl]="Campo2Control"
+                  [(ngModel)]="periodoMultiple"
+                  placeholder="2020-I, 2020-II, 2020-III"
+                  [disabled]="!proyectos_selected"
+                  required
+                  multiple
                   >
-                    <mat-icon>double_arrow</mat-icon>
-                  </button>
-                </td></ng-container
+                  @for (periodo of periodos; track periodo) {
+                    <mat-option [value]="periodo.Id">
+                      {{ periodo.Nombre }}
+                    </mat-option>
+                  }
+                </mat-select>
+              }
+            </mat-form-field>
+          }
+          @if (loading) {
+            <div class="alert warning margin-y">
+              <mat-icon class="icon">hourglass_top</mat-icon>
+              <span>{{ "GLOBAL.cargando" | translate }}</span>
+            </div>
+          }
+          <!-- Boton para buscar -->
+          @if (mostrarBoton) {
+            <button
+              mat-flat-button
+              color="accent"
+              type="button"
+              (click)="loadInscritos()"
               >
+              <mat-icon>search</mat-icon>
+              {{ "GLOBAL.buscar" | translate }}
+            </button>
+          }
+          <!-- Mensaje -->
+          @if (mostrarMensajeInicial) {
+            <div class="alert warning margin-y">
+              <mat-icon class="icon">info</mat-icon>
+              <span
+                >{{ "gestion_horarios.mensaje_doctorado" | translate }} :
+                {{ nombresPeriodos }}
+                {{ "gestion_horarios.mensaje_doctorado_mensaje" | translate }}</span
+                >
+              </div>
+            }
+            <!-- RESUMEN DE LA TABLA -->
+            @if (mostrarConteos) {
+              <mat-card status="success">
+                <mat-card-header class="card-header">
+                  <mat-card-title>
+                    {{ "admision.resumen_estados_inscripcion" | translate }}
+                  </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="card-content">
+                  <label
+                    >{{ "admision.estado_inscrito" | translate }}:
+                    <b>{{ cantidad_inscritos }}</b></label
+                    >
+                    <label
+                      >{{ "admision.estado_inscrito_observacion" | translate }}:
+                      <b>{{ cantidad_inscritos_obs }}</b></label
+                      >
+                      <label
+                        >{{ "admision.estado_admitido" | translate }}:
+                        <b>{{ cantidad_admitidos }}</b></label
+                        >
+                        <label
+                          >{{ "admision.total_aspirantes" | translate }}:
+                          <b>{{ cantidad_aspirantes }}</b></label
+                          >
+                        </mat-card-content>
+                      </mat-card>
+                    }
+                    <!-- BUSCADOR DE LA TABLA -->
+                    @if (mostrarConteos) {
+                      <mat-card-content>
+                        <div class="margin-y">
+                          <mat-form-field class="form-field">
+                            <mat-label>{{ "GLOBAL.buscar" | translate }}</mat-label>
+                            <input
+                              class="search-input"
+                              matInput
+                              placeholder="{{ 'GLOBAL.buscar' | translate }}"
+                              (keyup)="applyFilterProces($event)"
+                              matInput
+                              />
+                            <button mat-icon-button matSuffix color="primary">
+                              <mat-icon>search</mat-icon>
+                            </button>
+                          </mat-form-field>
+                        </div>
+                        <!-- TABLA -->
+                        <div class="table table-container">
+                          <table mat-table [dataSource]="dataSource" matSort class="">
+                            <ng-container matColumnDef="credencial">
+                              <th
+                                mat-header-cell
+                                *matHeaderCellDef
+                                mat-sort-header
+                                style="width: 20%"
+                                >
+                                {{ "admision.credencial" | translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let row">{{ row.Credencial }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="identificacion">
+                              <th
+                                mat-header-cell
+                                *matHeaderCellDef
+                                mat-sort-header
+                                style="width: 20%"
+                                >
+                                {{ "admision.id" | translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let row">{{ row.Identificacion }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="nombre">
+                              <th
+                                mat-header-cell
+                                *matHeaderCellDef
+                                mat-sort-header
+                                style="width: 20%"
+                                >
+                                {{ "admision.nombre" | translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let row">{{ row.Nombre }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="estado">
+                              <th
+                                mat-header-cell
+                                *matHeaderCellDef
+                                mat-sort-header
+                                style="width: 20%"
+                                >
+                                {{ "admision.estado" | translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let row">{{ row.Estado }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="acciones">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                {{ "GLOBAL.acciones" | translate }}
+                              </th>
+                              <td mat-cell *matCellDef="let row">
+                                <button
+                                  mat-icon-button
+                                  title="{{ 'admision.revisar_docs' | translate }}"
+                                  (click)="loadPerfil({ data: row })"
+                                  matTooltip="{{ 'admision.revisar_docs' | translate }}"
+                                  color="accent"
+                                  >
+                                  <mat-icon>double_arrow</mat-icon>
+                                </button>
+                              </td></ng-container
+                              >
+                              <tr mat-header-row *matHeaderRowDef="dataSourceColumn"></tr>
+                              <tr mat-row *matRowDef="let row; columns: dataSourceColumn"></tr>
+                              <!-- Row shown when there is no matching data. -->
+                              <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="4">
+                                  {{ "calendario.sin_procesos" | translate }}
+                                </td>
+                              </tr>
+                            </table>
+                            <mat-paginator
+                              #paginator
+                              [pageSize]="5"
+                              [showFirstLastButtons]="true"
+                              [pageSizeOptions]="[5, 10, 15, 100]"
+                              >
+                            </mat-paginator>
+                          </div>
+                        </mat-card-content>
+                      }
+                    </div>
+                  }
 
-              <tr mat-header-row *matHeaderRowDef="dataSourceColumn"></tr>
-              <tr mat-row *matRowDef="let row; columns: dataSourceColumn"></tr>
-
-              <!-- Row shown when there is no matching data. -->
-              <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="4">
-                  {{ "calendario.sin_procesos" | translate }}
-                </td>
-              </tr>
-            </table>
-            <mat-paginator
-              #paginator
-              [pageSize]="5"
-              [showFirstLastButtons]="true"
-              [pageSizeOptions]="[5, 10, 15, 100]"
-            >
-            </mat-paginator>
-          </div>
-        </mat-card-content>
-      </div>
-
-      <div *ngIf="!showProfile">
-        <button mat-flat-button color="primary" (click)="activateTab()">
-          <mat-icon>arrow_back</mat-icon>
-          {{ "GLOBAL.regresar" | translate }}
-        </button>
-        <div class="text-center">
-          <ngx-perfil
-            [SuiteTags]="tagsObject"
-            [en_revision]="true"
-            [periodo_id]="periodoSeleccionadoId"
-            [periodo_nombre]="periodoSeleccionadoNombre"
-            info_persona_id="{{ info_persona_id }}"
-            inscripcion_id="{{ inscripcion_id }}"
-            (revisar_doc)="revisarDocumento($event)"
-            (notificar_obs)="notificarObservaciones($event)"
-            [reloadTagComponent]="folderTagtoReload"
-          >
-          </ngx-perfil>
-        </div>
-      </div>
-    </div>
-  </mat-card-content>
-</mat-card>
+                  @if (!showProfile) {
+                    <div>
+                      <button mat-flat-button color="primary" (click)="activateTab()">
+                        <mat-icon>arrow_back</mat-icon>
+                        {{ "GLOBAL.regresar" | translate }}
+                      </button>
+                      <div class="text-center">
+                        <ngx-perfil
+                          [SuiteTags]="tagsObject"
+                          [en_revision]="true"
+                          [periodo_id]="periodoSeleccionadoId"
+                          [periodo_nombre]="periodoSeleccionadoNombre"
+                          info_persona_id="{{ info_persona_id }}"
+                          inscripcion_id="{{ inscripcion_id }}"
+                          (revisar_doc)="revisarDocumento($event)"
+                          (notificar_obs)="notificarObservaciones($event)"
+                          [reloadTagComponent]="folderTagtoReload"
+                          >
+                        </ngx-perfil>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </mat-card-content>
+            </mat-card>

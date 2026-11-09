@@ -3,9 +3,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 
 @Component({
-  selector: "checkbox-assistance",
-  templateUrl: "./checkbox-assistance.component.html",
-  styleUrls: ["./checkbox-assistance.component.scss"],
+    selector: "checkbox-assistance",
+    templateUrl: "./checkbox-assistance.component.html",
+    styleUrls: ["./checkbox-assistance.component.scss"],
+    standalone: false
 })
 export class CheckboxAssistanceComponent implements OnInit {
   Assistance: any;

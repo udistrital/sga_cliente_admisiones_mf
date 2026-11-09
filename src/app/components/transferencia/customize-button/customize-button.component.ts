@@ -3,9 +3,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 
 @Component({
-  selector: 'customize-button',
-  templateUrl: './customize-button.component.html',
-  styleUrls: ['./customize-button.component.scss']
+    selector: 'customize-button',
+    templateUrl: './customize-button.component.html',
+    styleUrls: ['./customize-button.component.scss'],
+    standalone: false
 })
 export class CustomizeButtonComponent implements  OnInit{
 

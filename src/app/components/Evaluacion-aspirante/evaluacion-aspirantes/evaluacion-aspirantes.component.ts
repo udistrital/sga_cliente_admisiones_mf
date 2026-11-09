@@ -32,9 +32,10 @@ import { RespFormat } from "src/app/models/respuesta/response-format";
 import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
-  selector: "evaluacion-aspirantes",
-  templateUrl: "./evaluacion-aspirantes.component.html",
-  styleUrls: ["./evaluacion-aspirantes.component.scss"],
+    selector: "evaluacion-aspirantes",
+    templateUrl: "./evaluacion-aspirantes.component.html",
+    styleUrls: ["./evaluacion-aspirantes.component.scss"],
+    standalone: false
 })
 export class EvaluacionAspirantesComponent implements OnInit {
   toasterService: any;

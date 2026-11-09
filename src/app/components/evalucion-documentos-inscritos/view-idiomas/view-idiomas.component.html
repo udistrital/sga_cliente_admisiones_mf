@@ -1,40 +1,49 @@
-<p *ngIf="inscripcion && info_examen">
-  <label
-    ><strong>** {{ "GLOBAL.idioma_examen" | translate }}: </strong></label
-  >
-  {{ info_examen.Idioma.Nombre }}
-</p>
-<table class="table-responsive">
-  <thead>
-    <tr class="subheader">
-      <th>{{ "GLOBAL.idioma" | translate }}</th>
-      <th>{{ "GLOBAL.nativo" | translate }}</th>
-      <th>{{ "GLOBAL.nivel_escribe" | translate }}</th>
-      <th>{{ "GLOBAL.nivel_escucha" | translate }}</th>
-      <th>{{ "GLOBAL.nivel_habla" | translate }}</th>
-      <th>{{ "GLOBAL.nivel_lee" | translate }}</th>
-    </tr>
-  </thead>
-  <tbody *ngIf="info_idioma">
-    <tr *ngFor="let idioma of info_idioma">
-      <td>{{ idioma.IdiomaId.Nombre }}</td>
-      <td *ngIf="idioma.Nativo; else elseTemplate2">Si</td>
-      <ng-template #elseTemplate2>
-        <td>No</td>
-      </ng-template>
-      <td>{{ idioma.NivelEscribeId.Nombre }}</td>
-      <td>{{ idioma.NivelEscuchaId.Nombre }}</td>
-      <td>{{ idioma.NivelHablaId.Nombre }}</td>
-      <td>{{ idioma.NivelLeeId.Nombre }}</td>
-    </tr>
-  </tbody>
-  <tfoot *ngIf="url_editar && gotoEdit">
-    <tr>
-      <td colspan="6" style="background-color: var(--warning-main)" (click)="editar()">
-        <span  class="link"
-          ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
-        >
-      </td>
-    </tr>
-  </tfoot>
-</table>
+@if (inscripcion && info_examen) {
+  <p>
+    <label
+      ><strong>** {{ "GLOBAL.idioma_examen" | translate }}: </strong></label
+      >
+      {{ info_examen.Idioma.Nombre }}
+    </p>
+  }
+  <table class="table-responsive">
+    <thead>
+      <tr class="subheader">
+        <th>{{ "GLOBAL.idioma" | translate }}</th>
+        <th>{{ "GLOBAL.nativo" | translate }}</th>
+        <th>{{ "GLOBAL.nivel_escribe" | translate }}</th>
+        <th>{{ "GLOBAL.nivel_escucha" | translate }}</th>
+        <th>{{ "GLOBAL.nivel_habla" | translate }}</th>
+        <th>{{ "GLOBAL.nivel_lee" | translate }}</th>
+      </tr>
+    </thead>
+    @if (info_idioma) {
+      <tbody>
+        @for (idioma of info_idioma; track idioma) {
+          <tr>
+            <td>{{ idioma.IdiomaId.Nombre }}</td>
+            @if (idioma.Nativo) {
+              <td>Si</td>
+            } @else {
+              <td>No</td>
+            }
+            <td>{{ idioma.NivelEscribeId.Nombre }}</td>
+            <td>{{ idioma.NivelEscuchaId.Nombre }}</td>
+            <td>{{ idioma.NivelHablaId.Nombre }}</td>
+            <td>{{ idioma.NivelLeeId.Nombre }}</td>
+          </tr>
+        }
+      </tbody>
+    }
+    @if (url_editar && gotoEdit) {
+      <tfoot>
+        <tr>
+          <td colspan="6" style="background-color: var(--warning-main)" (click)="editar()">
+            <span  class="link"
+              ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
+              >
+            </td>
+          </tr>
+        </tfoot>
+      }
+    </table>

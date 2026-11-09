@@ -36,10 +36,11 @@ import { EventosService } from "src/app/services/eventos.service";
 import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
-  // tslint:disable-next-line: component-selector
-  selector: "evaluacion-documentos-inscritos",
-  templateUrl: "./evaluacion-documentos-inscritos.component.html",
-  styleUrls: ["./evaluacion-documentos-inscritos.component.scss"],
+    // tslint:disable-next-line: component-selector
+    selector: "evaluacion-documentos-inscritos",
+    templateUrl: "./evaluacion-documentos-inscritos.component.html",
+    styleUrls: ["./evaluacion-documentos-inscritos.component.scss"],
+    standalone: false
 })
 export class EvaluacionDocumentosInscritosComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;

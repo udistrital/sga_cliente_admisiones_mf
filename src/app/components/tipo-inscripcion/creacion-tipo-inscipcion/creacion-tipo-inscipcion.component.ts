@@ -9,9 +9,10 @@ import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 
 @Component({
-  selector: 'app-creacion-tipo-inscipcion',
-  templateUrl: './creacion-tipo-inscipcion.component.html',
-  styleUrls: ['./creacion-tipo-inscipcion.component.scss']
+    selector: 'app-creacion-tipo-inscipcion',
+    templateUrl: './creacion-tipo-inscipcion.component.html',
+    styleUrls: ['./creacion-tipo-inscipcion.component.scss'],
+    standalone: false
 })
 export class CreacionTipoInscipcionComponent {
   data: any;

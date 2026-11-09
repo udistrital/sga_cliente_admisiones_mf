@@ -9,9 +9,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReporteVisualizerComponent } from 'src/app/components/reporte-visualizer/reporte-visualizer.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
-  selector: 'app-reporte-codificacion',
-  templateUrl: './reporte-codificacion.component.html',
-  styleUrls: ['./reporte-codificacion.component.scss']
+    selector: 'app-reporte-codificacion',
+    templateUrl: './reporte-codificacion.component.html',
+    styleUrls: ['./reporte-codificacion.component.scss'],
+    standalone: false
 })
 export class ReporteCodificacionComponent implements OnInit {
 

@@ -24,9 +24,10 @@ import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-pro
 import { esAdministradorProgramas } from 'src/app/services/filtros-programa.service';
 
 @Component({
-  selector: 'app-repotes-inscripciones',
-  templateUrl: './repotes-inscripciones.component.html',
-  styleUrls: ['./repotes-inscripciones.component.scss']
+    selector: 'app-repotes-inscripciones',
+    templateUrl: './repotes-inscripciones.component.html',
+    styleUrls: ['./repotes-inscripciones.component.scss'],
+    standalone: false
 })
 export class RepotesInscripcionesComponent {
 

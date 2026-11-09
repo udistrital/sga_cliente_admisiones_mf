@@ -6,7 +6,8 @@ describe("CheckboxAssistanceComponent", () => {
   let component: CheckboxAssistanceComponent;
   let fixture: ComponentFixture<CheckboxAssistanceComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
+
     TestBed.configureTestingModule({
       declarations: [CheckboxAssistanceComponent],
     }).compileComponents();
