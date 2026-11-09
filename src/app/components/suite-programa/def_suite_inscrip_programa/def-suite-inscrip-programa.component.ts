@@ -479,7 +479,6 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
           PeriodoId: this.periodo,
           TipoInscripcionId: this.tipoInscrip,
         };
-        console.log(postData);
         await this.postTags(postData);
       } else {
         let putData = {...this.respuestaTagsOriginal};
