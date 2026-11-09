@@ -88,7 +88,7 @@
                     }
                   </mat-panel-description>
                 </mat-expansion-panel-header>
-                @if (SuiteTags.info_persona.render) {
+                @if (!SuiteTags.info_persona.reload) {
                   <ngx-view-info-persona
                     (url_editar)="editar($event, 'info_persona')"
                     (revisar_doc)="abrirDocumento($event)"
@@ -97,252 +97,289 @@
               SuiteTags.info_persona.observacion = $event;
               checkZeroObservations()
             "
-            persona_id="{{ info_persona_id }}"
-            *ngIf="!SuiteTags.info_persona.reload"
-          >
-          </ngx-view-info-persona>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel
-          id="formacion_academica"
-          *ngIf="SuiteTags.formacion_academica.selected"
-          hideToggle
-          [disabled]="!SuiteTags.formacion_academica.render"
-          [expanded]="SuiteTags.formacion_academica.render"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              "inscripcion.formacion_academica" | translate
-            }}</mat-panel-title>
-            <mat-panel-description>
-              <div *ngIf="SuiteTags.formacion_academica.required">
-                {{ "GLOBAL.obligatorio" | translate }}
-              </div>
-              <div *ngIf="!SuiteTags.formacion_academica.required">
-                {{ "GLOBAL.opcional" | translate }}
-              </div>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <ngx-view-formacion-academica
-            (url_editar)="editar($event, 'formacion_academica')"
-            (revisar_doc)="abrirDocumento($event)"
-            (estadoCarga)="manageLoading($event, 'formacion_academica')"
+                    persona_id="{{ info_persona_id }}"
+                    >
+                  </ngx-view-info-persona>
+                }
+              </mat-expansion-panel>
+            }
+            @if (SuiteTags.formacion_academica.selected) {
+              <mat-expansion-panel
+                id="formacion_academica"
+                hideToggle
+                [disabled]="!SuiteTags.formacion_academica.render"
+                [expanded]="SuiteTags.formacion_academica.render"
+                >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{
+                    "inscripcion.formacion_academica" | translate
+                  }}</mat-panel-title>
+                  <mat-panel-description>
+                    @if (SuiteTags.formacion_academica.required) {
+                      <div>
+                        {{ "GLOBAL.obligatorio" | translate }}
+                      </div>
+                    }
+                    @if (!SuiteTags.formacion_academica.required) {
+                      <div>
+                        {{ "GLOBAL.opcional" | translate }}
+                      </div>
+                    }
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                @if (!SuiteTags.formacion_academica.reload) {
+                  <ngx-view-formacion-academica
+                    (url_editar)="editar($event, 'formacion_academica')"
+                    (revisar_doc)="abrirDocumento($event)"
+                    (estadoCarga)="manageLoading($event, 'formacion_academica')"
             (docs_editados)="
               SuiteTags.formacion_academica.observacion = $event;
               checkZeroObservations()
             "
-            persona_id="{{ info_persona_id }}"
-            *ngIf="!SuiteTags.formacion_academica.reload"
-          >
-          </ngx-view-formacion-academica>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel
-          id="idiomas"
-          *ngIf="SuiteTags.idiomas.selected"
-          hideToggle
-          [disabled]="!SuiteTags.idiomas.render"
-          [expanded]="SuiteTags.idiomas.render"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              "inscripcion.idiomas" | translate
-            }}</mat-panel-title>
-            <mat-panel-description>
-              <div *ngIf="SuiteTags.idiomas.required">
-                {{ "GLOBAL.obligatorio" | translate }}
-              </div>
-              <div *ngIf="!SuiteTags.idiomas.required">
-                {{ "GLOBAL.opcional" | translate }}
-              </div>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <ngx-view-idiomas
-            (url_editar)="editar($event, 'idiomas')"
-            (estadoCarga)="manageLoading($event, 'idiomas')"
-            persona_id="{{ info_persona_id }}"
-            inscripcion_id="{{ info_inscripcion_id }}"
-            *ngIf="!SuiteTags.idiomas.reload"
-          >
-          </ngx-view-idiomas>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel
-          id="experiencia_laboral"
-          *ngIf="SuiteTags.experiencia_laboral.selected"
-          hideToggle
-          [disabled]="!SuiteTags.experiencia_laboral.render"
-          [expanded]="SuiteTags.experiencia_laboral.render"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              "inscripcion.experiencia_laboral" | translate
-            }}</mat-panel-title>
-            <mat-panel-description>
-              <div *ngIf="SuiteTags.experiencia_laboral.required">
-                {{ "GLOBAL.obligatorio" | translate }}
-              </div>
-              <div *ngIf="!SuiteTags.experiencia_laboral.required">
-                {{ "GLOBAL.opcional" | translate }}
-              </div>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <ngx-view-experiencia-laboral
-            (url_editar)="editar($event, 'experiencia_laboral')"
-            (revisar_doc)="abrirDocumento($event)"
-            (estadoCarga)="manageLoading($event, 'experiencia_laboral')"
+                    persona_id="{{ info_persona_id }}"
+                    >
+                  </ngx-view-formacion-academica>
+                }
+              </mat-expansion-panel>
+            }
+            @if (SuiteTags.idiomas.selected) {
+              <mat-expansion-panel
+                id="idiomas"
+                hideToggle
+                [disabled]="!SuiteTags.idiomas.render"
+                [expanded]="SuiteTags.idiomas.render"
+                >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{
+                    "inscripcion.idiomas" | translate
+                  }}</mat-panel-title>
+                  <mat-panel-description>
+                    @if (SuiteTags.idiomas.required) {
+                      <div>
+                        {{ "GLOBAL.obligatorio" | translate }}
+                      </div>
+                    }
+                    @if (!SuiteTags.idiomas.required) {
+                      <div>
+                        {{ "GLOBAL.opcional" | translate }}
+                      </div>
+                    }
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                @if (!SuiteTags.idiomas.reload) {
+                  <ngx-view-idiomas
+                    (url_editar)="editar($event, 'idiomas')"
+                    (estadoCarga)="manageLoading($event, 'idiomas')"
+                    persona_id="{{ info_persona_id }}"
+                    inscripcion_id="{{ info_inscripcion_id }}"
+                    >
+                  </ngx-view-idiomas>
+                }
+              </mat-expansion-panel>
+            }
+            @if (SuiteTags.experiencia_laboral.selected) {
+              <mat-expansion-panel
+                id="experiencia_laboral"
+                hideToggle
+                [disabled]="!SuiteTags.experiencia_laboral.render"
+                [expanded]="SuiteTags.experiencia_laboral.render"
+                >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{
+                    "inscripcion.experiencia_laboral" | translate
+                  }}</mat-panel-title>
+                  <mat-panel-description>
+                    @if (SuiteTags.experiencia_laboral.required) {
+                      <div>
+                        {{ "GLOBAL.obligatorio" | translate }}
+                      </div>
+                    }
+                    @if (!SuiteTags.experiencia_laboral.required) {
+                      <div>
+                        {{ "GLOBAL.opcional" | translate }}
+                      </div>
+                    }
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                @if (!SuiteTags.experiencia_laboral.reload) {
+                  <ngx-view-experiencia-laboral
+                    (url_editar)="editar($event, 'experiencia_laboral')"
+                    (revisar_doc)="abrirDocumento($event)"
+                    (estadoCarga)="manageLoading($event, 'experiencia_laboral')"
             (docs_editados)="
               SuiteTags.experiencia_laboral.observacion = $event;
               checkZeroObservations()
             "
-            persona_id="{{ info_persona_id }}"
-            *ngIf="!SuiteTags.experiencia_laboral.reload"
-          >
-          </ngx-view-experiencia-laboral>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel
-          id="produccion_academica"
-          *ngIf="SuiteTags.produccion_academica.selected"
-          hideToggle
-          [disabled]="!SuiteTags.produccion_academica.render"
-          [expanded]="SuiteTags.produccion_academica.render"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              "inscripcion.produccion_academica" | translate
-            }}</mat-panel-title>
-            <mat-panel-description>
-              <div *ngIf="SuiteTags.produccion_academica.required">
-                {{ "GLOBAL.obligatorio" | translate }}
-              </div>
-              <div *ngIf="!SuiteTags.produccion_academica.required">
-                {{ "GLOBAL.opcional" | translate }}
-              </div>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <ngx-view-produccion-academica
-            (url_editar)="editar($event, 'produccion_academica')"
-            (revisar_doc)="abrirDocumento($event)"
-            (estadoCarga)="manageLoading($event, 'produccion_academica')"
+                    persona_id="{{ info_persona_id }}"
+                    >
+                  </ngx-view-experiencia-laboral>
+                }
+              </mat-expansion-panel>
+            }
+            @if (SuiteTags.produccion_academica.selected) {
+              <mat-expansion-panel
+                id="produccion_academica"
+                hideToggle
+                [disabled]="!SuiteTags.produccion_academica.render"
+                [expanded]="SuiteTags.produccion_academica.render"
+                >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{
+                    "inscripcion.produccion_academica" | translate
+                  }}</mat-panel-title>
+                  <mat-panel-description>
+                    @if (SuiteTags.produccion_academica.required) {
+                      <div>
+                        {{ "GLOBAL.obligatorio" | translate }}
+                      </div>
+                    }
+                    @if (!SuiteTags.produccion_academica.required) {
+                      <div>
+                        {{ "GLOBAL.opcional" | translate }}
+                      </div>
+                    }
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                @if (!SuiteTags.produccion_academica.reload) {
+                  <ngx-view-produccion-academica
+                    (url_editar)="editar($event, 'produccion_academica')"
+                    (revisar_doc)="abrirDocumento($event)"
+                    (estadoCarga)="manageLoading($event, 'produccion_academica')"
             (docs_editados)="
               SuiteTags.produccion_academica.observacion = $event;
               checkZeroObservations()
             "
-            persona_id="{{ info_persona_id }}"
-            *ngIf="!SuiteTags.produccion_academica.reload"
-          >
-          </ngx-view-produccion-academica>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel
-          id="documento_programa"
-          *ngIf="SuiteTags.documento_programa.selected"
-          hideToggle
-          [disabled]="!SuiteTags.documento_programa.render"
-          [expanded]="SuiteTags.documento_programa.render"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              "inscripcion.documento_programa" | translate
-            }}</mat-panel-title>
-            <mat-panel-description>
-              <div *ngIf="SuiteTags.documento_programa.required">
-                {{ "GLOBAL.obligatorio" | translate }}
-              </div>
-              <div *ngIf="!SuiteTags.documento_programa.required">
-                {{ "GLOBAL.opcional" | translate }}
-              </div>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <ngx-view-documento-programa
-            (url_editar)="editar($event, 'documento_programa')"
-            (revisar_doc)="abrirDocumento($event)"
-            (estadoCarga)="manageLoading($event, 'documento_programa')"
+                    persona_id="{{ info_persona_id }}"
+                    >
+                  </ngx-view-produccion-academica>
+                }
+              </mat-expansion-panel>
+            }
+            @if (SuiteTags.documento_programa.selected) {
+              <mat-expansion-panel
+                id="documento_programa"
+                hideToggle
+                [disabled]="!SuiteTags.documento_programa.render"
+                [expanded]="SuiteTags.documento_programa.render"
+                >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{
+                    "inscripcion.documento_programa" | translate
+                  }}</mat-panel-title>
+                  <mat-panel-description>
+                    @if (SuiteTags.documento_programa.required) {
+                      <div>
+                        {{ "GLOBAL.obligatorio" | translate }}
+                      </div>
+                    }
+                    @if (!SuiteTags.documento_programa.required) {
+                      <div>
+                        {{ "GLOBAL.opcional" | translate }}
+                      </div>
+                    }
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                @if (!SuiteTags.documento_programa.reload) {
+                  <ngx-view-documento-programa
+                    (url_editar)="editar($event, 'documento_programa')"
+                    (revisar_doc)="abrirDocumento($event)"
+                    (estadoCarga)="manageLoading($event, 'documento_programa')"
             (docs_editados)="
               SuiteTags.documento_programa.observacion = $event;
               checkZeroObservations()
             "
-            [periodo_id]="periodo_id"
-            inscripcion_id="{{ info_inscripcion_id }}"
-            persona_id="{{ info_persona_id }}"
-            *ngIf="!SuiteTags.documento_programa.reload"
-          >
-          </ngx-view-documento-programa>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel
-          id="descuento_matricula"
-          *ngIf="SuiteTags.descuento_matricula.selected"
-          hideToggle
-          [disabled]="!SuiteTags.descuento_matricula.render"
-          [expanded]="SuiteTags.descuento_matricula.render"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              "inscripcion.descuento_matricula" | translate
-            }}</mat-panel-title>
-            <mat-panel-description>
-              <div *ngIf="SuiteTags.descuento_matricula.required">
-                {{ "GLOBAL.obligatorio" | translate }}
-              </div>
-              <div *ngIf="!SuiteTags.descuento_matricula.required">
-                {{ "GLOBAL.opcional" | translate }}
-              </div>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <ngx-view-descuento-academico
-            (url_editar)="editar($event, 'descuento_matricula')"
-            (revisar_doc)="abrirDocumento($event)"
-            (estadoCarga)="manageLoading($event, 'descuento_matricula')"
+                    [periodo_id]="periodo_id"
+                    inscripcion_id="{{ info_inscripcion_id }}"
+                    persona_id="{{ info_persona_id }}"
+                    >
+                  </ngx-view-documento-programa>
+                }
+              </mat-expansion-panel>
+            }
+            @if (SuiteTags.descuento_matricula.selected) {
+              <mat-expansion-panel
+                id="descuento_matricula"
+                hideToggle
+                [disabled]="!SuiteTags.descuento_matricula.render"
+                [expanded]="SuiteTags.descuento_matricula.render"
+                >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{
+                    "inscripcion.descuento_matricula" | translate
+                  }}</mat-panel-title>
+                  <mat-panel-description>
+                    @if (SuiteTags.descuento_matricula.required) {
+                      <div>
+                        {{ "GLOBAL.obligatorio" | translate }}
+                      </div>
+                    }
+                    @if (!SuiteTags.descuento_matricula.required) {
+                      <div>
+                        {{ "GLOBAL.opcional" | translate }}
+                      </div>
+                    }
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                @if (!SuiteTags.descuento_matricula.reload) {
+                  <ngx-view-descuento-academico
+                    (url_editar)="editar($event, 'descuento_matricula')"
+                    (revisar_doc)="abrirDocumento($event)"
+                    (estadoCarga)="manageLoading($event, 'descuento_matricula')"
             (docs_editados)="
               SuiteTags.descuento_matricula.observacion = $event;
               checkZeroObservations()
             "
-            [periodo_id]="periodo_id"
-            inscripcion_id="{{ info_inscripcion_id }}"
-            persona_id="{{ info_persona_id }}"
-            *ngIf="!SuiteTags.descuento_matricula.reload"
-          >
-          </ngx-view-descuento-academico>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel
-          id="propuesta_grado"
-          *ngIf="SuiteTags.propuesta_grado.selected"
-          hideToggle
-          [disabled]="!SuiteTags.propuesta_grado.render"
-          [expanded]="SuiteTags.propuesta_grado.render"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              "inscripcion.propuesta_grado" | translate
-            }}</mat-panel-title>
-            <mat-panel-description>
-              <div *ngIf="SuiteTags.propuesta_grado.required">
-                {{ "GLOBAL.obligatorio" | translate }}
-              </div>
-              <div *ngIf="!SuiteTags.propuesta_grado.required">
-                {{ "GLOBAL.opcional" | translate }}
-              </div>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <ngx-view-propuesta-grado
-            (url_editar)="editar($event, 'propuesta_grado')"
-            (revisar_doc)="abrirDocumento($event)"
-            (estadoCarga)="manageLoading($event, 'propuesta_grado')"
+                    [periodo_id]="periodo_id"
+                    inscripcion_id="{{ info_inscripcion_id }}"
+                    persona_id="{{ info_persona_id }}"
+                    >
+                  </ngx-view-descuento-academico>
+                }
+              </mat-expansion-panel>
+            }
+            @if (SuiteTags.propuesta_grado.selected) {
+              <mat-expansion-panel
+                id="propuesta_grado"
+                hideToggle
+                [disabled]="!SuiteTags.propuesta_grado.render"
+                [expanded]="SuiteTags.propuesta_grado.render"
+                >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{
+                    "inscripcion.propuesta_grado" | translate
+                  }}</mat-panel-title>
+                  <mat-panel-description>
+                    @if (SuiteTags.propuesta_grado.required) {
+                      <div>
+                        {{ "GLOBAL.obligatorio" | translate }}
+                      </div>
+                    }
+                    @if (!SuiteTags.propuesta_grado.required) {
+                      <div>
+                        {{ "GLOBAL.opcional" | translate }}
+                      </div>
+                    }
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                @if (!SuiteTags.propuesta_grado.reload) {
+                  <ngx-view-propuesta-grado
+                    (url_editar)="editar($event, 'propuesta_grado')"
+                    (revisar_doc)="abrirDocumento($event)"
+                    (estadoCarga)="manageLoading($event, 'propuesta_grado')"
             (docs_editados)="
               SuiteTags.propuesta_grado.observacion = $event;
               checkZeroObservations()
             "
-            inscripcion_id="{{ info_inscripcion_id }}"
-            persona_id="{{ info_persona_id }}"
-            *ngIf="!SuiteTags.propuesta_grado.reload"
-          >
-          </ngx-view-propuesta-grado>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
+                    inscripcion_id="{{ info_inscripcion_id }}"
+                    persona_id="{{ info_persona_id }}"
+                    >
+                  </ngx-view-propuesta-grado>
+                }
+              </mat-expansion-panel>
+            }
+          </mat-accordion>
+        </div>
+      }
 
       <br />
       @if (imprimir) {
