@@ -140,18 +140,38 @@ const rawRoutes: Routes = [
   {
     path:"lista-tipo-inscripcion", 
     component: ListaTipoInscripcionComponent,
+    data: {
+      catalogoTiposInscripcion: true,
+      requiereEscritura: false,
+      menuUrl: '/admisiones/lista-tipo-inscripcion',
+    },
   },
   {
     path:"crear-tipo-inscripcion", 
     component: CreacionTipoInscipcionComponent,
+    data: {
+      catalogoTiposInscripcion: true,
+      requiereEscritura: true,
+      menuUrl: '/admisiones/lista-tipo-inscripcion',
+    },
   },
   {
     path:"lista-tipo-cupos", 
     component: ListaTipoCuposComponent,
+    data: {
+      catalogoTiposCupos: true,
+      requiereEscritura: false,
+      menuUrl: '/admisiones/lista-tipo-cupos',
+    },
   },
   {
     path:"crear-tipo-cupos", 
     component: CreacionTipoCuposComponent,
+    data: {
+      catalogoTiposCupos: true,
+      requiereEscritura: true,
+      menuUrl: '/admisiones/lista-tipo-cupos',
+    },
   },
   {
     path:"reportes", 

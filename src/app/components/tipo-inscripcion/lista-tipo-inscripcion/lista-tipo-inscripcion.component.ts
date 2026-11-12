@@ -8,6 +8,9 @@ import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MODALS } from 'src/app/models/diccionario/diccionario';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
+import { getRolesUsuario } from 'src/utils/auth.util';
+import { PermisosUtils } from 'src/utils/role-permissions';
+import { tieneRolEscritura } from 'src/app/models/roles.model';
 
 @Component({
     selector: 'app-lista-tipo-inscripcion',
@@ -16,7 +19,7 @@ import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.se
     standalone: false
 })
 export class ListaTipoInscripcionComponent {
-  displayedColumns: string[] = ['id', 'nombre', 'descripcion', 'nivel', 'estado', 'acciones'];
+  displayedColumns: string[] = ['id', 'nombre', 'descripcion', 'nivel', 'estado',];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -27,15 +30,27 @@ export class ListaTipoInscripcionComponent {
   niveles!: any;
   tiposInscripcion!: any;
 
+  readonly opcionesPermisos = [
+    'crear_tipo_inscripcion',
+    'editar_tipo_inscripcion',
+    'desactivar_tipo_inscripcion',
+    'reactivar_tipo_inscripcion',
+  ]
+
+  permisos: { [key: string]: boolean } = {};
+  permisosListos = false;
+
   constructor(
     private router: Router,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private projectService: ProyectoAcademicoService,
     private inscripcionService: InscripcionService,
+    private permisosUtils: PermisosUtils,
   ) { }
 
   async ngOnInit() {
+    this.cargarPermisos();
     this.loading = true;
     await this.cargarNiveles();
     await this.cargarTiposInscripcion();
@@ -53,6 +68,51 @@ export class ListaTipoInscripcionComponent {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  private cargarPermisos(): void {
+    this.permisosListos = false;
+    this.permisos = {};
+    this.displayedColumns = [
+      'id', 'nombre', 'descripcion', 'nivel', 'estado',
+    ];
+
+    this.permisosUtils
+      .obtenerPermisos(getRolesUsuario(), this.opcionesPermisos)
+      .subscribe(permisos => {
+        this.permisos = permisos;
+        this.permisosListos = true;
+
+        const tieneAcciones =
+          this.puedeEditar ||
+          this.puedeDesactivar ||
+          this.puedeReactivar;
+
+        if (tieneAcciones) {
+          this.displayedColumns = [...this.displayedColumns, 'acciones'];
+        }
+      });
+  }
+
+  private tienePermiso(opcion: string): boolean {
+    return tieneRolEscritura(getRolesUsuario())
+      && this.permisosListos
+      && this.permisos[opcion] === true;
+  }
+
+  get puedeCrear(): boolean { return this.tienePermiso('crear_tipo_inscripcion'); }
+  get puedeEditar(): boolean { return this.tienePermiso('editar_tipo_inscripcion'); }
+  get puedeDesactivar(): boolean { return this.tienePermiso('desactivar_tipo_inscripcion'); }
+  get puedeReactivar(): boolean { return this.tienePermiso('reactivar_tipo_inscripcion'); }
+
+  private validarPermiso(permitido: boolean): boolean {
+    if (!permitido) {
+      this.popUpManager.showErrorAlert(
+        this.translate.instant('ERROR.rol_insuficiente_titulo'),
+      );
+    }
+
+    return permitido;
   }
 
   cargarNiveles() {
@@ -100,6 +160,7 @@ export class ListaTipoInscripcionComponent {
   }
 
   navigateToCrearTipoInscripcion() {
+    if (!this.validarPermiso(this.puedeCrear)) return;
     this.router.navigate(
       ['/crear-tipo-inscripcion'], 
       { state: { data: 
@@ -109,6 +170,7 @@ export class ListaTipoInscripcionComponent {
   }
 
   navigateToEditarTipoInscripcion(data: any) {
+    if (!this.validarPermiso(this.puedeEditar)) return;
     this.router.navigate(
       ['/crear-tipo-inscripcion'], 
       { state: { data: {
@@ -120,6 +182,7 @@ export class ListaTipoInscripcionComponent {
   }
 
   eliminar(data: any) {
+    if (!this.validarPermiso(this.puedeDesactivar)) return;
     this.popUpManager.showPopUpGeneric(
       this.translate.instant('tipo_inscripcion.tooltip_eliminar'),
       this.translate.instant('tipo_inscripcion.seguro_deshabilitar_tipo_inscripcion'),
@@ -133,31 +196,55 @@ export class ListaTipoInscripcionComponent {
   }
 
   async prepararEliminacion(data: any) {
+    if (!this.validarPermiso(this.puedeDesactivar)) return;
+
     this.loading = true;
-    data.Activo = false;
-    await this.actualizarTipoInscripcion(data);
-    this.loading = false;
+
+    try {
+      const guardado = await this.actualizarTipoInscripcion({
+        ...data,
+        Activo: false,
+      });
+
+      if (guardado) {
+        data.Activo = false;
+      }
+    } finally {
+      this.loading = false;
+    }
   }
 
-  actualizarTipoInscripcion(body: any) {
-    return new Promise((resolve, reject) => {
-      this.inscripcionService
-        .put('tipo_inscripcion/', body)
-        .subscribe(
-          (res: any) => {
-            this.popUpManager.showSuccessAlert(this.translate.instant('tipo_inscripcion.tipo_inscripcion_deshabilitado'));
-            resolve(true);
-          },
-          (error: any) => {
-            this.loading = false;
-            this.popUpManager.showErrorAlert(this.translate.instant('tipo_inscripcion.tipo_inscripcion_deshabilitado_error'));
-            reject(false);
-          }
-        );
+  actualizarTipoInscripcion(body: any): Promise<boolean> {
+    const permitido = body.Activo === true
+      ? this.puedeReactivar
+      : this.puedeDesactivar;
+
+    if (!this.validarPermiso(permitido)) {
+      return Promise.resolve(false);
+    }
+
+    return new Promise(resolve => {
+      this.inscripcionService.put('tipo_inscripcion/', body).subscribe({
+        next: () => {
+          this.popUpManager.showSuccessAlert(
+            body.Activo
+              ? 'Tipo de inscripción reactivado correctamente.'
+              : 'Tipo de inscripción desactivado correctamente.',
+          );
+          resolve(true);
+        },
+        error: () => {
+          this.popUpManager.showErrorAlert(
+            'No fue posible cambiar el estado del tipo de inscripción.',
+          );
+          resolve(false);
+        },
+      });
     });
   }
 
   activar(data: any) {
+    if (!this.validarPermiso(this.puedeReactivar)) return;
     this.popUpManager.showPopUpGeneric(
       this.translate.instant('tipo_inscripcion.tooltip_activar'),
       this.translate.instant('tipo_inscripcion.seguro_activar_tipo_inscripcion'),
@@ -171,9 +258,21 @@ export class ListaTipoInscripcionComponent {
   }
 
   async prepararActivacion(data: any) {
+    if (!this.validarPermiso(this.puedeReactivar)) return;
+
     this.loading = true;
-    data.Activo = true;
-    await this.actualizarTipoInscripcion(data);
-    this.loading = false;
+
+    try {
+      const guardado = await this.actualizarTipoInscripcion({
+        ...data,
+        Activo: true,
+      });
+
+      if (guardado) {
+        data.Activo = true;
+      }
+    } finally {
+      this.loading = false;
+    }
   }
 }

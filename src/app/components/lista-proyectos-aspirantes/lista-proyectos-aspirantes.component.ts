@@ -196,7 +196,7 @@ export class ListaProyectosAspirantesComponent implements OnDestroy{
     const periodoId = this.periodo.Id
 
     // this.subscripcion.add(this.evaluacionService.get('cupos_por_dependencia?query=DependenciaId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
-      this.subscripcion.add(this.inscripcionService.get('cupo_inscripcion?query=ProgramaAcademicoId :' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
+      this.subscripcion.add(this.inscripcionService.get('cupo_inscripcion?query=ProyectoAcademicoId:' + proyectoId + ',PeriodoId:' + periodoId + '&limit=1').subscribe(
       (response: any) => {
         if (response !== null && response !== undefined && response[0].Id !== undefined) {
           proyecto.cuposProyecto = response[0].CuposHabilitados;

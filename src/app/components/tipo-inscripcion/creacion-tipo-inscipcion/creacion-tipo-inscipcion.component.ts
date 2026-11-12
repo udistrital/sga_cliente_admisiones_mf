@@ -7,6 +7,10 @@ import { MODALS } from 'src/app/models/diccionario/diccionario';
 import { TipoInscripcion } from 'src/app/models/inscripcion/tipo_inscripcion';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
+import { firstValueFrom } from 'rxjs';
+import { getRolesUsuario } from 'src/utils/auth.util';
+import { PermisosUtils } from 'src/utils/role-permissions';
+import { tieneRolEscritura } from 'src/app/models/roles.model';
 
 @Component({
     selector: 'app-creacion-tipo-inscipcion',
@@ -30,6 +34,8 @@ export class CreacionTipoInscipcionComponent {
   editando: boolean = false;
   infoInscripcion!: any;
   niveles!: any;
+  permisos: { [key: string]: boolean } = {};
+  permisosListos = false;
 
   constructor(
     private router: Router,
@@ -38,18 +44,52 @@ export class CreacionTipoInscipcionComponent {
     private translate: TranslateService,
     private projectService: ProyectoAcademicoService,
     private inscripcionService: InscripcionService,
+    private permisosUtils: PermisosUtils,
   ) {}
 
   async ngOnInit() {
     this.loading = true;
-    await this.cargarNiveles();
-    this.data = history.state.data;
-    this.editando = this.data.editando
-    if (this.editando) {
-      this.infoInscripcion = this.data.info
-      this.setearCamposFormularios(this.infoInscripcion)
+    this.infoTipoInscripcion.disable();
+
+    try {
+      this.data = history.state?.data;
+
+      if (typeof this.data?.editando !== 'boolean') {
+        await this.router.navigate(['/lista-tipo-inscripcion']);
+        return;
+      }
+
+      this.editando = this.data.editando;
+
+      if (this.editando && !this.data.info?.Id) {
+        await this.router.navigate(['/lista-tipo-inscripcion']);
+        return;
+      }
+
+      this.permisos = await firstValueFrom(
+        this.permisosUtils.obtenerPermisos(getRolesUsuario(), [
+          'crear_tipo_inscripcion',
+          'editar_tipo_inscripcion',
+        ]),
+      );
+      this.permisosListos = true;
+
+      if (!this.validarPermiso(this.puedeGuardar)) {
+        await this.router.navigate(['/lista-tipo-inscripcion']);
+        return;
+      }
+
+      await this.cargarNiveles();
+
+      if (this.editando) {
+        this.infoInscripcion = { ...this.data.info };
+        this.setearCamposFormularios(this.infoInscripcion);
+      }
+
+      this.infoTipoInscripcion.enable();
+    } finally {
+      this.loading = false;
     }
-    this.loading = false;
   }
 
   cargarNiveles() {
@@ -71,6 +111,7 @@ export class CreacionTipoInscipcionComponent {
   }
 
   async guardar() {
+    if (!this.validarPermiso(this.puedeCrear)) return;
     this.infoTipoInscripcion.markAllAsTouched();
     if (this.infoTipoInscripcion.valid) {
       this.popUpManager.showPopUpGeneric(
@@ -88,7 +129,28 @@ export class CreacionTipoInscipcionComponent {
     }
   }
 
+  private tienePermiso(opcion: string): boolean {
+    return tieneRolEscritura(getRolesUsuario())
+      && this.permisosListos
+      && this.permisos[opcion] === true;
+  }
+
+  get puedeCrear(): boolean {return !this.editando && this.tienePermiso('crear_tipo_inscripcion'); }
+  get puedeEditar(): boolean { return this.editando && this.tienePermiso('editar_tipo_inscripcion'); }
+  get puedeGuardar(): boolean { return this.editando ? this.puedeEditar : this.puedeCrear; }
+
+  private validarPermiso(permitido: boolean): boolean {
+    if (!permitido) {
+      this.popUpManager.showErrorAlert(
+        this.translate.instant('ERROR.rol_insuficiente_titulo'),
+      );
+    }
+
+    return permitido;
+  }
+
   async prepararCreacion() {
+    if (!this.validarPermiso(this.puedeCrear)) return;
     this.loading = true;
     let newTipoInscripcion = new TipoInscripcion();
     newTipoInscripcion.Nombre = this.infoTipoInscripcion.get('nombre')!.value ?? '';
@@ -107,6 +169,9 @@ export class CreacionTipoInscipcionComponent {
   }
 
   crearTipoInscripcion(body: TipoInscripcion) {
+    if (!this.validarPermiso(this.puedeCrear)) {
+      return Promise.resolve(false);
+    }
     return new Promise((resolve, reject) => {
       this.inscripcionService
         .post('tipo_inscripcion', body)
@@ -130,12 +195,14 @@ export class CreacionTipoInscipcionComponent {
       descripcion: data['Descripcion'],
       codigo_abreviacion: data['CodigoAbreviacion'],
       numero_orden: data['NumeroOrden'],
-      especial: data['Especial']
+      especial: data['Especial'],
+      nivel: data['NivelId'],
     }
     this.infoTipoInscripcion.patchValue(infoInscripcion);
   }
 
   actualizar() {
+    if (!this.validarPermiso(this.puedeEditar)) return;
     this.infoTipoInscripcion.markAllAsTouched();
     if (this.infoTipoInscripcion.valid) {
       this.popUpManager.showPopUpGeneric(
@@ -154,6 +221,7 @@ export class CreacionTipoInscipcionComponent {
   }
 
   async prepararActualizacion() {
+    if (!this.validarPermiso(this.puedeEditar)) return;
     this.loading = true;
     this.infoInscripcion.Nombre = this.infoTipoInscripcion.get('nombre')!.value ?? this.infoInscripcion.Nombre;
     this.infoInscripcion.Descripcion = this.infoTipoInscripcion.get('descripcion')!.value ?? this.infoInscripcion.Descripcion;
@@ -170,6 +238,9 @@ export class CreacionTipoInscipcionComponent {
   }
 
   actualizarTipoInscripcion(body: any) {
+    if (!this.validarPermiso(this.puedeEditar)) {
+      return Promise.resolve(false);
+    }
     return new Promise((resolve, reject) => {
       this.inscripcionService
         .put('tipo_inscripcion/', body)

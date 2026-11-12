@@ -57,11 +57,21 @@
     </form>
   </mat-card-content>
   <mat-card-actions>
-    @if (!editando) {
-      <button mat-button class="boton-principal" (click)="guardar()">{{"tipo_inscripcion.tooltip_crear" | translate}}</button>
+    @if (puedeCrear) {
+      <button 
+        mat-button class="boton-principal" 
+        (click)="guardar()" 
+        [disabled]="loading || !puedeGuardar || infoTipoInscripcion.invalid">
+        {{"tipo_inscripcion.tooltip_crear" | translate}}
+      </button>
     }
-    @if (editando) {
-      <button mat-button class="boton-principal" (click)="actualizar()">{{"tipo_inscripcion.tooltip_guargar" | translate}}</button>
+    @if (puedeEditar) {
+      <button 
+        mat-button class="boton-principal" 
+        (click)="actualizar()" 
+        [disabled]="loading || !puedeGuardar || infoTipoInscripcion.invalid">
+        {{"tipo_inscripcion.tooltip_guargar" | translate}}
+      </button>
     }
   </mat-card-actions>
 </mat-card>
