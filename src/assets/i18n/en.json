@@ -1694,6 +1694,13 @@
         "enviar_correos": "Send institutional email request"
     },
     "cupos": {
+        "desactivar": "Deactivate",
+        "reactivar": "Reactivate",
+        "confirmar_desactivar": "Are you sure you want to deactivate this quota type?",
+        "confirmar_reactivar": "Are you sure you want to reactivate this quota type?",
+        "desactivacion_exitosa": "Quota type deactivated successfully.",
+        "reactivacion_exitosa": "Quota type reactivated successfully.",
+        "error_cambiar_estado": "The quota type status could not be changed.",
         "aviso_periodo": "Period in which the admission quotas are defined",
         "aviso_periodo_listar": "Period in which applicants will be listed",
         "aviso_periodo_actualizar": "Period in which you want to update status",

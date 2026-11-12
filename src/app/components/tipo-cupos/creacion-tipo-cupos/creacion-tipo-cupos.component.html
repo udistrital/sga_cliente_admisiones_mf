@@ -41,11 +41,21 @@
     </form>
   </mat-card-content>
   <mat-card-actions>
-    @if (!editando) {
-      <button mat-button class="boton-principal" (click)="guardar()">{{"cupos.crear_tipos_cupo" | translate}}</button>
+    @if (puedeCrear) {
+      <button 
+        mat-button class="boton-principal"
+        (click)="guardar()"
+        [disabled]="loading">
+        {{"cupos.crear_tipos_cupo" | translate}}
+      </button>
     }
-    @if (editando) {
-      <button mat-button class="boton-principal" (click)="actualizar()">{{"cupos.actualizar_tipos_cupo" | translate}}</button>
+    @if (puedeEditar) {
+      <button 
+        mat-button class="boton-principal" 
+        (click)="actualizar()"
+        [disabled]="loading">
+        {{"cupos.actualizar_tipos_cupo" | translate}}
+      </button>
     }
   </mat-card-actions>
 </mat-card>
