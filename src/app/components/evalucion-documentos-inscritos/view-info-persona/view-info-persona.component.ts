@@ -16,9 +16,10 @@ import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.serv
 import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
 
 @Component({
-  selector: 'ngx-view-info-persona',
-  templateUrl: './view-info-persona.component.html',
-  styleUrls: ['./view-info-persona.component.scss'],
+    selector: 'ngx-view-info-persona',
+    templateUrl: './view-info-persona.component.html',
+    styleUrls: ['./view-info-persona.component.scss'],
+    standalone: false
 })
 export class ViewInfoPersonaComponent implements OnInit {
 

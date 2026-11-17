@@ -11,41 +11,50 @@
       <th>{{ "solicitudes.soporte" | translate }}</th>
     </tr>
   </thead>
-  <tbody *ngIf="info_formacion_academica">
-    <tr *ngFor="let formacion of info_formacion_academica">
-      <td>{{ formacion.NombreCompleto }}</td>
-      <td>{{ formacion.ProgramaAcademico.Nombre }}</td>
-      <td></td>
-      <td>{{ formacion.FechaInicio }}</td>
-      <td>{{ formacion.FechaFinalizacion }}</td>
-      <td>
-        {{ formacion.estadoObservacion ? formacion.estadoObservacion : "" }}
-      </td>
-      <td>{{ formacion.observacion ? formacion.observacion : "" }}</td>
-      <td *ngIf="formacion.Documento !== undefined">
-        <button
-          mat-icon-button
-          color="accent"
-          type="button"
-          (click)="abrirDocumento(formacion)"
-        >
-          <mat-icon>file_open</mat-icon>
-        </button>
-      </td>
-      <td *ngIf="formacion.Documento === undefined">
-        {{ "GLOBAL.no_informacion_registrada" | translate }}
-      </td>
-    </tr>
-  </tbody>
-  <tfoot
-    *ngIf="(url_editar && gotoEdit) || (updateDocument && canUpdateDocument)"
-  >
-    <tr>
-      <td colspan="8" style="background-color: var(--warning-main)" (click)="editar()">
-        <span  class="link"
-          ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
-        >
-      </td>
-    </tr>
-  </tfoot>
-</table>
+  @if (info_formacion_academica) {
+    <tbody>
+      @for (formacion of info_formacion_academica; track formacion) {
+        <tr>
+          <td>{{ formacion.NombreCompleto }}</td>
+          <td>{{ formacion.ProgramaAcademico.Nombre }}</td>
+          <td></td>
+          <td>{{ formacion.FechaInicio }}</td>
+          <td>{{ formacion.FechaFinalizacion }}</td>
+          <td>
+            {{ formacion.estadoObservacion ? formacion.estadoObservacion : "" }}
+          </td>
+          <td>{{ formacion.observacion ? formacion.observacion : "" }}</td>
+          @if (formacion.Documento !== undefined) {
+            <td>
+              <button
+                mat-icon-button
+                color="accent"
+                type="button"
+                (click)="abrirDocumento(formacion)"
+                >
+                <mat-icon>file_open</mat-icon>
+              </button>
+            </td>
+          }
+          @if (formacion.Documento === undefined) {
+            <td>
+              {{ "GLOBAL.no_informacion_registrada" | translate }}
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  }
+  @if ((url_editar && gotoEdit) || (updateDocument && canUpdateDocument)) {
+    <tfoot
+      >
+      <tr>
+        <td colspan="8" style="background-color: var(--warning-main)" (click)="editar()">
+          <span  class="link"
+            ><mat-icon>edit</mat-icon> {{ "GLOBAL.actualizar" | translate }}</span
+            >
+          </td>
+        </tr>
+      </tfoot>
+    }
+  </table>

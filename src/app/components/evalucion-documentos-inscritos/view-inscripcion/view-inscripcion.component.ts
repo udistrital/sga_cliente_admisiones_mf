@@ -8,9 +8,10 @@ import { UserService } from 'src/app/services/users.service';
 import { PopUpManager } from '../../../managers/popUpManager';
 
 @Component({
-  selector: 'ngx-view-inscripcion',
-  templateUrl: './view-inscripcion.component.html',
-  styleUrls: ['./view-inscripcion.component.scss']
+    selector: 'ngx-view-inscripcion',
+    templateUrl: './view-inscripcion.component.html',
+    styleUrls: ['./view-inscripcion.component.scss'],
+    standalone: false
 })
 export class ViewInscripcionComponent implements OnInit {
 

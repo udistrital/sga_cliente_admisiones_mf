@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -8,11 +8,10 @@ import { FiltrosProgramaService, idAcademico, nivelPrograma } from '../../servic
 import { OpcionPrograma, SeleccionPrograma } from '../../models/proyecto_academico/filtros-programa.models';
 
 @Component({
-  selector: 'app-filtros-programa',
-  standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatSelectModule, TranslateModule],
-  templateUrl: './filtros-programa.component.html',
-  styles: [':host { display: block; width: 100%; grid-column: 1 / -1; } .filtros { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }'],
+    selector: 'app-filtros-programa',
+    imports: [FormsModule, MatFormFieldModule, MatSelectModule, TranslateModule],
+    templateUrl: './filtros-programa.component.html',
+    styles: [':host { display: block; width: 100%; grid-column: 1 / -1; } .filtros { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }']
 })
 export class FiltrosProgramaComponent implements OnInit, OnChanges, OnDestroy {
   @Input() periodos: any[] = [];

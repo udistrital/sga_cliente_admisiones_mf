@@ -11,9 +11,10 @@ interface Food {
 }
 
 @Component({
-  selector: 'udistrital-listado-historico',
-  templateUrl: './listado-historico.component.html',
-  styleUrls: ['./listado-historico.component.scss']
+    selector: 'udistrital-listado-historico',
+    templateUrl: './listado-historico.component.html',
+    styleUrls: ['./listado-historico.component.scss'],
+    standalone: false
 })
 
 

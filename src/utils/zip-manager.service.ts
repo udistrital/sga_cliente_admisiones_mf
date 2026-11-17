@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 
 @Injectable({

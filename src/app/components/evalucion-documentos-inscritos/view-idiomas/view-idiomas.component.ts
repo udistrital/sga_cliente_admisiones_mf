@@ -8,9 +8,10 @@ import Swal from 'sweetalert2/dist/sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'ngx-view-idiomas',
-  templateUrl: './view-idiomas.component.html',
-  styleUrls: ['./view-idiomas.component.scss'],
+    selector: 'ngx-view-idiomas',
+    templateUrl: './view-idiomas.component.html',
+    styleUrls: ['./view-idiomas.component.scss'],
+    standalone: false
 })
 export class ViewIdiomasComponent implements OnInit {
   persona_id: number;

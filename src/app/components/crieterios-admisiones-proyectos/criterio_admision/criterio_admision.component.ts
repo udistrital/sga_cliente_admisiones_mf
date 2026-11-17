@@ -1,4 +1,3 @@
-import { async } from "@angular/core/testing";
 import { Criterio } from "src/app/models/admision/criterio";
 import { Component, OnChanges } from "@angular/core";
 import { Input, Output, EventEmitter } from "@angular/core";
@@ -33,9 +32,10 @@ import { RespFormat } from "src/app/models/respuesta/response-format";
 import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 
 @Component({
-  selector: "criterio-admision",
-  templateUrl: "./criterio_admision.component.html",
-  styleUrls: ["./criterio_admision.component.scss"],
+    selector: "criterio-admision",
+    templateUrl: "./criterio_admision.component.html",
+    styleUrls: ["./criterio_admision.component.scss"],
+    standalone: false
 })
 export class CriterioAdmisionComponent implements OnChanges {
   @Input("criterios_select")

@@ -14,9 +14,10 @@ import { DependenciasVinculacionTercero } from "src/app/models/admision/dependen
 import { RespFormat } from "src/app/models/respuesta/response-format";
 
 @Component({
-  selector: "app-administracion-cuenta-bancaria",
-  templateUrl: "./administracion-cuenta-bancaria.component.html",
-  styleUrls: ["./administracion-cuenta-bancaria.component.scss"],
+    selector: "app-administracion-cuenta-bancaria",
+    templateUrl: "./administracion-cuenta-bancaria.component.html",
+    styleUrls: ["./administracion-cuenta-bancaria.component.scss"],
+    standalone: false
 })
 export class AdministracionCuentaBancariaComponent {
   toasterService: any;

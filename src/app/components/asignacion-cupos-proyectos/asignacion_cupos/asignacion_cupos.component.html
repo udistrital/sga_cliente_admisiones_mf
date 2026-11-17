@@ -5,20 +5,22 @@
     <!-- SELECTS -->
     <div class="form-grid2 margin-y">
       <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
-        (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
+      (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
 
     </div>
 
     <!-- FORMULARIOS -->
     <!--Formularios------------------------------------------------------------->
 
-    <mat-card *ngIf="show_cupos" class="card mt-20">
-      <mat-card-content>
-        <h3>{{ "cupos.cupos" | translate }}</h3>
-        <crud-asignacion-cupo [info_proyectos]="this.proyectos_selected" [info_periodo]="this.periodo"
-          [info_nivel]="this.esPosgrado" [tipo_inscripcion]="this.tipins_selected">
-        </crud-asignacion-cupo>
-      </mat-card-content>
-    </mat-card>
+    @if (show_cupos) {
+      <mat-card class="card mt-20">
+        <mat-card-content>
+          <h3>{{ "cupos.cupos" | translate }}</h3>
+          <crud-asignacion-cupo [info_proyectos]="this.proyectos_selected" [info_periodo]="this.periodo"
+            [info_nivel]="this.esPosgrado" [tipo_inscripcion]="this.tipins_selected">
+          </crud-asignacion-cupo>
+        </mat-card-content>
+      </mat-card>
+    }
   </mat-card-content>
 </mat-card>

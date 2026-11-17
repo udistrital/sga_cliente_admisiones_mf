@@ -1,85 +1,83 @@
 <mat-card>
-    <mat-card-header>
-        {{ 'inscripcion.solicitud_transferencia' | translate }}
-    </mat-card-header>
-    <mat-card-content>
+  <mat-card-header>
+    {{ 'inscripcion.solicitud_transferencia' | translate }}
+  </mat-card-header>
+  <mat-card-content>
 
-        <fieldset [ngClass]="{'fieldseter':true} ">
-            <legend> {{ 'inscripcion.listado_solicitudes' | translate }} </legend>
-            <!--<ng2-smart-table *ngIf="listadoSolicitudes" [settings]="settings" [source]="dataSource">
-            </ng2-smart-table>-->
+    <fieldset [ngClass]="{'fieldseter':true} ">
+      <legend> {{ 'inscripcion.listado_solicitudes' | translate }} </legend>
+      <!--<ng2-smart-table *ngIf="listadoSolicitudes" [settings]="settings" [source]="dataSource">
+    </ng2-smart-table>-->
 
-            <mat-card class="card">
-              <mat-card-header class="d-block">
-                <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
-                  (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
-              </mat-card-header>
-            </mat-card>
-            <div class="mat-elevation-z8" *ngIf="listadoSolicitudes">
-                <table mat-table [dataSource]="dataSource" matSort>
-                    
-                    <ng-container matColumnDef="#recibo">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> {{'inscripcion.recibo' |
-                            translate}} </th>
-                        <td mat-cell *matCellDef="let row"> {{row.Recibo}} </td>
-                    </ng-container>
+    <mat-card class="card">
+      <mat-card-header class="d-block">
+        <app-filtros-programa [periodos]="periodos" [periodoInicial]="periodo" [nivelesPermitidos]="['POS']"
+        (seleccion)="seleccionarPrograma($event)"></app-filtros-programa>
+      </mat-card-header>
+    </mat-card>
+    @if (listadoSolicitudes) {
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="#recibo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> {{'inscripcion.recibo' |
+            translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.Recibo}} </td>
+          </ng-container>
+          <ng-container matColumnDef="concepto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 30%;">
+              {{'inscripcion.concepto' |
+            translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.Concepto}} </td>
+          </ng-container>
+          <ng-container matColumnDef="programa">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40%;">
+            {{'inscripcion.programa' | translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.Programa}} </td>
+          </ng-container>
+          <ng-container matColumnDef="fechageneracion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
+            {{'inscripcion.fecha_generacion' | translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.FechaGeneracion}} </td>
+          </ng-container>
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
+            {{'inscripcion.estado' | translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.Estado}} </td>
+          </ng-container>
+          <ng-container matColumnDef="solicitar">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'GLOBAL.acciones' | translate}} </th>
+            <td mat-cell *matCellDef="let row">
+              <div class="separacion-acciones">
+                <customize-button [value]="true" [rowData]="row" (save)="handleButtonClick(row)" ></customize-button>
+              </div>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="dataSourceColum"></tr>
+            <tr mat-row *matRowDef="let row; columns:dataSourceColum ;"></tr>
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">{{'calendario.sin_procesos' | translate}}</td>
+            </tr>
+          </table>
+          <mat-paginator #paginator [pageSize]="10" [showFirstLastButtons]="true">
+          </mat-paginator>
+        </div>
+      }
 
-                    <ng-container matColumnDef="concepto">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 30%;">
-                            {{'inscripcion.concepto' |
-                            translate}} </th>
-                        <td mat-cell *matCellDef="let row"> {{row.Concepto}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="programa">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40%;">
-                            {{'inscripcion.programa' | translate}} </th>
-
-                        <td mat-cell *matCellDef="let row"> {{row.Programa}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="fechageneracion">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
-                            {{'inscripcion.fecha_generacion' | translate}} </th>
-
-                        <td mat-cell *matCellDef="let row"> {{row.FechaGeneracion}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="estado">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
-                            {{'inscripcion.estado' | translate}} </th>
-
-                        <td mat-cell *matCellDef="let row"> {{row.Estado}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="solicitar">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'GLOBAL.acciones' | translate}} </th>
-                        <td mat-cell *matCellDef="let row">
-                            <div class="separacion-acciones">
-                                <customize-button [value]="true" [rowData]="row" (save)="handleButtonClick(row)" ></customize-button>
-                               
-                            </div>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="dataSourceColum"></tr>
-                    <tr mat-row *matRowDef="let row; columns:dataSourceColum ;"></tr>
-
-                    <!-- Row shown when there is no matching data. -->
-                    <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="4">{{'calendario.sin_procesos' | translate}}</td>
-                    </tr>
-                </table>
-                <mat-paginator #paginator [pageSize]="10" [showFirstLastButtons]="true">
-                </mat-paginator>
-            </div>
-
-            <hr width="0%">
-            <div class="text-center" *ngIf="actions">
-                <button *ngIf="listadoSolicitudes" mat-button type="button" (click)="descargarNormativa()">
-                    {{ 'inscripcion.btn_descargar_normativa' | translate }}
-                </button>
-                <button *ngIf="listadoSolicitudes" mat-button type="button" (click)="nuevaSolicitud()">
-                    {{ 'inscripcion.btn_nueva_solicitud' | translate }}
-                </button>
-            </div>
-        </fieldset>
-    </mat-card-content>
+      <hr width="0%">
+      @if (actions) {
+        <div class="text-center">
+          @if (listadoSolicitudes) {
+            <button mat-button type="button" (click)="descargarNormativa()">
+              {{ 'inscripcion.btn_descargar_normativa' | translate }}
+            </button>
+          }
+          @if (listadoSolicitudes) {
+            <button mat-button type="button" (click)="nuevaSolicitud()">
+              {{ 'inscripcion.btn_nueva_solicitud' | translate }}
+            </button>
+          }
+        </div>
+      }
+    </fieldset>
+  </mat-card-content>
 </mat-card>

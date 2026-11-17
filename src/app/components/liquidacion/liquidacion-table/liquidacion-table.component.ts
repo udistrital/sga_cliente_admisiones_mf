@@ -12,9 +12,10 @@ import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service'
 import { TercerosService } from 'src/app/services/terceros.service';
 
 @Component({
-  selector: 'app-liquidacion-table',
-  templateUrl: './liquidacion-table.component.html',
-  styleUrls: ['./liquidacion-table.component.scss']
+    selector: 'app-liquidacion-table',
+    templateUrl: './liquidacion-table.component.html',
+    styleUrls: ['./liquidacion-table.component.scss'],
+    standalone: false
 })
 
 export class LiquidacionTableComponent implements OnInit{

@@ -12,9 +12,10 @@ import { PopUpManager } from '../../../managers/popUpManager';
 import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.service';
 
 @Component({
-  selector: 'ngx-view-experiencia-laboral',
-  templateUrl: './view-experiencia_laboral.component.html',
-  styleUrls: ['./view-experiencia_laboral.component.scss'],
+    selector: 'ngx-view-experiencia-laboral',
+    templateUrl: './view-experiencia_laboral.component.html',
+    styleUrls: ['./view-experiencia_laboral.component.scss'],
+    standalone: false
 })
 export class ViewExperienciaLaboralComponent implements OnInit {
   persona_id!: number;

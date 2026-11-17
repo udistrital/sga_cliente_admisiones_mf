@@ -8,9 +8,10 @@ import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { TercerosService } from 'src/app/services/terceros.service';
 
 @Component({
-  selector: 'app-tabla-listado-aspirantes',
-  templateUrl: './tabla-listado-aspirantes.component.html',
-  styleUrls: ['./tabla-listado-aspirantes.component.scss']
+    selector: 'app-tabla-listado-aspirantes',
+    templateUrl: './tabla-listado-aspirantes.component.html',
+    styleUrls: ['./tabla-listado-aspirantes.component.scss'],
+    standalone: false
 })
 export class TablaListadoAspirantesComponent {
 

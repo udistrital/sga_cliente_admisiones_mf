@@ -11,9 +11,10 @@ import { EvaluacionInscripcionService } from "src/app/services/evaluacion_inscri
 import { catchError, forkJoin, Observable } from "rxjs";
 
 @Component({
-  selector: "ngx-administrador-criterios",
-  templateUrl: "./administrador-criterios.component.html",
-  styleUrls: ["./administrador-criterios.component.scss"],
+    selector: "ngx-administrador-criterios",
+    templateUrl: "./administrador-criterios.component.html",
+    styleUrls: ["./administrador-criterios.component.scss"],
+    standalone: false
 })
 export class AdministradorCriteriosComponent implements OnInit {
   criterios!: Criterio[];

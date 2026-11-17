@@ -12,9 +12,10 @@ import { UtilidadesService } from 'src/app/services/utilidades.service';
 import { ZipManagerService } from 'src/utils/zip-manager.service';
 
 @Component({
-  selector: 'ngx-view-documento-programa',
-  templateUrl: './view-documento_programa.component.html',
-  styleUrls: ['./view-documento_programa.component.scss'],
+    selector: 'ngx-view-documento-programa',
+    templateUrl: './view-documento_programa.component.html',
+    styleUrls: ['./view-documento_programa.component.scss'],
+    standalone: false
 })
 export class ViewDocumentoProgramaComponent implements OnInit {
   persona_id!: string | null;

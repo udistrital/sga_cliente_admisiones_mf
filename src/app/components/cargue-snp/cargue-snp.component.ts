@@ -25,9 +25,10 @@ interface Tile {
 
 
 @Component({
-  selector: 'ngx-cargue-snp',
-  templateUrl: './cargue-snp.component.html',
-  styleUrls: ['./cargue-snp.component.scss']
+    selector: 'ngx-cargue-snp',
+    templateUrl: './cargue-snp.component.html',
+    styleUrls: ['./cargue-snp.component.scss'],
+    standalone: false
 })
 export class CargueSnpComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;

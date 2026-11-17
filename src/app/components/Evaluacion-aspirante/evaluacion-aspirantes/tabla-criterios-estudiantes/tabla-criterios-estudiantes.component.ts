@@ -4,9 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 
 @Component({
-  selector: 'tabla-criterios-estudiantes',
-  templateUrl: './tabla-criterios-estudiantes.component.html',
-  styleUrls: ['./tabla-criterios-estudiantes.component.scss']
+    selector: 'tabla-criterios-estudiantes',
+    templateUrl: './tabla-criterios-estudiantes.component.html',
+    styleUrls: ['./tabla-criterios-estudiantes.component.scss'],
+    standalone: false
 })
 export class TablaCriteriosEstudiantesComponent implements OnInit {
   @Input() key: number = 0;

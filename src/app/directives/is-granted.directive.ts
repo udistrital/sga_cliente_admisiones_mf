@@ -2,7 +2,8 @@ import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 import { UserService } from '../services/users.service';
 
 @Directive({
-    selector: '[isGranted]'
+    selector: '[isGranted]',
+    standalone: false
 })
 export class IsGrantedDirective {
     @Input() set isGranted(roles: string[]) {

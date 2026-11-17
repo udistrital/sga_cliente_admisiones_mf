@@ -10,9 +10,10 @@ import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 
 @Component({
-  selector: 'app-lista-tipo-inscripcion',
-  templateUrl: './lista-tipo-inscripcion.component.html',
-  styleUrls: ['./lista-tipo-inscripcion.component.scss']
+    selector: 'app-lista-tipo-inscripcion',
+    templateUrl: './lista-tipo-inscripcion.component.html',
+    styleUrls: ['./lista-tipo-inscripcion.component.scss'],
+    standalone: false
 })
 export class ListaTipoInscripcionComponent {
   displayedColumns: string[] = ['id', 'nombre', 'descripcion', 'nivel', 'estado', 'acciones'];

@@ -15,9 +15,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 @Component({
-  selector: 'ngx-list-documento-proyecto',
-  templateUrl: './list-documento-proyecto.component.html',
-  styleUrls: ['./list-documento-proyecto.component.scss'],
+    selector: 'ngx-list-documento-proyecto',
+    templateUrl: './list-documento-proyecto.component.html',
+    styleUrls: ['./list-documento-proyecto.component.scss'],
+    standalone: false
 })
 export class ListDocumentoProyectoComponent implements OnInit {
 

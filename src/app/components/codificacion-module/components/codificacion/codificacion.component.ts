@@ -18,9 +18,10 @@ import {
 } from "../../../../models/codificacion/types";
 
 @Component({
-  selector: "app-codificacion",
-  templateUrl: "./codificacion.component.html",
-  styleUrls: ["./codificacion.component.scss"],
+    selector: "app-codificacion",
+    templateUrl: "./codificacion.component.html",
+    styleUrls: ["./codificacion.component.scss"],
+    standalone: false
 })
 export class CodificacionComponent {
   selectionForm: FormGroup;

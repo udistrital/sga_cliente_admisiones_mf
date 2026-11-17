@@ -14,9 +14,10 @@ import { ZipManagerService } from 'src/utils/zip-manager.service';
 import { PopUpManager } from '../../../managers/popUpManager';
 
 @Component({
-  selector: 'ngx-view-propuesta-grado',
-  templateUrl: './view-propuesta_grado.component.html',
-  styleUrls: ['./view-propuesta_grado.component.scss'],
+    selector: 'ngx-view-propuesta-grado',
+    templateUrl: './view-propuesta_grado.component.html',
+    styleUrls: ['./view-propuesta_grado.component.scss'],
+    standalone: false
 })
 export class ViewPropuestaGradoComponent implements OnInit {
   info_propuesta_grado!: any;

@@ -18,9 +18,11 @@
               <mat-label>{{ 'GLOBAL.proyecto_academico' | translate }}:</mat-label>
               <mat-select formControlName="validatorProyecto" required>
                 <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                <mat-option *ngFor="let item of proyectos" [value]="item" [disabled]="!item.Id">
-                  {{item.Nombre}}
-                </mat-option>
+                @for (item of proyectos; track item) {
+                  <mat-option [value]="item" [disabled]="!item.Id">
+                    {{item.Nombre}}
+                  </mat-option>
+                }
               </mat-select>
             </mat-form-field>
           </div>
@@ -31,7 +33,9 @@
               <mat-label>{{ 'GLOBAL.periodo' | translate }}:</mat-label>
               <mat-select formControlName="validatorPeriodo" required>
                 <mat-option>--{{ 'GLOBAL.seleccionar' | translate }}--</mat-option>
-                <mat-option *ngFor="let item of periodos" [value]="item">{{item.Nombre}}</mat-option>
+                @for (item of periodos; track item) {
+                  <mat-option [value]="item">{{item.Nombre}}</mat-option>
+                }
               </mat-select>
             </mat-form-field>
           </div>
@@ -392,28 +396,28 @@
         <div class="button-container">
           <div class="button-stepper">
             <button mat-stroked-button class="azulOscuro" (click)="guardarLiquidaciones()">{{
-              'liquidacion.guardar' | translate }}</button>
+            'liquidacion.guardar' | translate }}</button>
           </div>
 
           <div class="button-stepper">
             <button mat-stroked-button class=" azulClaro" (click)="generarRecibos()">{{
-              'liquidacion.generar_recibo' | translate }}</button>
+            'liquidacion.generar_recibo' | translate }}</button>
           </div>
 
           <div class="button-stepper">
             <button mat-stroked-button class="azulClaro">{{
-              'liquidacion.descargar_listado' | translate }}</button>
+            'liquidacion.descargar_listado' | translate }}</button>
           </div>
 
           <div class="button-stepper">
             <button mat-stroked-button class="azulClaro" (click)="descargarPDFs()" [disabled]="!generados">{{
-              'liquidacion.conjunto_recibos' | translate }}</button>
+            'liquidacion.conjunto_recibos' | translate }}</button>
           </div>
 
           <div class="button-stepper">
             <button mat-stroked-button class="azulClaro" (click)="notificarGeneracionRecibos()"
               [disabled]="!generados">{{
-              'liquidacion.asignar_recibo' | translate }}</button>
+            'liquidacion.asignar_recibo' | translate }}</button>
           </div>
         </div>
 

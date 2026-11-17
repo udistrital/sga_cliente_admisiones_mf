@@ -7,9 +7,10 @@ import { InscripcionMidService } from 'src/app/services/sga_inscripcion_mid.serv
 import { PopUpManager } from 'src/app/managers/popUpManager';
 
 @Component({
-  selector: 'udistrital-listados-oficializados',
-  templateUrl: './crud-listados-oficializados.component.html',
-  styleUrls: ['./crud-listados-oficializados.component.scss']
+    selector: 'udistrital-listados-oficializados',
+    templateUrl: './crud-listados-oficializados.component.html',
+    styleUrls: ['./crud-listados-oficializados.component.scss'],
+    standalone: false
 })
 export class CrudListadosOficializadosComponent implements OnInit {
 

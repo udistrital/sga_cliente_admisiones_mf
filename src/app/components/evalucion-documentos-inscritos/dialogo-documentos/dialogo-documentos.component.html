@@ -10,9 +10,11 @@
         viewer="pdf"
         class="resizable"
       ></ngx-doc-viewer>
-      <div class="viewer" *ngIf="!isPDF">
-        <img [src]="documento" [alt]="tabName" />
-      </div>
+      @if (!isPDF) {
+        <div class="viewer">
+          <img [src]="documento" [alt]="tabName" />
+        </div>
+      }
 
       <br/>
 
@@ -34,7 +36,7 @@
                 }}"
                 value="{{ nombreDocumento }}"
                 readonly
-              />
+                />
             </mat-form-field>
             <mat-form-field appearance="fill" class="form-field">
               <mat-label>{{ "GLOBAL.estado" | translate }}</mat-label>
@@ -43,7 +45,7 @@
                 placeholder="{{ 'GLOBAL.estado' | translate }}"
                 value="{{ verEstado }}"
                 readonly
-              />
+                />
             </mat-form-field>
           </div>
           <div>
@@ -55,7 +57,7 @@
                 placeholder="{{ 'GLOBAL.placeholder_observacion' | translate }}"
                 formControlName="observacion"
                 [readonly]="observando"
-              >
+                >
               </textarea>
             </mat-form-field>
           </div>
@@ -65,26 +67,28 @@
   </mat-card-content>
   <div #formElement></div> <!-- Elemento de referencia -->
   <br/>
-  <div *ngIf="!observando" class="container-buttons">
-    <button mat-flat-button (click)="scrollToForm()">
-      <mat-icon>arrow_downward</mat-icon>
-      {{ "GLOBAL.ir_observacion" | translate }}
-    </button>
-    <button
-      class="boton-primary-succes"
-      mat-flat-button
-      color="warn"
-      (click)="guardarRevision('NoAprueba')"
-    >
-      {{ "admision.btn_doc_No_aprobar" | translate }}
-    </button>
-    <button
-      class="boton-primary-warn"
-      mat-flat-button
-      color="primary"
-      (click)="guardarRevision('Aprueba')"
-    >
-      {{ "admision.btn_doc_aprobar" | translate }}
-    </button>
-  </div>
+  @if (!observando) {
+    <div class="container-buttons">
+      <button mat-flat-button (click)="scrollToForm()">
+        <mat-icon>arrow_downward</mat-icon>
+        {{ "GLOBAL.ir_observacion" | translate }}
+      </button>
+      <button
+        class="boton-primary-succes"
+        mat-flat-button
+        color="warn"
+        (click)="guardarRevision('NoAprueba')"
+        >
+        {{ "admision.btn_doc_No_aprobar" | translate }}
+      </button>
+      <button
+        class="boton-primary-warn"
+        mat-flat-button
+        color="primary"
+        (click)="guardarRevision('Aprueba')"
+        >
+        {{ "admision.btn_doc_aprobar" | translate }}
+      </button>
+    </div>
+  }
 </mat-card>
