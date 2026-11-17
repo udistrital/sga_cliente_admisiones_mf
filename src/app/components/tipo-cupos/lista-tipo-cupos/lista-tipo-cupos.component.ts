@@ -1,8 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MODALS } from 'src/app/models/diccionario/diccionario';
@@ -24,6 +23,9 @@ export class ListaTipoCuposComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  @Output() crear = new EventEmitter<void>();
+  @Output() editar = new EventEmitter<any>();
+  
   loading!: boolean;
   tiposCupos!: any;
 
@@ -41,7 +43,6 @@ export class ListaTipoCuposComponent {
     private parametrosService: ParametrosService,
     private translate: TranslateService,
     private popUpManager: PopUpManager,
-    private router: Router,
     private permisosUtils: PermisosUtils,
   ) {}
 
@@ -130,26 +131,16 @@ export class ListaTipoCuposComponent {
     });
   }
 
-  navigateToCrearTipoCupo() {
-    if (!this.validarPermiso(this.puedeCrear)) return;
-    this.router.navigate(
-      ['/crear-tipo-cupos'], 
-      { state: { data: 
-        {editando: false} 
-      } }
-    );
+  navigateToCrearTipoCupo(): void {
+    if (this.loading || !this.validarPermiso(this.puedeCrear)) return;
+
+    this.crear.emit();
   }
 
-  navigateToEditarTipoCupo(data: any) {
-    if (!this.validarPermiso(this.puedeEditar)) return;
-    this.router.navigate(
-      ['/crear-tipo-cupos'], 
-      { state: { data: {
-          editando: true,
-          info: data
-        }} 
-      }
-    );
+  navigateToEditarTipoCupo(data: any): void {
+    if (this.loading || !this.validarPermiso(this.puedeEditar)) return;
+
+    this.editar.emit(data);
   }
 
   eliminar(data: any) {

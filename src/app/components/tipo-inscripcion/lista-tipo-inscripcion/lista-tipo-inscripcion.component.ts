@@ -1,14 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MODALS } from 'src/app/models/diccionario/diccionario';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
-import { getRolesUsuario } from 'src/utils/auth.util';
+import { getRolesUsuario, getToken } from 'src/utils/auth.util';
 import { PermisosUtils } from 'src/utils/role-permissions';
 import { tieneRolEscritura } from 'src/app/models/roles.model';
 
@@ -24,6 +23,9 @@ export class ListaTipoInscripcionComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+  @Output() crear = new EventEmitter<void>();
+  @Output() editar = new EventEmitter<any>();
 
   loading!: boolean;
 
@@ -41,7 +43,6 @@ export class ListaTipoInscripcionComponent {
   permisosListos = false;
 
   constructor(
-    private router: Router,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private projectService: ProyectoAcademicoService,
@@ -95,7 +96,8 @@ export class ListaTipoInscripcionComponent {
   }
 
   private tienePermiso(opcion: string): boolean {
-    return tieneRolEscritura(getRolesUsuario())
+    return !!getToken()
+      && tieneRolEscritura(getRolesUsuario())
       && this.permisosListos
       && this.permisos[opcion] === true;
   }
@@ -159,26 +161,16 @@ export class ListaTipoInscripcionComponent {
     return tiposInscripcion
   }
 
-  navigateToCrearTipoInscripcion() {
-    if (!this.validarPermiso(this.puedeCrear)) return;
-    this.router.navigate(
-      ['/crear-tipo-inscripcion'], 
-      { state: { data: 
-        {editando: false} 
-      } }
-    );
+  navigateToCrearTipoInscripcion(): void {
+    if (this.loading || !this.validarPermiso(this.puedeCrear)) return;
+
+    this.crear.emit();
   }
 
-  navigateToEditarTipoInscripcion(data: any) {
-    if (!this.validarPermiso(this.puedeEditar)) return;
-    this.router.navigate(
-      ['/crear-tipo-inscripcion'], 
-      { state: { data: {
-          editando: true,
-          info: data
-        }} 
-      }
-    );
+  navigateToEditarTipoInscripcion(data: any): void {
+    if (this.loading || !this.validarPermiso(this.puedeEditar)) return;
+
+    this.editar.emit(data);
   }
 
   eliminar(data: any) {

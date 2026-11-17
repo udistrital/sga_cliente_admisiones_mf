@@ -73,5 +73,12 @@
         {{"tipo_inscripcion.tooltip_guargar" | translate}}
       </button>
     }
+    <button
+      mat-button
+      type="button"
+      [disabled]="loading"
+      (click)="cancelar()">
+      Cancelar
+    </button>
   </mat-card-actions>
 </mat-card>

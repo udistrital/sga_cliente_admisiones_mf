@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MODALS } from 'src/app/models/diccionario/diccionario';
@@ -8,7 +7,7 @@ import { TipoInscripcion } from 'src/app/models/inscripcion/tipo_inscripcion';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { firstValueFrom } from 'rxjs';
-import { getRolesUsuario } from 'src/utils/auth.util';
+import { getRolesUsuario, getToken } from 'src/utils/auth.util';
 import { PermisosUtils } from 'src/utils/role-permissions';
 import { tieneRolEscritura } from 'src/app/models/roles.model';
 
@@ -19,7 +18,11 @@ import { tieneRolEscritura } from 'src/app/models/roles.model';
     standalone: false
 })
 export class CreacionTipoInscipcionComponent {
-  data: any;
+  @Input({ required: true })
+  data!: { editando: boolean; info?: any };
+
+  @Output() guardado = new EventEmitter<void>();
+  @Output() cancelado = new EventEmitter<void>(true);
 
   infoTipoInscripcion = this.fb.group({
     nombre: ['', Validators.required],
@@ -38,7 +41,6 @@ export class CreacionTipoInscipcionComponent {
   permisosListos = false;
 
   constructor(
-    private router: Router,
     private fb: FormBuilder,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
@@ -47,22 +49,22 @@ export class CreacionTipoInscipcionComponent {
     private permisosUtils: PermisosUtils,
   ) {}
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     this.loading = true;
+    this.permisosListos = false;
+    this.permisos = {};
     this.infoTipoInscripcion.disable();
 
     try {
-      this.data = history.state?.data;
-
       if (typeof this.data?.editando !== 'boolean') {
-        await this.router.navigate(['/lista-tipo-inscripcion']);
+        this.cancelado.emit();
         return;
       }
 
       this.editando = this.data.editando;
 
       if (this.editando && !this.data.info?.Id) {
-        await this.router.navigate(['/lista-tipo-inscripcion']);
+        this.cancelado.emit();
         return;
       }
 
@@ -75,7 +77,7 @@ export class CreacionTipoInscipcionComponent {
       this.permisosListos = true;
 
       if (!this.validarPermiso(this.puedeGuardar)) {
-        await this.router.navigate(['/lista-tipo-inscripcion']);
+        this.cancelado.emit();
         return;
       }
 
@@ -87,6 +89,10 @@ export class CreacionTipoInscipcionComponent {
       }
 
       this.infoTipoInscripcion.enable();
+    } catch {
+      // cargarNiveles ya muestra el mensaje de error.
+      // Ante un fallo de inicialización, se vuelve al listado.
+      this.cancelado.emit();
     } finally {
       this.loading = false;
     }
@@ -129,8 +135,15 @@ export class CreacionTipoInscipcionComponent {
     }
   }
 
+  cancelar(): void {
+    if (this.loading) return;
+
+    this.cancelado.emit();
+  }
+
   private tienePermiso(opcion: string): boolean {
-    return tieneRolEscritura(getRolesUsuario())
+    return !!getToken()
+      && tieneRolEscritura(getRolesUsuario())
       && this.permisosListos
       && this.permisos[opcion] === true;
   }
@@ -162,10 +175,11 @@ export class CreacionTipoInscipcionComponent {
     newTipoInscripcion.Especial = this.infoTipoInscripcion.get('especial')!.value ?? false;
 
     const res = await this.crearTipoInscripcion(newTipoInscripcion);
-    if (res) {
-      this.router.navigate(['/lista-tipo-inscripcion']);
-    }
     this.loading = false;
+
+    if (res) {
+      this.guardado.emit();
+    }
   }
 
   crearTipoInscripcion(body: TipoInscripcion) {
@@ -231,10 +245,11 @@ export class CreacionTipoInscipcionComponent {
     this.infoInscripcion.Especial = this.infoTipoInscripcion.get('especial')!.value ?? this.infoInscripcion.Especial;
 
     const res = await this.actualizarTipoInscripcion(this.infoInscripcion);
-    if (res) {
-      this.router.navigate(['/lista-tipo-inscripcion']);
-    }
     this.loading = false;
+
+    if (res) {
+      this.guardado.emit();
+    }
   }
 
   actualizarTipoInscripcion(body: any) {
