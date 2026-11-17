@@ -129,6 +129,8 @@ import { ListService } from './store/services/list.service';
 import { IsGrantedDirective } from './directives/is-granted.directive';
 import { TablaCriteriosEstudiantesComponent } from './components/Evaluacion-aspirante/evaluacion-aspirantes/tabla-criterios-estudiantes/tabla-criterios-estudiantes.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { TipoInscripcionComponent } from './components/tipo-inscripcion/tipo-inscripcion.component';
+import { TipoCuposComponent } from './components/tipo-cupos/tipo-cupos.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.apiUrl + 'assets/i18n/', '.json');
@@ -222,6 +224,8 @@ export function createTranslateLoader(http: HttpClient) {
         ReportesComponent,
         IsGrantedDirective,
         TablaCriteriosEstudiantesComponent,
+        TipoInscripcionComponent,
+        TipoCuposComponent,
     ],
     bootstrap: [AppComponent], imports: [FiltrosProgramaComponent,
         NgxPaginationModule,

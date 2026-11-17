@@ -1,6 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { getRolesUsuario, getToken } from 'src/utils/auth.util';
+import { PermisosUtils } from 'src/utils/role-permissions';
+import { tieneRolEscritura } from 'src/app/models/roles.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MODALS } from 'src/app/models/diccionario/diccionario';
@@ -14,7 +17,14 @@ import { ParametrosService } from 'src/app/services/parametros.service';
     standalone: false
 })
 export class CreacionTipoCuposComponent {
-  data: any;
+  @Input({ required: true })
+  data!: { editando: boolean; info?: any };
+
+  @Output() guardado = new EventEmitter<void>();
+  @Output() cancelado = new EventEmitter<void>(true);
+
+  permisos: Record<string, boolean> = {};
+  permisosListos = false;
   
   infoTipoCupo = this.fb.group({
     nombre: ['', Validators.required],
@@ -28,23 +38,79 @@ export class CreacionTipoCuposComponent {
   infoCupo!: any;
 
   constructor(
-    private router: Router,
     private fb: FormBuilder,
     private popUpManager: PopUpManager,
     private translate: TranslateService,
     private parametrosService: ParametrosService,
+    private permisosUtils: PermisosUtils,
   ) {}
 
-  ngOnInit(): void {
-    this.data = history.state.data;
-    this.editando = this.data.editando;
-    if (this.editando) {
-      this.infoCupo = this.data.info;
-      this.setearCamposFormularios(this.infoCupo)
+  async ngOnInit(): Promise<void> {
+    this.loading = true;
+    this.permisosListos = false;
+    this.permisos = {};
+    this.infoTipoCupo.disable();
+
+    try {
+      if (typeof this.data?.editando !== 'boolean') {
+        this.cancelado.emit();
+        return;
+      }
+
+      this.editando = this.data.editando;
+
+      if (this.editando && !this.data.info?.Id) {
+        this.cancelado.emit();
+        return;
+      }
+
+      this.permisos = await firstValueFrom(
+        this.permisosUtils.obtenerPermisos(getRolesUsuario(), [
+          'crear_tipo_cupo',
+          'editar_tipo_cupo',
+        ]),
+      );
+      this.permisosListos = true;
+
+      if (!this.validarPermiso(this.puedeGuardar)) {
+        this.cancelado.emit();
+        return;
+      }
+
+      if (this.editando) {
+        this.infoCupo = { ...this.data.info };
+        this.setearCamposFormularios(this.infoCupo);
+      }
+
+      this.infoTipoCupo.enable();
+    } finally {
+      this.loading = false;
     }
   }
 
+  private tienePermiso(opcion: string): boolean {
+    return !!getToken()
+      && tieneRolEscritura(getRolesUsuario())
+      && this.permisosListos
+      && this.permisos[opcion] === true;
+  }
+
+  get puedeCrear(): boolean {return !this.editando && this.tienePermiso('crear_tipo_cupo'); }
+  get puedeEditar(): boolean { return this.editando && this.tienePermiso('editar_tipo_cupo'); }
+  get puedeGuardar(): boolean { return this.editando ? this.puedeEditar : this.puedeCrear; }
+
+  private validarPermiso(permitido: boolean): boolean {
+    if (!permitido) {
+      this.popUpManager.showErrorAlert(
+        this.translate.instant('ERROR.rol_insuficiente_titulo'),
+      );
+    }
+
+    return permitido;
+  }
+
   async guardar() {
+    if (this.loading || !this.validarPermiso(this.puedeCrear)) return;
     this.infoTipoCupo.markAllAsTouched();
     if (this.infoTipoCupo.valid) {
       this.popUpManager.showPopUpGeneric(
@@ -62,7 +128,14 @@ export class CreacionTipoCuposComponent {
     }
   }
 
+  cancelar(): void {
+    if (this.loading) return;
+
+    this.cancelado.emit();
+  }
+
   async prepararCreacion() {
+    if (this.loading || !this.validarPermiso(this.puedeCrear)) return;
     this.loading = true;
     let newTipoCupo = this.prepararBodyTipoCupo();
     newTipoCupo.Activo = true;
@@ -71,14 +144,14 @@ export class CreacionTipoCuposComponent {
     };
 
     const res = await this.crearTipoCupo(newTipoCupo);
-    if (res) {
-      this.router.navigate(['/lista-tipo-cupos']);
-    }
     this.loading = false;
+
+    if (res) {
+      this.guardado.emit();
+    }
   }
 
   setearCamposFormularios(data: any) {
-    this.loading = true;
     const infoCupo = {
       nombre: data['Nombre'],
       descripcion: data['Descripcion'],
@@ -86,10 +159,10 @@ export class CreacionTipoCuposComponent {
       numero_orden: data['NumeroOrden']
     }
     this.infoTipoCupo.patchValue(infoCupo);
-    this.loading = false;
   }
 
   actualizar() {
+    if (this.loading || !this.validarPermiso(this.puedeEditar)) return;
     this.infoTipoCupo.markAllAsTouched();
     if (this.infoTipoCupo.valid) {
       this.popUpManager.showPopUpGeneric(
@@ -108,6 +181,7 @@ export class CreacionTipoCuposComponent {
   }
 
   async prepararActualizacion() {
+    if (this.loading || !this.validarPermiso(this.puedeEditar)) return;
     this.loading = true;
     this.infoCupo.Nombre = this.infoTipoCupo.get('nombre')!.value ?? this.infoCupo.Nombre;
     this.infoCupo.Descripcion = this.infoTipoCupo.get('descripcion')!.value ?? this.infoCupo.Descripcion;
@@ -118,10 +192,11 @@ export class CreacionTipoCuposComponent {
     };
 
     const res = await this.actualizarTipoCupo(this.infoCupo);
-    if (res) {
-      this.router.navigate(['/lista-tipo-cupos']);
-    }
     this.loading = false;
+
+    if (res) {
+      this.guardado.emit();
+    }
   }
 
   prepararBodyTipoCupo() {
@@ -134,6 +209,7 @@ export class CreacionTipoCuposComponent {
   }
 
   crearTipoCupo(body: TipoParametro) {
+    if (!this.validarPermiso(this.puedeCrear)) return Promise.resolve(false);
     return new Promise((resolve, reject) => {
       this.parametrosService
         .post('parametro', body)
@@ -145,13 +221,14 @@ export class CreacionTipoCuposComponent {
           (error: any) => {
             this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('cupos.creacion_tipos_cupo_fallo'));
-            reject(false);
+            resolve(false);
           }
         );
     });
   }
 
   actualizarTipoCupo(body: TipoParametro) {
+    if (!this.validarPermiso(this.puedeEditar)) return Promise.resolve(false);
     return new Promise((resolve, reject) => {
       this.parametrosService
         .put('parametro/', body)
@@ -163,7 +240,7 @@ export class CreacionTipoCuposComponent {
           (error: any) => {
             this.loading = false;
             this.popUpManager.showErrorAlert(this.translate.instant('cupos.actualizacion_tipos_cupo_fallo'));
-            reject(false);
+            resolve(false);
           }
         );
     });

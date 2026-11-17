@@ -24,7 +24,7 @@ export function nivelPrograma(programa: any): any {
 }
 
 export function esAdministradorProgramas(roles: unknown): boolean {
-  const globales = ['ADMIN_SGA', 'VICERRECTOR', 'ASESOR_VICE', 'ADMISIONES_REG'];
+  const globales = ['ADMIN_SGA', 'VICERRECTOR', 'ASESOR_VICE', 'ASISTENTE_VICE_ADMIN', 'ADMISIONES_REG'];
   return Array.isArray(roles) && roles.some(rol =>
     globales.includes(String(rol).split('/').pop()!.trim().toUpperCase()));
 }
