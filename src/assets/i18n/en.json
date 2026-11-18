@@ -906,7 +906,8 @@
         "Acciones": "Actions",
         "SelectNivel": "Select level",
         "SelectTipoInscripcion": "Select inscription type",
-        "SelectEstadoInscripcion": "Selet inscription status"
+        "SelectEstadoInscripcion": "Selet inscription status",
+        "sin_permiso_generar": "You do not have permissions to generate reports."
     },
     "evento": {
         "evento": "Event",

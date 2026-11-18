@@ -108,8 +108,12 @@ const rawRoutes: Routes = [
     path:"liquidacion-historico", 
     component: LiquidacionHistoricoComponent,
   },
-    {path:"reportes-inscritos", 
+  {
+    path: 'reportes-inscritos',
     component: RepotesInscripcionesComponent,
+    data: {
+      menuUrl: '/admisiones/reportes-inscritos',
+    },
   },
   {
     path:"listado-pregrado", 

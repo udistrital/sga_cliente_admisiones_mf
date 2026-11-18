@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OikosService } from 'src/app/services/oikos.service';
@@ -16,12 +16,14 @@ import { tipoReporteInscritos } from 'src/app/models/reportes/tipo-reportes-insc
 import { estadosReintegrosTransferencias } from 'src/app/models/reportes/estados-reintegros-transferencias';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { UserService } from 'src/app/services/users.service';
-import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 import { DependenciasVinculacionTercero } from 'src/app/models/admision/dependencia_vinculacion_tercero';
 import { RespFormat } from 'src/app/models/respuesta/response-format';
-
 import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-programa.models';
 import { esAdministradorProgramas } from 'src/app/services/filtros-programa.service';
+import { TranslateService } from '@ngx-translate/core';
+import { PopUpManager } from 'src/app/managers/popUpManager';
+import { getRolesUsuario } from 'src/utils/auth.util';
+import { PermisosUtils } from 'src/utils/role-permissions';
 
 @Component({
     selector: 'app-repotes-inscripciones',
@@ -59,6 +61,15 @@ export class RepotesInscripcionesComponent {
   displayedColumns: string[] = ['Periodo', 'Facultad', 'Proyecto', 'Acciones'];
   dataSource: { Periodo: string, Facultad: string, Proyecto: string }[] = [];
 
+  readonly opcionesPermisos = [
+    'generar_reporte_inscritos',
+    'descargar_pdf_reporte_inscritos',
+    'descargar_excel_reporte_inscritos',
+    'ver_pdf_reporte_inscritos',
+  ];
+  permisos: Record<string, boolean> = {};
+  permisosListos = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -70,8 +81,9 @@ export class RepotesInscripcionesComponent {
     private _snackBar: MatSnackBar,
     private sgaInscripcionService: InscripcionService,
     private userService: UserService,
-    private autenticationService: ImplicitAutenticationService,
-
+    private permisosUtils: PermisosUtils,
+    private translate: TranslateService,
+    private popUpManager: PopUpManager,
   ) {
     this.reporteForm = this.fb.group({
       periodoAcademico: ["", Validators.required],
@@ -88,6 +100,7 @@ export class RepotesInscripcionesComponent {
   }
 
   async ngOnInit(): Promise<void> {
+    this.cargarPermisos();
     this.caragarNivelesAcademicos();
     await this.cargarPermisosAcceso();
     if (!this.puedeAcceder) {
@@ -107,8 +120,7 @@ export class RepotesInscripcionesComponent {
   }
 
   async cargarPermisosAcceso(): Promise<void> {
-    const roles = await this.autenticationService.getRole();
-    this.rolesUsuario = Array.isArray(roles) ? roles : [];
+    this.rolesUsuario = getRolesUsuario();
     this.IsAdmin = esAdministradorProgramas(this.rolesUsuario);
 
     if (this.IsAdmin) {
@@ -139,6 +151,45 @@ export class RepotesInscripcionesComponent {
         'No fue posible validar tu vinculacion con terceros. Comunicate con soporte.'
       );
     }
+  }
+
+  private cargarPermisos(): void {
+    this.permisosListos = false;
+    this.permisos = {};
+    this.permisosUtils
+      .obtenerPermisos(getRolesUsuario(), this.opcionesPermisos)
+      .subscribe(permisos => {
+        this.permisos = permisos;
+        this.permisosListos = true;
+      });
+  }
+
+  private tienePermiso(opcion: string): boolean {
+    return this.permisosListos && this.permisos[opcion] === true;
+  }
+
+  get puedeGenerarReporte(): boolean { return this.tienePermiso('generar_reporte_inscritos'); }
+  get puedeDescargarPdf(): boolean { return this.tienePermiso('descargar_pdf_reporte_inscritos'); }
+  get puedeDescargarExcel(): boolean { return this.tienePermiso('descargar_excel_reporte_inscritos'); }
+  get puedeVerPdf(): boolean { return this.tienePermiso('ver_pdf_reporte_inscritos'); }
+
+  private validarPermiso(permitido: boolean): boolean {
+    if (!permitido) {
+      this.popUpManager.showErrorAlert(
+        this.translate.instant('ERROR.rol_insuficiente_titulo'),
+      );
+    }
+    return permitido;
+  }
+
+  descargarPdf(): void {
+    if (!this.validarPermiso(this.puedeDescargarPdf)) return;
+    this.downloadFile(this.reportePdf, 'ReporteInscritos.pdf');
+  }
+
+  descargarExcel(): void {
+    if (!this.validarPermiso(this.puedeDescargarExcel)) return;
+    this.downloadFile(this.reporteExcel, 'ReporteInscritos.xlsx');
   }
 
   caragarPeriodos(): Promise<void> {
@@ -348,6 +399,7 @@ export class RepotesInscripcionesComponent {
   }
 
   openDialog(): void {
+    if (!this.validarPermiso(this.puedeVerPdf)) return;
     const byteCharacters = atob(this.reportePdf);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
@@ -423,6 +475,7 @@ export class RepotesInscripcionesComponent {
   }
 
   onSubmit() {
+    if (!this.validarPermiso(this.puedeGenerarReporte)) return;
     const revision = ++this.revisionFiltros;
     if (this.reporteForm.valid) {
 
