@@ -99,9 +99,9 @@
                               <mat-card-content>
                                 <div class="filters-grid">
                                   <mat-form-field appearance="outline">
-                                    <mat-label>Estado de inscripción</mat-label>
+                                    <mat-label>{{ 'inscripcion.estado_inscripcion' | translate }}</mat-label>
                                     <mat-select [(ngModel)]="estadoFiltro" (selectionChange)="aplicarFiltrosTabla()">
-                                      <mat-option value="">Todos</mat-option>
+                                      <mat-option value="">{{ 'admision.todos' | translate }}</mat-option>
                                       @for (estado of estadosFiltro; track estado) {
                                         <mat-option [value]="estado">
                                           {{ estado }}
@@ -110,9 +110,9 @@
                                     </mat-select>
                                   </mat-form-field>
                                   <mat-form-field appearance="outline">
-                                    <mat-label>Estado de recibo</mat-label>
+                                    <mat-label>{{ 'inscripcion.estado_recibo' | translate }}</mat-label>
                                     <mat-select [(ngModel)]="estadoReciboFiltro" (selectionChange)="aplicarFiltrosTabla()">
-                                      <mat-option value="">Todos</mat-option>
+                                      <mat-option value="">{{ 'admision.todos' | translate }}</mat-option>
                                       @for (estado of estadosReciboFiltro; track estado) {
                                         <mat-option [value]="estado">
                                           {{ estado }}
@@ -121,9 +121,9 @@
                                     </mat-select>
                                   </mat-form-field>
                                   <mat-form-field appearance="outline">
-                                    <mat-label>Tipo de inscripción</mat-label>
+                                    <mat-label>{{ 'GLOBAL.TipoInscripcion' | translate }}</mat-label>
                                     <mat-select [(ngModel)]="tipoInscripcionFiltro" (selectionChange)="aplicarFiltrosTabla()">
-                                      <mat-option value="">Todos</mat-option>
+                                      <mat-option value="">{{ 'admision.todos' | translate }}</mat-option>
                                       @for (tipo of tiposInscripcionFiltro; track tipo) {
                                         <mat-option [value]="tipo">
                                           {{ tipo }}
@@ -279,7 +279,7 @@
                                         </td></ng-container
                                         >
                                         <ng-container matColumnDef="acciones">
-                                          <th mat-header-cell *matHeaderCellDef >Acciones</th>
+                                          <th mat-header-cell *matHeaderCellDef >{{ 'GLOBAL.acciones' | translate }}</th>
                                           <td mat-cell *matCellDef="let row">
                                             <!-- BOTONES DE EDITAR -->
                                             <div class="container-actions">
