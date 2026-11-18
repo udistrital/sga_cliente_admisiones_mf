@@ -75,18 +75,20 @@
                                 <b>{{ cuposProyecto - cuposAsignados }}</b></label
                                 >
                                 <!-- *ngIf="cuposProyecto - cuposAsignados > 0" -->
-                                <button
-                                  mat-flat-button
-                                  color="accent"
-                                  (click)="asignacionDeCuposPorPrioridad()"
-                                  >
-                                  {{ "cupos.asignanacion_automatica" | translate }}
-                                </button>
+                                @if (puedeAsignacionAutomatica) {
+                                  <button
+                                    mat-flat-button
+                                    color="accent"
+                                    (click)="asignacionDeCuposPorPrioridad()"
+                                    >
+                                    {{ "cupos.asignanacion_automatica" | translate }}
+                                  </button>
+                                }
                                 <button
                                   mat-stroked-button
                                   color="primary"
                                   (click)="downloadCSV()"
-                                  [disabled]="Aspirantes.length === 0">
+                                  [disabled]="!puedeDescargarCsv || Aspirantes.length === 0">
                                   <mat-icon>download</mat-icon>
                                   {{ "GLOBAL.descargar" | translate }} CSV
                                 </button>
@@ -289,6 +291,7 @@
                                                   mat-icon-button
                                                   color="accent"
                                                   (click)="buttonedit(row)"
+                                                  [disabled]="!puedeEditar"
                                                   >
                                                   <mat-icon>edit</mat-icon>
                                                 </button>
