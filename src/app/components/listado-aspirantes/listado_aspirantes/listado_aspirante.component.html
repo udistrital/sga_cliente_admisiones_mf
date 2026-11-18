@@ -84,14 +84,16 @@
                                     {{ "cupos.asignanacion_automatica" | translate }}
                                   </button>
                                 }
-                                <button
-                                  mat-stroked-button
-                                  color="primary"
-                                  (click)="downloadCSV()"
-                                  [disabled]="!puedeDescargarCsv || Aspirantes.length === 0">
-                                  <mat-icon>download</mat-icon>
-                                  {{ "GLOBAL.descargar" | translate }} CSV
-                                </button>
+                                @if (puedeDescargarCsv) {
+                                  <button
+                                    mat-stroked-button
+                                    color="primary"
+                                    (click)="downloadCSV()"
+                                    [disabled]="Aspirantes.length === 0">
+                                    <mat-icon>download</mat-icon>
+                                    {{ "GLOBAL.descargar" | translate }} CSV
+                                  </button>
+                                }
                               </mat-card-content>
                             </mat-card>
                           }
