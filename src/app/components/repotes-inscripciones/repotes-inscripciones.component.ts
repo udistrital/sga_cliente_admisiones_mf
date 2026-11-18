@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OikosService } from 'src/app/services/oikos.service';
