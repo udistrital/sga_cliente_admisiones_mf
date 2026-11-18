@@ -948,7 +948,8 @@
     "periodo_academico": "Seleccione el Período Académico",
     "proceso_academico": "Proceso Académico:",
     "proyecto_academico": "Proyecto Curricular:",
-    "nivel_academico": "Nivel Académico:"
+    "nivel_academico": "Nivel Académico:",
+    "sin_permiso_generar": "No cuenta con permisos para generar reportes."
   },
   "evento": {
     "evento": "Evento",

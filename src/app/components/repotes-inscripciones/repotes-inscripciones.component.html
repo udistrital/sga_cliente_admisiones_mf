@@ -86,6 +86,12 @@
             <button class="boton-primary" mat-raised-button color="primary" type="submit">{{ 'GLOBAL.generar' | translate }}</button>
           </div>
         }
+        @if (permisosListos && !puedeGenerarReporte) {
+          <div class="alert warning margin-y">
+            <mat-icon class="icon">lock</mat-icon>
+            <span>{{ 'reportes.sin_permiso_generar' | translate }}</span>
+          </div>
+        }
       </form>
     }
   </mat-card-content>
