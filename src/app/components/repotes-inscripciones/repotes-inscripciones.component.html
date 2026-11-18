@@ -81,9 +81,11 @@
           </mat-form-field>
           -->
         </div>
-        <div class="centrar">
-          <button class="boton-primary" mat-raised-button color="primary" type="submit">{{ 'GLOBAL.generar' | translate }}</button>
-        </div>
+        @if (puedeGenerarReporte) {
+          <div class="centrar">
+            <button class="boton-primary" mat-raised-button color="primary" type="submit">{{ 'GLOBAL.generar' | translate }}</button>
+          </div>
+        }
       </form>
     }
   </mat-card-content>
@@ -121,13 +123,13 @@
           <ng-container matColumnDef="Acciones">
             <th class="centrar" mat-header-cell *matHeaderCellDef> {{ 'reportes.Acciones' | translate }} </th>
             <td class="centrar" mat-cell *matCellDef="let element">
-              <button mat-icon-button aria-label="Descargar PDF" matTooltip="Descargar PDF" (click)="downloadFile(reportePdf, 'ReporteInscritos.pdf')">
+              <button mat-icon-button aria-label="Descargar PDF" matTooltip="Descargar PDF" [disabled]="!puedeDescargarPdf" (click)="descargarPdf()">
                 <mat-icon fontIcon="picture_as_pdf"></mat-icon>
               </button>
-              <button mat-icon-button aria-label="Descargar Xlsx" matTooltip="Descargar Xlsx" (click)="downloadFile(reporteExcel, 'ReporteInscritos.xlsx')">
+              <button mat-icon-button aria-label="Descargar Xlsx" matTooltip="Descargar Xlsx" [disabled]="!puedeDescargarExcel" (click)="descargarExcel()">
                 <mat-icon fontIcon="table_chart"></mat-icon>
               </button>
-              <button mat-icon-button aria-label="Ver PDF" matTooltip="Ver PDF" (click)="openDialog()">
+              <button mat-icon-button aria-label="Ver PDF" matTooltip="Ver PDF" [disabled]="!puedeVerPdf" (click)="openDialog()">
                 <mat-icon fontIcon="visibility"></mat-icon>
               </button>
             </td>
