@@ -1,3 +1,5 @@
+import { inject } from '@angular/core';
+import { AccesoConfiguracionAdmisionService, PERMISOS_CONFIGURACION } from 'src/app/services/acceso-configuracion-admision.service';
 import { Criterio } from "src/app/models/admision/criterio";
 import { Component, OnChanges } from "@angular/core";
 import { Input, Output, EventEmitter } from "@angular/core";
@@ -38,6 +40,7 @@ import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-pro
     standalone: false
 })
 export class CriterioAdmisionComponent implements OnChanges {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear(PERMISOS_CONFIGURACION.criteriosProyecto);
   @Input("criterios_select")
   set name(inscripcion_id: number) {
     this.inscripcion_id = inscripcion_id;
@@ -336,6 +339,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   onCriteriosChange() {
+    if (!this.acceso.validar('asignar_criterios_admision')) return;
     this.viewtab();
   }
 
@@ -741,7 +745,7 @@ export class CriterioAdmisionComponent implements OnChanges {
       this.selectTipo = false;
       this.criterioEsExamenEstado = false;
       this.valorMinimo = 0;
-      this.guardar({ confirm: false });
+      if (this.acceso.permite('asignar_criterios_admision')) this.guardar({ confirm: false });
     } else {
       this.criterio_selected.forEach((criterio: any) => {
         if (criterio.ExamenEstado) {
@@ -767,7 +771,7 @@ export class CriterioAdmisionComponent implements OnChanges {
         this.createTable(this.criterio_selected[i]);
         this.selectTipoIcfes = true;
       }
-      this.guardar({ confirm: false });
+      if (this.acceso.permite('asignar_criterios_admision')) this.guardar({ confirm: false });
     }
   }
 
@@ -863,6 +867,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   async guardarSubcriterio(criterio: Criterio) {
+    if (!this.acceso.validar('asignar_criterios_admision')) return;
     this.calcularPorcentajeTotalSubcriterio();
     if (this.porcentajeSubcriterioTotal != 100) {
       this.popUpManager.showErrorToast(
@@ -930,6 +935,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   async guardar(settings: { confirm: boolean } = { confirm: true }) {
+    if (!this.acceso.validar('asignar_criterios_admision')) return;
     if (this.calcularPorcentaje() !== 100 && settings.confirm) {
       if (settings.confirm) {
         this.popUpManager.showErrorToast(
@@ -1067,6 +1073,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   private requisitoPost(i: number, confirm: boolean = true) {
+    if (!this.acceso.validar('asignar_criterios_admision')) return;
     const requisitoPost: any = {};
     requisitoPost.Id = 0;
     requisitoPost.ProgramaAcademicoId = this.proyectos_selected;
@@ -1128,6 +1135,7 @@ export class CriterioAdmisionComponent implements OnChanges {
   }
 
   private requisitoPut(requisitoPut: any, confirm: boolean = true) {
+    if (!this.acceso.validar('asignar_criterios_admision')) return;
     this.evaluacionService
       .put("requisito_programa_academico", requisitoPut)
       .subscribe(
@@ -1210,11 +1218,11 @@ export class CriterioAdmisionComponent implements OnChanges {
   openSubcriteriosDialog(criterio: any): void {
     const dialogRef = this.dialog.open(SubcriteriosDialogComponent, {
       width: "600px",
-      data: { subcriterios: criterio.Subcriterios, title: criterio.Criterio },
+      data: { subcriterios: criterio.Subcriterios, title: criterio.Criterio, acceso: this.acceso },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
+      if (result && this.acceso.validar('asignar_criterios_admision')) {
         criterio.Subcriterios = result;
         this.dataSubcriterios = result;
         this.guardarSubcriterio(criterio);

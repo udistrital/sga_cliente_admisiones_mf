@@ -1,3 +1,6 @@
+import { AccesoConfiguracionAdmision, ACCESO_CONFIGURACION_DENEGADO } from 'src/app/services/acceso-configuracion-admision.service';
+import { inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 // import { LocalDataSource } from 'ng2-smart-table';
 /* import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster'; */
@@ -16,7 +19,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DocumentoPrograma } from 'src/app/models/documento/documento_programa';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ImplicitAutenticationService } from 'src/app/services/implicit_autentication.service';
 
 @Component({
     selector: 'ngx-select-documento-proyecto',
@@ -25,6 +27,7 @@ import { ImplicitAutenticationService } from 'src/app/services/implicit_autentic
     standalone: false
 })
 export class SelectDocumentoProyectoComponent implements OnInit {
+  readonly acceso: AccesoConfiguracionAdmision = inject(MAT_DIALOG_DATA, { optional: true })?.acceso ?? ACCESO_CONFIGURACION_DENEGADO;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -32,7 +35,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
   // config: ToasterConfig;
   settings: any;
   Campo2Control = new FormControl('', [Validators.required]);
-  sourceColumns = ["nombre","obligatorio","eliminar"]
+  get sourceColumns() { return ['nombre', 'obligatorio', ...(this.acceso.permite('retirar_documento_admision') ? ['eliminar'] : [])]; }
   source: MatTableDataSource<any> = new MatTableDataSource();
   administrar_documentos: boolean = false;
   boton_retornar: boolean = false;
@@ -41,13 +44,12 @@ export class SelectDocumentoProyectoComponent implements OnInit {
   documentos: any = [];
   subscription!: Subscription;
   documento_proyecto: any = [];
-  hasPermission: boolean = false;
+  get hasPermission(): boolean { return this.acceso.permite('ver_documentos_admision'); }
 
   constructor(private translate: TranslateService,
     private inscripcionService: InscripcionService,
     private dialogRef: MatDialogRef<SelectDocumentoProyectoComponent>,
     private popUpManager: PopUpManager,
-    private autenticationService: ImplicitAutenticationService
     ) {
     this.loading = true;
     this.loadData();
@@ -74,7 +76,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.obtenerPermisos()
+
   }
 
   activetab(): void {
@@ -91,6 +93,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
   }
 
   onCreateDocument(event: any) {
+    if (!this.acceso.validar('asignar_documento_admision')) return;
     const documento = <TipoDocumentoPrograma>event.value;
     if (!this.documento_proyecto.find((documento_registrado: any) => documento_registrado.Id === documento.Id) && documento.Id) {
 
@@ -106,6 +109,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
       Swal.fire(opt)
         .then((create: any) => {
           if (create.value) {
+          if (!this.acceso.validar('asignar_documento_admision')) return;
             Swal.fire({
               title: this.translate.instant('documento_proyecto.carga_nuevo_documento'),
               html: `<b></b>`,
@@ -179,6 +183,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
   }
 
   onDeleteDocument(event: any) {
+    if (!this.acceso.validar('retirar_documento_admision')) return;
     const documento = <TipoDocumentoPrograma>event.data;
     const opt: any = {
       title: this.translate.instant('GLOBAL.eliminar'),
@@ -192,6 +197,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
       .then((willDelete:any) => {
 
         if (willDelete.value) {
+          if (!this.acceso.validar('retirar_documento_admision')) return;
           Swal.fire({
             title: this.translate.instant('documento_proyecto.carga_eliminando_documento'),
             html: `<b></b>`,
@@ -245,6 +251,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
   }
 
   onUpdate(documento: any) {
+    if (!this.acceso.validar('editar_obligatoriedad_documento_admision')) return;
     var msgpopUp
     if (documento.value == true) {
       msgpopUp = this.translate.instant('documento_proyecto.poner_obligatorio')
@@ -253,6 +260,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
     }
     this.popUpManager.showConfirmAlert(msgpopUp, this.translate.instant('documento_proyecto.documento')).then(accion => {
       if (accion.value) {
+          if (!this.acceso.validar('editar_obligatoriedad_documento_admision')) return;
         const documentoModificado: DocumentoPrograma = new DocumentoPrograma();
         documentoModificado.TipoDocumentoProgramaId = documento.Data;
         documentoModificado.Activo = true;
@@ -284,6 +292,7 @@ export class SelectDocumentoProyectoComponent implements OnInit {
   }
 
   openListDocumentoComponent() {
+    if (!this.acceso.validar('ver_documentos_admision')) return;
     if (this.hasPermission) {
       this.administrar_documentos = true;
       this.boton_retornar = true;
@@ -298,16 +307,6 @@ export class SelectDocumentoProyectoComponent implements OnInit {
 
   }
 
-obtenerPermisos() {
-  this.autenticationService.getRole().then((rol) => {
-    const roles = rol as Array<String>;  // Casting a Array<String>
-    if (roles.includes('ADMIN_SGA')) {
-      this.hasPermission = true;
-    } else {
-      this.hasPermission = false;
-    }
-  });
-}
 
 
   retorno(event: any) {

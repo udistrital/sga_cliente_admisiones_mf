@@ -1,3 +1,5 @@
+import { inject } from '@angular/core';
+import { AccesoConfiguracionAdmisionService, PERMISOS_CONFIGURACION } from 'src/app/services/acceso-configuracion-admision.service';
 import { Component, OnInit } from "@angular/core";
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 import { ProyectoAcademicoService } from "src/app/services/proyecto_academico.service";
@@ -28,6 +30,7 @@ import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-pro
     standalone: false
 })
 export class AsignarDocumentosDescuentosComponent implements OnInit {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear(PERMISOS_CONFIGURACION.documentosDescuentos);
   toasterService: any;
   info_inscripcion: any;
 
@@ -56,7 +59,8 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   Campo3Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
 
   loadingGlobal: boolean = false;
-  puedeVerDocumentos: boolean = false;
+  get puedeVerDocumentos(): boolean { return this.acceso.permite('ver_documentos_admision'); }
+  get puedeVerDescuentos(): boolean { return this.acceso.permite('ver_descuentos_admision'); }
 
   constructor(
     private translate: TranslateService,
@@ -72,17 +76,8 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   ) {
     this.translate = translate;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
-    this.cargarPermisos();
   }
 
-  private cargarPermisos(): void {
-    this.autenticationService.getRole().then((roles: any) => {
-      this.puedeVerDocumentos =
-        Array.isArray(roles) && !roles.includes("ADMISIONES_REG");
-    }).catch(() => {
-      this.puedeVerDocumentos = false;
-    });
-  }
 
   async ngOnInit() {
     try {
@@ -447,11 +442,13 @@ export class AsignarDocumentosDescuentosComponent implements OnInit {
   }
 
   openSelectDocumentoProyectoComponent() {
-    this.dialogService.open(SelectDocumentoProyectoComponent);
+    if (!this.acceso.validar('ver_documentos_admision')) return;
+    this.dialogService.open(SelectDocumentoProyectoComponent, { data: { acceso: this.acceso } });
   }
 
   openSelectDescuentoProyectoComponent() {
-    this.dialogService.open(SelectDescuentoProyectoComponent);
+    if (!this.acceso.validar('ver_descuentos_admision')) return;
+    this.dialogService.open(SelectDescuentoProyectoComponent, { data: { acceso: this.acceso } });
   }
 
   cambioPeriodo() {

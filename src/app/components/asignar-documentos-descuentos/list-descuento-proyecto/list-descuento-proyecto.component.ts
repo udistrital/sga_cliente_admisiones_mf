@@ -1,3 +1,4 @@
+import { AccesoConfiguracionAdmision, ACCESO_CONFIGURACION_DENEGADO } from 'src/app/services/acceso-configuracion-admision.service';
 import {
   Component,
   OnInit,
@@ -17,7 +18,6 @@ import { TipoDescuento } from "src/app/models/descuento/tipo_descuento";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
 
 @Component({
     selector: "ngx-list-descuento-proyecto",
@@ -26,6 +26,7 @@ import { ImplicitAutenticationService } from "src/app/services/implicit_autentic
     standalone: false
 })
 export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
+  @Input() acceso: AccesoConfiguracionAdmision = ACCESO_CONFIGURACION_DENEGADO;
   @Input() asDialog!: boolean;
   @Output() retorno = new EventEmitter<boolean>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -36,13 +37,13 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   cambiotab: boolean = false;
   loading: boolean;
   info_desc_programa!: TipoDescuento;
-  hasPermission: boolean = false;
+  get hasPermission(): boolean { return ['crear_tipo_descuento_admision', 'editar_tipo_descuento_admision', 'desactivar_tipo_descuento_admision'].some(opcion => this.acceso.permite(opcion)); }
 
   descuentos: any = [];
   administrar_descuentos: boolean = true;
   dataTableDescuentos: MatTableDataSource<any> = new MatTableDataSource();
-  columnsTableDescuentos: string[] = [
-    "acciones",
+  get columnsTableDescuentos(): string[] { return [
+    ...(this.acceso.permite('editar_tipo_descuento_admision') || this.acceso.permite('desactivar_tipo_descuento_admision') ? ['acciones'] : []),
     "nombre",
     "descripcion",
     "codigo_abreviacion",
@@ -50,21 +51,19 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
     "numero_orden",
     "general",
     "concepto_academico_id",
-  ];
+  ]; }
 
   constructor(
     private translate: TranslateService,
     private descuentoService: DescuentoAcademicoService,
     private dialogRef: MatDialogRef<ListDescuentoProyectoComponent>,
     private popUpManager: PopUpManager,
-    private autenticationService: ImplicitAutenticationService
   ) {
     this.loading = true;
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {});
   }
 
   ngOnInit() {
-    this.obtenerPermisos();
     this.loadData();
   }
 
@@ -117,6 +116,7 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   itemselec(event: any) {}
 
   onEdit(event: any): void {
+    if (!this.acceso.validar('editar_tipo_descuento_admision')) return;
     if (!this.hasPermission) {
       return;
     }
@@ -125,6 +125,7 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   }
 
   onDelete(event: any): void {
+    if (!this.acceso.validar('desactivar_tipo_descuento_admision')) return;
     if (!this.hasPermission) {
       return;
     }
@@ -140,6 +141,7 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
     };
     Swal.fire(opt).then((willDelete: any) => {
       if (willDelete.value) {
+          if (!this.acceso.validar('desactivar_tipo_descuento_admision')) return;
         this.info_desc_programa = <TipoDescuento>event.data;
         this.info_desc_programa.Activo = false;
         const general = this.info_desc_programa.General
@@ -188,6 +190,7 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
   }
 
   onCreate(event: any = null): void {
+    if (!this.acceso.validar('crear_tipo_descuento_admision')) return;
     if (!this.hasPermission) {
       return;
     }
@@ -195,13 +198,6 @@ export class ListDescuentoProyectoComponent implements OnInit, AfterViewInit {
     this.activetab();
   }
 
-  obtenerPermisos() {
-    this.autenticationService.getRole().then((rol: any) => {
-      this.hasPermission =
-        Array.isArray(rol) &&
-        (rol.includes('ADMIN_SGA') || rol.includes('ADMISIONES_REG'));
-    });
-  }
 
   activetab(): void {
     this.cambiotab = !this.cambiotab;

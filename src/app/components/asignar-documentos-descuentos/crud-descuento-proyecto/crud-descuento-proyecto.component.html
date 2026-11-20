@@ -1,3 +1,4 @@
+@if (acceso.permite(descuento_id ? 'editar_tipo_descuento_admision' : 'crear_tipo_descuento_admision')) {
 <div class="crud-descuento-proyecto">
   <ngx-dinamicform
     [normalform]="formDescuentoProyecto"
@@ -7,3 +8,4 @@
   >
   </ngx-dinamicform>
 </div>
+}

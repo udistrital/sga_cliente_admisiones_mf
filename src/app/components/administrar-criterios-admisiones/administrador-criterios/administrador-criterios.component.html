@@ -21,7 +21,8 @@
         </mat-form-field>
         <!-- BARRA DE HERRAMIENTAS -->
         <mat-toolbar>
-          <button
+          @if (acceso.permite('crear_criterio_admision')) {
+            <button
             mat-flat-button
             color="accent"
             type="button"
@@ -30,6 +31,7 @@
             <mat-icon>add</mat-icon>
             <label>{{ "admision.tooltip_crear" | translate }}</label>
           </button>
+          }
         </mat-toolbar>
         <!-- TABLA -->
         <div class="table">
@@ -97,18 +99,22 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                  <button mat-menu-item (click)="editarCriterio({ data: row })">
+                  @if (acceso.permite('editar_criterio_admision')) {
+                    <button mat-menu-item (click)="editarCriterio({ data: row })">
                     <mat-icon fontIcon="edit" color="accent"></mat-icon>
                     <span>{{ "admision.tooltip_editar" | translate }}</span>
                   </button>
+                  }
 
-                  <button
+                  @if (acceso.permite('desactivar_criterio_admision')) {
+                    <button
                     mat-menu-item
                     (click)="inactivarCriterio({ data: row })"
                     >
                     <mat-icon fontIcon="unpublished" color="warn"></mat-icon>
                     <span>{{ "admision.tooltip_eliminar" | translate }}</span>
                   </button>
+                  }
                 </mat-menu>
               </td>
             </ng-container>
@@ -156,7 +162,8 @@
                 </mat-form-field>
                 <!-- BARRA DE HERRAMIENTAS -->
                 <mat-toolbar>
-                  <button
+                  @if (acceso.permite('crear_subcriterio_admision')) {
+                    <button
                     mat-flat-button
                     color="accent"
                     type="button"
@@ -165,6 +172,7 @@
                     <mat-icon>add </mat-icon>
                     <label>{{ "admision.crear_subcriterio" | translate }}</label>
                   </button>
+                  }
                 </mat-toolbar>
                 <!-- TABLA -->
                 <div class="table">
@@ -233,7 +241,8 @@
                           <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                          <button
+                          @if (acceso.permite('editar_subcriterio_admision')) {
+                            <button
                             mat-menu-item
                             (click)="editarSubcriterio({ data: row })"
                             >
@@ -242,7 +251,9 @@
                               "GLOBAL.editar" | translate
                             }}</span>
                           </button>
-                          <button
+                          }
+                          @if (acceso.permite('desactivar_subcriterio_admision')) {
+                            <button
                             mat-menu-item
                             (click)="eliminarSubcriterio(criterio, row)"
                             >
@@ -254,13 +265,14 @@
                               "GLOBAL.eliminar" | translate
                             }}</span>
                           </button>
+                          }
                         </mat-menu>
                       </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="criterioColumn"></tr>
+                    <tr mat-header-row *matHeaderRowDef="subcriterioColumn"></tr>
                     <tr
                       mat-row
-                      *matRowDef="let row; columns: criterioColumn"
+                      *matRowDef="let row; columns: subcriterioColumn"
                     ></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
