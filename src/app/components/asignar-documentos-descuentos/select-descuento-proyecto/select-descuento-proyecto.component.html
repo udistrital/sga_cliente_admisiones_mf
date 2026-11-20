@@ -8,7 +8,7 @@
         </button>
       </header>
       <main>
-      @if (puedeModificarAsignaciones){
+      @if (acceso.permite('asignar_descuento_admision')){
         <section>
           <p>
             <b>{{ "descuento_academico.seleccione_descuentos" | translate }}</b>
@@ -77,13 +77,15 @@
                 </th>
                 <td mat-cell *matCellDef="let element">
                   @if (puedeModificarAsignaciones) {
-                    <button
+                    @if (acceso.permite('retirar_descuento_admision')) {
+                      <button
                       mat-icon-button
                       color="warn"
                       (click)="onDeleteDescuento(element)"
                     >
                       <mat-icon>delete</mat-icon>
                     </button>
+                    }
                   }
                 </td>
               </ng-container>
@@ -98,7 +100,8 @@
           </div>
         </section>
         @if (puedeAdministrarCatalogo) {
-          <button
+          @if (acceso.permite('ver_descuentos_admision')) {
+            <button
             mat-flat-button
             (click)="openListDescuentoComponent()"
             type="submit"
@@ -106,6 +109,7 @@
           >
             {{ "descuento_academico.administrar_descuento" | translate }}
           </button>
+          }
         }
         @if (boton_retornar) {
           <button
@@ -122,7 +126,7 @@
   }
   @if (administrar_descuentos) {
     <mat-card-content>
-      <ngx-list-descuento-proyecto (retorno)="retorno($event)">
+      <ngx-list-descuento-proyecto [acceso]="acceso" (retorno)="retorno($event)">
       </ngx-list-descuento-proyecto>
       @if (boton_retornar) {
         <button

@@ -25,6 +25,7 @@ export class SubcriteriosDialogComponent {
   }
 
   onSave(): void {
+    if (!this.data.acceso?.validar('asignar_criterios_admision')) return;
     if (this.calcularPorcentajeTotal() === 100) {
       this.dialogRef.close(this.dataSourceSubCriterio.data);
     } else {

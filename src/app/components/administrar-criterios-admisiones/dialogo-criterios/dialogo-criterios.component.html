@@ -82,7 +82,7 @@
         }
 
         <!-- Formulario adicional si se va a parametrizar un examen de estado -->
-        <form [formGroup]="examenEstadoForm">
+        <div [formGroup]="examenEstadoForm">
           @if (criterioForm.get('ExamenEstado')?.value) {
             <div>
               @if (!subcriterio) {
@@ -124,11 +124,11 @@
                       }
                     </div>
                   }
-                </form>
+                </div>
               </div>
 
               <div mat-dialog-actions>
-                <button mat-flat-button color="warn" mat-dialog-close>
+                <button type="button" mat-flat-button color="warn" mat-dialog-close>
                   {{ "GLOBAL.cancelar" | translate }}
                 </button>
                 <button
@@ -136,7 +136,7 @@
                   color="accent"
                   cdkFocusInitial
                   type="submit"
-                  [disabled]="criterioForm.invalid"
+                  [disabled]="!puedeGuardar || criterioForm.invalid || confirmando"
                   >
                   {{ "GLOBAL.guardar" | translate }}
                 </button>

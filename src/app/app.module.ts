@@ -23,6 +23,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
+import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
 import { RequestManager } from './managers/requestManager';
 import { HttpErrorManager } from './managers/errorManager';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -275,6 +276,7 @@ export function createTranslateLoader(http: HttpClient) {
             },
         }),
         CodificacionModule], providers: [
+        { provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } },
         MatSnackBar,
         TerceroMidService,
         InscripcionMidService,

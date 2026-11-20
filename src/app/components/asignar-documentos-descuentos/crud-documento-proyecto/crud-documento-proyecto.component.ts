@@ -1,3 +1,4 @@
+import { AccesoConfiguracionAdmision, ACCESO_CONFIGURACION_DENEGADO } from 'src/app/services/acceso-configuracion-admision.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { FORM_DOCUMENTO_PROYECTO } from './form-documento-proyecto'
@@ -16,6 +17,7 @@ import { TipoDocumentoPrograma } from 'src/app/models/documento/tipo_documento_p
     standalone: false
 })
 export class CrudDocumentoProyectoComponent implements OnInit {
+  @Input() acceso: AccesoConfiguracionAdmision = ACCESO_CONFIGURACION_DENEGADO;
 
   clean!: boolean;
   documento_id!: number;
@@ -83,6 +85,7 @@ export class CrudDocumentoProyectoComponent implements OnInit {
   }
 
   updateDocumentoProyecto(documentoProyecto: any): void {
+    if (!this.acceso.validar('editar_tipo_documento_admision')) return;
 
     const opt: any = {
       title: this.translate.instant('GLOBAL.actualizar'),
@@ -95,6 +98,7 @@ export class CrudDocumentoProyectoComponent implements OnInit {
     Swal.fire(opt)
       .then((willDelete:any) => {
         if (willDelete.value) {
+          if (!this.acceso.validar('editar_tipo_documento_admision')) return;
           this.info_doc_programa = <TipoDocumentoPrograma>documentoProyecto;
           if (documentoProyecto.Activo == "") {
             this.info_doc_programa.Activo = false;
@@ -117,6 +121,7 @@ export class CrudDocumentoProyectoComponent implements OnInit {
   }
 
   createDocumentoProyecto(documentoProyecto: any): void {
+    if (!this.acceso.validar('crear_tipo_documento_admision')) return;
     const opt: any = {
       title: this.translate.instant('GLOBAL.registrar'),
       text: this.translate.instant('documento_proyecto.seguro_continuar_registrar_documento'),
@@ -128,6 +133,7 @@ export class CrudDocumentoProyectoComponent implements OnInit {
     Swal.fire(opt)
       .then((willDelete:any) => {
         if (willDelete.value) {
+          if (!this.acceso.validar('crear_tipo_documento_admision')) return;
           this.info_doc_programa = <TipoDocumentoPrograma>documentoProyecto;
           if (documentoProyecto.Activo == "") {
             this.info_doc_programa.Activo = false;

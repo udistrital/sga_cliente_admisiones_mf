@@ -1,3 +1,4 @@
+import { AccesoConfiguracionAdmision, ACCESO_CONFIGURACION_DENEGADO } from 'src/app/services/acceso-configuracion-admision.service';
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 // import { LocalDataSource } from 'ng2-smart-table';
 // import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
@@ -21,6 +22,7 @@ import { MatSort } from '@angular/material/sort';
     standalone: false
 })
 export class ListDocumentoProyectoComponent implements OnInit {
+  @Input() acceso: AccesoConfiguracionAdmision = ACCESO_CONFIGURACION_DENEGADO;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -33,7 +35,10 @@ export class ListDocumentoProyectoComponent implements OnInit {
 
   documentos: any = [];
   administrar_documentos: boolean = true;
-  sourceColumn = ["acciones", "nombre", "descripcion", "codigo_abreviacion", "activo", "numero_orden"]
+  get sourceColumn() {
+    const puedeActuar = this.acceso.permite('editar_tipo_documento_admision') || this.acceso.permite('desactivar_tipo_documento_admision');
+    return [...(puedeActuar ? ['acciones'] : []), 'nombre', 'descripcion', 'codigo_abreviacion', 'activo', 'numero_orden'];
+  }
   source: MatTableDataSource<any> = new MatTableDataSource();
 
   constructor(private translate: TranslateService,
@@ -109,11 +114,13 @@ export class ListDocumentoProyectoComponent implements OnInit {
   }
 
   onEdit(event: any): void {
+    if (!this.acceso.validar('editar_tipo_documento_admision')) return;
     this.uid = event.data.Id;
     this.activetab();
   }
 
   onDelete(event: any): void {
+    if (!this.acceso.validar('desactivar_tipo_documento_admision')) return;
 
     const opt: any = {
       title: this.translate.instant('GLOBAL.eliminar'),
@@ -126,6 +133,7 @@ export class ListDocumentoProyectoComponent implements OnInit {
     Swal.fire(opt)
       .then((willDelete:any) => {
         if (willDelete.value) {
+          if (!this.acceso.validar('desactivar_tipo_documento_admision')) return;
           this.info_doc_programa = <TipoDocumentoPrograma>event.data;
           this.info_doc_programa.Activo = false;
 
@@ -160,6 +168,7 @@ export class ListDocumentoProyectoComponent implements OnInit {
   }
 
   onCreate(event: any): void {
+    if (!this.acceso.validar('crear_tipo_documento_admision')) return;
     this.uid = 0;
     this.activetab();
   }

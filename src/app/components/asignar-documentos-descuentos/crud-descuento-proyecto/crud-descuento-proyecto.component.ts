@@ -1,3 +1,4 @@
+import { AccesoConfiguracionAdmision, ACCESO_CONFIGURACION_DENEGADO } from 'src/app/services/acceso-configuracion-admision.service';
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FORM_DESCUENTO_PROYECTO } from "./form-descuento-proyecto";
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
@@ -14,6 +15,7 @@ import { PopUpManager } from "src/app/managers/popUpManager";
     standalone: false
 })
 export class CrudDescuentoProyectoComponent implements OnInit {
+  @Input() acceso: AccesoConfiguracionAdmision = ACCESO_CONFIGURACION_DENEGADO;
   descuento_id!: number;
 
   @Input("descuento_id")
@@ -101,6 +103,7 @@ export class CrudDescuentoProyectoComponent implements OnInit {
   }
 
   updateDescuentoProyecto(descuentoProyecto: any): void {
+    if (!this.acceso.validar('editar_tipo_descuento_admision')) return;
     const opt: any = {
       title: this.translate.instant("GLOBAL.actualizar"),
       text: this.translate.instant(
@@ -113,6 +116,7 @@ export class CrudDescuentoProyectoComponent implements OnInit {
     };
     Swal.fire(opt).then((willDelete:any) => {
       if (willDelete.value) {
+          if (!this.acceso.validar('editar_tipo_descuento_admision')) return;
         this.info_desc_programa = <TipoDescuento>descuentoProyecto;
         if (descuentoProyecto.Activo == "") {
           this.info_desc_programa.Activo = false;
@@ -154,6 +158,7 @@ export class CrudDescuentoProyectoComponent implements OnInit {
   }
 
   createDescuentoProyecto(descuentoProyecto: any): void {
+    if (!this.acceso.validar('crear_tipo_descuento_admision')) return;
     const opt: any = {
       title: this.translate.instant("GLOBAL.registrar"),
       text: this.translate.instant(
@@ -166,6 +171,7 @@ export class CrudDescuentoProyectoComponent implements OnInit {
     };
     Swal.fire(opt).then((willDelete: any) => {
       if (willDelete.value) {
+          if (!this.acceso.validar('crear_tipo_descuento_admision')) return;
         this.info_desc_programa = <TipoDescuento>descuentoProyecto;
         if (descuentoProyecto.Activo == "") {
           this.info_desc_programa.Activo = false;

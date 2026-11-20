@@ -1,3 +1,6 @@
+import { AccesoConfiguracionAdmision, ACCESO_CONFIGURACION_DENEGADO } from 'src/app/services/acceso-configuracion-admision.service';
+import { inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Input, ViewChild } from "@angular/core";
 // import { LocalDataSource } from 'ng2-smart-table';
 // import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
@@ -15,7 +18,6 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { DescuentoDependencia } from "src/app/models/descuento/descuento_dependencia";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatDialogRef } from "@angular/material/dialog";
-import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
 import { MatPaginator } from "@angular/material/paginator";
 
 @Component({
@@ -25,11 +27,12 @@ import { MatPaginator } from "@angular/material/paginator";
     standalone: false
 })
 export class SelectDescuentoProyectoComponent implements OnInit {
+  readonly acceso: AccesoConfiguracionAdmision = inject(MAT_DIALOG_DATA, { optional: true })?.acceso ?? ACCESO_CONFIGURACION_DENEGADO;
   uid!: number;
   settings: any;
   Campo2Control = new FormControl("", [Validators.required]);
   // sourceColumns = ["nombre", "porcentaje", "eliminar"];
-  sourceColumns = ["nombre", "porcentaje"];
+  get sourceColumns() { return ['nombre', 'porcentaje', ...(this.acceso.permite('retirar_descuento_admision') ? ['eliminar'] : [])]; }
   source: MatTableDataSource<any> = new MatTableDataSource();
   @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
     if (paginator) {
@@ -38,8 +41,8 @@ export class SelectDescuentoProyectoComponent implements OnInit {
   }
   administrar_descuentos: boolean = false;
   boton_retornar: boolean = false;
-  puedeModificarAsignaciones: boolean = false;
-  puedeAdministrarCatalogo: boolean = false;
+  get puedeModificarAsignaciones(): boolean { return this.acceso.permite('asignar_descuento_admision') || this.acceso.permite('retirar_descuento_admision'); }
+  get puedeAdministrarCatalogo(): boolean { return this.acceso.permite('ver_descuentos_admision'); }
   loading: boolean;
 
   descuentos: any = [];
@@ -51,10 +54,8 @@ export class SelectDescuentoProyectoComponent implements OnInit {
     private descuentoService: DescuentoAcademicoService,
     private dialogRef: MatDialogRef<SelectDescuentoProyectoComponent>,
     private popUpManager: PopUpManager,
-    private autenticationService: ImplicitAutenticationService
   ) {
     this.loading = true;
-    this.cargarPermisos();
     this.loadData();
     this.loadDataProyecto();
 
@@ -71,24 +72,6 @@ export class SelectDescuentoProyectoComponent implements OnInit {
 
   ngOnInit() {}
 
-  private cargarPermisos(): void {
-    this.autenticationService.getRole().then((roles: any) => {
-      const rolesUsuario = Array.isArray(roles) ? roles : [];
-      this.puedeModificarAsignaciones = [
-        "ADMIN_SGA",
-        "VICERRECTOR",
-        "ASESOR_VICE",
-        "JEFE_DEPENDENCIA",
-        "ADMISIONES_REG",
-      ].some((rol) => rolesUsuario.includes(rol));
-      this.sourceColumns = this.puedeModificarAsignaciones
-        ? ["nombre", "porcentaje", "eliminar"]
-        : ["nombre", "porcentaje"];
-      this.puedeAdministrarCatalogo = ["ADMIN_SGA", "ADMISIONES_REG"].some(
-        (rol) => rolesUsuario.includes(rol)
-      );
-    });
-  }
 
   activetab(): void {
     this.administrar_descuentos = !this.administrar_descuentos;
@@ -104,6 +87,7 @@ export class SelectDescuentoProyectoComponent implements OnInit {
   }
 
   onCreateDescuento(event: any) {
+    if (!this.acceso.validar('asignar_descuento_admision')) return;
     if (!this.puedeModificarAsignaciones) {
       return;
     }
@@ -127,6 +111,7 @@ export class SelectDescuentoProyectoComponent implements OnInit {
 
       Swal.fire(opt).then((create: any) => {
         if (create.value) {
+          if (!this.acceso.validar('asignar_descuento_admision')) return;
           Swal.fire({
             title: this.translate.instant(
               "descuento_academico.carga_nuevo_descuento"
@@ -230,6 +215,7 @@ export class SelectDescuentoProyectoComponent implements OnInit {
   }
 
   onDeleteDescuento(event: any) {
+    if (!this.acceso.validar('retirar_descuento_admision')) return;
     if (!this.puedeModificarAsignaciones) {
       return;
     }
@@ -247,6 +233,7 @@ export class SelectDescuentoProyectoComponent implements OnInit {
     };
     Swal.fire(opt).then((willDelete: any) => {
       if (willDelete.value) {
+          if (!this.acceso.validar('retirar_descuento_admision')) return;
         Swal.fire({
           title: this.translate.instant(
             "descuento_academico.carga_eliminando_descuento"
@@ -313,6 +300,7 @@ export class SelectDescuentoProyectoComponent implements OnInit {
   }
 
   openListDescuentoComponent() {
+    if (!this.acceso.validar('ver_descuentos_admision')) return;
     if (!this.puedeAdministrarCatalogo) {
       return;
     }

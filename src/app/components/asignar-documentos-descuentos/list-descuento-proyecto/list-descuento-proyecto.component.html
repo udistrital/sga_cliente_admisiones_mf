@@ -9,7 +9,8 @@
     <main>
       <!-- CREAR NUEVO -->
       @if (hasPermission) {
-        <button
+        @if (acceso.permite('crear_tipo_descuento_admision')) {
+          <button
           class="margin-y"
           mat-flat-button
           color="accent"
@@ -18,6 +19,7 @@
           >
           <mat-icon>add</mat-icon> {{ "GLOBAL.crear" | translate }}
         </button>
+        }
       }
       <!-- BUSCADOR DE LA TABLA -->
       <mat-form-field appearance="outline" class="form-field">
@@ -38,7 +40,8 @@
             <td mat-cell *matCellDef="let row">
               <div class="separacion-acciones">
                 @if (hasPermission) {
-                  <button
+                  @if (acceso.permite('editar_tipo_descuento_admision')) {
+                    <button
                     aria-hidden="false"
                     mat-icon-button
                     title="{{ 'admision.tooltip_editar' | translate }}"
@@ -48,9 +51,11 @@
                   >
                     <mat-icon fontIcon="edit"></mat-icon>
                   </button>
+                  }
                 }
                 @if (hasPermission) {
-                  <button
+                  @if (acceso.permite('desactivar_tipo_descuento_admision')) {
+                    <button
                     color="warn"
                     mat-icon-button
                     aria-hidden="false"
@@ -60,6 +65,7 @@
                     >
                     <mat-icon fontIcon="delete"></mat-icon>
                   </button>
+                  }
                 }
               </div>
             </td>
@@ -138,7 +144,7 @@
 }
 @if (cambiotab) {
   <div>
-    <ngx-crud-descuento-proyecto
+    <ngx-crud-descuento-proyecto [acceso]="acceso"
       [descuento_id]="uid"
       (eventChange)="onChange($event)"
       >

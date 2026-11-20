@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { MODALS } from 'src/app/models/diccionario/diccionario';
 import { ParametrosService } from 'src/app/services/parametros.service';
-import { getRolesUsuario } from 'src/utils/auth.util';
+import { getRolesUsuario, getToken } from 'src/utils/auth.util';
 import { PermisosUtils } from 'src/utils/role-permissions';
 import { tieneRolEscritura } from 'src/app/models/roles.model';
 
@@ -94,7 +94,8 @@ export class ListaTipoCuposComponent {
   }
 
   private tienePermiso(opcion: string): boolean {
-    return tieneRolEscritura(getRolesUsuario())
+    return !!getToken()
+      && tieneRolEscritura(getRolesUsuario())
       && this.permisosListos
       && this.permisos[opcion] === true;
   }

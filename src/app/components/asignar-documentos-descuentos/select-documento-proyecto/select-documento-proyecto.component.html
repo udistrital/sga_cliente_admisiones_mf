@@ -11,7 +11,8 @@
       <main>
         <section>
           {{ "documento_proyecto.seleccione_documentos" | translate }}
-          <mat-form-field style="width: 100%; justify-self: center">
+          @if (acceso.permite('asignar_documento_admision')) {
+<mat-form-field style="width: 100%; justify-self: center">
             <mat-label>{{
               "documento_proyecto.documento_proyecto" | translate
             }}</mat-label>
@@ -34,6 +35,7 @@
               }}</mat-error>
             }
           </mat-form-field>
+}
         </section>
         <section>
           <!-- TITLE SECTION -->
@@ -76,7 +78,7 @@
                   {{ "documento_proyecto.obligatorio" | translate }}
                 </th>
                 <td mat-cell *matCellDef="let row">
-                  <doc-programa-obligatorio
+                  <doc-programa-obligatorio [puedeEditar]="acceso.permite('editar_obligatoriedad_documento_admision')"
                     [value]="row.Obligatorio"
                     [rowData]="row"
                     (checkboxVal)="handleCheckboxChange($event)"
@@ -93,13 +95,15 @@
                   {{ "GLOBAL.eliminar" | translate }}
                 </th>
                 <td mat-cell *matCellDef="let row">
-                  <button
+                  @if (acceso.permite('retirar_documento_admision')) {
+                    <button
                     mat-icon-button
                     color="warn"
                     (click)="onDeleteDocument({ data: row })"
                     >
                     <mat-icon fontIcon="delete"></mat-icon>
                   </button>
+                  }
                 </td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="sourceColumns"></tr>
@@ -119,7 +123,8 @@
             </mat-paginator>
           </div>
           <!-- BOTON -->
-          <button
+          @if (acceso.permite('ver_documentos_admision')) {
+            <button
             class="boton-primary m-20"
             mat-flat-button
             color="primary"
@@ -129,6 +134,7 @@
             >
             {{ "documento_proyecto.administrar_documento" | translate }}
           </button>
+          }
         </section>
       </main>
     </mat-card-content>
@@ -137,7 +143,7 @@
   <!-- LISTA DE DOCUMENTOS DE PROYECTO -->
   @if (administrar_documentos) {
     <mat-card-content>
-      <ngx-list-documento-proyecto
+      <ngx-list-documento-proyecto [acceso]="acceso"
         (retorno)="retorno($event)"
         >
       </ngx-list-documento-proyecto>

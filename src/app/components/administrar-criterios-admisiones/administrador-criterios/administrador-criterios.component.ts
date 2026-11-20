@@ -1,3 +1,5 @@
+import { inject } from '@angular/core';
+import { AccesoConfiguracionAdmisionService, PERMISOS_CONFIGURACION } from 'src/app/services/acceso-configuracion-admision.service';
 import { MatSort } from "@angular/material/sort";
 import { Criterio } from "src/app/models/admision/criterio";
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
@@ -8,7 +10,7 @@ import { MatDialogConfig, MatDialog } from "@angular/material/dialog";
 import { LangChangeEvent, TranslateService } from "@ngx-translate/core";
 import { DialogoCriteriosComponent } from "../dialogo-criterios/dialogo-criterios.component";
 import { EvaluacionInscripcionService } from "src/app/services/evaluacion_inscripcion.service";
-import { catchError, forkJoin, Observable } from "rxjs";
+import { EMPTY, catchError, forkJoin, Observable } from "rxjs";
 
 @Component({
     selector: "ngx-administrador-criterios",
@@ -17,6 +19,7 @@ import { catchError, forkJoin, Observable } from "rxjs";
     standalone: false
 })
 export class AdministradorCriteriosComponent implements OnInit {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear(PERMISOS_CONFIGURACION.criterios);
   criterios!: Criterio[];
   criterioSettings: any;
   subcriterioSettings: any;
@@ -26,7 +29,14 @@ export class AdministradorCriteriosComponent implements OnInit {
   dialogConfig!: MatDialogConfig;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  criterioColumn = ["nombre", "descripcion", "asistencia", "acciones"];
+  get criterioColumn() {
+    return ['nombre', 'descripcion', 'asistencia',
+      ...(this.acceso.permite('editar_criterio_admision') || this.acceso.permite('desactivar_criterio_admision') ? ['acciones'] : [])];
+  }
+  get subcriterioColumn() {
+    return ['nombre', 'descripcion', 'asistencia',
+      ...(this.acceso.permite('editar_subcriterio_admision') || this.acceso.permite('desactivar_subcriterio_admision') ? ['acciones'] : [])];
+  }
   constructor(
     private dialog: MatDialog,
     private popUpManager: PopUpManager,
@@ -96,6 +106,7 @@ export class AdministradorCriteriosComponent implements OnInit {
   }
 
   agregarCriterio() {
+    if (!this.acceso.validar('crear_criterio_admision')) return;
     // Verifica el tamaño de la pantalla
     if (window.innerWidth < 600) {
       // Configuración para dispositivos móviles
@@ -107,12 +118,15 @@ export class AdministradorCriteriosComponent implements OnInit {
       this.dialogConfig.maxHeight = "80%";
     }
     this.dialogConfig.data = {};
+    this.dialogConfig.data.acceso = this.acceso;
+    this.dialogConfig.data.permiso = 'crear_criterio_admision';
     const criterioDialog = this.dialog.open(
       DialogoCriteriosComponent,
       this.dialogConfig
     );
     criterioDialog.afterClosed().subscribe((criterio: Criterio) => {
       if (criterio) {
+        if (!this.acceso.validar('crear_criterio_admision')) return;
         this.admisiones
           .post("requisito", criterio)
           .pipe(
@@ -120,7 +134,7 @@ export class AdministradorCriteriosComponent implements OnInit {
               this.popUpManager.showErrorToast(
                 this.translate.instant("admision.error_registro_criterio")
               );
-              throw error;
+              return EMPTY;
             })
           )
           .subscribe((response: any) => {
@@ -135,8 +149,8 @@ export class AdministradorCriteriosComponent implements OnInit {
               });
             }
 
-            const updateTable = () => {
-              const newCriterio: Criterio = { ...response, Subcriterios: [] };
+            const updateTable = (subcriterios: Criterio[] = []) => {
+              const newCriterio: Criterio = { ...response, Subcriterios: subcriterios };
               this.criterios.unshift(newCriterio);
               this.criterioSource.data = this.criterios;
               this.cdr.detectChanges();
@@ -152,11 +166,14 @@ export class AdministradorCriteriosComponent implements OnInit {
                     this.popUpManager.showErrorToast(
                       this.translate.instant("admision.error_registro_criterio")
                     );
-                    throw error;
+                    // El padre ya existe aunque falle alguno de sus hijos.
+                    // Recargar evita ocultarlo e inducir una creación duplicada.
+                    this.ngOnInit();
+                    return EMPTY;
                   })
                 )
-                .subscribe(() => {
-                  updateTable();
+                .subscribe((subcriterios) => {
+                  updateTable(subcriterios);
                 });
             } else {
               // Si no hay subcriterios, simplemente actualiza la tabla
@@ -168,17 +185,24 @@ export class AdministradorCriteriosComponent implements OnInit {
   }
 
   editarCriterio(event: any) {
+    if (!this.acceso.validar('editar_criterio_admision')) return;
     this.dialogConfig.data = { oldCriterio: event.data };
+    this.dialogConfig.data.acceso = this.acceso;
+    this.dialogConfig.data.permiso = 'editar_criterio_admision';
     const criterioDialog = this.dialog.open(
       DialogoCriteriosComponent,
       this.dialogConfig
     );
     criterioDialog.afterClosed().subscribe((criterio: Criterio) => {
       if (criterio) {
+        if (!this.acceso.validar('editar_criterio_admision')) return;
         this.admisiones.put("requisito", criterio).subscribe(
           (response: any) => {
-            const updatedCriterio: Criterio = <Criterio>response;
-            // this.criterioSource.update(event.data, updatedCriterio);
+            Object.assign(event.data, criterio, response, {
+              Subcriterios: event.data.Subcriterios ?? [],
+            });
+            this.criterioSource.data = [...this.criterios];
+            this.cdr.detectChanges();
             this.popUpManager.showSuccessAlert(
               this.translate.instant("admision.criterio_modificado")
             );
@@ -194,12 +218,14 @@ export class AdministradorCriteriosComponent implements OnInit {
   }
 
   inactivarCriterio(event: any) {
+    if (!this.acceso.validar('desactivar_criterio_admision')) return;
     this.popUpManager
       .showConfirmAlert(
         this.translate.instant("admision.seguro_inactivar_criterio")
       )
       .then((willDelete: any) => {
         if (willDelete.value) {
+          if (!this.acceso.validar('desactivar_criterio_admision')) return;
           const criterio = <Criterio>event.data;
           this.criterios;
           criterio.Activo = false;
@@ -235,19 +261,22 @@ export class AdministradorCriteriosComponent implements OnInit {
   }
 
   agregarSubcriterio(event: any, criterio: Criterio) {
+    if (!this.acceso.validar('crear_subcriterio_admision')) return;
     this.dialogConfig.data = { sub: true };
+    this.dialogConfig.data.acceso = this.acceso;
+    this.dialogConfig.data.permiso = 'crear_subcriterio_admision';
     const criterioDialog = this.dialog.open(
       DialogoCriteriosComponent,
       this.dialogConfig
     );
     criterioDialog.afterClosed().subscribe((subCriterio: Criterio) => {
       if (subCriterio) {
+        if (!this.acceso.validar('crear_subcriterio_admision')) return;
         subCriterio.RequisitoPadreId = { Id: criterio.Id };
         this.admisiones.post("requisito", subCriterio).subscribe(
           (response: any) => {
             const newSubcriterio: Criterio = <Criterio>response;
-            criterio.Subcriterios.unshift(newSubcriterio);
-            criterio.Subcriterios = criterio.Subcriterios;
+            criterio.Subcriterios = [newSubcriterio, ...(criterio.Subcriterios ?? [])];
             const foundCriterio = this.criterios.find(
               (c) => c.Id === criterio.Id
             );
@@ -270,15 +299,26 @@ export class AdministradorCriteriosComponent implements OnInit {
   }
 
   editarSubcriterio(event: any) {
+    if (!this.acceso.validar('editar_subcriterio_admision')) return;
     this.dialogConfig.data = { oldCriterio: event.data, sub: true };
+    this.dialogConfig.data.acceso = this.acceso;
+    this.dialogConfig.data.permiso = 'editar_subcriterio_admision';
     const subcriterioDialog = this.dialog.open(
       DialogoCriteriosComponent,
       this.dialogConfig
     );
     subcriterioDialog.afterClosed().subscribe((subcriterio: Criterio) => {
-      if (subcriterio !== undefined) {
+      if (subcriterio) {
+        if (!this.acceso.validar('editar_subcriterio_admision')) return;
         this.admisiones.put("requisito", subcriterio).subscribe(
           (response: any) => {
+            Object.assign(event.data, subcriterio, response);
+            const padre = this.criterios.find(c =>
+              c.Subcriterios?.some(sub => sub.Id === subcriterio.Id)
+            );
+            if (padre) padre.Subcriterios = [...padre.Subcriterios];
+            this.criterioSource.data = [...this.criterios];
+            this.cdr.detectChanges();
             this.popUpManager.showSuccessAlert(
               this.translate.instant("admision.criterio_modificado")
             );
@@ -294,6 +334,7 @@ export class AdministradorCriteriosComponent implements OnInit {
   }
 
   eliminarSubcriterio(criterio: Criterio, subCriterio: Criterio) {
+    if (!this.acceso.validar('desactivar_subcriterio_admision')) return;
     subCriterio.Activo = false;
     this.admisiones.put("requisito", subCriterio).subscribe(
       (response: any) => {

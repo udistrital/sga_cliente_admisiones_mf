@@ -25,7 +25,7 @@ export class AuthGuard implements CanActivate {
 
     const path = route.data['menuUrl'] ?? destinoConBase;
 
-    if (route.data['catalogoTiposInscripcion'] || route.data['catalogoTiposCupos']) {
+    if (route.data['catalogoTiposInscripcion'] || route.data['catalogoTiposCupos'] || route.data['configuracionAdmision']) {
       const roles = getRolesUsuario();
 
       const rolPermitido = route.data['requiereEscritura']

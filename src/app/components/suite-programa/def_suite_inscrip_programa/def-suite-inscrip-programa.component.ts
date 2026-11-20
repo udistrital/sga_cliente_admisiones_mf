@@ -1,3 +1,5 @@
+import { inject } from '@angular/core';
+import { AccesoConfiguracionAdmisionService, PERMISOS_CONFIGURACION } from 'src/app/services/acceso-configuracion-admision.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
@@ -23,6 +25,7 @@ import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-pro
     standalone: false
 })
 export class DefSuiteInscripProgramaComponent implements OnInit {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear(PERMISOS_CONFIGURACION.suite);
 
   loading: boolean = false;
 
@@ -413,7 +416,12 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
     }
   }
 
+  get puedeModificarSuite(): boolean {
+    return this.acceso.permite(this.nuevaSuite ? 'crear_suite_admision' : 'editar_suite_admision');
+  }
+
   clickTag(tag:any) {
+    if (!this.puedeModificarSuite) return;
     switch (tag) {
       case 'info_persona':
         this.tagsObject.info_persona.selected = !this.tagsObject.info_persona.selected;
@@ -469,6 +477,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   }
 
   async guardar() {
+    if (!this.acceso.validar(this.nuevaSuite ? 'crear_suite_admision' : 'editar_suite_admision')) return;
     if (this.periodo && this.nivel && this.facultad && this.proyecto && this.tipoInscrip) {
       const tagsPayload = this.prepararTagsParaGuardar();
       if (this.nuevaSuite) {
@@ -516,6 +525,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   }
 
   async postTags(dataJson:any) {
+    if (!this.acceso.validar('crear_suite_admision')) return;
     this.popUpManager.showConfirmAlert(this.translate.instant('admision.guardar_suite_inscripción'), this.translate.instant('admision.definicion_suite_inscripcion_programa'))
       .then(async (Accion) => {
         if (Accion.value) {
@@ -526,6 +536,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   }
 
   crearTags(dataJson: any) {
+    if (!this.acceso.validar('crear_suite_admision')) return;
     return new Promise((resolve, reject) => {
       this.sgaMidAdmisiones.post('admision/suite', dataJson)
         .subscribe({
@@ -554,6 +565,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   }
 
   putTags(dataJson:any) {
+    if (!this.acceso.validar('editar_suite_admision')) return;
     this.popUpManager.showConfirmAlert(this.translate.instant('admision.cambios_suite_inscripción'), this.translate.instant('admision.definicion_suite_inscripcion_programa'))
       .then(async (Accion) => {
         if (Accion.value) {
@@ -564,6 +576,7 @@ export class DefSuiteInscripProgramaComponent implements OnInit {
   }
 
   actualizarTags(dataJson: any) {
+    if (!this.acceso.validar('editar_suite_admision')) return;
     return new Promise((resolve, reject) => {
       const id = dataJson.Id;
       this.sgaMidAdmisiones.put('admision/suite/', dataJson)

@@ -20,7 +20,7 @@
       <td mat-cell *matCellDef="let row">
         <mat-form-field>
           <mat-label>{{ "admision.porcentaje" | translate }}</mat-label>
-          <input matInput type="number" [(ngModel)]="row.Porcentaje" />
+          <input [readonly]="!data.acceso?.permite('asignar_criterios_admision')" matInput type="number" [(ngModel)]="row.Porcentaje" />
         </mat-form-field>
       </td>
     </ng-container>
@@ -45,7 +45,8 @@
   <button mat-button (click)="onCancel()">
     {{ "GLOBAL.cancelar" | translate }}
   </button>
-  <button
+  @if (data.acceso?.permite('asignar_criterios_admision')) {
+<button
     mat-flat-button
     color="accent"
     (click)="onSave()"
@@ -53,4 +54,5 @@
   >
     {{ "GLOBAL.guardar" | translate }}
   </button>
+}
 </div>
