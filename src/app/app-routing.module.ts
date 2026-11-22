@@ -119,8 +119,11 @@ const rawRoutes: Routes = [
     },
   },
   {
-    path:"listado-pregrado", 
+    path: 'listado-pregrado',
     component: ListadoAspirantesPregradoComponent,
+    data: {
+      menuUrl: '/admisiones/listado-pregrado',
+    },
   },
   {
     path:"snp", 

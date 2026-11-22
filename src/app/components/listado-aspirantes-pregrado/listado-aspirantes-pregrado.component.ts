@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
 import { OikosService } from 'src/app/services/oikos.service';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { ParametrosService } from 'src/app/services/parametros.service';
@@ -13,15 +12,6 @@ import { MatSort } from '@angular/material/sort';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
-
-interface Tile {
-  color: string;
-  textColor: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
-
 
 @Component({
     selector: 'ngx-listado-aspirantes-pregrado',
@@ -34,7 +24,6 @@ export class ListadoAspirantesPregradoComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  formulario: boolean = false;
   dataSource!: MatTableDataSource<any>;
 
   public editingRowId: number | null = null;
@@ -63,21 +52,7 @@ export class ListadoAspirantesPregradoComponent {
     validatorPeriodo: ['', Validators.required],
     validatorFacultad: ['', Validators.required],
   });
-  secondFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
-  });
   isLinear = true;
-
-  tiles: Tile[] = [
-    { text: '0', cols: 7, rows: 1, color: '#03678F', textColor: 'white' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-  ];
 
   proyectosCurriculares!: any[]
   periodos!: any[]
@@ -105,7 +80,6 @@ export class ListadoAspirantesPregradoComponent {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private dialog: MatDialog,
     private translate: TranslateService,
     private oikosService: OikosService,
     private parametrosService: ParametrosService,
@@ -358,13 +332,11 @@ export class ListadoAspirantesPregradoComponent {
         this.loading = false;
       }
       this.editingRowId = null;
-      this.formulario = false;
       this.cambiarEstado(orden, false)
     } else {
       const row = this.inscritosData.find(item => item.numeral === orden);
       this.valorOriginal = row.snp;
       this.editingRowId = orden;
-      this.formulario = true;
       this.cambiarEstado(orden, true)
     }
   }

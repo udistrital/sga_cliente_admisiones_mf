@@ -2813,7 +2813,8 @@
     "inscrito_ob": "Inscrito con observación: ",
     "total": "Total aspirantes: ",
     "acciones": "Acciones",
-    "consultar_general": "Consultar general"
+    "consultar_general": "Consultar general",
+    "acciones_aria": "Menú de acciones de la fila"
   },
   "cargue_snp": {
     "tabla_resumen": "Resumen SNP",
