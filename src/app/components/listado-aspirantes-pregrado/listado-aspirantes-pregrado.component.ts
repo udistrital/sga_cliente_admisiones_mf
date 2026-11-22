@@ -192,43 +192,49 @@ export class ListadoAspirantesPregradoComponent {
     this.reiniciarDatosTablas();
     this.sgaAdmisionService.get("admision/listadoaspirantegeneral/id_periodo?id_periodo=" + this.firstFormGroup.get('validatorPeriodo')?.value)
       .subscribe((response: any) => {
-        if (response.Success == true && response.Status == 200) {
-          const pregrado = response.Data.filter((inscripcion: any) => inscripcion.TipoInscripcionId?.NivelId === 1);
-          if (pregrado.length === 0) {
+        try {
+          if (response.Success == true && response.Status == 200) {
+            const data: any[] = Array.isArray(response.Data) ? response.Data : [];
+            const pregrado = data.filter((inscripcion: any) => inscripcion.TipoInscripcionId?.NivelId === 1);
+            if (pregrado.length === 0) {
+              this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
+              this.loading = false;
+              return;
+            }
+            pregrado.forEach((inscripcion: any, index: number) => {
+              this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
+              const inscritoData = {
+                "persona_id": inscripcion.PersonaId,
+                "inscripcion_id": inscripcion.Id,
+                "inscripcion_pregrado_id": inscripcion.Id,
+                "numeral": index + 1,
+                "credencial": 123,
+                "num_doc_icfes": inscripcion.examenEstado[0].NumeroIdentificacionIcfes,
+                "num_doc_actual": inscripcion.Persona.Data.NumeroIdentificacion,
+                "nombre_completo": inscripcion.Persona.Data.NombreCompleto,
+                "telefono": inscripcion.Persona.Data.Telefono,
+                "correo": inscripcion.Persona.Data.UsuarioWSO2,
+                "cod_proyecto": inscripcion.ProgramaAcademicoId,
+                "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
+                "puntaje": inscripcion.NotaFinal,
+                "estado_inscripcion": inscripcion.EstadoInscripcionId.Nombre,
+                "estado_recibo": "Pagado",
+                "snp": inscripcion.examenEstado[0].CodigoIcfes,
+                "estado_edicion": false
+              }
+              this.inscritosData.push(inscritoData);
+            });
+            this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+            stepper.next();
+            this.loading = false;
+          } else {
             this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
             this.loading = false;
-            return;
           }
-          pregrado.forEach((inscripcion: any, index: number) => {
-            this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
-            const inscritoData = {
-              "persona_id": inscripcion.PersonaId,
-              "inscripcion_id": inscripcion.Id,
-              "inscripcion_pregrado_id": inscripcion.Id,
-              "numeral": index + 1,
-              "credencial": 123,
-              "num_doc_icfes": inscripcion.examenEstado[0].NumeroIdentificacionIcfes,
-              "num_doc_actual": inscripcion.Persona.Data.NumeroIdentificacion,
-              "nombre_completo": inscripcion.Persona.Data.NombreCompleto,
-              "telefono": inscripcion.Persona.Data.Telefono,
-              "correo": inscripcion.Persona.Data.UsuarioWSO2,
-              "cod_proyecto": inscripcion.ProgramaAcademicoId,
-              "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
-              "puntaje": inscripcion.NotaFinal,
-              "estado_inscripcion": inscripcion.EstadoInscripcionId.Nombre,
-              "estado_recibo": "Pagado",
-              "snp": inscripcion.examenEstado[0].CodigoIcfes,
-              "estado_edicion": false
-            }
-            this.inscritosData.push(inscritoData);
-          });
-          this.dataSource = new MatTableDataSource<any>(this.inscritosData);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          stepper.next();
-          this.loading = false;
-        } else {
-          this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
+        } catch (e) {
+          console.error(e);
           this.loading = false;
         }
       })
