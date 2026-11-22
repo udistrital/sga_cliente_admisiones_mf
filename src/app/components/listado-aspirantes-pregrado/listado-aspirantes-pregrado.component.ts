@@ -193,9 +193,13 @@ export class ListadoAspirantesPregradoComponent {
     this.sgaAdmisionService.get("admision/listadoaspirantegeneral/id_periodo?id_periodo=" + this.firstFormGroup.get('validatorPeriodo')?.value)
       .subscribe((response: any) => {
         if (response.Success == true && response.Status == 200) {
-          response.Data
-            .filter((inscripcion: any) => inscripcion.TipoInscripcionId?.NivelId === 1)
-            .forEach((inscripcion: any, index: number) => {
+          const pregrado = response.Data.filter((inscripcion: any) => inscripcion.TipoInscripcionId?.NivelId === 1);
+          if (pregrado.length === 0) {
+            this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
+            this.loading = false;
+            return;
+          }
+          pregrado.forEach((inscripcion: any, index: number) => {
             this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
             const inscritoData = {
               "persona_id": inscripcion.PersonaId,
