@@ -3,6 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { OikosService } from 'src/app/services/oikos.service';
+import { getRolesUsuario } from 'src/utils/auth.util';
+import { PermisosUtils } from 'src/utils/role-permissions';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
@@ -78,6 +80,13 @@ export class ListadoAspirantesPregradoComponent {
 
   loading: boolean = false
 
+  readonly opcionesPermisos = [
+    'descargar_snp_listado_pregrado',
+    'editar_snp_listado_pregrado',
+  ];
+  permisos: Record<string, boolean> = {};
+  permisosListos = false;
+
   constructor(
     private _formBuilder: FormBuilder,
     private translate: TranslateService,
@@ -87,17 +96,37 @@ export class ListadoAspirantesPregradoComponent {
     private terceroMidService: TerceroMidService,
     private projectService: ProyectoAcademicoService,
     private sgaAdmisionService: SgaAdmisionesMid,
-    private popUpManager: PopUpManager
+    private popUpManager: PopUpManager,
+    private permisosUtils: PermisosUtils,
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
     });
   }
 
   async ngOnInit() {
+    this.cargarPermisos();
     this.loading = true;
     await this.cargarSelects();
     this.loading = false;
   }
+
+  private cargarPermisos(): void {
+    this.permisosListos = false;
+    this.permisos = {};
+    this.permisosUtils
+      .obtenerPermisos(getRolesUsuario(), this.opcionesPermisos)
+      .subscribe(permisos => {
+        this.permisos = permisos;
+        this.permisosListos = true;
+      });
+  }
+
+  private tienePermiso(opcion: string): boolean {
+    return this.permisosListos && this.permisos[opcion] === true;
+  }
+
+  get puedeDescargarSnp(): boolean { return this.tienePermiso('descargar_snp_listado_pregrado'); }
+  get puedeEditarSnp(): boolean { return this.tienePermiso('editar_snp_listado_pregrado'); }
 
   async cargarSelects() {
     await this.cargarPeriodos();
