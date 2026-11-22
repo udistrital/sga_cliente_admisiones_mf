@@ -160,12 +160,11 @@ export class ListadoAspirantesPregradoComponent {
 
   async generarBusquedaGeneral(stepper: MatStepper) {
     this.loading = true;
+    this.reiniciarDatosTablas();
     this.sgaAdmisionService.get("admision/listadoaspirantegeneral/id_periodo?id_periodo=" + this.firstFormGroup.get('validatorPeriodo')?.value)
       .subscribe((response: any) => {
         if (response.success == true && response.status == 200) {
           response.data.forEach(async (inscripcion: any, index: number) => {
-            this.firstFormGroup.get('validatorProyecto')?.setValue(inscripcion.ProgramaAcademicoId)
-            this.firstFormGroup.get('validatorFacultad')?.setValue(inscripcion.ProgramaAcademicoId)
             this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
             const inscritoData = {
               "persona_id": inscripcion.PersonaId,
@@ -195,9 +194,9 @@ export class ListadoAspirantesPregradoComponent {
           this.loading = false;
         } else {
           this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
+          this.loading = false;
         }
       })
-    
   }
 
   async generarBusqueda(stepper: MatStepper) {
