@@ -192,8 +192,10 @@ export class ListadoAspirantesPregradoComponent {
     this.reiniciarDatosTablas();
     this.sgaAdmisionService.get("admision/listadoaspirantegeneral/id_periodo?id_periodo=" + this.firstFormGroup.get('validatorPeriodo')?.value)
       .subscribe((response: any) => {
-        if (response.success == true && response.status == 200) {
-          response.data.forEach(async (inscripcion: any, index: number) => {
+        if (response.Success == true && response.Status == 200) {
+          response.Data
+            .filter((inscripcion: any) => inscripcion.TipoInscripcionId?.NivelId === 1)
+            .forEach((inscripcion: any, index: number) => {
             this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
             const inscritoData = {
               "persona_id": inscripcion.PersonaId,
