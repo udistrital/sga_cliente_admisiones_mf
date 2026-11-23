@@ -17,6 +17,7 @@ import { DialogoDocumentosTransferenciasComponent } from './components/transfere
 import { CustomizeButtonComponent } from './components/transferencia/customize-button/customize-button.component';
 import { CrudTipoCupoComponent } from './components/asignacion-cupos-proyectos/asignacion_cupos/crud-tipo-cupo/crud-tipo-cupo.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
 import { EventEmitter, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -271,6 +272,11 @@ export function createTranslateLoader(http: HttpClient) {
             },
         }),
         CodificacionModule], providers: [
+        // Angular CDK 21 habilita por defecto la Popover API para los overlays,
+        // lo que renderiza los MatDialog en el "top layer" del navegador y deja
+        // por detrás los popups de SweetAlert2 (z-index no puede superar el top
+        // layer). Se desactiva para restaurar el comportamiento pre-Angular 21.
+        { provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } },
         MatSnackBar,
         TerceroMidService,
         InscripcionMidService,
