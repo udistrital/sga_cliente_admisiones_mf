@@ -52,11 +52,13 @@ const rawRoutes: Routes = [
   },
   {
     path:"asignacion-cupos", 
-    component: AsignacionCuposComponent
+    component: AsignacionCuposComponent,
+    data: { configuracionAdmision: true, requiereEscritura: false, menuUrl: '/admisiones/asignacion-cupos' },
   },
   {
     path:"asignacion-cupos/comentarios-cupos", 
-    component: ComentariosCuposComponent
+    component: ComentariosCuposComponent,
+    data: { configuracionAdmision: true, requiereEscritura: false, menuUrl: '/admisiones/asignacion-cupos' },
   },
   {
     path:"evaluacion-documentos-inscritos", 

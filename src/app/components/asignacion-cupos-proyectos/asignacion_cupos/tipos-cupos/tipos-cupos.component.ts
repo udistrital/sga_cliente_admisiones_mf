@@ -1,4 +1,5 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild, inject } from '@angular/core';
+import { AccesoConfiguracionAdmisionService, PERMISOS_CONFIGURACION } from 'src/app/services/acceso-configuracion-admision.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
 import { CrudTipoCupoComponent } from '../crud-tipo-cupo/crud-tipo-cupo.component';
@@ -14,6 +15,10 @@ import { AsignacionCupoService } from 'src/app/services/asignacion_cupo.service'
     standalone: false
 })
 export class TiposCuposComponent {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear([
+    ...PERMISOS_CONFIGURACION.cuposProyecto,
+    'crear_tipo_cupo', 'editar_tipo_cupo', 'desactivar_tipo_cupo', 'reactivar_tipo_cupo',
+  ]);
 
   checked = 0;
   dataSource = new MatTableDataSource();
@@ -54,12 +59,14 @@ export class TiposCuposComponent {
 
   onAction(event: any) {
     if (event.action == 'crear') {
+      if (!this.acceso.validar('crear_tipo_cupo')) return;
       this.dialogService.open(CrudTipoCupoComponent, {
         width: '500px',
       });
     }
 
     if (event.action == 'edit') {
+      if (!this.acceso.validar('editar_tipo_cupo')) return;
 
       this.dialogService.open(CrudTipoCupoComponent, {
         width: '500px',
@@ -67,6 +74,7 @@ export class TiposCuposComponent {
        });
 
     } else if (event.action == 'delete') {
+      if (!this.acceso.validar(event.data.Activo ? 'desactivar_tipo_cupo' : 'reactivar_tipo_cupo')) return;
       event.data.Activo = !event.data.Activo
       this.parametroService.put("parametro/", event.data).subscribe((response: any) => {
         if (response.Status == '200' && response.Success == true) {
@@ -86,6 +94,7 @@ export class TiposCuposComponent {
   }
 
   onCheckboxChange(event: Event, cupo: any) {
+    if (!this.acceso.validar('asignar_cupos_proyecto')) return;
     const inputElement = event.target as HTMLInputElement;
 
     if (this.checked == 0) {
@@ -98,6 +107,7 @@ export class TiposCuposComponent {
     }
   }
   onYesClick(): void {
+    if (!this.acceso.validar('asignar_cupos_proyecto')) return;
     const dataResult: any[] = [];
     this.dataSource.data.forEach((element: any) => {
       if (element.check == true) {

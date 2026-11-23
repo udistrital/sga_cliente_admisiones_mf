@@ -5,13 +5,16 @@
         &nbsp;<strong>Soporte Cupo Inscripción</strong>
       </legend>
     </div>
+    @if (data?.soloSeleccion) {
+      <p>Seleccione un PDF y escriba un comentario. Esta selección es temporal y todavía no se guarda en el servidor.</p>
+    }
     <mat-card class="mt-20">
       <mat-card-content class="mt-20">
         <mat-form-field class="form-item" style="width: 100%;">
           <mat-label>
             Comentario
           </mat-label>
-          <input type="text" matInput [formControl]="comentario" [value]="comentario.value" [disabled]="true">
+          <input type="text" matInput [formControl]="comentario" [readonly]="!acceso.permite('cargar_soporte_cupo_proyecto')">
           @if (comentario.hasError('required')) {
             <mat-error>
               por favor ingrese un comentario
@@ -19,16 +22,19 @@
           }
         </mat-form-field>
         <div class="mt-20">
-          <input  mat-flat-button color="accent"  type="file" accept=".pdf" (change)="onFileSelected($event)" />
+          <input mat-flat-button color="accent" type="file" accept=".pdf" [disabled]="!acceso.permite('cargar_soporte_cupo_proyecto')" (change)="onFileSelected($event)" />
         </div>
+        @if (errorMessage) { <p role="alert">{{ errorMessage }}</p> }
+        @if (selectedFile) { <p>{{ selectedFile.name }}</p> }
         <br>
         </mat-card-content>
       </mat-card>
 
       <mat-card-content class="mt-20">
         <div style="display: flex; justify-content: center;">
-          <button mat-flat-button color="accent" type="button" (click)="validarInputs()">
-            {{'GLOBAL.guardar' | translate}}
+          <button mat-button type="button" mat-dialog-close>{{ 'GLOBAL.cancelar' | translate }}</button>
+          <button mat-flat-button color="accent" type="button" [disabled]="leyendoArchivo || !base64String || comentario.invalid || !comentario.value?.trim() || !acceso.permite('cargar_soporte_cupo_proyecto')" (click)="validarInputs()">
+            {{ data?.soloSeleccion ? 'Usar selección' : ('GLOBAL.guardar' | translate) }}
           </button>
         </div>
       </mat-card-content>
