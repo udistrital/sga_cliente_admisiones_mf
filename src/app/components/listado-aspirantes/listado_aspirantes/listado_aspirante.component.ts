@@ -21,7 +21,8 @@ import { Store } from "@ngrx/store";
 import { ListService } from "src/app/store/services/list.service";
 import { SgaAdmisionesMid } from "src/app/services/sga_admisiones_mid.service";
 import { UserService } from "src/app/services/users.service";
-import { ImplicitAutenticationService } from "src/app/services/implicit_autentication.service";
+import { getRolesUsuario } from "src/utils/auth.util";
+import { PermisosUtils } from "src/utils/role-permissions";
 import {
   Destination,
   EmailTemplated,
@@ -160,6 +161,15 @@ export class ListadoAspiranteComponent implements OnInit {
   Campo1Control = new FormControl({ value: null, disabled: true }, [Validators.required]);
   Campo2Control = new FormControl("", [Validators.required]);
   cuposAsignados: number = 0;
+
+  readonly opcionesPermisos = [
+    'asignacion_automatica_listado_aspirantes',
+    'descargar_csv_listado_aspirantes',
+    'editar_inscripcion_listado_aspirantes',
+  ];
+  permisos: Record<string, boolean> = {};
+  permisosListos = false;
+
   constructor(
     private translate: TranslateService,
     private projectService: ProyectoAcademicoService,
@@ -175,7 +185,7 @@ export class ListadoAspiranteComponent implements OnInit {
     private listService: ListService,
     private sgaMidAdmisioens: SgaAdmisionesMid,
     private userService: UserService,
-    private autenticationService: ImplicitAutenticationService,
+    private permisosUtils: PermisosUtils,
     private notificacionesMidService: NotificacionesMidService
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -207,6 +217,7 @@ export class ListadoAspiranteComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.cargarPermisos();
     this.loadLists();
     this.cargarPeriodo();
     this.nivel_load();
@@ -214,6 +225,25 @@ export class ListadoAspiranteComponent implements OnInit {
     this.source_emphasys = new MatTableDataSource([]);
     this.updateNextSelectAvailability();
   }
+
+  private cargarPermisos(): void {
+    this.permisosListos = false;
+    this.permisos = {};
+    this.permisosUtils
+      .obtenerPermisos(getRolesUsuario(), this.opcionesPermisos)
+      .subscribe(permisos => {
+        this.permisos = permisos;
+        this.permisosListos = true;
+      });
+  }
+
+  private tienePermiso(opcion: string): boolean {
+    return this.permisosListos && this.permisos[opcion] === true;
+  }
+
+  get puedeAsignacionAutomatica(): boolean { return this.tienePermiso('asignacion_automatica_listado_aspirantes'); }
+  get puedeDescargarCsv(): boolean { return this.tienePermiso('descargar_csv_listado_aspirantes'); }
+  get puedeEditar(): boolean { return this.tienePermiso('editar_inscripcion_listado_aspirantes'); }
 
   private updateNextSelectAvailability() {
     if (this.periodo) {
@@ -483,58 +513,55 @@ export class ListadoAspiranteComponent implements OnInit {
         .get("proyecto_academico_institucion?limit=0")
         .subscribe(
           (response: any) => {
-            this.autenticationService.getRole().then(
-              (rol: any) => {
-                let r = rol.find(
-                  (role: any) =>
-                    role == "ADMIN_SGA" ||
-                    role == "VICERRECTOR" ||
-                    role == "ASESOR_VICE"
-                );
-                if (r) {
-                  this.proyectos = <any[]>(
-                    response.filter((proyecto: any) =>
-                      this.filtrarProyecto(proyecto)
-                    )
-                  );
-                  this.updateNextSelectAvailability();
-                } else {
-                  const id_tercero = this.userService.getPersonaId();
-                  this.sgaMidAdmisioens
-                    .get<RespFormat<DependenciasVinculacionTercero>>(
-                      "admision/dependencia_vinculacion_tercero/" + id_tercero
-                    )
-                    .subscribe(
-                      (respDependencia) => {
-                        const dependencias = respDependencia.Data.DependenciaId;
-                        this.proyectos = <any[]>(
-                          response.filter((proyecto: any) =>
-                            dependencias.includes(proyecto.DependenciaId)
-                          )
-                        );
-                        if (dependencias.length > 1) {
-                          this.popUpManager.showAlert(
-                            this.translate.instant("GLOBAL.info"),
-                            this.translate.instant(
-                              "admision.multiple_vinculacion"
-                            )
-                          ); 
-                        }
-                        this.updateNextSelectAvailability();
-                      },
-                      (error: any) => {
-                        this.popUpManager.showErrorAlert(
-                          this.translate.instant(
-                            "admision.no_vinculacion_no_rol"
-                          ) +
-                            ". " +
-                            this.translate.instant("GLOBAL.comunicar_OAS_error")
-                        );
-                      }
-                    );
-                }
-              }
+            const roles = getRolesUsuario();
+            const isAdmin = roles.some(
+              (role) =>
+                role === "ADMIN_SGA" ||
+                role === "VICERRECTOR" ||
+                role === "ASESOR_VICE"
             );
+            if (isAdmin) {
+              this.proyectos = <any[]>(
+                response.filter((proyecto: any) =>
+                  this.filtrarProyecto(proyecto)
+                )
+              );
+              this.updateNextSelectAvailability();
+            } else {
+              const id_tercero = this.userService.getPersonaId();
+              this.sgaMidAdmisioens
+                .get<RespFormat<DependenciasVinculacionTercero>>(
+                  "admision/dependencia_vinculacion_tercero/" + id_tercero
+                )
+                .subscribe(
+                  (respDependencia) => {
+                    const dependencias = respDependencia.Data.DependenciaId;
+                    this.proyectos = <any[]>(
+                      response.filter((proyecto: any) =>
+                        dependencias.includes(proyecto.DependenciaId)
+                      )
+                    );
+                    if (dependencias.length > 1) {
+                      this.popUpManager.showAlert(
+                        this.translate.instant("GLOBAL.info"),
+                        this.translate.instant(
+                          "admision.multiple_vinculacion"
+                        )
+                      );
+                    }
+                    this.updateNextSelectAvailability();
+                  },
+                  (error: any) => {
+                    this.popUpManager.showErrorAlert(
+                      this.translate.instant(
+                        "admision.no_vinculacion_no_rol"
+                      ) +
+                        ". " +
+                        this.translate.instant("GLOBAL.comunicar_OAS_error")
+                    );
+                  }
+                );
+            }
           },
           (error) => {
             this.popUpManager.showErrorToast(

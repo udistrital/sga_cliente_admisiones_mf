@@ -215,7 +215,6 @@ export function createTranslateLoader(http: HttpClient) {
         CrudListadosOficializadosComponent,
         ListadoOficializadosComponent,
         ListadoAdmitidosComponent,
-        ListadoAspiranteComponent,
         TablaListadoAspirantesComponent,
         PreinscripcionProyectosCurricularesComponent,
         SubcriteriosDialogComponent,

@@ -2,8 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
 import { OikosService } from 'src/app/services/oikos.service';
+import { getRolesUsuario } from 'src/utils/auth.util';
+import { PermisosUtils } from 'src/utils/role-permissions';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
@@ -13,15 +14,6 @@ import { MatSort } from '@angular/material/sort';
 import { ProyectoAcademicoService } from 'src/app/services/proyecto_academico.service';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
 import { TerceroMidService } from 'src/app/services/sga_tercero_mid.service';
-
-interface Tile {
-  color: string;
-  textColor: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
-
 
 @Component({
     selector: 'ngx-listado-aspirantes-pregrado',
@@ -34,7 +26,6 @@ export class ListadoAspirantesPregradoComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  formulario: boolean = false;
   dataSource!: MatTableDataSource<any>;
 
   public editingRowId: number | null = null;
@@ -63,21 +54,7 @@ export class ListadoAspirantesPregradoComponent {
     validatorPeriodo: ['', Validators.required],
     validatorFacultad: ['', Validators.required],
   });
-  secondFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
-  });
   isLinear = true;
-
-  tiles: Tile[] = [
-    { text: '0', cols: 7, rows: 1, color: '#03678F', textColor: 'white' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-    { text: '0', cols: 1, rows: 2, color: 'white', textColor: 'black' },
-  ];
 
   proyectosCurriculares!: any[]
   periodos!: any[]
@@ -103,9 +80,15 @@ export class ListadoAspirantesPregradoComponent {
 
   loading: boolean = false
 
+  readonly opcionesPermisos = [
+    'descargar_snp_listado_pregrado',
+    'editar_snp_listado_pregrado',
+  ];
+  permisos: Record<string, boolean> = {};
+  permisosListos = false;
+
   constructor(
     private _formBuilder: FormBuilder,
-    private dialog: MatDialog,
     private translate: TranslateService,
     private oikosService: OikosService,
     private parametrosService: ParametrosService,
@@ -113,17 +96,37 @@ export class ListadoAspirantesPregradoComponent {
     private terceroMidService: TerceroMidService,
     private projectService: ProyectoAcademicoService,
     private sgaAdmisionService: SgaAdmisionesMid,
-    private popUpManager: PopUpManager
+    private popUpManager: PopUpManager,
+    private permisosUtils: PermisosUtils,
   ) {
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
     });
   }
 
   async ngOnInit() {
+    this.cargarPermisos();
     this.loading = true;
     await this.cargarSelects();
     this.loading = false;
   }
+
+  private cargarPermisos(): void {
+    this.permisosListos = false;
+    this.permisos = {};
+    this.permisosUtils
+      .obtenerPermisos(getRolesUsuario(), this.opcionesPermisos)
+      .subscribe(permisos => {
+        this.permisos = permisos;
+        this.permisosListos = true;
+      });
+  }
+
+  private tienePermiso(opcion: string): boolean {
+    return this.permisosListos && this.permisos[opcion] === true;
+  }
+
+  get puedeDescargarSnp(): boolean { return this.tienePermiso('descargar_snp_listado_pregrado'); }
+  get puedeEditarSnp(): boolean { return this.tienePermiso('editar_snp_listado_pregrado'); }
 
   async cargarSelects() {
     await this.cargarPeriodos();
@@ -186,44 +189,55 @@ export class ListadoAspirantesPregradoComponent {
 
   async generarBusquedaGeneral(stepper: MatStepper) {
     this.loading = true;
+    this.reiniciarDatosTablas();
     this.sgaAdmisionService.get("admision/listadoaspirantegeneral/id_periodo?id_periodo=" + this.firstFormGroup.get('validatorPeriodo')?.value)
       .subscribe((response: any) => {
-        if (response.success == true && response.status == 200) {
-          response.data.forEach(async (inscripcion: any, index: number) => {
-            this.firstFormGroup.get('validatorProyecto')?.setValue(inscripcion.ProgramaAcademicoId)
-            this.firstFormGroup.get('validatorFacultad')?.setValue(inscripcion.ProgramaAcademicoId)
-            this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
-            const inscritoData = {
-              "persona_id": inscripcion.PersonaId,
-              "inscripcion_id": inscripcion.Id,
-              "inscripcion_pregrado_id": inscripcion.Id,
-              "numeral": index + 1,
-              "credencial": 123,
-              "num_doc_icfes": inscripcion.examenEstado[0].NumeroIdentificacionIcfes,
-              "num_doc_actual": inscripcion.Persona.Data.NumeroIdentificacion,
-              "nombre_completo": inscripcion.Persona.Data.NombreCompleto,
-              "telefono": inscripcion.Persona.Data.Telefono,
-              "correo": inscripcion.Persona.Data.UsuarioWSO2,
-              "cod_proyecto": inscripcion.ProgramaAcademicoId,
-              "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
-              "puntaje": inscripcion.NotaFinal,
-              "estado_inscripcion": inscripcion.EstadoInscripcionId.Nombre,
-              "estado_recibo": "Pagado",
-              "snp": inscripcion.examenEstado[0].CodigoIcfes,
-              "estado_edicion": false
+        try {
+          if (response.Success == true && response.Status == 200) {
+            const data: any[] = Array.isArray(response.Data) ? response.Data : [];
+            const pregrado = data.filter((inscripcion: any) => inscripcion.TipoInscripcionId?.NivelId === 1);
+            if (pregrado.length === 0) {
+              this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
+              this.loading = false;
+              return;
             }
-            this.inscritosData.push(inscritoData);
-          });
-          this.dataSource = new MatTableDataSource<any>(this.inscritosData);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          stepper.next();
+            pregrado.forEach((inscripcion: any, index: number) => {
+              this.cargarResumenInscripciones(inscripcion.EstadoInscripcionId.CodigoAbreviacion)
+              const inscritoData = {
+                "persona_id": inscripcion.PersonaId,
+                "inscripcion_id": inscripcion.Id,
+                "inscripcion_pregrado_id": inscripcion.Id,
+                "numeral": index + 1,
+                "credencial": 123,
+                "num_doc_icfes": inscripcion.examenEstado[0].NumeroIdentificacionIcfes,
+                "num_doc_actual": inscripcion.Persona.Data.NumeroIdentificacion,
+                "nombre_completo": inscripcion.Persona.Data.NombreCompleto,
+                "telefono": inscripcion.Persona.Data.Telefono,
+                "correo": inscripcion.Persona.Data.UsuarioWSO2,
+                "cod_proyecto": inscripcion.ProgramaAcademicoId,
+                "tipo_inscripcion": inscripcion.TipoInscripcionId.Id,
+                "puntaje": inscripcion.NotaFinal,
+                "estado_inscripcion": inscripcion.EstadoInscripcionId.Nombre,
+                "estado_recibo": "Pagado",
+                "snp": inscripcion.examenEstado[0].CodigoIcfes,
+                "estado_edicion": false
+              }
+              this.inscritosData.push(inscritoData);
+            });
+            this.dataSource = new MatTableDataSource<any>(this.inscritosData);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+            stepper.next();
+            this.loading = false;
+          } else {
+            this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
+            this.loading = false;
+          }
+        } catch (e) {
+          console.error(e);
           this.loading = false;
-        } else {
-          this.popUpManager.showAlert(this.translate.instant('admision.titulo_no_aspirantes'), this.translate.instant('admision.error_no_aspirantes'));
         }
       })
-    
   }
 
   async generarBusqueda(stepper: MatStepper) {
@@ -358,13 +372,11 @@ export class ListadoAspirantesPregradoComponent {
         this.loading = false;
       }
       this.editingRowId = null;
-      this.formulario = false;
       this.cambiarEstado(orden, false)
     } else {
       const row = this.inscritosData.find(item => item.numeral === orden);
       this.valorOriginal = row.snp;
       this.editingRowId = orden;
-      this.formulario = true;
       this.cambiarEstado(orden, true)
     }
   }

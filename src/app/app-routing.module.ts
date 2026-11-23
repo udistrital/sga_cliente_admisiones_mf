@@ -73,8 +73,11 @@ const rawRoutes: Routes = [
     component: EvalucionAspirantePregradoComponent
   },
   {
-    path:"listado-aspirantes", 
-    component: ListadoAspiranteComponent
+    path:"listado-aspirantes",
+    component: ListadoAspiranteComponent,
+    data: {
+      menuUrl: '/admisiones/listado-aspirantes',
+    },
   },
   {
     path:"lista-proyectos-aspirantes", 
@@ -116,8 +119,11 @@ const rawRoutes: Routes = [
     },
   },
   {
-    path:"listado-pregrado", 
+    path: 'listado-pregrado',
     component: ListadoAspirantesPregradoComponent,
+    data: {
+      menuUrl: '/admisiones/listado-pregrado',
+    },
   },
   {
     path:"snp", 

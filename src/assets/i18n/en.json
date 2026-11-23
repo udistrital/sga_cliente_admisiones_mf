@@ -2705,7 +2705,9 @@
         "matriculado": "Registered: ",
         "no_oficializado": "Not official: ",
         "total": "Total Applicants: ",
-        "acciones": "Actions"
+        "acciones": "Actions",
+        "consultar_general": "General consult",
+        "acciones_aria": "Row actions menu"
     },
     "cargue_snp": {
         "tabla_resumen": "Summary SNP",
