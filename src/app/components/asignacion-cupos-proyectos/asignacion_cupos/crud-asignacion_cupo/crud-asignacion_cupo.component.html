@@ -6,6 +6,7 @@
           <mat-label class="form-label">{{ 'GLOBAL.cupos_asignados' | translate }}</mat-label>
           <input matInput type="number" min="0" max="999" name="CuposAsignados"
             [(ngModel)]="formModel.CuposAsignados"
+            [readonly]="!puedeGuardar || loading"
             #CuposAsignados="ngModel"
             required
             [placeholder]="'GLOBAL.placeholder_cupos_asignados' | translate">
@@ -17,10 +18,49 @@
         }
       </div>
       <div class="col-12 actions-row">
-        <button mat-flat-button color="accent" type="submit" [disabled]="cuposForm.invalid">
+        @if (puedeGuardar) {
+        <button mat-flat-button color="accent" type="submit" [disabled]="cuposForm.invalid || loading">
           {{ 'GLOBAL.guardar' | translate }}
         </button>
+        }
       </div>
     </form>
+    @if (puedeRetirar || puedeCargarSoporte) {
+      <section class="mt-20" aria-label="Acciones sobre los cupos asignados">
+        @for (cupo of dataSource.data; track cupo.Id) {
+          <div class="asignacion-acciones">
+            <p>Cupos asignados: <strong>{{ cupo.CuposHabilitados }}</strong></p>
+            <div class="actions-row">
+              @if (puedeCargarSoporte) {
+                <button mat-flat-button color="accent" type="button" [disabled]="loading"
+                  (click)="seleccionarSoporteProyecto(cupo)">
+                  <mat-icon>attach_file</mat-icon>
+                  Cargar soporte
+                </button>
+              }
+              @if (puedeRetirar) {
+                <button mat-flat-button color="warn" type="button" [disabled]="loading"
+                  (click)="retirarCupoProyecto(cupo)">
+                  <mat-icon>delete_outline</mat-icon>
+                  Retirar cupo
+                </button>
+              }
+            </div>
+            @if (puedeCargarSoporte) {
+              <p class="soporte-aviso">El PDF y el comentario solo se seleccionan: aún no se guardan en el servidor y se pierden al recargar o cambiar de proyecto o periodo.</p>
+              @if (soportesPendientes[cupo.Id]; as soporte) {
+                <div role="status">
+                  <p><strong>Archivo seleccionado:</strong> {{ soporte.nombre }}</p>
+                  <p><strong>Comentario:</strong> {{ soporte.comentario }}</p>
+                  <p>Pendiente de guardado. El botón Guardar de cupos no guarda este soporte.</p>
+                </div>
+              }
+            }
+          </div>
+        } @empty {
+          <p>Guarde una asignación de cupos para poder retirarla o seleccionar su soporte.</p>
+        }
+      </section>
+    }
   </mat-card-content>
 </mat-card>

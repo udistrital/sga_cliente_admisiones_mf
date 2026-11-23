@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, ViewChild, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, SimpleChanges, AfterViewInit, inject } from '@angular/core';
+import { AccesoConfiguracionAdmisionService, PERMISOS_CONFIGURACION } from 'src/app/services/acceso-configuracion-admision.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { InscripcionMidService } from 'src/app/services/inscripcion_mid.service';
 import { MatPaginator } from '@angular/material/paginator';
@@ -10,7 +11,7 @@ import { NewNuxeoService } from 'src/app/services/new_nuxeo.service';
 import { PopUpManager } from 'src/app/managers/popUpManager';
 import { TranslateService } from '@ngx-translate/core';
 import { SgaAdmisionesMid } from 'src/app/services/sga_admisiones_mid.service';
-import { catchError, EMPTY, finalize, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, finalize, firstValueFrom, switchMap, tap } from 'rxjs';
 import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscripcion.service';
 
 
@@ -21,6 +22,73 @@ import { EvaluacionInscripcionService } from 'src/app/services/evaluacion_inscri
     standalone: false
 })
 export class CrudAsignacionCupoComponent implements AfterViewInit {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear(PERMISOS_CONFIGURACION.cuposProyecto);
+
+  get puedeGuardar(): boolean { return this.acceso.permite('asignar_cupos_proyecto'); }
+  get puedeRetirar(): boolean { return this.acceso.permite('retirar_cupo_proyecto'); }
+  get puedeCargarSoporte(): boolean { return this.acceso.permite('cargar_soporte_cupo_proyecto'); }
+  soportesPendientes: Record<number, { nombre: string; comentario: string; base64: string }> = {};
+
+  seleccionarSoporteProyecto(cupo: any): void {
+    if (this.loading || !this.acceso.validar('cargar_soporte_cupo_proyecto')) return;
+    if (!this.esCupoDelContexto(cupo)) return;
+    this.loading = true;
+    const dialogRef = this.dialogService.open(SoporteCupoInscripcionComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      data: { ...cupo, soloSeleccion: true },
+    });
+    dialogRef.afterClosed().pipe(finalize(() => { this.loading = false; })).subscribe({
+      next: (resultado: any) => {
+        if (!resultado?.result || !this.acceso.validar('cargar_soporte_cupo_proyecto')) return;
+        if (!this.esCupoDelContexto(cupo)) return;
+        const soporte = resultado.result;
+        if (!soporte.base64 || !soporte.comentario?.trim()) return;
+        this.soportesPendientes[cupo.Id] = {
+          nombre: soporte.nombreArchivo,
+          comentario: soporte.comentario,
+          base64: soporte.base64,
+        };
+      },
+      error: () => this.popUpManager.showErrorAlert('No fue posible seleccionar el soporte.'),
+    });
+  }
+
+  async retirarCupoProyecto(cupo: any): Promise<void> {
+    if (this.loading || !this.acceso.validar('retirar_cupo_proyecto')) return;
+    if (!this.esCupoDelContexto(cupo)) return;
+    this.loading = true;
+    try {
+      const confirmacion = await this.popUpManager.showConfirmAlert(
+        '¿Desea retirar esta asignación de cupos del proyecto y periodo seleccionados?',
+      );
+      if (!confirmacion.isConfirmed || !this.acceso.validar('retirar_cupo_proyecto')) return;
+      if (!this.esCupoDelContexto(cupo)) return;
+      const respuesta: any = await firstValueFrom(this.evaluacionService.put(
+        'cupos_por_dependencia', { ...cupo, Activo: false },
+      ));
+      if (!respuesta || respuesta.Success === false || respuesta.Type === 'error' ||
+          (respuesta.Status && Number(respuesta.Status) >= 400)) {
+        throw new Error('No se pudo retirar la asignación');
+      }
+      if (this.esCupoDelContexto(cupo)) {
+        delete this.soportesPendientes[cupo.Id];
+        await firstValueFrom(this.obtenerCupos(), { defaultValue: null });
+      }
+      this.popUpManager.showSuccessAlert('La asignación de cupos fue retirada.');
+      this.eventChange.emit(true);
+    } catch {
+      this.popUpManager.showErrorAlert('No fue posible retirar la asignación de cupos.');
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  private esCupoDelContexto(cupo: any): boolean {
+    return !!cupo?.Id && cupo.Activo !== false
+      && Number(cupo.DependenciaId) === Number(this.info_proyectos?.Id)
+      && Number(cupo.PeriodoId) === Number(this.info_periodo?.Id);
+  }
 
   cupo: any;
   cuposAdmitidos: number = 0;
@@ -73,6 +141,8 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
   }
 
   obtenerCupos() {
+    const proyectoId = this.info_proyectos?.Id;
+    const periodoId = this.info_periodo?.Id;
     if (!this.info_periodo?.Id || !this.info_proyectos?.Id) {
       this.dataSource.data = [];
       this.formModel.CuposAsignados = null;
@@ -82,9 +152,16 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
 
     return this.evaluacionService.get('cupos_por_dependencia/?query=DependenciaId:' + Number(this.info_proyectos.Id) + ',PeriodoId:' + Number(this.info_periodo.Id)).pipe(
       tap((response: any) => {
-        const data = Array.isArray(response) ? response : (response?.Data ?? []);
+        if (proyectoId !== this.info_proyectos?.Id || periodoId !== this.info_periodo?.Id) return;
+        const registros = Array.isArray(response) ? response : (response?.Data ?? []);
+        const data = registros.filter((registro: any) => registro?.Id && registro.Activo !== false);
+        this.cuposAdmitidos = 0;
+        this.cuposOpcionados = 0;
+        this.cuposDisponibles = 0;
         if (data.length === 0) {
           this.dataSource.data = [];
+          this.formModel.CuposAsignados = null;
+          this.formModel.CuposOpcionados = null;
           if (this.mostrarAlertaSinCupos && response?.Message) {
             this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), response.Message);
           }
@@ -96,7 +173,7 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
         data.forEach((element: any) => {
           this.cuposAdmitidos = this.cuposAdmitidos + element.CuposHabilitados
           this.cuposOpcionados = this.cuposOpcionados + element.CuposOpcionados
-          this.cuposDisponibles = this.cuposDisponibles + element.CuposDisponibles
+          this.cuposDisponibles += Number(element.CuposDisponibles ?? Math.max(element.CuposHabilitados - element.CuposOpcionados, 0));
         });
         this.formModel.CuposAsignados = this.cuposAdmitidos;
         this.formModel.CuposOpcionados = this.cuposOpcionados;
@@ -110,6 +187,7 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
   }
 
   submitForm() {
+    if (this.loading || !this.acceso.validar('asignar_cupos_proyecto')) return;
     this.errors = {};
     const cuposAsignados = Number(this.formModel.CuposAsignados);
     const cuposOpcionados = Number(this.formModel.CuposOpcionados || 0);
@@ -176,12 +254,14 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
   }
 
   CargarSoporte(data: any) {
+    if (!this.acceso.validar('cargar_soporte_cupo_proyecto')) return;
     const dialogRef = this.dialogService.open(SoporteCupoInscripcionComponent, {
       width: '800px',
       data
     });
     dialogRef.afterClosed().subscribe({
       next: (result: any) => {
+        if (!result?.result || !this.acceso.validar('cargar_soporte_cupo_proyecto')) return;
         data.base64 = result.result.base64;
         data.Comentario = result.result.comentario;
         data.TipoInscripcionId = this.dataSource.data[0].TipoInscripcionId
@@ -192,12 +272,14 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
   }
 
   TiposCupos() {
+    if (!this.acceso.validar('asignar_cupos_proyecto')) return;
     const dialogRef = this.dialogService.open(TiposCuposComponent, {
       width: '1500px',
       data: this.dataSource.data
     });
     dialogRef.afterClosed().subscribe({
       next: (result: any) => {
+        if (!result?.result) return;
         this.logicaTablaCloseModal(result.result)
       },
     });
@@ -205,6 +287,10 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
   }
 
   logicaTablaCloseModal(result: any) {
+    if (!this.acceso.validar('asignar_cupos_proyecto')) return;
+    const retiraCupos = this.dataSource.data.some((element: any) =>
+      !result.some((item: any) => item.Id === element.CupoId));
+    if (retiraCupos && !this.acceso.validar('retirar_cupo_proyecto')) return;
     this.dataSource.data.forEach((element: any) => {
       const exist = result.some((item: any) => item.Id === element.CupoId);
       if (exist == false) {
@@ -238,6 +324,7 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
 
 
   EliminarCupo(cupo: any) {
+    if (!this.acceso.validar('retirar_cupo_proyecto')) return;
     const data = {
       Activo: false,
       CupoId: cupo.CupoId,
@@ -264,6 +351,7 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
 
   onAction(event: any) {
     if (event.action == 'eliminar') {
+      if (!this.acceso.validar('retirar_cupo_proyecto')) return;
       if (event.data.Id == undefined) {
         this.dataSource.data = this.dataSource.data.filter((item: any) => item.Nombre !== event.data.Nombre);
       } else {
@@ -277,6 +365,7 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
   }
 
   guardarDocumento() {
+    if (!this.acceso.validar('cargar_soporte_cupo_proyecto')) return;
     this.dataSource.data.forEach((element: any, index: any) => {
       const file: any[] = [];;
       if (element.Id == undefined) {
@@ -300,6 +389,8 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
 
 
   async guardarCupos() {
+    if (this.loading || !this.acceso.validar('asignar_cupos_proyecto')) return;
+    if (!this.acceso.validar('cargar_soporte_cupo_proyecto')) return;
     this.loading = true;
     let Validar = true;
     this.dataSource.data.forEach((element: any) => {
@@ -322,6 +413,11 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
     if (Validar) {
       await this.guardarDocumento();
       setTimeout(() => {
+        if (!this.acceso.validar('asignar_cupos_proyecto') ||
+            !this.acceso.validar('cargar_soporte_cupo_proyecto')) {
+          this.loading = false;
+          return;
+        }
         this.inscripcionMidService.post('cupos', this.dataSource.data).subscribe({
           next: (response: any) => {
             console.log(this.dataSource.data)
@@ -345,6 +441,12 @@ export class CrudAsignacionCupoComponent implements AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (changes['info_proyectos'] || changes['info_periodo']) {
+      this.soportesPendientes = {};
+      this.dataSource.data = [];
+      this.formModel.CuposAsignados = null;
+      this.formModel.CuposOpcionados = null;
+    }
     this.show_posgrado = !!this.info_nivel;
     if (this.autoPrecargaCupos) {
       this.obtenerCupos().subscribe();

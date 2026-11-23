@@ -42,19 +42,23 @@ const rawRoutes: Routes = [
   },
   {
     path:"administrar-criterios", 
-    component: AdministradorCriteriosComponent
+    component: AdministradorCriteriosComponent,
+    data: { configuracionAdmision: true, menuUrl: '/admisiones/administrar-criterios' },
   },
   {
     path:"criterios", 
-    component: CriterioAdmisionComponent
+    component: CriterioAdmisionComponent,
+    data: { configuracionAdmision: true, menuUrl: '/admisiones/criterios' },
   },
   {
     path:"asignacion-cupos", 
-    component: AsignacionCuposComponent
+    component: AsignacionCuposComponent,
+    data: { configuracionAdmision: true, requiereEscritura: false, menuUrl: '/admisiones/asignacion-cupos' },
   },
   {
     path:"asignacion-cupos/comentarios-cupos", 
-    component: ComentariosCuposComponent
+    component: ComentariosCuposComponent,
+    data: { configuracionAdmision: true, requiereEscritura: false, menuUrl: '/admisiones/asignacion-cupos' },
   },
   {
     path:"evaluacion-documentos-inscritos", 
@@ -85,7 +89,8 @@ const rawRoutes: Routes = [
   },
   {
     path:"asignar-descuento-documento", 
-    component: AsignarDocumentosDescuentosComponent
+    component: AsignarDocumentosDescuentosComponent,
+    data: { configuracionAdmision: true, menuUrl: '/admisiones/asignar-descuento-documento' },
   },
   {
     path:"transferencias/:process", 
@@ -98,6 +103,7 @@ const rawRoutes: Routes = [
   {
     path:"suite-programa", 
     component: DefSuiteInscripProgramaComponent,
+    data: { configuracionAdmision: true, menuUrl: '/admisiones/suite-programa' },
   },
   {
     path:"liquidacion-recibos-posgrado", 

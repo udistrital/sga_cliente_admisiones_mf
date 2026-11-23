@@ -61,7 +61,7 @@
             }
             <div
               id="info_basica"
-              *isGranted="['ADMIN_SGA', 'VICERRECTOR', 'ASESOR_VICE', 'ASIS_PROYECTO', 'JEFE_DEPENDENCIA', 'ADMISIONES_REG']"
+              *ngIf="puedeVerDescuentos"
               >
               <mat-card
                 class="exp-card"

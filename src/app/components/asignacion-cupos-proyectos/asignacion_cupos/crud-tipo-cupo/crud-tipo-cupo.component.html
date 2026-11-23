@@ -85,7 +85,7 @@
       </div>
       <br><br>
       <div style="display: flex; justify-content: center;">
-        <button mat-flat-button color="accent" type="button" (click)="TipoCupoguardar()">
+        <button mat-flat-button color="accent" type="button" [disabled]="!acceso.permite(permisoGuardar)" (click)="TipoCupoguardar()">
           {{'GLOBAL.guardar' | translate}}
         </button>
       </div>

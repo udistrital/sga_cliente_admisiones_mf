@@ -55,9 +55,20 @@
 }
 
 .actions-row {
+  gap: 12px;
+  flex-wrap: wrap;
   margin-top: 1rem;
   display: flex;
   justify-content: flex-end;
+}
+
+.asignacion-acciones {
+  padding: 16px 0;
+  border-top: 1px solid #ddd;
+}
+
+.soporte-aviso {
+  margin-top: 12px;
 }
 
 .form-label {

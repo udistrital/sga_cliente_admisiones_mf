@@ -1,5 +1,6 @@
 
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
+import { AccesoConfiguracionAdmisionService } from 'src/app/services/acceso-configuracion-admision.service';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SgaParametrosService } from 'src/app/services/sga_parametros.service';
@@ -11,6 +12,8 @@ import { SgaParametrosService } from 'src/app/services/sga_parametros.service';
     standalone: false
 })
 export class CrudTipoCupoComponent {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear(['crear_tipo_cupo', 'editar_tipo_cupo']);
+  get permisoGuardar(): string { return this.data?.Id ? 'editar_tipo_cupo' : 'crear_tipo_cupo'; }
 
 
   titulo: string = "Crear";
@@ -37,6 +40,7 @@ export class CrudTipoCupoComponent {
   }
 
   TipoCupoguardar() {
+    if (!this.acceso.validar(this.permisoGuardar)) return;
     const currentDate = new Date().toISOString().replace('T', ' ').replace('Z', ' +0000 +0000');
     const data = {
       Activo: true,

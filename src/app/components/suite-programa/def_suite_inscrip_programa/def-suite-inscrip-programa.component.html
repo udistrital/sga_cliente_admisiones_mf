@@ -61,7 +61,7 @@
           <mat-card-footer>
             <mat-checkbox
               color="primary"
-              [disabled]="true"
+              [disabled]="!puedeModificarSuite || (true)"
               [(ngModel)]="tagsObject.info_persona.required"
               ><b>{{ "GLOBAL.obligatorio" | translate }}</b>
             </mat-checkbox>
@@ -85,7 +85,7 @@
             <mat-card-footer>
               <mat-checkbox
                 color="primary"
-                [disabled]="!tagsObject.formacion_academica.selected"
+                [disabled]="!puedeModificarSuite || (!tagsObject.formacion_academica.selected)"
                 [(ngModel)]="tagsObject.formacion_academica.required"
                 ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                 >
@@ -109,7 +109,7 @@
               <mat-card-footer>
                 <mat-checkbox
                   color="primary"
-                  [disabled]="!tagsObject.idiomas.selected"
+                  [disabled]="!puedeModificarSuite || (!tagsObject.idiomas.selected)"
                   [(ngModel)]="tagsObject.idiomas.required"
                   ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                   >
@@ -133,7 +133,7 @@
                 <mat-card-footer>
                   <mat-checkbox
                     color="primary"
-                    [disabled]="!tagsObject.experiencia_laboral.selected"
+                    [disabled]="!puedeModificarSuite || (!tagsObject.experiencia_laboral.selected)"
                     [(ngModel)]="tagsObject.experiencia_laboral.required"
                     ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                     >
@@ -157,7 +157,7 @@
                   <mat-card-footer>
                     <mat-checkbox
                       color="primary"
-                      [disabled]="!tagsObject.produccion_academica.selected"
+                      [disabled]="!puedeModificarSuite || (!tagsObject.produccion_academica.selected)"
                       [(ngModel)]="tagsObject.produccion_academica.required"
                       ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                       >
@@ -181,7 +181,7 @@
                     <mat-card-footer>
                       <mat-checkbox
                         color="primary"
-                        [disabled]="!tagsObject.documento_programa.selected"
+                        [disabled]="!puedeModificarSuite || (!tagsObject.documento_programa.selected)"
                         [(ngModel)]="tagsObject.documento_programa.required"
                         ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                         >
@@ -203,7 +203,7 @@
                         <mat-icon class="icon" fontIcon="attach_money"></mat-icon>
                       </mat-card-content>
                       <mat-card-footer>
-                        <mat-checkbox
+                        <mat-checkbox [disabled]="!puedeModificarSuite"
                           color="primary"
                           [(ngModel)]="tagsObject.descuento_matricula.required"
                           ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
@@ -228,7 +228,7 @@
                         <mat-card-footer>
                           <mat-checkbox
                             color="primary"
-                            [disabled]="!tagsObject.propuesta_grado.selected"
+                            [disabled]="!puedeModificarSuite || (!tagsObject.propuesta_grado.selected)"
                             [(ngModel)]="tagsObject.propuesta_grado.required"
                             ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                             >
@@ -251,7 +251,7 @@
                           <mat-card-footer>
                             <mat-checkbox
                               color="primary"
-                              [disabled]="true"
+                              [disabled]="!puedeModificarSuite || (true)"
                               [(ngModel)]="tagsObject.perfil.required"
                               ><b>{{ "GLOBAL.obligatorio" | translate }}</b></mat-checkbox
                               >
@@ -340,7 +340,8 @@
                         <br />
                         <div class="container" style="padding: 2%">
                           <div class="row justify-content-md-center">
-                            <button
+                            @if (puedeModificarSuite) {
+                              <button
                               class="boton-primary"
                               mat-raised-button
                               color="primary"
@@ -348,6 +349,7 @@
                               >
                               {{ "GLOBAL.guardar" | translate }}
                             </button>
+                            }
                           </div>
                         </div>
                       </div>

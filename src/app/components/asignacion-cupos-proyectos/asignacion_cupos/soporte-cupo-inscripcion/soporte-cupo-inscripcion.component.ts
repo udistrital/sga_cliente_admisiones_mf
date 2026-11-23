@@ -1,4 +1,5 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
+import { AccesoConfiguracionAdmisionService } from 'src/app/services/acceso-configuracion-admision.service';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
@@ -13,8 +14,11 @@ import { DocumentoService } from 'src/app/services/documento.service';
     standalone: false
 })
 export class SoporteCupoInscripcionComponent {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear(['cargar_soporte_cupo_proyecto']);
 
   selectedFile: File | null = null;
+  leyendoArchivo = false;
+  private lectura = 0;
   base64String!: string;
   errorMessage!: string;
   comentario = new FormControl('', [Validators.required, Validators.minLength(2)]);
@@ -31,16 +35,32 @@ export class SoporteCupoInscripcionComponent {
   }
 
   onFileSelected(event: any): void {
-    const file = event.target.files[0];
+    if (!this.acceso.validar('cargar_soporte_cupo_proyecto')) return;
+    const lectura = ++this.lectura;
+    const file = event.target.files?.[0];
+    this.selectedFile = null;
+    this.base64String = '';
+    this.leyendoArchivo = false;
     this.errorMessage = '';
     if (file) {
       if (file.type !== 'application/pdf') {
-        this.errorMessage = 'Please upload a valid PDF file.';
+        this.errorMessage = 'Seleccione un archivo PDF válido.';
         return;
       }
       const reader = new FileReader();
-      reader.onload = this.handleFile.bind(this);
-      reader.readAsBinaryString(file);
+      this.leyendoArchivo = true;
+      reader.onload = () => {
+        if (lectura !== this.lectura) return;
+        this.base64String = String(reader.result).split(',')[1] ?? '';
+        this.selectedFile = file;
+        this.leyendoArchivo = false;
+      };
+      reader.onerror = () => {
+        if (lectura !== this.lectura) return;
+        this.errorMessage = 'No fue posible leer el archivo PDF.';
+        this.leyendoArchivo = false;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -50,17 +70,22 @@ export class SoporteCupoInscripcionComponent {
   }
 
   validarInputs() {
+    if (!this.acceso.validar('cargar_soporte_cupo_proyecto')) return;
+    if (this.leyendoArchivo) return;
     if (this.comentario.invalid) {
       this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('cupos.error_soporte_comentario'));
     }
 
-    if (this.base64String === undefined) {
+    if (!this.base64String) {
       this.popUpManager.showAlert(this.translate.instant('GLOBAL.info'), this.translate.instant('cupos.error_soporte_archivo'));
     }
-    if (this.base64String != undefined && this.comentario.valid) {
-      this.data.comentario = this.comentario.value;
-      this.data.base64 = this.base64String;
-      this.dialogRef.close({ result: this.data });
+    if (this.base64String && this.comentario.valid && this.comentario.value?.trim()) {
+      this.dialogRef.close({ result: {
+        ...this.data,
+        comentario: this.comentario.value.trim(),
+        base64: this.base64String,
+        nombreArchivo: this.selectedFile?.name,
+      } });
     }
   }
 }
