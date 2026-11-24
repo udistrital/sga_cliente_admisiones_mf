@@ -18,7 +18,6 @@ import { DefSuiteInscripProgramaComponent } from './components/suite-programa/de
 import { ListadoHistoricoComponent } from './components/listado-historico/listado-historico.component';
 import { LiquidacionRecibosComponent } from './components/liquidacion-recibos/liquidacion-recibos.component';
 import { LiquidacionRecibosComponent as LiquidacionPregrado } from './components/liquidacion/liquidacion-recibos/liquidacion-recibos.component';
-import { CodificacionModule } from './components/codificacion-module/codificacion.module';
 import { ListaProyectosAspirantesComponent } from './components/lista-proyectos-aspirantes/lista-proyectos-aspirantes.component';
 import { LiquidacionHistoricoComponent } from './components/liquidacion/liquidacion-historico/liquidacion-historico.component';
 import { SoporteConfiguracionComponent } from './components/soporte-configuracion/soporte-configuracion.component';
@@ -34,11 +33,19 @@ import { TipoInscripcionComponent } from './components/tipo-inscripcion/tipo-ins
 import { TipoCuposComponent } from './components/tipo-cupos/tipo-cupos.component';
 import { ReportesComponent } from './components/reportes/reportes.component';
 import { AuthGuard } from 'src/_guards/auth.guard';
+import { CodificacionComponent } from './components/codificacion-module/components/codificacion/codificacion.component';
+import { ReporteCodificacionComponent } from './components/codificacion-module/components/reporte-codificacion/reporte-codificacion.component';
 
 const rawRoutes: Routes = [
   {
-    path: "codificacion", // cambiar la ruta del modulo
-    loadChildren: () => import ('./components/codificacion-module/codificacion.module').then(m => m.CodificacionModule),
+    path: 'codificacion/crear',
+    component: CodificacionComponent,
+    data: { configuracionAdmision: true, requiereEscritura: false, menuUrl: '/admisiones/codificacion/crear' },
+  },
+  {
+    path: 'codificacion/reporte',
+    component: ReporteCodificacionComponent,
+    data: { configuracionAdmision: true, requiereEscritura: false, menuUrl: '/admisiones/codificacion/reporte' },
   },
   {
     path:"administrar-criterios", 

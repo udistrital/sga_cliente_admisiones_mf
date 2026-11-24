@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { finalize } from 'rxjs';
+import { AccesoConfiguracionAdmisionService, PERMISOS_CONFIGURACION } from 'src/app/services/acceso-configuracion-admision.service';
 import { ParametrosService } from 'src/app/services/parametros.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OikosService } from 'src/app/services/oikos.service';
@@ -15,6 +17,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     standalone: false
 })
 export class ReporteCodificacionComponent implements OnInit {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear(PERMISOS_CONFIGURACION.reporteCodificacion);
+  loading = false;
 
 
   reporteForm: FormGroup;
@@ -82,6 +86,7 @@ export class ReporteCodificacionComponent implements OnInit {
   }
 
   downloadFile(base64: string, fileName: string) {
+    if (!this.acceso.validar('ver_reporte_codificacion') || !base64 || this.loading) return;
     const sliceSize = 512
     const byteCharacters = atob(base64);
     const byteArrays = [];
@@ -99,6 +104,7 @@ export class ReporteCodificacionComponent implements OnInit {
   }
 
   openDialog(): void {
+    if (!this.acceso.validar('ver_reporte_codificacion') || !this.reportePdf || this.loading) return;
     const dialogRef = this.dialog.open(ReporteVisualizerComponent, {
       width: '80vw',   // Set width to 60 percent of view port width
       height: '90vh',
@@ -114,6 +120,7 @@ export class ReporteCodificacionComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.loading || !this.acceso.validar('ver_reporte_codificacion')) return;
     if (this.reporteForm.valid) {
 
       this.openSnackBar("Generando reporte porfavor espera", "Aceptar")
@@ -129,8 +136,12 @@ export class ReporteCodificacionComponent implements OnInit {
         { Periodo: nombrePeriodo, Facultad: nombreFacultad, Proyecto: nombreProyecto }
       ]
 
-      this.sgaAdmisionesMidService.get(`reporte?id_periodo=${idPeriodo}&id_proyecto=${idProyecto}`).subscribe(
+      this.loading = true;
+      this.reportePdf = '';
+      this.reporteExcel = '';
+      this.sgaAdmisionesMidService.get(`reporte?id_periodo=${idPeriodo}&id_proyecto=${idProyecto}`).pipe(finalize(() => { this.loading = false; })).subscribe(
         (Response: any) => {
+          if (!this.acceso.permite('ver_reporte_codificacion')) return;
           if (Response.Status == 200 && Response.Success) {
 
             this.reporteExcel = Response.Data.Excel
@@ -140,7 +151,8 @@ export class ReporteCodificacionComponent implements OnInit {
           } else {
             this.openSnackBar("Ocurrio un error", "Aceptar")
           }
-        }
+        },
+        () => this.openSnackBar('No fue posible generar el reporte', 'Aceptar'),
       )
 
     } else {

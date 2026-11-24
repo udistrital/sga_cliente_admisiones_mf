@@ -1,4 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
+import { finalize } from 'rxjs';
+import { AccesoConfiguracionAdmisionService, PERMISOS_CONFIGURACION } from 'src/app/services/acceso-configuracion-admision.service';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { CodificacionService } from "../../../../services/codificacion.service";
 import {
@@ -24,6 +26,8 @@ import {
     standalone: false
 })
 export class CodificacionComponent {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear(PERMISOS_CONFIGURACION.codificacion);
+  loading = false;
   selectionForm: FormGroup;
 
   todosNiveles: NivelFormacion[] = [];
@@ -156,11 +160,18 @@ export class CodificacionComponent {
   //ACCIONES DE LOS BOTONES
 
   onSubmit() {
+    if (this.loading || this.selectionForm.invalid || !this.acceso.validar('ver_listado_codificacion')) return;
     this.getAdmitidos()
     this.openSnackBar('Cargando información')
   }
 
   getAdmitidos() {
+    if (this.loading || !this.acceso.validar('ver_listado_codificacion')) return;
+    this.loading = true;
+    this.isCodigos = false;
+    this.isGenerarCodigos = false;
+    this.boolListado = false;
+    this.dataSource = [];
     const idProyecto = this.selectionForm.get('proyectoCurricular')?.value
     const idPeriodo = this.selectionForm.get('periodoAcademico')?.value
     const codigoProyecto = this.selectionForm.get('codigoProyectoCurricular')?.value
@@ -168,18 +179,20 @@ export class CodificacionComponent {
 
     this.codificacionService
       .getAdmitidos(idPeriodo, idProyecto, this.periodoValue, codigoProyecto, nivel?.viewValue)
+      .pipe(finalize(() => { this.loading = false; }))
       .subscribe(
         {
           next: (data: any) => {
+            if (!this.acceso.permite('ver_listado_codificacion')) return;
             this.boolListado = true
             this.openSnackBar('Información encontrada')
-            this.dataSource = data.Data
-            if (data.Data[0].codigo != "") {
+            this.dataSource = Array.isArray(data.Data) ? data.Data : [];
+            if (this.dataSource[0]?.codigo) {
               this.isCodigos = true
               this.isGenerarCodigos = false
             }
 
-            if (data.Data[0].PuntajeFinal == 0) {
+            if (this.dataSource[0]?.PuntajeFinal === 0) {
               this.openSnackBar('Recuerda asignar los puntajes de los estudiantes')
             }
           },
@@ -191,8 +204,12 @@ export class CodificacionComponent {
   }
 
   generarCodigos() {
-    this.codificacionService.postGenerarCodigos(this.dataSource, 1).subscribe({
+    if (this.loading || !this.acceso.validar('generar_codigos_admision')) return;
+    if (!this.acceso.validar('ver_listado_codificacion') || !this.dataSource.length || this.isCodigos) return;
+    this.loading = true;
+    this.codificacionService.postGenerarCodigos(this.dataSource, 1).pipe(finalize(() => { this.loading = false; })).subscribe({
       next: (data: any) => {
+        if (!this.acceso.permite('generar_codigos_admision')) return;
         if (data.Data) {
           this.openSnackBar('Codigos generados')
           this.dataSource = data.Data
@@ -204,11 +221,19 @@ export class CodificacionComponent {
   }
 
   asignarCodificacion() {
-    this.codificacionService.postGuardarCodigos(this.dataSource).subscribe({
+    if (this.loading || !this.acceso.validar('asignar_codigos_admision')) return;
+    if (!this.acceso.validar('ver_listado_codificacion') || !this.isGenerarCodigos || !this.dataSource.length) return;
+    this.loading = true;
+    let actualizarListado = false;
+    this.codificacionService.postGuardarCodigos(this.dataSource).pipe(finalize(() => {
+      this.loading = false;
+      if (actualizarListado && this.acceso.permite('ver_listado_codificacion')) this.getAdmitidos();
+    })).subscribe({
       next: (data: any) => {
         if (data.Data) {
           this.openSnackBar('Codificación asignada')
-          this.getAdmitidos()
+          this.isGenerarCodigos = false;
+          actualizarListado = true;
         }
       },
       error: (error: any) => this.openSnackBar('Codificación no asignada')
@@ -216,6 +241,7 @@ export class CodificacionComponent {
   }
 
   descargarListado() {
+    if (this.loading || !this.acceso.validar('ver_listado_codificacion')) return;
     // Lógica para descargar el listado
     if (!this.dataSource || this.dataSource.length === 0) {
       this.openSnackBar('No hay datos para descargar');

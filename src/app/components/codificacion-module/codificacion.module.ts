@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 import { FiltrosProgramaComponent } from '../../shared/filtros-programa/filtros-programa.component';
 import { CommonModule } from "@angular/common";
 
-import { CodificacionRoutingModule } from "./codificacion-routing.module";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { CodificacionComponent } from "./components/codificacion/codificacion.component";
 import { ReporteCodificacionComponent } from "./components/reporte-codificacion/reporte-codificacion.component";
@@ -27,7 +26,6 @@ import { RepotesInscripcionesComponent } from "../repotes-inscripciones/repotes-
 
 @NgModule({ declarations: [ReporteCodificacionComponent, CodificacionComponent, RepotesInscripcionesComponent, SafeUrlPipe, ReporteVisualizerComponent], imports: [FiltrosProgramaComponent,
         CommonModule,
-        CodificacionRoutingModule,
         ReactiveFormsModule,
         MatSelectModule,
         MatButtonModule,

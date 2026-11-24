@@ -199,13 +199,13 @@
                           mat-flat-button
                           color="accent"
                           type="submit"
-                          [disabled]="selectionForm.invalid"
+                          [disabled]="selectionForm.invalid || loading || !acceso.permite('ver_listado_codificacion')"
                           >
                           {{ "CODIFICACION.BUTTON_ACEPTAR" | translate }}
                         </button>
                       </mat-card-actions>
                     </form>
-                    @if (boolListado) {
+                    @if (boolListado && acceso.permite('ver_listado_codificacion')) {
                       <div class="table">
                         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt">
                           <!-- ID Column -->
@@ -281,27 +281,35 @@
                               mat-raised-button
                               color="accent"
                               (click)="descargarListado()"
+                              type="button"
+                              [disabled]="loading"
                               >
                               {{ "CODIFICACION.BUTTON_DESCARGAR_LISTADO" | translate }}
                             </button>
                           </div>
                           <div class="right-buttons">
+                            @if (acceso.permite('generar_codigos_admision')) {
                             <button
                               mat-flat-button
                               color="accent"
                               (click)="generarCodigos()"
-                              [disabled]="isCodigos"
+                              type="button"
+                              [disabled]="isCodigos || loading || !dataSource.length"
                               >
                               {{ "CODIFICACION.BUTTON_GENERAR_CODIGOS" | translate }}
                             </button>
+                            }
+                            @if (acceso.permite('asignar_codigos_admision')) {
                             <button
                               mat-flat-button
                               color="accent"
                               (click)="asignarCodificacion()"
-                              [disabled]="!isGenerarCodigos"
+                              type="button"
+                              [disabled]="!isGenerarCodigos || loading || !dataSource.length"
                               >
                               {{ "CODIFICACION.BUTTON_GENERAR_CODIFICACION" | translate }}
                             </button>
+                            }
                           </div>
                         </mat-card-actions>
                       </div>

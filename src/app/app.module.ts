@@ -274,7 +274,7 @@ export function createTranslateLoader(http: HttpClient) {
                 deps: [HttpClient],
             },
         }),
-        CodificacionModule], providers: [
+        ], providers: [
         { provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } },
         MatSnackBar,
         TerceroMidService,
