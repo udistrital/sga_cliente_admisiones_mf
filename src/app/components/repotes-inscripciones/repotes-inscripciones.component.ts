@@ -11,7 +11,7 @@ import { ReporteVisualizerComponent } from '../reporte-visualizer/reporte-visual
 import { MatSnackBar } from '@angular/material/snack-bar';
 // @ts-ignore
 import Swal from 'sweetalert2/dist/sweetalert2';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { tipoReporteInscritos } from 'src/app/models/reportes/tipo-reportes-inscripciones';
 import { estadosReintegrosTransferencias } from 'src/app/models/reportes/estados-reintegros-transferencias';
 import { InscripcionService } from 'src/app/services/inscripcion.service';
@@ -22,7 +22,8 @@ import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-pro
 import { esAdministradorProgramas } from 'src/app/services/filtros-programa.service';
 import { TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popUpManager';
-import { getRolesUsuario } from 'src/utils/auth.util';
+import { getRolesUsuario, getToken } from 'src/utils/auth.util';
+import { tieneRolConsulta } from 'src/app/models/roles.model';
 import { PermisosUtils } from 'src/utils/role-permissions';
 
 @Component({
@@ -69,6 +70,16 @@ export class RepotesInscripcionesComponent {
   ];
   permisos: Record<string, boolean> = {};
   permisosListos = false;
+  private usuarioPermisos: string | null = null;
+  private rolesPermisos: string[] = [];
+
+  get sesionAutorizada(): boolean {
+    const roles = getRolesUsuario();
+    return !!getToken() && tieneRolConsulta(roles)
+      && localStorage.getItem('user') === this.usuarioPermisos
+      && roles.length === this.rolesPermisos.length
+      && roles.every(rol => this.rolesPermisos.includes(rol));
+  }
 
 
   constructor(
@@ -101,6 +112,10 @@ export class RepotesInscripcionesComponent {
 
   async ngOnInit(): Promise<void> {
     this.cargarPermisos();
+    if (!this.sesionAutorizada) {
+      this.loadingAcceso = false;
+      return;
+    }
     this.caragarNivelesAcademicos();
     await this.cargarPermisosAcceso();
     if (!this.puedeAcceder) {
@@ -120,6 +135,10 @@ export class RepotesInscripcionesComponent {
   }
 
   async cargarPermisosAcceso(): Promise<void> {
+    this.puedeAcceder = false;
+    this.IsAdmin = false;
+    this.dependenciasUsuario = [];
+    if (!this.sesionAutorizada) return;
     this.rolesUsuario = getRolesUsuario();
     this.IsAdmin = esAdministradorProgramas(this.rolesUsuario);
 
@@ -133,6 +152,7 @@ export class RepotesInscripcionesComponent {
       const respDependencia = await firstValueFrom(
         this.sgaAdmisionesMidService.get<RespFormat<DependenciasVinculacionTercero>>('admision/dependencia_vinculacion_tercero/' + idTercero)
       );
+      if (!this.sesionAutorizada) return;
       this.dependenciasUsuario = respDependencia.Data.DependenciaId;
 
       this.puedeAcceder = this.dependenciasUsuario.length > 0;
@@ -156,16 +176,30 @@ export class RepotesInscripcionesComponent {
   private cargarPermisos(): void {
     this.permisosListos = false;
     this.permisos = {};
+    this.usuarioPermisos = localStorage.getItem('user');
+    this.rolesPermisos = [...getRolesUsuario()];
+    if (!this.sesionAutorizada) {
+      this.permisosListos = true;
+      return;
+    }
     this.permisosUtils
-      .obtenerPermisos(getRolesUsuario(), this.opcionesPermisos)
-      .subscribe(permisos => {
-        this.permisos = permisos;
-        this.permisosListos = true;
+      .obtenerPermisos(this.rolesPermisos, this.opcionesPermisos)
+      .pipe(take(1))
+      .subscribe({
+        next: permisos => {
+          this.permisos = this.sesionAutorizada ? permisos : {};
+          this.permisosListos = true;
+        },
+        error: () => {
+          this.permisos = {};
+          this.permisosListos = true;
+        },
       });
   }
 
   private tienePermiso(opcion: string): boolean {
-    return this.permisosListos && this.permisos[opcion] === true;
+    return this.sesionAutorizada && this.puedeAcceder && !this.loadingAcceso
+      && this.permisosListos && this.permisos[opcion] === true;
   }
 
   get puedeGenerarReporte(): boolean { return this.tienePermiso('generar_reporte_inscritos'); }
@@ -382,6 +416,10 @@ export class RepotesInscripcionesComponent {
   }
 
   downloadFile(base64: string, fileName: string) {
+    const permitido = fileName === 'ReporteInscritos.pdf'
+      ? this.puedeDescargarPdf
+      : fileName === 'ReporteInscritos.xlsx' && this.puedeDescargarExcel;
+    if (!this.validarPermiso(permitido) || this.loading || !this.isDocuments || !base64) return;
     const sliceSize = 512
     const byteCharacters = atob(base64);
     const byteArrays = [];
@@ -400,6 +438,7 @@ export class RepotesInscripcionesComponent {
 
   openDialog(): void {
     if (!this.validarPermiso(this.puedeVerPdf)) return;
+    if (this.loading || !this.isDocuments || !this.reportePdf) return;
     const byteCharacters = atob(this.reportePdf);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
@@ -475,6 +514,7 @@ export class RepotesInscripcionesComponent {
   }
 
   onSubmit() {
+    if (this.loading || this.loadingAcceso) return;
     if (!this.validarPermiso(this.puedeGenerarReporte)) return;
     const revision = ++this.revisionFiltros;
     if (this.reporteForm.valid) {
@@ -519,6 +559,12 @@ export class RepotesInscripcionesComponent {
         next: (Response: any) => {
           if (revision !== this.revisionFiltros) { return; }
           this.loading = false
+          if (!this.puedeGenerarReporte) {
+            this.reportePdf = '';
+            this.reporteExcel = '';
+            this.isDocuments = false;
+            return;
+          }
           if (Response.Status == 200 && Response.Success) {
             this.reporteExcel = Response.Data.Excel
             this.reportePdf = Response.Data.Pdf

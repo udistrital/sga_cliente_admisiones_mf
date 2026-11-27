@@ -15,7 +15,7 @@
             <mat-form-field appearance="outline">
               <mat-label>{{ "reportes.proceso_academico" | translate }}</mat-label>
               <mat-icon class="mat-icon-outlined" color="primary" matPrefix>book</mat-icon>
-              <mat-select [formControl]="Campo3Control">
+              <mat-select [formControl]="Campo3Control" (selectionChange)="dataSource.data = []">
                 <mat-option value="" disabled>--{{ "GLOBAL.seleccionar" | translate }}--</mat-option>
                 @for (item of data_proceso; track item) {
                   <mat-option [value]="item.Id">
@@ -30,17 +30,19 @@
               }
             </mat-form-field>
           </div>
-          <button mat-stroked-button matStepperNext [disabled]="firstFormGroup.invalid" class="azulOscuro fixed-button">
+          <button type="button" mat-stroked-button (click)="consultarReporte(stepper)" [disabled]="firstFormGroup.invalid || loading || !puedeConsultar" class="azulOscuro fixed-button">
             {{ 'GLOBAL.continuar' | translate }}
           </button>
         </form>
       </mat-step>
 
 
+      @if (puedeConsultar) {
       <mat-step [stepControl]="secondFormGroupNivel">
         <ng-template matStepLabel>{{ 'reportes.reporte_tabla' | translate }}</ng-template>
         <form [formGroup]="secondFormGroupNivel">
           <mat-card-content>
+            <p role="status">Datos de ejemplo. Esta vista aún no consulta un reporte real y los registros mostrados no corresponden a los filtros seleccionados.</p>
             <div class="table">
               <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
 
@@ -159,6 +161,7 @@
 
         </form>
       </mat-step>
+      }
     </mat-stepper>
   </mat-card-content>
 </mat-card>

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { AccesoConfiguracionAdmisionService, PERMISOS_CONFIGURACION } from 'src/app/services/acceso-configuracion-admision.service';
+import { MatStepper } from '@angular/material/stepper';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { ParametrosService } from 'src/app/services/parametros.service';
@@ -32,6 +34,13 @@ import { SeleccionPrograma } from 'src/app/models/proyecto_academico/filtros-pro
     standalone: false
 })
 export class ReportesComponent implements OnInit {
+  readonly acceso = inject(AccesoConfiguracionAdmisionService).crear(PERMISOS_CONFIGURACION.reportes);
+  get puedeConsultar(): boolean { return this.acceso.permite('ver_reportes_admision'); }
+
+  consultarReporte(stepper: MatStepper): void {
+    if (!this.loadDataTabla()) return;
+    stepper.next();
+  }
 
   data_proceso = [{ Id: 1, Nombre: 'Inscripciones' }, { Id: 2, Nombre: 'Admisiones' }];
   loading: boolean = false;
@@ -46,7 +55,7 @@ export class ReportesComponent implements OnInit {
 
   selectednivel: any;
 
-  isLinear = false;
+  isLinear = true;
   firstFormGroup!: FormGroup;
   secondFormGroupNivel!: FormGroup;
 
@@ -82,10 +91,10 @@ export class ReportesComponent implements OnInit {
     this.firstFormGroup = new FormGroup({
       CampoControl: this.CampoControl,
       Campo1Control: this.Campo1Control,
-      Campo2Control: this.Campo2Control
+      Campo2Control: this.Campo2Control,
+      Campo3Control: this.Campo3Control,
     });
     this.secondFormGroupNivel = new FormGroup({});
-    this.loadDataTabla();
   }
 
   async loadData() {
@@ -112,6 +121,7 @@ export class ReportesComponent implements OnInit {
   }
 
   seleccionarPrograma(seleccion: SeleccionPrograma) {
+    this.dataSource.data = [];
     this.Campo2Control.setValue(seleccion.periodo?.Id ?? '', { emitEvent: false });
     this.CampoControl.setValue(seleccion.nivel?.Id ?? '', { emitEvent: false });
     this.Campo1Control.setValue(seleccion.programa?.Id ?? '', { emitEvent: false });
@@ -136,7 +146,16 @@ export class ReportesComponent implements OnInit {
     return proyecto.NivelFormacionId.Id === nivelSeleccionado;
   }
 
-  loadDataTabla() {
+  loadDataTabla(): boolean {
+    if (!this.acceso.validar('ver_reportes_admision')) {
+      this.dataSource.data = [];
+      return false;
+    }
+    if (this.loading || !this.firstFormGroup || this.firstFormGroup.invalid) {
+      this.firstFormGroup?.markAllAsTouched();
+      this.dataSource.data = [];
+      return false;
+    }
     const estudiantes: Estudiante[] = [
       {
         nombres: 'Juan',
@@ -225,5 +244,6 @@ export class ReportesComponent implements OnInit {
       }
     ];
     this.dataSource.data = estudiantes;
+    return true;
   }
 }

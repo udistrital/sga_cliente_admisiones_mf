@@ -7,6 +7,7 @@ import { tieneRolConsulta, tieneRolEscritura } from '../models/roles.model';
 import { PopUpManager } from '../managers/popUpManager';
 
 export const PERMISOS_CONFIGURACION = {
+  reportes: ['ver_reportes_admision'],
   codificacion: ['ver_listado_codificacion', 'generar_codigos_admision', 'asignar_codigos_admision'],
   reporteCodificacion: ['ver_reporte_codificacion'],
   cuposProyecto: ['asignar_cupos_proyecto', 'retirar_cupo_proyecto', 'cargar_soporte_cupo_proyecto'],

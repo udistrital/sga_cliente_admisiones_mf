@@ -129,6 +129,8 @@ const rawRoutes: Routes = [
     component: RepotesInscripcionesComponent,
     data: {
       menuUrl: '/admisiones/reportes-inscritos',
+      configuracionAdmision: true,
+      requiereEscritura: false,
     },
   },
   {
@@ -179,6 +181,10 @@ const rawRoutes: Routes = [
   {
     path:"reportes", 
     component: ReportesComponent,
+    data: { 
+      configuracionAdmision: true, 
+      requiereEscritura: false, 
+      menuUrl: '/admisiones/reportes' },
   },
 ];
 

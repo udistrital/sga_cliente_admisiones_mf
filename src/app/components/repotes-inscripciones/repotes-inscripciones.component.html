@@ -9,7 +9,7 @@
         </div>
       }
 
-      @if (!loadingAcceso && puedeAcceder) {
+      @if (!loadingAcceso && puedeAcceder && sesionAutorizada) {
         <form [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
           <div class="grid">
             @if (!generalReport) {
@@ -83,7 +83,7 @@
         </div>
         @if (puedeGenerarReporte) {
           <div class="centrar">
-            <button class="boton-primary" mat-raised-button color="primary" type="submit">{{ 'GLOBAL.generar' | translate }}</button>
+            <button class="boton-primary" mat-raised-button color="primary" type="submit" [disabled]="loading || reporteForm.invalid">{{ 'GLOBAL.generar' | translate }}</button>
           </div>
         }
         @if (permisosListos && !puedeGenerarReporte) {
@@ -104,7 +104,7 @@
   </div>
 }
 
-@if (isDocuments) {
+@if (isDocuments && sesionAutorizada && puedeAcceder && (puedeVerPdf || puedeDescargarPdf || puedeDescargarExcel)) {
   <mat-card>
     <mat-card-content>
       <div class="table-reporte">
